@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/device_type.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/views/intropages/introScreen.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import '../../../configs/assets_constant.dart';

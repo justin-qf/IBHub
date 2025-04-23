@@ -50,15 +50,15 @@ class CustomParentScaffold extends StatelessWidget {
         Color bgColor = Theme.of(context).scaffoldBackgroundColor;
         return PopScope(
           canPop: onWillPop == null, // Allow pop if no callback
-          onPopInvokedWithResult: (didPop, result) async {
-            if (didPop) return; // If already popped, do nothing
-            if (onWillPop != null) {
-              final shouldPop = await onWillPop!();
-              if (shouldPop && context.mounted) {
-                Get.back();
-              }
-            }
-          },
+          // onPopInvokedWithResult: (didPop, result) async {
+          //   if (didPop) return; // If already popped, do nothing
+          //   if (onWillPop != null) {
+          //     final shouldPop = await onWillPop!();
+          //     if (shouldPop && context.mounted) {
+          //       Get.back();
+          //     }
+          //   }
+          // },
           child: isExtendBodyScreen
               ? SafeArea(
                 child: Scaffold(
