@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ibh/configs/string_constant.dart';
+import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
 
@@ -16,6 +18,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final internetController = Get.put(InternetController(), permanent: true);
+
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
@@ -29,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home: const Splashscreen(),
+        home: Splashscreen(),
         defaultTransition: Transition.fadeIn,
       );
     });
