@@ -259,6 +259,7 @@ class SignUpConstant {
   static const contactNumHint = 'Enter Contact Number';
   static const roleHint = 'Select Role';
   static const subjectHint = 'Select Subject';
+  static const stateHint = 'Select Subject';
   static const stdExamHint = 'Select Exam';
   static const passwordHint = 'Enter Password';
   static const confirmPasswordHint = 'Re-Enter Password';
@@ -277,12 +278,16 @@ class SignUpConstant {
   static const accounts = 'Account & Address';
 
   static const nameLabel = 'Name';
+  static const bussinessLabel = 'Bussiness Name';
   static const schoolLabel = 'School';
   static const addressLabel = 'Address';
   static const cityLabel = 'City';
   static const whatsappLabel = 'WhatsApp No';
   static const contactLabel = 'Contact No';
+  static const pinCodeLabel = 'Pincode';
   static const subjectLabel = 'Subject';
+  static const stateLabel = 'State';
+
   static const stdLabel = 'Standard';
   static const examLabel = 'Exam';
 

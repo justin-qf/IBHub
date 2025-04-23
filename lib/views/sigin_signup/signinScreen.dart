@@ -9,6 +9,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signinScreenController.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/sigin_signup/signupScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class Signinscreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class Signinscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Signinscreencontroller ctr = Get.put(Signinscreencontroller());
     return CustomParentScaffold(
-      isExtendBodyScreen: true,
+        isExtendBodyScreen: true,
         onWillPop: () async {
           return false;
         },
@@ -185,7 +186,7 @@ class Signinscreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Get.to(() => SignUpScreen());
+                      Get.to(() => Signupscreen());
 
                       print('go to signup screen');
 
