@@ -5,6 +5,7 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class CustomParentScaffold extends StatelessWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final Widget body;
@@ -46,38 +47,36 @@ class CustomParentScaffold extends StatelessWidget {
             ConnectivityResult.none) {
           return checkInternet();
         }
-
         Color bgColor = Theme.of(context).scaffoldBackgroundColor;
         return PopScope(
           canPop: onWillPop == null, // Allow pop if no callback
-          // onPopInvokedWithResult: (didPop, result) async {
-          //   if (didPop) return; // If already popped, do nothing
-          //   if (onWillPop != null) {
-          //     final shouldPop = await onWillPop!();
-          //     if (shouldPop && context.mounted) {
-          //       Get.back();
-          //     }
-          //   }
-          // },
+          onPopInvoked: (didPop) async {
+            if (didPop) return; // If already popped, do nothing
+            if (onWillPop != null) {
+              final shouldPop = await onWillPop!();
+              if (shouldPop && context.mounted) {
+                Get.back();
+              }
+            }
+          },
           child: isExtendBodyScreen
-              ? SafeArea(
-                child: Scaffold(
-                    key: scaffoldKey,
-                    drawer: isdraweruse
-                        ? Align(
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(height: 80.h, child: drower))
-                        : null,
-                    drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-                    bottomNavigationBar: bottomNavigationBar,
-                    backgroundColor: bgColor,
-                    extendBodyBehindAppBar: true,
-                    resizeToAvoidBottomInset: isSmallDevice(context),
-                    body: body,
-                  ),
-              )
+              ? Scaffold(
+                  extendBodyBehindAppBar: true,
+                  resizeToAvoidBottomInset: true,
+                  key: scaffoldKey,
+                  drawer: isdraweruse
+                      ? Align(
+                          alignment: Alignment.topLeft,
+                          child: SizedBox(height: 80.h, child: drower))
+                      : null,
+                  drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+                  bottomNavigationBar: bottomNavigationBar,
+                  backgroundColor: bgColor,
+                  // resizeToAvoidBottomInset: isSmallDevice(context),
+                  body: body,
+                )
               : SafeArea(
-                child: Scaffold(
+                  child: Scaffold(
                     key: scaffoldKey,
                     drawer: isdraweruse
                         ? Align(
@@ -89,7 +88,7 @@ class CustomParentScaffold extends StatelessWidget {
                     backgroundColor: bgColor,
                     body: body,
                   ),
-              ),
+                ),
         );
       }),
     );
@@ -225,7 +224,6 @@ class CustomParentScaffold extends StatelessWidget {
 //                           bottomNavigationBar: bottomNavigationBar,
 //                           backgroundColor: bgColor,
 //                           body: body,
-
 //                         ),
 //                       );
 //       }),

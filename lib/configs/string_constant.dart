@@ -314,6 +314,7 @@ class SignUpConstant {
 
   static const next = 'Next';
   static const back = 'Back';
+  static const stateList = 'State List';
 }
 
 class OtpConstants {
@@ -395,6 +396,7 @@ class ResetpassConstant {
 }
 
 class ChangPasswordScreenConstant {
+  static const title = 'Change Password';
   static const change = "Change ";
   static const passowrd = 'Password';
   static const firstDesc =
@@ -416,6 +418,7 @@ class ChangPasswordScreenConstant {
   static const popUpTitle = 'OTP Verified';
   static const popUpDesc = 'Are You Confirmed?';
   static const changepasswordSuccess = 'Password changed successfully!';
+  static const notMatchPasswordHint = 'Password Not Match';
 }
 
 class Popupconst {

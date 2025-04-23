@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  screenOrientations();
+  Get.lazyPut<InternetController>(() => InternetController());
   runApp(const MyApp());
 }
 
@@ -22,16 +26,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.portraitUp,
-    ]);
     super.initState();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Statusbar().trasparentStatusbar();
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
         builder: (context, child) {

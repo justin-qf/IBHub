@@ -1,4 +1,7 @@
+import 'dart:convert';
 
+import 'package:ibh/models/Signup_screen_data_model.dart';
+import 'package:ibh/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPreferences {
@@ -18,20 +21,20 @@ class UserPreferences {
     pref = SharedPreferences.getInstance();
   }
 
-  // void saveSignInInfo(UserData? data) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString(loginKey, json.encode(data));
-  // }
+  void saveSignInInfo(User? data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(loginKey, json.encode(data));
+  }
 
-  // Future<UserData?> getSignInInfo() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? jsonString = prefs.getString(loginKey);
-  //   if (jsonString != null) {
-  //     Map<String, dynamic> jsonMap = json.decode(jsonString);
-  //     return UserData.fromJson(jsonMap);
-  //   }
-  //   return null;
-  // }
+  Future<User?> getSignInInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonString = prefs.getString(loginKey);
+    if (jsonString != null) {
+      Map<String, dynamic> jsonMap = json.decode(jsonString);
+      return User.fromJson(jsonMap);
+    }
+    return null;
+  }
 
   Future<void> setToken(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

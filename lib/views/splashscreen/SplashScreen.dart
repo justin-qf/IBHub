@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/device_type.dart';
+import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -21,19 +22,17 @@ class SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
     futureDelay(() async {
-      Get.offAll(() => Signinscreen());
+      Get.offAll(() => const Signinscreen());
     }, fromSplash: true);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Statusbar().trasparentStatusbar();
+    Statusbar().trasparentStatusbar();
     return Container(
       height: sizer.Device.height,
       width: sizer.Device.width,
-      decoration: const BoxDecoration(
-        color: secondaryColor,
-      ),
+      decoration: const BoxDecoration(color: secondaryColor),
       child: Bounce(
         from: 150,
         child: Center(

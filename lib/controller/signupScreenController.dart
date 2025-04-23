@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/componant/dialogs/dialogs.dart';
+import 'package:ibh/componant/input/form_inputs.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Signupscreencontroller extends GetxController {
@@ -47,17 +52,26 @@ class Signupscreencontroller extends GetxController {
 
   RxBool isFormInvalidate = false.obs;
 
-  var _isLoading = false.obs;
-  bool get isloading => _isLoading.value;
-  set isloading(bool value) => _isLoading.value = value;
+  var isLoading = false.obs;
+  bool get isloading => isLoading.value;
+  set isloading(bool value) => isLoading.value = value;
 
-  var _obsecureTextPass = true.obs;
-  bool get isObsecurePassText => _obsecureTextPass.value;
-  set isObsecurePassText(bool value) => _obsecureTextPass.value = value;
+  var obsecureTextPass = true.obs;
+  bool get isObsecurePassText => obsecureTextPass.value;
+  set isObsecurePassText(bool value) => obsecureTextPass.value = value;
 
-  var _obsecureTextConPass = true.obs;
-  bool get isObsecureConPassText => _obsecureTextConPass.value;
-  set isObsecureConPassText(bool value) => _obsecureTextConPass.value = value;
+  var obsecureTextConPass = true.obs;
+  bool get isObsecureConPassText => obsecureTextConPass.value;
+  set isObsecureConPassText(bool value) => obsecureTextConPass.value = value;
+
+  late TextEditingController searchStatectr;
+  late FocusNode searchStateNode;
+  var searchModel = ValidationModel(null, null, isValidate: false).obs;
+
+  RxBool isStateApiCallLoading = false.obs;
+  RxList stateFilterList = [].obs;
+  RxString stateId = "".obs;
+  RxList stateList = [].obs;
 
   Signupscreencontroller() {
     nameNode = FocusNode();
@@ -70,6 +84,7 @@ class Signupscreencontroller extends GetxController {
     visitingcardNode = FocusNode();
     passNode = FocusNode();
     confpassNode = FocusNode();
+    searchStateNode = FocusNode();
 
     nameCtr = TextEditingController();
     emailCtr = TextEditingController();
@@ -81,15 +96,16 @@ class Signupscreencontroller extends GetxController {
     visitingcardCtr = TextEditingController();
     passCtr = TextEditingController();
     confpassCtr = TextEditingController();
+    searchStatectr = TextEditingController();
   }
 
   void togglePassObscureText() {
-    _obsecureTextPass.value = !_obsecureTextPass.value;
+    obsecureTextPass.value = !obsecureTextPass.value;
     update();
   }
 
   void toggleConfPassObscureText() {
-    _obsecureTextConPass.value = !_obsecureTextConPass.value;
+    obsecureTextConPass.value = !obsecureTextConPass.value;
     update();
   }
 
@@ -175,9 +191,9 @@ class Signupscreencontroller extends GetxController {
 
     // Reset reactive variables
     isFormInvalidate.value = false;
-    _isLoading.value = false;
-    _obsecureTextPass.value = true;
-    _obsecureTextConPass.value = true;
+    isLoading.value = false;
+    obsecureTextPass.value = true;
+    obsecureTextConPass.value = true;
 
     super.onClose();
   }
@@ -221,9 +237,9 @@ class Signupscreencontroller extends GetxController {
 
     // Reset reactive variables
     isFormInvalidate.value = false;
-    _isLoading.value = false;
-    _obsecureTextPass.value = true;
-    _obsecureTextConPass.value = true;
+    isLoading.value = false;
+    obsecureTextPass.value = true;
+    obsecureTextConPass.value = true;
 
     update();
   }
@@ -327,5 +343,78 @@ class Signupscreencontroller extends GetxController {
         enableBtnFunction: () {
           enableSignUpButton();
         });
+  }
+
+  Widget setStateListDialog() {
+    return Obx(() {
+      if (isStateApiCallLoading.value == true) {
+        return setDropDownContent([].obs, const Text("Loading"),
+            isApiIsLoading: isStateApiCallLoading.value);
+      }
+      return setDropDownContent(
+          stateFilterList,
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemCount: stateFilterList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                contentPadding:
+                    const EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
+                horizontalTitleGap: null,
+                minLeadingWidth: 5,
+                onTap: () async {
+                  Get.back();
+                  stateId.value = stateFilterList[index].id.toString();
+                  stateCtr.text = stateFilterList[index].name;
+                  if (stateCtr.text.toString().isNotEmpty) {
+                    stateFilterList.clear();
+                    stateFilterList.addAll(stateList);
+                  }
+                  // cityctr.text = "";
+                  // cityId.value = "";
+                  update();
+                  futureDelay(() {
+                    // getCityApi(context, stateId.value.toString(), "", "");
+                  }, isOneSecond: false);
+                  // validateFields(stateCtr.text);
+                },
+                title: showSelectedTextInDialog(
+                    name: stateFilterList[index].name,
+                    modelId: stateFilterList[index].id.toString(),
+                    storeId: stateId.value),
+              );
+            },
+          ),
+          searchcontent: getReactiveFormField(
+              node: searchStateNode,
+              controller: searchStatectr,
+              hintLabel: "Search Here",
+              onChanged: (val) {
+                applyFilter(val.toString());
+                update();
+              },
+              isSearch: true,
+              inputType: TextInputType.text,
+              errorText: searchModel.value.error));
+    });
+  }
+
+  void applyFilter(String keyword) {
+    stateFilterList.clear();
+    // for (StateDataList stateList in stateList) {
+    //   if (stateList.name
+    //       .toString()
+    //       .toLowerCase()
+    //       .contains(keyword.toLowerCase())) {
+    //     stateFilterList.add(stateList);
+    //   }
+    // }
+    stateFilterList.refresh();
+    stateFilterList.call();
+    logcat('filterApply', stateFilterList.length.toString());
+    update();
   }
 }
