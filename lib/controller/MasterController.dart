@@ -13,6 +13,7 @@ void validateField({
   bool ispassword = false,
   bool isselectionfield = false,
   bool isEmail = false,
+  bool ispincode = false,
   String? confirmpasswordctr,
   bool isconfirmpassword = false,
   String? mediumgroupvalue,
@@ -62,6 +63,14 @@ void validateField({
         models.value = ValidationModel(val, errorText2, isValidate: false);
       } else if (!emailRegex.hasMatch(val)) {
         models.value = ValidationModel(val, errorText3, isValidate: false);
+      } else {
+        models.value = ValidationModel(val, null, isValidate: true);
+      }
+    } else if (ispincode) {
+      if (val.isEmpty) {
+        models.value = ValidationModel(val, errorText1, isValidate: false);
+      } else if (val.length != 6) {
+        models.value = ValidationModel(val, errorText2, isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }

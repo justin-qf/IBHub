@@ -267,6 +267,7 @@ Widget getTextField(
     bool isobscure = false,
     Function? obscureFunction,
     bool useOnChanged = true,
+    Function? ontap,
     context}) {
   Widget formfield = getReactiveFormField(
     isDropdown: isdropdown ? true : false,
@@ -293,6 +294,7 @@ Widget getTextField(
     isBorderSideEnable: isBorderSideEnable ? true : false,
     obscuretext: isobscure ? true : false,
     obscureTextFunction: obscureFunction,
+    onTap: ontap
   );
 
   return Column(

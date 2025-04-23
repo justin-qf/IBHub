@@ -1,12 +1,17 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class Signupscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -231,7 +236,7 @@ class Signupscreencontroller extends GetxController {
   final ImagePicker _picker = ImagePicker();
   Rxn<XFile> imageFile = Rxn<XFile>();
 
-  String imagePath = "";
+  // String imagePath = "";
 
   Future<void> _pickImage({bool iscamera = false}) async {
     final XFile? image = await _picker.pickImage(
@@ -240,57 +245,52 @@ class Signupscreencontroller extends GetxController {
 
     if (image != null) {
       print('Picked Image Path: ${image.path}');
-      imagePath = image.path;
+      // imagePath = image.path;
       imageFile.value = image;
+      final String fileName = path.basename(image.path);
+      visitingcardCtr.text = fileName;
       update(); // not needed if you're using Obx(), but required for GetBuilder
     } else {
       print('No image selected');
     }
   }
 
-  Future<void> showOptionsCupertinoDialog({required context}) async {
-    showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(EditprofileScreenconst.chooseOptions),
-          content: Text(EditprofileScreenconst.selectPicture),
+  void showOptionsCupertinoDialog({required BuildContext context}) {
+  showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: "Background",
+    barrierColor:  black.withOpacity(0.6), // Dark overlay, no blur
+    transitionDuration: Duration(milliseconds: 200),
+    pageBuilder: (context, animation1, animation2) {
+      return Center(
+        child: CupertinoAlertDialog(
+          title: Text('Choose an Option'),
+          content: Text(
+            'Select how you want to add the picture.',
+            style: TextStyle(fontFamily: dM_sans_medium),
+          ),
           actions: [
             CupertinoDialogAction(
+              child: Text('Camera', style: TextStyle(color: black)),
               onPressed: () {
                 Navigator.of(context).pop();
-                _pickImage(iscamera: false); // Open Photo Gallery
+                _pickImage(iscamera: true);
               },
-              child: Text(EditprofileScreenconst.photoGallery),
             ),
             CupertinoDialogAction(
+              child: Text('Gallery', style: TextStyle(color: black)),
               onPressed: () {
                 Navigator.of(context).pop();
-                _pickImage(iscamera: true); // Open Camera
+                _pickImage(iscamera: false);
               },
-              child: Text(EditprofileScreenconst.camera),
-            ),
-            CupertinoDialogAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-                imageFile.value = null;
-                imagePath = "";
-                update();
-              },
-              isDestructiveAction: true,
-              child: Text(EditprofileScreenconst.removePicture),
-            ),
-            CupertinoDialogAction(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cancel
-              },
-              child: Text(EditprofileScreenconst.cancel),
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   validateFields(val,
       {model,
@@ -305,6 +305,7 @@ class Signupscreencontroller extends GetxController {
       isemail = false,
       isconfirmpassword = false,
       confirmpasswordctr,
+      isPincode = false,
       shouldEnableButton = true}) {
     return validateField(
         iscomman: iscomman,
@@ -318,6 +319,7 @@ class Signupscreencontroller extends GetxController {
         isnumber: isnumber,
         ispassword: ispassword,
         isEmail: isemail,
+        ispincode: isPincode,
         isconfirmpassword: isconfirmpassword,
         confirmpasswordctr: confirmpasswordctr,
         shouldEnableButton: shouldEnableButton,
