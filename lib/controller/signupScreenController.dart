@@ -88,6 +88,12 @@ class Signupscreencontroller extends GetxController {
     confpassCtr = TextEditingController();
   }
 
+  @override
+  void onInit() {
+    super.onInit();
+    print('call signup screeen');
+  }
+
   void togglePassObscureText() {
     _obsecureTextPass.value = !_obsecureTextPass.value;
     update();
@@ -187,51 +193,7 @@ class Signupscreencontroller extends GetxController {
     super.onClose();
   }
 
-  void resetForm() {
-    // Clear text controllers
-    nameCtr.clear();
-    emailCtr.clear();
-    phoneCtr.clear();
-    bussinessCtr.clear();
-    stateCtr.clear();
-    cityCtr.clear();
-    pincodeCtr.clear();
-    visitingcardCtr.clear();
-    passCtr.clear();
-    confpassCtr.clear();
-
-    // Unfocus all nodes
-    nameNode.unfocus();
-    emailNode.unfocus();
-    phoneNode.unfocus();
-    bussinessNode.unfocus();
-    stateNode.unfocus();
-    cityNode.unfocus();
-    pincodeNode.unfocus();
-    visitingcardNode.unfocus();
-    passNode.unfocus();
-    confpassNode.unfocus();
-
-    // Reset validation models
-    nameModel.value = ValidationModel(null, null, isValidate: false);
-    emailModel.value = ValidationModel(null, null, isValidate: false);
-    phoneModel.value = ValidationModel(null, null, isValidate: false);
-    bussinessModel.value = ValidationModel(null, null, isValidate: false);
-    stateModel.value = ValidationModel(null, null, isValidate: false);
-    cityModel.value = ValidationModel(null, null, isValidate: false);
-    pincodeModel.value = ValidationModel(null, null, isValidate: false);
-    visitingCardModel.value = ValidationModel(null, null, isValidate: false);
-    passModel.value = ValidationModel(null, null, isValidate: false);
-    confpassModel.value = ValidationModel(null, null, isValidate: false);
-
-    // Reset reactive variables
-    isFormInvalidate.value = false;
-    _isLoading.value = false;
-    _obsecureTextPass.value = true;
-    _obsecureTextConPass.value = true;
-
-    update();
-  }
+ 
 
   final ImagePicker _picker = ImagePicker();
   Rxn<XFile> imageFile = Rxn<XFile>();
@@ -256,41 +218,41 @@ class Signupscreencontroller extends GetxController {
   }
 
   void showOptionsCupertinoDialog({required BuildContext context}) {
-  showGeneralDialog(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: "Background",
-    barrierColor:  black.withOpacity(0.6), // Dark overlay, no blur
-    transitionDuration: Duration(milliseconds: 200),
-    pageBuilder: (context, animation1, animation2) {
-      return Center(
-        child: CupertinoAlertDialog(
-          title: Text('Choose an Option'),
-          content: Text(
-            'Select how you want to add the picture.',
-            style: TextStyle(fontFamily: dM_sans_medium),
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Background",
+      barrierColor: black.withOpacity(0.6), // Dark overlay, no blur
+      transitionDuration: Duration(milliseconds: 200),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: CupertinoAlertDialog(
+            title: Text('Choose an Option'),
+            content: Text(
+              'Select how you want to add the picture.',
+              style: TextStyle(fontFamily: dM_sans_medium),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                child: Text('Camera', style: TextStyle(color: black)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _pickImage(iscamera: true);
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text('Gallery', style: TextStyle(color: black)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _pickImage(iscamera: false);
+                },
+              ),
+            ],
           ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text('Camera', style: TextStyle(color: black)),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _pickImage(iscamera: true);
-              },
-            ),
-            CupertinoDialogAction(
-              child: Text('Gallery', style: TextStyle(color: black)),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _pickImage(iscamera: false);
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   validateFields(val,
       {model,

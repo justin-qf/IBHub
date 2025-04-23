@@ -60,22 +60,20 @@ class CustomParentScaffold extends StatelessWidget {
             }
           },
           child: isExtendBodyScreen
-              ? SafeArea(
-                child: Scaffold(
-                    key: scaffoldKey,
-                    drawer: isdraweruse
-                        ? Align(
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(height: 80.h, child: drower))
-                        : null,
-                    drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-                    bottomNavigationBar: bottomNavigationBar,
-                    backgroundColor: bgColor,
-                    extendBodyBehindAppBar: true,
-                    resizeToAvoidBottomInset: isSmallDevice(context),
-                    body: body,
-                  ),
-              )
+              ? Scaffold(
+                  key: scaffoldKey,
+                  drawer: isdraweruse
+                      ? Align(
+                          alignment: Alignment.topLeft,
+                          child: SizedBox(height: 80.h, child: drower))
+                      : null,
+                  drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+                  bottomNavigationBar: bottomNavigationBar,
+                  backgroundColor: bgColor,
+                  extendBodyBehindAppBar: true,
+                  resizeToAvoidBottomInset: isSmallDevice(context),
+                  body: body,
+                )
               : SafeArea(
                 child: Scaffold(
                     key: scaffoldKey,

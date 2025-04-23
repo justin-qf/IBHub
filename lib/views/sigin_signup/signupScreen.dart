@@ -10,6 +10,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signupScreenController.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class Signupscreen extends StatelessWidget {
@@ -31,14 +32,16 @@ class Signupscreen extends StatelessWidget {
         child: Column(
           children: [
             getDynamicSizedBox(height: 2.h),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Create Your Account',
-                style: TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Create Your Account',
+                  style: TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
+                ),
               ),
             ),
-            getDynamicSizedBox(height: 4.h),
+            getDynamicSizedBox(height: 2.h),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -46,7 +49,7 @@ class Signupscreen extends StatelessWidget {
                 style: TextStyle(fontFamily: dM_sans_semiBold, color: grey),
               ),
             ),
-            getDynamicSizedBox(height: 2.h),
+            getDynamicSizedBox(height: 4.h),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -187,7 +190,7 @@ class Signupscreen extends StatelessWidget {
                     Obx(() {
                       return getTextField(
                         useOnChanged: false,
-                        label: SignUpConstant.visitingLabel,
+                        label: SignUpConstant.logoLabel,
                         ctr: ctr.visitingcardCtr,
                         node: ctr.visitingcardNode,
                         model: ctr.visitingCardModel.value,
@@ -297,8 +300,8 @@ class Signupscreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    ctr.resetForm();
-                    Get.back();
+                    // ctr.resetForm();
+                    Get.offAll(Signinscreen());
                   },
                   child: Container(
                     padding: EdgeInsets.only(left: 1.w),

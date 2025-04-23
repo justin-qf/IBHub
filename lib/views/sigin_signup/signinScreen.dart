@@ -6,6 +6,7 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
+import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signinScreenController.dart';
 import 'package:ibh/utils/log.dart';
@@ -18,6 +19,7 @@ class Signinscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Signinscreencontroller ctr = Get.put(Signinscreencontroller());
+    Statusbar().trasparentStatusbar();
     return CustomParentScaffold(
         isExtendBodyScreen: true,
         onWillPop: () async {
@@ -32,12 +34,14 @@ class Signinscreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   getDynamicSizedBox(height: 2.h),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Login To Your Account',
-                      style:
-                          TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
+                  SafeArea(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Login To Your Account',
+                        style: TextStyle(
+                            fontFamily: dM_sans_bold, fontSize: 20.sp),
+                      ),
                     ),
                   ),
                   getDynamicSizedBox(height: 4.h),
@@ -94,12 +98,13 @@ class Signinscreen extends StatelessWidget {
                           });
                     },
                   ),
+                  getDynamicSizedBox(height: 2.h),
                   Container(
                     margin: EdgeInsets.only(left: 55.w),
                     child: GestureDetector(
                       onTap: () {
                         logcat('Print:', 'goto forgot password screen');
-                        ctr.resetForm();
+                        // ctr.resetForm();
 
                         // Get.to(() => Forgotpasswordscreen(
                         //       loginController: ctr,
@@ -186,11 +191,11 @@ class Signinscreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => Signupscreen());
+                      Get.offAll(Signupscreen());
 
                       print('go to signup screen');
 
-                      ctr.resetForm();
+                      // ctr.resetForm();
                       logcat('print:', 'click');
                     },
                     child: Container(

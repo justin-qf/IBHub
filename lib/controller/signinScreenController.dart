@@ -40,6 +40,12 @@ class Signinscreencontroller extends GetxController {
   }
 
   @override
+  void onInit() {
+    super.onInit();
+    print('call signin screeen');
+  }
+
+  @override
   void onClose() {
     // Dispose controllers and focus nodes
     emailNode.dispose();
@@ -59,21 +65,21 @@ class Signinscreencontroller extends GetxController {
     super.onClose();
   }
 
-  void resetForm() {
-    emailCtr.clear();
-    passCtr.clear();
-    emailNode.unfocus();
-    passNode.unfocus();
+  // void resetForm() {
+  //   emailCtr.clear();
+  //   passCtr.clear();
+  //   emailNode.unfocus();
+  //   passNode.unfocus();
 
-    emailModel.value = ValidationModel(null, null, isValidate: false);
-    passModel.value = ValidationModel(null, null, isValidate: false);
+  //   emailModel.value = ValidationModel(null, null, isValidate: false);
+  //   passModel.value = ValidationModel(null, null, isValidate: false);
 
-    isFormInvalidate.value = false;
-    _isLoading.value = false;
-    _obsecureTextPass.value = true;
+  //   isFormInvalidate.value = false;
+  //   _isLoading.value = false;
+  //   _obsecureTextPass.value = true;
 
-    // update();
-  }
+  //   // update();
+  // }
 
   void enableSignUpButton() {
     if (emailModel.value.isValidate == false) {
@@ -97,7 +103,7 @@ class Signinscreencontroller extends GetxController {
     errorText1,
     errorText2,
     errorText3,
-    isemail=false,
+    isemail = false,
     ispassword = false,
   }) {
     return validateField(

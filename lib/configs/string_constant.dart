@@ -254,7 +254,7 @@ class SignUpConstant {
   static const mediumHint = 'Select Medium';
   static const addressHint = 'Enter Address';
   static const cityHint = 'Select City';
-  static const pickHint = 'Select Card';
+  static const pickHint = 'Select Logo';
   static const stdhint = 'Enter Standard';
   static const whatsappHint = 'Enter Whatsapp Number';
   static const contactNumHint = 'Enter Contact Number';
@@ -273,8 +273,7 @@ class SignUpConstant {
       'Whatsapp number must be exactly 10 digits.';
   static const contactNumLengthHint =
       'Contact number must be exactly 10 digits.';
-  static const pincodeNumLengthHint =
-      'Pincode must be exactly 6 digits.';
+  static const pincodeNumLengthHint = 'Pincode must be exactly 6 digits.';
 
   static const required = ' *';
   static const requiredText = '* Indicates a required field';
@@ -287,7 +286,7 @@ class SignUpConstant {
   static const schoolLabel = 'School';
   static const addressLabel = 'Address';
   static const cityLabel = 'City';
-  static const visitingLabel = 'Visiting Card';
+  static const logoLabel = 'Logo';
   static const whatsappLabel = 'WhatsApp No';
   static const contactLabel = 'Contact No';
   static const pinCodeLabel = 'Pincode';
