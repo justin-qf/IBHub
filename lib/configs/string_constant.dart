@@ -215,7 +215,7 @@ class SubjectScreenConst {
 class LoginConst {
   static const title = 'Sign In';
   static const mobileHint = 'Enter Phone Number';
-  static const mobileLabel = 'Mobile No';
+  static const emailLabel = 'Email No';
   static const signup = 'Sign up';
   static const subText = "Sign Into Your Account";
   static const buttonLabel = 'LOGIN';

@@ -9,7 +9,7 @@ class CustomParentScaffold extends StatelessWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final Widget body;
   Future<bool> Function()? onWillPop;
-
+  bool isExtendBodyScreen;
   final Widget? floatingActionBtn;
   Widget? bottomNavigationBar;
   bool isdraweruse;
@@ -28,6 +28,7 @@ class CustomParentScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.isdraweruse = false,
     this.drower,
+    this.isExtendBodyScreen = false,
     this.drawerEnableOpenDragGesture = false,
   });
 
@@ -58,18 +59,37 @@ class CustomParentScaffold extends StatelessWidget {
               }
             }
           },
-          child: Scaffold(
-            key: scaffoldKey,
-            drawer: isdraweruse
-                ? Align(
-                    alignment: Alignment.topLeft,
-                    child: SizedBox(height: 80.h, child: drower))
-                : null,
-            drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-            bottomNavigationBar: bottomNavigationBar,
-            backgroundColor: bgColor,
-            body: body,
-          ),
+          child: isExtendBodyScreen
+              ? SafeArea(
+                child: Scaffold(
+                    key: scaffoldKey,
+                    drawer: isdraweruse
+                        ? Align(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(height: 80.h, child: drower))
+                        : null,
+                    drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+                    bottomNavigationBar: bottomNavigationBar,
+                    backgroundColor: bgColor,
+                    extendBodyBehindAppBar: true,
+                    resizeToAvoidBottomInset: isSmallDevice(context),
+                    body: body,
+                  ),
+              )
+              : SafeArea(
+                child: Scaffold(
+                    key: scaffoldKey,
+                    drawer: isdraweruse
+                        ? Align(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(height: 80.h, child: drower))
+                        : null,
+                    drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+                    bottomNavigationBar: bottomNavigationBar,
+                    backgroundColor: bgColor,
+                    body: body,
+                  ),
+              ),
         );
       }),
     );
