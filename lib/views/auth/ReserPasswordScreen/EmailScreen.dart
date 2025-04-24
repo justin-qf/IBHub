@@ -30,6 +30,7 @@ class EmailScreenState extends State<EmailScreen> {
     Statusbar().trasparentStatusbar();
     return CustomParentScaffold(
       onWillPop: () async {
+        Get.back(result: true);
         return true;
       },
       onTap: () {

@@ -5,6 +5,7 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home:  Splashscreen(),
+        home:  Updateprofilescreen(),
         defaultTransition: Transition.fadeIn,
       );
     });

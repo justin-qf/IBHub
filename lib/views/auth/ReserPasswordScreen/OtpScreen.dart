@@ -67,6 +67,7 @@ class OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return CustomParentScaffold(
       onWillPop: () async {
+        Get.back(result: true);
         return true;
       },
       onTap: () {

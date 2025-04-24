@@ -79,33 +79,64 @@ void commonGetApiCallFormate(context,
     InternetController? networkManager,
     bool? isFromPartyList}) async {
   apisLoading!(true);
-  try {
-    if (networkManager!.connectionType.value == 0) {
+
+  if (networkManager!.connectionType.value == 0) {
+    Future.delayed(Duration.zero, () {
       showDialogForScreen(context, title!, Connection.noConnection,
           callback: () {
         Get.back();
       });
-      return;
-    }
-    var response = await Repository.get({}, apiEndPoint!, allowHeader: true);
-    apisLoading(false);
-    var responseData = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      if (responseData['status'] == true) {
-        onResponse(responseData);
-      } else {
-        showDialogForScreen(context, title!, responseData['message'],
-            callback: () {});
-      }
-    } else {
-      isFromPartyList != true
-          ? showDialogForScreen(context, title!,
-              responseData['message'] ?? Connection.servererror,
-              callback: () {})
-          : Container();
-    }
-  } catch (e) {
-    apisLoading(false);
-    logcat('Exception', e);
+    });
+    // showDialogForScreen(context, title!, Connection.noConnection, callback: () {
+    //   Get.back();
+    // });
+    return;
   }
+  var response =
+      await Repository.get({}, apiEndPoint!, allowHeader: allowHeader);
+  apisLoading(false);
+  var responseData = jsonDecode(response.body);
+  if (response.statusCode == 200) {
+    if (responseData['success'] == true) {
+      onResponse(responseData);
+    } else {
+      showDialogForScreen(context, title!, responseData['message'],
+          callback: () {});
+    }
+  } else {
+    isFromPartyList != true
+        ? showDialogForScreen(
+            context, title!, responseData['message'] ?? Connection.servererror,
+            callback: () {})
+        : Container();
+  }
+  // try {
+  //   if (networkManager!.connectionType.value == 0) {
+  //     showDialogForScreen(context, title!, Connection.noConnection,
+  //         callback: () {
+  //       Get.back();
+  //     });
+  //     return;
+  //   }
+  //   var response = await Repository.get({}, apiEndPoint!, allowHeader: true);
+  //   apisLoading(false);
+  //   var responseData = jsonDecode(response.body);
+  //   if (response.statusCode == 200) {
+  //     if (responseData['success'] == true) {
+  //       onResponse(responseData);
+  //     } else {
+  //       showDialogForScreen(context, title!, responseData['message'],
+  //           callback: () {});
+  //     }
+  //   } else {
+  //     isFromPartyList != true
+  //         ? showDialogForScreen(context, title!,
+  //             responseData['message'] ?? Connection.servererror,
+  //             callback: () {})
+  //         : Container();
+  //   }
+  // } catch (e) {
+  //   apisLoading(false);
+  //   logcat('Exception', e);
+  // }
 }

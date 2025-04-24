@@ -91,3 +91,4 @@ class User {
         "token": token,
       };
 }
+

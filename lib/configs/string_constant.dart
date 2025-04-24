@@ -320,6 +320,7 @@ class SignUpConstant {
   static const next = 'Next';
   static const back = 'Back';
   static const stateList = 'State List';
+  static const cityList = 'City List';
 }
 
 class OtpConstants {

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -13,28 +11,44 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
-import 'package:ibh/controller/signupScreenController.dart';
+import 'package:ibh/controller/updateProfileController.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:sizer/sizer.dart';
 
-class Signupscreen extends StatefulWidget {
-  const Signupscreen({super.key});
+class Updateprofilescreen extends StatefulWidget {
+  const Updateprofilescreen({super.key});
 
   @override
-  State<Signupscreen> createState() => _SignupscreenState();
+  State<Updateprofilescreen> createState() => _UpdateprofilescreenState();
 }
 
-class _SignupscreenState extends State<Signupscreen> {
-  final Signupscreencontroller ctr = Get.put(Signupscreencontroller());
+class _UpdateprofilescreenState extends State<Updateprofilescreen> {
+  final Updateprofilecontroller ctr = Get.put(Updateprofilecontroller());
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   ctr.getState(context);
+  // }
+
+  // bool _isInitialized = false;
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (!_isInitialized) {
+  //     ctr.getState(context); // ✅ now it's safe to use context
+  //     _isInitialized = true;
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     Statusbar().trasparentStatusbar();
+
     return CustomParentScaffold(
       isExtendBodyScreen: true,
       onWillPop: () async {
-        ctr.resetForm();
-        ctr.unfocusAll();
         return true;
       },
       onTap: () {
@@ -81,7 +95,7 @@ class _SignupscreenState extends State<Signupscreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Create Your Account',
+                        'Edit Profile',
                         style: TextStyle(
                             fontFamily: dM_sans_bold,
                             fontSize: 24.sp,
@@ -92,7 +106,7 @@ class _SignupscreenState extends State<Signupscreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Discover opportunities, build your brand\nSign up and showcase your skills to the world.',
+                        'Update your details,\nunlock new opportunities.',
                         style: TextStyle(
                             fontFamily: dM_sans_semiBold, color: grey),
                       ),
@@ -169,97 +183,111 @@ class _SignupscreenState extends State<Signupscreen> {
                             isRequired: true);
                       },
                     ),
-                    // Obx(() {
-                    //   return getTextField(
-                    //     useOnChanged: false,
-                    //     label: SignUpConstant.stateLabel,
-                    //     ctr: ctr.stateCtr,
-                    //     node: ctr.stateNode,
-                    //     model: ctr.stateModel.value,
-                    //     hint: SignUpConstant.stateHint,
-                    //     wantsuffix: true,
-                    //     isenable: false,
-                    //     isdropdown: true,
-                    //     usegesture: true,
-                    //     isRequired: true,
-                    //     context: context,
-                    //     gestureFunction: () {
-                    //       ctr.searchStatectr.text = "";
-                    //       showDropdownMessage(context, ctr.setStateListDialog(),
-                    //           SignUpConstant.stateList,
-                    //           isShowLoading: ctr.stateFilterList, onClick: () {
-                    //         ctr.applyFilter('');
-                    //       }, refreshClick: () {
-                    //         futureDelay(() {
-                    //           // ctr.getStateApi(context, "");
-                    //         }, isOneSecond: false);
-                    //       });
-                    //       ctr.unfocusAll();
-                    //       // ctr.showSubjectSelectionPopups(context);
-                    //     },
-                    //   );
-                    // }),
-                    // Obx(() {
-                    //   return getTextField(
-                    //     useOnChanged: false,
-                    //     label: SignUpConstant.cityLabel,
-                    //     ctr: ctr.stateCtr,
-                    //     node: ctr.stateNode,
-                    //     model: ctr.stateModel.value,
-                    //     hint: SignUpConstant.cityHint,
-                    //     wantsuffix: true,
-                    //     isenable: false,
-                    //     isdropdown: true,
-                    //     usegesture: true,
-                    //     isRequired: true,
-                    //     context: context,
-                    //     gestureFunction: () {
-                    //       ctr.unfocusAll();
-                    //       // ctr.showSubjectSelectionPopups(context);
-                    //     },
-                    //   );
-                    // }),
-                    // Obx(
-                    //   () {
-                    //     return getTextField(
-                    //         label: SignUpConstant.pinCodeLabel,
-                    //         ctr: ctr.pincodeCtr,
-                    //         node: ctr.pincodeNode,
-                    //         model: ctr.pincodeModel.value,
-                    //         function: (val) {
-                    //           ctr.validateFields(
-                    //             val,
-                    //             isPincode: true,
-                    //             model: ctr.pincodeModel,
-                    //             errorText1: SignUpConstant.pinNumHint,
-                    //             errorText2: SignUpConstant.pincodeNumLengthHint,
-                    //           );
-                    //         },
-                    //         hint: SignUpConstant.pinNumHint,
-                    //         isNumeric: true,
-                    //         isRequired: true);
-                    //   },
-                    // ),
-                    // Obx(() {
-                    //   return getTextField(
-                    //     useOnChanged: false,
-                    //     label: SignUpConstant.logoLabel,
-                    //     ctr: ctr.visitingcardCtr,
-                    //     node: ctr.visitingcardNode,
-                    //     model: ctr.visitingCardModel.value,
-                    //     hint: SignUpConstant.pickHint,
-                    //     isenable: false,
-                    //     usegesture: true,
-                    //     isRequired: true,
-                    //     context: context,
-                    //     gestureFunction: () {
-                    //       ctr.unfocusAll();
-                    //       ctr.showOptionsCupertinoDialog(context: context);
+                    Obx(() {
+                      return getTextField(
+                        useOnChanged: false,
+                        label: SignUpConstant.stateLabel,
+                        ctr: ctr.stateCtr,
+                        node: ctr.stateNode,
+                        model: ctr.stateModel.value,
+                        hint: SignUpConstant.stateHint,
+                        wantsuffix: true,
+                        isenable: false,
+                        isdropdown: true,
+                        usegesture: true,
+                        isRequired: true,
+                        context: context,
+                        gestureFunction: () {
+                          ctr.searchStatectr.text = "";
 
-                    //       // ctr.showSubjectSelectionPopups(context);
-                    //     },
-                    //   );
-                    // }),
+                          ctr.getState(context);
+                          showDropdownMessage(context, ctr.setStateListDialog(),
+                              SignUpConstant.stateList,
+                              isShowLoading: ctr.stateFilterList, onClick: () {
+                            ctr.applyFilter('');
+                          }, refreshClick: () {
+                            futureDelay(() {
+                              ctr.getState(context);
+                            }, isOneSecond: false);
+                          });
+                          ctr.unfocusAll();
+                          // ctr.showSubjectSelectionPopups(context);
+                        },
+                      );
+                    }),
+                    Obx(() {
+                      return getTextField(
+                        useOnChanged: false,
+                        label: SignUpConstant.cityLabel,
+                        ctr: ctr.cityCtr,
+                        node: ctr.cityNode,
+                        model: ctr.cityModel.value,
+                        hint: SignUpConstant.cityHint,
+                        wantsuffix: true,
+                        isenable: false,
+                        isdropdown: true,
+                        usegesture: true,
+                        isRequired: true,
+                        context: context,
+                        gestureFunction: () {
+                          ctr.unfocusAll();
+
+                          ctr.getCity(context);
+                          showDropdownMessage(context, ctr.setStateListDialog(),
+                              SignUpConstant.cityList,
+                              isShowLoading: ctr.cityFilterList, onClick: () {
+                            ctr.applyFilter('');
+                          }, refreshClick: () {
+                            futureDelay(() {
+                              ctr.getCity(context);
+                            }, isOneSecond: false);
+                          });
+
+                          // ctr.showSubjectSelectionPopups(context);
+                        },
+                      );
+                    }),
+                    Obx(
+                      () {
+                        return getTextField(
+                            label: SignUpConstant.pinCodeLabel,
+                            ctr: ctr.pincodeCtr,
+                            node: ctr.pincodeNode,
+                            model: ctr.pincodeModel.value,
+                            function: (val) {
+                              ctr.validateFields(
+                                val,
+                                isPincode: true,
+                                model: ctr.pincodeModel,
+                                errorText1: SignUpConstant.pinNumHint,
+                                errorText2: SignUpConstant.pincodeNumLengthHint,
+                              );
+                            },
+                            hint: SignUpConstant.pinNumHint,
+                            isNumeric: true,
+                            isRequired: true);
+                      },
+                    ),
+                    Obx(() {
+                      return getTextField(
+                        useOnChanged: false,
+                        label: SignUpConstant.logoLabel,
+                        ctr: ctr.visitingcardCtr,
+                        node: ctr.visitingcardNode,
+                        model: ctr.visitingCardModel.value,
+                        hint: SignUpConstant.pickHint,
+                        isenable: false,
+                        usegesture: true,
+                        isRequired: true,
+                        context: context,
+                        gestureFunction: () {
+                          ctr.unfocusAll();
+                          ctr.showOptionsCupertinoDialog(context: context);
+
+                          // ctr.showSubjectSelectionPopups(context);
+                        },
+                      );
+                    }),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.passwordLable,
@@ -324,68 +352,68 @@ class _SignupscreenState extends State<Signupscreen> {
                           });
                     }),
                     getDynamicSizedBox(height: 2.h),
-                    Obx(() {
-                      return ctr.isloading == false
-                          ? Container(
-                              margin: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: getFormButton(context, () async {
-                                if (ctr.isFormInvalidate.value == true) {
-                                  ctr.registerAPI(
-                                    context,
-                                  );
-                                  // ctr.validateLogin(context);
-                                }
-                              }, LoginConst.title,
-                                  validate: ctr.isFormInvalidate.value),
-                            )
-                          : CircularProgressIndicator();
-                    }),
                   ],
                 ),
               ),
             ),
             getDynamicSizedBox(height: 2.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  SignUpConstant.alreadyhaveaccount,
-                  style: TextStyle(color: grey, fontFamily: dM_sans_medium),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    ctr.resetForm();
-                    Get.back(result: true);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.only(left: 1.w),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Text(
-                          SignUpConstant.title,
-                          style: const TextStyle(
-                            fontFamily: dM_sans_medium,
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 1,
-                          // Adjust this value to control the gap
-                          child: Container(
-                            width: 35.w, // Adjust width based on text length
-                            height: 0.2.h, // Thickness of the underline
-                            color: primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            Obx(() {
+              return ctr.isloading == false
+                  ? Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: getFormButton(context, () async {
+                        if (ctr.isFormInvalidate.value == true) {
+                          ctr.registerAPI(
+                            context,
+                          );
+                          // ctr.validateLogin(context);
+                        }
+                      }, ProfileScreenConst.save,
+                          validate: ctr.isFormInvalidate.value),
+                    )
+                  : CircularProgressIndicator();
+            }),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   crossAxisAlignment: CrossAxisAlignment.center,
+            //   children: [
+            //     Text(
+            //       SignUpConstant.alreadyhaveaccount,
+            //       style: TextStyle(color: grey, fontFamily: dM_sans_medium),
+            //     ),
+            //     GestureDetector(
+            //       onTap: () {
+            //         ctr.resetForm();
+            //         Get.back(result: true);
+            //       },
+            //       child: Container(
+            //         padding: EdgeInsets.only(left: 1.w),
+            //         child: Stack(
+            //           alignment: Alignment.center,
+            //           children: [
+            //             Text(
+            //               SignUpConstant.title,
+            //               style: const TextStyle(
+            //                 fontFamily: dM_sans_medium,
+            //                 color: primaryColor,
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
+            //             Positioned(
+            //               bottom: 1,
+            //               // Adjust this value to control the gap
+            //               child: Container(
+            //                 width: 35.w, // Adjust width based on text length
+            //                 height: 0.2.h, // Thickness of the underline
+            //                 color: primaryColor,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             getDynamicSizedBox(height: 3.h)
           ],
         ),

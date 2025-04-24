@@ -87,6 +87,7 @@ class CustomParentScaffold extends StatelessWidget {
                     bottomNavigationBar: bottomNavigationBar,
                     backgroundColor: bgColor,
                     body: body,
+                    resizeToAvoidBottomInset: false,
                   ),
                 ),
         );
