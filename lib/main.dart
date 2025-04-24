@@ -11,6 +11,7 @@ import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/HomeScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 import 'package:ibh/views/services/addserviceScreen.dart';
+import 'package:ibh/views/services/viewserviceScreen.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
@@ -51,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home: AddServicescreen(),
+        home: Viewservicescreen(),
         defaultTransition: Transition.fadeIn,
       );
     });
