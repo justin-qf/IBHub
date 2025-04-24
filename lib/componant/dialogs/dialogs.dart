@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/utils/helper.dart';
@@ -336,38 +337,36 @@ void showMessage(
                 style: TextStyle(
                   fontFamily: fontBold,
                   fontSize:
-                      Device.screenType == ScreenType.mobile ? 15.sp : 8.sp,
+                      Device.screenType == ScreenType.mobile ? 18.sp : 12.sp,
                 ),
               ),
               content: Text(
                 message!,
-                style: const TextStyle(
-                  fontFamily: fontRegular,
-                ),
+                style: const TextStyle(fontFamily: fontRegular),
               ),
               actions: [
-                if (negativeButton!.isNotEmpty)
+                if (negativeButton != null && negativeButton.isNotEmpty)
                   CupertinoDialogAction(
                       child: Text(
                         negativeButton,
                         style: TextStyle(
                             fontSize: Device.screenType == ScreenType.mobile
-                                ? 12.sp
-                                : 6.sp,
+                                ? 17.sp
+                                : 16.sp,
                             fontFamily: fontMedium,
                             color: isDarkMode() ? white : black),
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),
-                if (positiveButton!.isNotEmpty)
+                if (positiveButton != null && positiveButton.isNotEmpty)
                   CupertinoDialogAction(
                       child: Text(
                         positiveButton,
                         style: TextStyle(
                             fontSize: Device.screenType == ScreenType.mobile
-                                ? 12.sp
-                                : 10.sp,
+                                ? 17.sp
+                                : 16.sp,
                             fontFamily: fontMedium,
                             color: isDarkMode()
                                 ? isFromLogin == true
@@ -514,21 +513,27 @@ Future showDropDownDialog(BuildContext context, Widget content, String title) {
       });
 }
 
-void showDropdownMessage(BuildContext context, Widget content, String title,
-    {Function? onClick}) {
+void showDropdownMessage(
+  BuildContext context,
+  Widget content,
+  String title, {
+  Function? onClick,
+  Function? refreshClick,
+  RxList<dynamic>? isShowLoading,
+}) {
   showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              titlePadding: EdgeInsets.zero,
-              title: Padding(
-                padding: EdgeInsets.only(
-                    left: Device.screenType == ScreenType.mobile ? 0.w : 2.9.w),
-                child: Stack(
-                  children: [
-                    Padding(
+            titlePadding: EdgeInsets.zero,
+            title: Padding(
+              padding: EdgeInsets.only(
+                  left: Device.screenType == ScreenType.mobile ? 0.w : 2.9.w),
+              child: Stack(
+                children: [
+                  Padding(
                       padding: EdgeInsets.only(
                         left: Device.screenType == ScreenType.mobile
                             ? 7.w
@@ -536,33 +541,61 @@ void showDropdownMessage(BuildContext context, Widget content, String title,
                         right: 10.w,
                         top: 3.h,
                       ),
-                      child: Text(title,
-                          style: TextStyle(
-                              fontFamily: fontMedium, fontSize: 20.sp)),
-                    ),
-                    Positioned(
-                      top: 1.h,
-                      right: 2.5.w,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (onClick != null) {
-                            onClick();
-                          }
-                          Navigator.of(context).pop();
-                        },
-                        child: Icon(Icons.cancel,
-                            color: black,
-                            size: Device.screenType == ScreenType.mobile
-                                ? 24.sp
-                                : 30.sp),
+                      child: Obx(() {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                  fontFamily: fontMedium, fontSize: 20.sp),
+                            ),
+                            getDynamicSizedBox(width: 2.w),
+                            if (isShowLoading!.isEmpty)
+                              GestureDetector(
+                                onTap: () {
+                                  if (refreshClick != null) {
+                                    refreshClick();
+                                  }
+                                },
+                                child: Icon(
+                                  Icons.refresh_rounded,
+                                  color: black,
+                                  size: Device.screenType == ScreenType.mobile
+                                      ? 24.sp
+                                      : 30.sp,
+                                ),
+                              ),
+                          ],
+                        );
+                      })),
+                  Positioned(
+                    top: 1.h,
+                    right: 2.5.w,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (onClick != null) {
+                          onClick();
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      child: Icon(
+                        Icons.cancel,
+                        color: black,
+                        size: Device.screenType == ScreenType.mobile
+                            ? 24.sp
+                            : 30.sp,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              contentPadding:
-                  EdgeInsets.only(left: 6.7.w, top: 0.5.h, right: 6.7.w),
-              content: content);
+            ),
+            contentPadding:
+                EdgeInsets.only(left: 6.7.w, top: 0.5.h, right: 6.7.w),
+            content: content,
+          );
         });
       });
 }

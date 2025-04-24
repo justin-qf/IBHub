@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/api_handle/apiCallingFormate.dart';
+import 'package:ibh/configs/apicall_constant.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 
 class Signinscreencontroller extends GetxController {
@@ -92,9 +97,19 @@ class Signinscreencontroller extends GetxController {
     update();
   }
 
-//for api use
-  void validateLogin(BuildContext context) async {
-    print('press');
+  void loginAPI(context) async {
+    commonPostApiCallFormate(context,
+        title: LoginConst.title,
+        body: {
+          "email": emailCtr.text.toString().trim(),
+          "password": passCtr.text.toString().trim()
+        },
+        apiEndPoint: ApiUrl.login, onResponse: (data) {
+      var responseDetail = LoginModel.fromJson(data);
+      UserPreferences().saveSignInInfo(responseDetail.data.user);
+      UserPreferences().setToken(responseDetail.data.user.token.toString());
+      // Get.offAll(const MainScreen());
+    }, networkManager: networkManager, isModelResponse: true);
   }
 
   validateFields(

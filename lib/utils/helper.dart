@@ -4,6 +4,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:intl/intl.dart';
+import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 
 bool isDarkMode() {
@@ -157,18 +158,18 @@ void hideKeyboard(context) {
   }
 }
 
-// getPinTheme() {
-//   return PinTheme(
-//     width: 16.w,
-//     height: 7.8.h,
-//     textStyle: TextStyle(fontSize: 16.sp),
-//     decoration: BoxDecoration(
-//       color: const Color.fromRGBO(222, 231, 240, .57),
-//       borderRadius: BorderRadius.circular(20),
-//       border: Border.all(color: transparent),
-//     ),
-//   );
-// }
+getPinTheme() {
+  return PinTheme(
+    width: 16.w,
+    height: 7.8.h,
+    textStyle: TextStyle(fontSize: 16.sp),
+    decoration: BoxDecoration(
+      color: const Color.fromRGBO(222, 231, 240, .57),
+      borderRadius: BorderRadius.circular(15),
+      border: Border.all(color: transparent),
+    ),
+  );
+}
 
 DataColumn setColumn(title) {
   return DataColumn(

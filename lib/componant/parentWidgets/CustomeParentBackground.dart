@@ -5,6 +5,7 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class CustomParentScaffold extends StatelessWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final Widget body;
@@ -46,11 +47,10 @@ class CustomParentScaffold extends StatelessWidget {
             ConnectivityResult.none) {
           return checkInternet();
         }
-
         Color bgColor = Theme.of(context).scaffoldBackgroundColor;
         return PopScope(
           canPop: onWillPop == null, // Allow pop if no callback
-          onPopInvokedWithResult: (didPop, result) async {
+          onPopInvoked: (didPop) async {
             if (didPop) return; // If already popped, do nothing
             if (onWillPop != null) {
               final shouldPop = await onWillPop!();
@@ -75,7 +75,7 @@ class CustomParentScaffold extends StatelessWidget {
                   body: body,
                 )
               : SafeArea(
-                child: Scaffold(
+                  child: Scaffold(
                     key: scaffoldKey,
                     drawer: isdraweruse
                         ? Align(
@@ -87,7 +87,7 @@ class CustomParentScaffold extends StatelessWidget {
                     backgroundColor: bgColor,
                     body: body,
                   ),
-              ),
+                ),
         );
       }),
     );
@@ -223,7 +223,6 @@ class CustomParentScaffold extends StatelessWidget {
 //                           bottomNavigationBar: bottomNavigationBar,
 //                           backgroundColor: bgColor,
 //                           body: body,
-
 //                         ),
 //                       );
 //       }),

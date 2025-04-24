@@ -3,14 +3,13 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/utils/helper.dart';
 
 class Statusbar {
-  void trasparentStatusbar({isprofileScreen = false}) {
-    // final bool dark = isDarkMode();
-
+  void trasparentStatusbar() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: transparent,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light
-          ));
+      statusBarIconBrightness:
+          isDarkMode() ? Brightness.light : Brightness.dark,
+      statusBarColor: isDarkMode() ? darkBackgroundColor : transparent,
+      statusBarBrightness: isDarkMode() ? Brightness.dark : Brightness.light,
+    ));
   }
 
   void trasparentStatusbarProfile(bool isLightStatusBar) {

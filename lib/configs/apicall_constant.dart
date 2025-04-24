@@ -5,15 +5,15 @@ class ApiUrl {
   // static const imageUrl = '${baseUrl}swooosh_admin/public/storage/';
 
   //LIVE
-  static const liveUrl = "https://queryfinders.com/swooosh_new/";
+  static const liveUrl = "http://192.168.1.21/indian_business_hub/";
   static const buildApiUrl = '${liveUrl}api/';
   static const imageUrl = '${liveUrl}public/storage';
 
   //AUTH
   static const login = "login";
-  static const forgotPass = "forgot_password";
-  static const verifyForgotOtp = "check_forgot_password_otp";
-  static const updateForgotPassword = "update_forgot_password";
+  static const forgotPass = "forgot-password-otp";
+  static const verifyForgotOtp = "verify-otp";
+  static const updateForgotPassword = "reset-password";
   static const changePassword = "change_password";
   static const getState = 'state_list';
   static const getCity = 'city_list';

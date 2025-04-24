@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/assets_constant.dart';
@@ -27,29 +26,27 @@ Future getpopup(BuildContext context,
         ),
         content: Text(
           message,
-          style: TextStyle(fontFamily: dM_sans_medium),
+          style: const TextStyle(fontFamily: dM_sans_medium),
         ),
         actions: [
           if (istimerrunout == false)
             CupertinoDialogAction(
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: black),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: black),
+                ),
+                onPressed: () {
+                  Get.back();
+                }),
+          CupertinoDialogAction(
+              child: const Text(
+                'Confirm',
+                style: TextStyle(color: green),
               ),
               onPressed: () {
                 Get.back();
-              },
-            ),
-          CupertinoDialogAction(
-            child: Text(
-              'Confirm',
-              style: TextStyle(color: green),
-            ),
-            onPressed: () {
-              Get.back();
-              function();
-            },
-          )
+                function();
+              })
         ],
       );
     },
@@ -67,7 +64,7 @@ Future openDialogBox(context, {title, desc, function}) async {
           Center(
             child: Text(
               title,
-              style: TextStyle(fontFamily: dM_sans_medium),
+              style: const TextStyle(fontFamily: dM_sans_medium),
             ),
           ),
           Positioned(
@@ -195,7 +192,7 @@ PreferredSizeWidget getTabbar(
                   labelStyle:
                       TextStyle(fontSize: 17.sp, fontFamily: dM_sans_bold),
                   splashFactory: NoSplash.splashFactory,
-                  overlayColor: WidgetStatePropertyAll(transparent),
+                  // overlayColor: WidgetStatePropertyAll(transparent),
                   labelPadding: EdgeInsets.symmetric(horizontal: 3.w),
                   tabs: tabs,
                   // tabtitles.map((title) => Tab(text: title)).toList(),
