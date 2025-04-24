@@ -74,7 +74,7 @@ class Repository {
     logcat("Token::::", token.toString());
     Map<String, String> headers = {
       'Content-Type': "multipart/form-data",
-      'Authorization': token,
+      'Authorization': "Bearer " + token,
     };
     var response = await client.get(buildUrl(endPoint),
         headers: allowHeader == true ? headers : await buildHeader);

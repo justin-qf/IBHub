@@ -10,6 +10,7 @@ import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -47,12 +48,12 @@ class Signinscreencontroller extends GetxController {
   @override
   void onClose() {
     // Dispose controllers and focus nodes
-    emailNode.dispose();
-    passNode.dispose();
-    emailCtr.dispose();
-    passCtr.dispose();
-    emailCtr.clear();
-    passCtr.clear();
+    // emailNode.dispose();
+    // passNode.dispose();
+    // emailCtr.dispose();
+    // passCtr.dispose();
+    // emailCtr.clear();
+    // passCtr.clear();
 
     // Reset all reactive variables
     emailModel.value = ValidationModel(null, null, isValidate: false);
@@ -102,7 +103,7 @@ class Signinscreencontroller extends GetxController {
       var responseDetail = LoginModel.fromJson(data);
       UserPreferences().saveSignInInfo(responseDetail.data.user);
       UserPreferences().setToken(responseDetail.data.user.token.toString());
-      // Get.offAll(const MainScreen());
+      Get.offAll(const MainScreen());
     }, networkManager: networkManager, isModelResponse: true);
   }
 

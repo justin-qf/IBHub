@@ -72,9 +72,7 @@ getFormButton(BuildContext context, Function fun, str,
             : grey,
         boxShadow: [
           BoxShadow(
-              color: validate
-                  ? black.withOpacity(0.2)
-                  : grey.withOpacity(0.2),
+              color: validate ? black.withOpacity(0.2) : grey.withOpacity(0.2),
               blurRadius: 10.0,
               offset: const Offset(0, 1),
               spreadRadius: 3.0)

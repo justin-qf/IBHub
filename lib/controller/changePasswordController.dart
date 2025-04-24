@@ -4,8 +4,6 @@ import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
-import 'package:ibh/models/login_model.dart';
-import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';

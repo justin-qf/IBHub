@@ -1,13 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/get_core.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/utils/helper.dart';
-
 import 'package:sizer/sizer.dart';
 import 'package:get/get.dart' as getx;
 
@@ -598,7 +596,7 @@ getCommonToolbar(String title,
                           ? white
                           : black,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18.sp)),
+                  fontSize: 20.sp)),
         ),
       ),
       if (isFilter == true)

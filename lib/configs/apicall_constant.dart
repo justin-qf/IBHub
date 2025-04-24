@@ -17,4 +17,8 @@ class ApiUrl {
   static const changePassword = "change_password";
   static const getState = 'state_list';
   static const getCity = 'city_list';
+  static const getCategories = 'categories/dropdown';
+  static const getCategorieList = 'categories/list';
+  static const getSearch = 'searchlist';
+  static const logout = 'logout';
 }

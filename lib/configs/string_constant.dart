@@ -240,6 +240,28 @@ class LoginConst {
       'log in to unlock new lessons, test your skills, and achieve your goals. Let\'s make progress together !';
 }
 
+class DashboardText {
+  static const dashboard = 'Dashboard';
+  static const addtoCart = 'Add to Cart';
+  static const categoryTitle = 'Category';
+  static const trendingTitle = 'Trending';
+  static const populerTitle = 'Popular';
+  static const blogTitle = 'Blogs';
+  static const addprescription = 'Add\nPrescription';
+  static const viewmedicalhistory = "View Medical\nHistory";
+  static const addfamilymember = 'Add Family\nMember';
+  static const viewuploads = 'View\nUploads';
+  static const seeAll = 'See All';
+  static const text =
+      'Doctors are people \nwho practice medicine \nDoctors are trained to \nkeep people healthy \nand to heal the sick.';
+}
+
+class SearchScreenConstant {
+  static const title = 'Search';
+  static const hint = 'Search Here....';
+  static const cancle = 'Cancle';
+}
+
 class SignUpConstant {
   static const title = 'Sign In';
   static const signup = 'Sign Up';
@@ -519,7 +541,8 @@ class ProfileScreenConstant {
 }
 
 class BottomConstant {
-  static const home = 'Home Screen';
+  static const home = 'Home';
+  static const search = 'Search';
   static const party = 'Retailer';
   static const orderHistory = 'Order History';
   static const profile = 'Profile';
@@ -527,6 +550,12 @@ class BottomConstant {
   static const tryAgain = 'Try Again';
   static const close = 'Close';
   static const retry = 'Retry';
+}
+
+class CategoryScreenConstant {
+  static const title = "Category";
+  static const subCategorytitle = "Sub Category";
+  static const innerSubCategorytitle = "Inner Sub Category";
 }
 
 class ResetPasstext {
@@ -590,12 +619,6 @@ class Common {
 class Connection {
   static const noConnection = 'No Internet Connection';
   static const servererror = 'Server Error';
-}
-
-class SearchScreenConstant {
-  static const title = 'Search';
-  static const hint = 'Search Here....';
-  static const cancle = 'Cancle';
 }
 
 class AddTheme {

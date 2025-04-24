@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -13,6 +13,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/sigin_signup/signinScreen.dart';
 
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:get/get.dart' as getx;
@@ -272,6 +273,78 @@ Future<Object?> popupDialogs(
                                   fontFamily: fontBold,
                                   fontWeight: FontWeight.bold)))
                     ])));
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      });
+}
+
+Future<Object?> logoutPopupDialogs(BuildContext context) {
+  return showGeneralDialog(
+      barrierColor: black.withOpacity(0.6),
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+              opacity: a1.value,
+              child: CupertinoAlertDialog(
+                title: const Text(
+                  "Logout",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: const Text(
+                  "Are you sure want to logout?",
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: black,
+                    fontFamily: fontMedium,
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    isDefaultAction: true,
+                    isDestructiveAction: true,
+                    child: const Text("No",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: black,
+                          fontFamily: fontBold,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      // Get.find<ProfileController>().logoutApi(context);
+                      Navigator.pop(context);
+                      UserPreferences().logout();
+                      Get.offAll(const Signinscreen());
+                    },
+                    isDefaultAction: true,
+                    isDestructiveAction: true,
+                    child: const Text("Yes",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: black,
+                          fontFamily: fontBold,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  // The "No" button
+                ],
+              )),
+        );
       },
       transitionDuration: const Duration(milliseconds: 200),
       barrierDismissible: true,
