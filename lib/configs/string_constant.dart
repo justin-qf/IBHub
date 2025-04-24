@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }
@@ -260,6 +262,23 @@ class SearchScreenConstant {
   static const title = 'Search';
   static const hint = 'Search Here....';
   static const cancle = 'Cancle';
+}
+
+class ServicesScreenConstant {
+  static const service = 'Service';
+  static const servicetitle = 'Enter Title';
+  
+  static const String description = 'Description';
+  static const String enterDescription = 'Enter Description';
+
+  static const String keyword = 'Keyword';
+  static const String enterKeyword = 'Enter Keyword(s)';
+
+  static const String category = 'Category';
+  static const String selectCategory = 'Select Category';
+
+  static const String thumbnail = 'Thumbnail';
+  static const String uploadThumbnail = 'Upload Thumbnail';
 }
 
 class SignUpConstant {
