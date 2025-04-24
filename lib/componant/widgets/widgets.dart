@@ -15,6 +15,27 @@ import 'package:sizer/sizer.dart';
 import '../../configs/colors_constant.dart';
 import '../../configs/font_constant.dart';
 
+getleftsidebackbtn({required backFunction, required title}) {
+  return Row(
+    children: [
+      GestureDetector(
+          onTap: () {
+            backFunction();
+          },
+          child: SvgPicture.asset(Asset.arrowBack,
+
+              // ignore: deprecated_member_use
+              color: black,
+              height: 4.h)),
+      getDynamicSizedBox(width: 1.w),
+      Text(
+        title,
+        style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
+      )
+    ],
+  );
+}
+
 Future getpopup(BuildContext context,
     {istimerrunout = false, title, message, function}) async {
   return showCupertinoDialog(
@@ -267,32 +288,31 @@ Widget getTextField(
     Function? ontap,
     context}) {
   Widget formfield = getReactiveFormField(
-    isDropdown: isdropdown ? true : false,
-    isEnable: isenable ? true : false,
-    node: node, // Ensure correct FocusNode
-    controller: ctr, // Ensure correct Controller
-    hintLabel: hint,
-    onChanged: useOnChanged
-        ? (val) {
-            function(val);
-          }
-        : (val) {},
-    errorText: model.error, // Corrected error binding
-    inputType: isNumeric ? TextInputType.number : TextInputType.text,
-    inputFormatters: isNumeric
-        ? [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(10)
-          ]
-        : [],
-    wantSuffix: wantsuffix ? true : false,
-    isPass: ispass ? true : false,
-    isWhite: true,
-    isBorderSideEnable: isBorderSideEnable ? true : false,
-    obscuretext: isobscure ? true : false,
-    obscureTextFunction: obscureFunction,
-    onTap: ontap
-  );
+      isDropdown: isdropdown ? true : false,
+      isEnable: isenable ? true : false,
+      node: node, // Ensure correct FocusNode
+      controller: ctr, // Ensure correct Controller
+      hintLabel: hint,
+      onChanged: useOnChanged
+          ? (val) {
+              function(val);
+            }
+          : (val) {},
+      errorText: model.error, // Corrected error binding
+      inputType: isNumeric ? TextInputType.number : TextInputType.text,
+      inputFormatters: isNumeric
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10)
+            ]
+          : [],
+      wantSuffix: wantsuffix ? true : false,
+      isPass: ispass ? true : false,
+      isWhite: true,
+      isBorderSideEnable: isBorderSideEnable ? true : false,
+      obscuretext: isobscure ? true : false,
+      obscureTextFunction: obscureFunction,
+      onTap: ontap);
 
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,

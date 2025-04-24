@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -77,9 +78,16 @@ class OtpScreenState extends State<OtpScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           getDynamicSizedBox(height: 5.h),
-          getCommonToolbar(OtpConstant.title, onClick: () {
-            Get.back();
-          }, showBackButton: true),
+          Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.w),
+              child: getleftsidebackbtn(
+                  title: OtpConstant.title,
+                  backFunction: () {
+                    Get.back(result: true);
+                  })),
+          // getCommonToolbar(OtpConstant.title, onClick: () {
+          //   Get.back();
+          // }, showBackButton: true),
           Expanded(
               child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -226,9 +234,11 @@ class OtpScreenState extends State<OtpScreen> {
                         //   otp: controller.otpController.text.toString(),
                         // ))!
                         //     .then((value) {
-                        //   controller.otpController.text = '';
-                        //   FocusScope.of(context)
-                        //       .requestFocus(controller.otpNode);
+                        //   if (Get.isRegistered<OtpController>()) {
+                        //     controller.otpController.text = '';
+                        //     FocusScope.of(context)
+                        //         .requestFocus(controller.otpNode);
+                        //   }
                         // });
                         controller.verifyForgotOtp(context, widget.email!);
                       }

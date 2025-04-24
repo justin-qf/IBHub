@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -7,6 +8,7 @@ import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -24,7 +26,7 @@ class Signupscreen extends StatelessWidget {
     return CustomParentScaffold(
       isExtendBodyScreen: true,
       onWillPop: () async {
-        return false;
+        return true;
       },
       onTap: () {
         hideKeyboard(context);
@@ -37,10 +39,35 @@ class Signupscreen extends StatelessWidget {
             SafeArea(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  'Create Your Account',
-                  style: TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
-                ),
+                child: GestureDetector(
+                    onTap: () {
+                      Get.back(result: true);
+                      ctr.resetForm();
+                      ctr.unfocusAll();
+                    },
+                    child: SvgPicture.asset(Asset.arrowBack,
+
+                        // ignore: deprecated_member_use
+                        color: black,
+                        height: 4.h)),
+              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   children: [
+
+              //     Text(
+              //       'Create Your Account',
+              //       style: TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
+              //     ),
+              //   ],
+              // ),
+            ),
+            getDynamicSizedBox(height: 2.h),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Create Your Account',
+                style: TextStyle(fontFamily: dM_sans_bold, fontSize: 24.sp),
               ),
             ),
             getDynamicSizedBox(height: 2.h),
@@ -94,7 +121,7 @@ class Signupscreen extends StatelessWidget {
                       () {
                         return getTextField(
                             label: SignUpConstant.contactLabel,
-                            ctr: ctr.passCtr,
+                            ctr: ctr.phoneCtr,
                             node: ctr.phoneNode,
                             model: ctr.phoneModel.value,
                             function: (val) {
@@ -143,19 +170,16 @@ class Signupscreen extends StatelessWidget {
                         isRequired: true,
                         context: context,
                         gestureFunction: () {
-                                ctr.searchStatectr.text = "";
-                                showDropdownMessage(
-                                    context,
-                                    ctr.setStateListDialog(),
-                                    SignUpConstant.stateList,
-                                    isShowLoading: ctr.stateFilterList,
-                                    onClick: () {
-                                  ctr.applyFilter('');
-                                }, refreshClick: () {
-                                  futureDelay(() {
-                                    // ctr.getStateApi(context, "");
-                                  }, isOneSecond: false);
-                                });
+                          ctr.searchStatectr.text = "";
+                          showDropdownMessage(context, ctr.setStateListDialog(),
+                              SignUpConstant.stateList,
+                              isShowLoading: ctr.stateFilterList, onClick: () {
+                            ctr.applyFilter('');
+                          }, refreshClick: () {
+                            futureDelay(() {
+                              // ctr.getStateApi(context, "");
+                            }, isOneSecond: false);
+                          });
                           ctr.unfocusAll();
                           // ctr.showSubjectSelectionPopups(context);
                         },
@@ -292,7 +316,9 @@ class Signupscreen extends StatelessWidget {
                               margin: EdgeInsets.symmetric(horizontal: 5.w),
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
-                                  // ctr.loginAPI(context);
+                                  ctr.registerAPI(
+                                    context,
+                                  );
                                   // ctr.validateLogin(context);
                                 }
                               }, LoginConst.title,
@@ -315,8 +341,8 @@ class Signupscreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // ctr.resetForm();
-                    Get.offAll(Signinscreen());
+                    ctr.resetForm();
+                    Get.back(result: true);
                   },
                   child: Container(
                     padding: EdgeInsets.only(left: 1.w),

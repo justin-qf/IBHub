@@ -71,7 +71,8 @@ class CustomParentScaffold extends StatelessWidget {
                   bottomNavigationBar: bottomNavigationBar,
                   backgroundColor: bgColor,
                   extendBodyBehindAppBar: true,
-                  resizeToAvoidBottomInset: isSmallDevice(context),
+                  // resizeToAvoidBottomInset: isSmallDevice(context),
+                  resizeToAvoidBottomInset: true,
                   body: body,
                 )
               : SafeArea(

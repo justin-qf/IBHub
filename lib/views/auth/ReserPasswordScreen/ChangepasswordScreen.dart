@@ -22,7 +22,7 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final controller = Get.put(ChangePasswordController());
+  final ctr = Get.put(ChangePasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -38,16 +38,19 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
       },
       isExtendBodyScreen: true,
       body: Form(
-        key: controller.resetpasskey,
+        key: ctr.resetpasskey,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           getDynamicSizedBox(height: 5.h),
-          getCommonToolbar(
-              showBackButton: true,
-              widget.fromProfile == false
-                  ? ResetPasstext.title
-                  : ChangPasswordScreenConstant.title, onClick: () {
-            Get.back(result: true);
-          }),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.w),
+            child: getleftsidebackbtn(
+                title: widget.fromProfile == false
+                    ? ResetPasstext.title
+                    : ChangPasswordScreenConstant.title,
+                backFunction: () {
+                  Get.back(result: true);
+                }),
+          ),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -64,97 +67,139 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (widget.fromProfile == true)
-                          getLable(ChangPasswordScreenConstant.currentPassHint),
-                        if (widget.fromProfile == true)
-                          AnimatedSize(
-                              duration: const Duration(milliseconds: 300),
-                              child: Obx(() {
-                                return getReactiveFormField(
-                                  node: controller.currentpassNode,
-                                  controller: controller.currentCtr,
-                                  hintLabel: ChangPasswordScreenConstant
-                                      .currentPasswordHint,
-                                  wantSuffix: true,
-                                  isPass: true,
-                                  onChanged: (val) {
-                                    controller.validateCurrentPass(val);
-                                  },
-                                  index: "0",
-                                  fromObsecureText: "RESETPASS",
-                                  errorText:
-                                      controller.currentPassModel.value.error,
-                                  inputType: TextInputType.text,
-                                );
-                              })),
-                        getLable(ChangPasswordScreenConstant.newPassHint),
-                        AnimatedSize(
-                            duration: const Duration(milliseconds: 300),
-                            child: Obx(() {
-                              return getReactiveFormField(
-                                node: controller.newpassNode,
-                                controller: controller.newpassCtr,
-                                hintLabel:
+                          Obx(() {
+                            return getTextField(
+                              label:
+                                  ChangPasswordScreenConstant.currentPassHint,
+                              hint: ChangPasswordScreenConstant
+                                  .currentPasswordHint,
+                              ctr: ctr.currentCtr,
+                              node: ctr.currentpassNode,
+                              model: ctr.currentPassModel.value,
+                              function: (val) {
+                                ctr.validateFields(val,
+                                    ispassword: true,
+                                    model: ctr.currentPassModel,
+                                    errorText1: ChangPasswordScreenConstant
+                                        .currentPasswordHint,
+                                    errorText2: ChangPasswordScreenConstant
+                                        .hintSpaceNotAllowed,
+                                    errorText3: ChangPasswordScreenConstant
+                                        .validPasswordHint,
+                                    isforgotpasswordfunction: false);
+                              },
+                              ispass: true,
+                              wantsuffix: true,
+                              isobscure: ctr.isObsecureCurrentPassText,
+                              obscureFunction: ctr.toggleCurrentPassObscureText,
+                            );
+                          }),
+                        Obx(() {
+                          return getTextField(
+                            label: ChangPasswordScreenConstant.newPassHint,
+                            hint: ChangPasswordScreenConstant.newPasswordHint,
+                            ctr: ctr.newpassCtr,
+                            node: ctr.newpassNode,
+                            model: ctr.newPassModel.value,
+                            function: (val) {
+                              ctr.validateFields(
+                                val,
+                                ispassword: true,
+                                model: ctr.newPassModel,
+                                isforgotpasswordfunction:
+                                    widget.fromProfile == false ? true : false,
+                                errorText1:
                                     ChangPasswordScreenConstant.newPasswordHint,
-                                wantSuffix: true,
-                                isPass: true,
-                                onChanged: (val) {
-                                  widget.fromProfile == true
-                                      ? controller.validateNewPass(val)
-                                      : controller.validateNewPassword(val);
-                                },
-                                index: "1",
-                                fromObsecureText: "RESETPASS",
-                                errorText: controller.newPassModel.value.error,
-                                inputType: TextInputType.text,
+                                errorText2: ChangPasswordScreenConstant
+                                    .hintSpaceNotAllowed,
+                                errorText3: ChangPasswordScreenConstant
+                                    .validPasswordHint,
                               );
-                            })),
-                        getLable(
-                            ChangPasswordScreenConstant.validConfirmPassHint),
-                        AnimatedSize(
-                            duration: const Duration(milliseconds: 300),
-                            child: Obx(() {
-                              return getReactiveFormField(
-                                node: controller.confirmpassNode,
-                                controller: controller.confirmCtr,
-                                hintLabel: ChangPasswordScreenConstant
-                                    .validConfirmPasswordHint,
-                                onChanged: (val) {
-                                  widget.fromProfile == true
-                                      ? controller.validateConfirmPass(val)
-                                      : controller.validateForgotPass(val);
-                                },
-                                index: "2",
-                                fromObsecureText: "RESETPASS",
-                                wantSuffix: true,
-                                isPass: true,
-                                errorText:
-                                    controller.confirmPassModel.value.error,
-                                inputType: TextInputType.text,
+
+                              if (ctr.confirmCtr.text.isNotEmpty) {
+                                ctr.validateFields(
+                                  val,
+                                  isconfirmpassword: true,
+                                  model: ctr.confirmPassModel,
+                                  isforgotpasswordfunction:
+                                      widget.fromProfile == false
+                                          ? true
+                                          : false,
+                                  confirmpasswordctr: ctr.confirmCtr.text,
+                                  errorText1: ChangPasswordScreenConstant
+                                      .confirmPasswordHint,
+                                  errorText2: ChangPasswordScreenConstant
+                                      .hintSpaceNotAllowed,
+                                  errorText3: ChangPasswordScreenConstant
+                                      .passwordMismatchHint,
+                                );
+                              }
+                            },
+                            ispass: true,
+                            wantsuffix: true,
+                            isobscure: ctr.isObsecureNewPassText,
+                            obscureFunction: ctr.toggleNewPassObscureText,
+                          );
+                        }),
+                        Obx(() {
+                          return getTextField(
+                            label: ChangPasswordScreenConstant
+                                .validConfirmPassHint,
+                            hint: ChangPasswordScreenConstant
+                                .validConfirmPasswordHint,
+                            ctr: ctr.confirmCtr,
+                            node: ctr.confirmpassNode,
+                            model: ctr.confirmPassModel.value,
+                            function: (val) {
+                              ctr.validateFields(
+                                val,
+                                isconfirmpassword: true,
+                                model: ctr.confirmPassModel,
+                                isforgotpasswordfunction:
+                                    widget.fromProfile == false ? true : false,
+                                errorText1: ChangPasswordScreenConstant
+                                    .confirmPasswordHint,
+                                errorText2: ChangPasswordScreenConstant
+                                    .hintSpaceNotAllowed,
+                                errorText3: ChangPasswordScreenConstant
+                                    .passwordMismatchHint,
+                                confirmpasswordctr: ctr.newpassCtr.text,
                               );
-                            })),
+                            },
+                            ispass: true,
+                            wantsuffix: true,
+                            isobscure: ctr.isObsecureNewConPassText,
+                            obscureFunction: ctr.toggleNewConPassObscureText,
+                          );
+                        }),
+                       
                         getDynamicSizedBox(height: 5.0.h),
                         Obx(() {
                           return getFormButton(
                             context,
                             () {
                               if (widget.fromProfile == true) {
-                                if (controller.isFormInvalidate.value == true) {
-                                  controller.changePasswordApi(context, true);
+                                if (ctr.isFormInvalidate.value == true) {
+                                  ctr.changePasswordApi(context, true);
+
+                                  print('changepasword api called');
                                 }
                               } else {
-                                if (controller.isForgotPasswordValidate.value ==
+                                if (ctr.isForgotPasswordValidate.value ==
                                     true) {
-                                  controller.forgotPassApi(
+                                  ctr.forgotPassApi(
                                       context,
                                       widget.email.toString(),
                                       widget.otp.toString());
+
+                                  print('forgotpassword api called');
                                 }
                               }
                             },
                             Button.continues,
                             validate: widget.fromProfile == true
-                                ? controller.isFormInvalidate.value
-                                : controller.isForgotPasswordValidate.value,
+                                ? ctr.isFormInvalidate.value
+                                : ctr.isForgotPasswordValidate.value,
                           );
                         }),
                       ],

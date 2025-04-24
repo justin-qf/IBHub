@@ -526,7 +526,9 @@ Widget backButtonWidget(callback, {isWhiteText}) {
       child: Container(
           margin: EdgeInsets.only(
               left: Device.screenType == ScreenType.mobile ? 5.w : 2.w),
-          child: GestureDetector(
+          child:
+          
+           GestureDetector(
               onTap: () {
                 callback();
               },

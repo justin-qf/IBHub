@@ -29,6 +29,15 @@ class EmailController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    emailNode.dispose();
+    emailctr.dispose();
+    isFormInvalidate.value = false;
+    emailModel = ValidationModel(null, null, isValidate: false).obs;
+    super.onClose();
+  }
+
   void validateEmail(String? val) {
     emailModel.update((model) {
       String trimmedValue = val?.trim() ?? '';

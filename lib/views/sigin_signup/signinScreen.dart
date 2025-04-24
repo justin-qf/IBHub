@@ -10,6 +10,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signinScreenController.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/EmailScreen.dart';
 import 'package:ibh/views/sigin_signup/signupScreen.dart';
 import 'package:sizer/sizer.dart';
@@ -23,6 +24,7 @@ class Signinscreen extends StatefulWidget {
 
 class _SigninscreenState extends State<Signinscreen> {
   final Signinscreencontroller ctr = Get.put(Signinscreencontroller());
+
   @override
   Widget build(BuildContext context) {
     Statusbar().trasparentStatusbar();
@@ -30,6 +32,9 @@ class _SigninscreenState extends State<Signinscreen> {
         isExtendBodyScreen: true,
         onWillPop: () async {
           return false;
+        },
+        onTap: () {
+          hideKeyboard(context);
         },
         body: SizedBox(
           height: Device.height,
@@ -48,9 +53,18 @@ class _SigninscreenState extends State<Signinscreen> {
                         style:
                             TextStyle(color: grey, fontFamily: dM_sans_medium)),
                     GestureDetector(
-                      onTap: () {
-                        Get.to(() => const Signupscreen());
-                        ctr.resetForm();
+                      onTap: () async {
+                        //  Get.to(ChangePasswordScreen(
+                        //       email: '',
+                        //       fromProfile: false,
+                        //     ));
+                        final result = await Get.to(() => const Signupscreen());
+
+                        if (result == true) {
+                          // ctr.init();
+                          ctr.resetForm();
+                          ctr.unfocusAll();
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.only(
@@ -84,13 +98,13 @@ class _SigninscreenState extends State<Signinscreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      getDynamicSizedBox(height: 5.h),
+                      getDynamicSizedBox(height: 10.h),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Login To Your Account',
                           style: TextStyle(
-                              fontFamily: dM_sans_bold, fontSize: 20.sp),
+                              fontFamily: dM_sans_bold, fontSize: 24.sp),
                         ),
                       ),
                       getDynamicSizedBox(height: 4.h),
@@ -109,6 +123,7 @@ class _SigninscreenState extends State<Signinscreen> {
                           ctr: ctr.emailCtr,
                           node: ctr.emailNode,
                           model: ctr.emailModel.value,
+                          isRequired: true,
                           function: (val) {
                             ctr.validateFields(val,
                                 isemail: true,
@@ -127,6 +142,7 @@ class _SigninscreenState extends State<Signinscreen> {
                               ctr: ctr.passCtr,
                               node: ctr.passNode,
                               model: ctr.passModel.value,
+                              isRequired: true,
                               function: (val) {
                                 ctr.validateFields(
                                   val,
@@ -149,9 +165,18 @@ class _SigninscreenState extends State<Signinscreen> {
                       Container(
                         margin: EdgeInsets.only(left: 55.w),
                         child: GestureDetector(
-                          onTap: () {
-                            ctr.resetForm();
-                            Get.to(() => const EmailScreen());
+                          onTap: () async {
+                            // Get.to(ChangePasswordScreen(
+                            //   email: '',
+                            //   fromProfile: true,
+                            // ));
+                            final result =
+                                await Get.to(() => const EmailScreen());
+
+                            if (result == true) {
+                              ctr.resetForm();
+                              ctr.unfocusAll();
+                            }
                           },
                           child: Container(
                             padding: const EdgeInsets.only(

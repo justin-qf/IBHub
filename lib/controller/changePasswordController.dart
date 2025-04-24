@@ -4,13 +4,11 @@ import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
-import 'package:ibh/models/login_model.dart';
-import 'package:ibh/preference/UserPreference.dart';
+import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
-
-import '../Models/sign_in_form_validation.dart';
+import 'MasterController.dart';
 
 class ChangePasswordController extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -29,9 +27,31 @@ class ChangePasswordController extends GetxController {
   RxBool isFormInvalidate = false.obs;
   RxBool isForgotPasswordValidate = false.obs;
 
-  RxBool obsecureOldPasswordText = true.obs;
-  RxBool obsecureNewPasswordText = true.obs;
-  RxBool obsecureConfirmPasswordText = true.obs;
+  var _obsecureCurrentTextPass = true.obs;
+  bool get isObsecureCurrentPassText => _obsecureCurrentTextPass.value;
+  set isObsecureCurrentPassText(bool value) =>
+      _obsecureCurrentTextPass.value = value;
+
+  var _obsecureNewTextCPass = true.obs;
+  bool get isObsecureNewPassText => _obsecureNewTextCPass.value;
+  set isObsecureNewPassText(bool value) => _obsecureNewTextCPass.value = value;
+
+  var _obsecureNewConTextCPass = true.obs;
+  bool get isObsecureNewConPassText => _obsecureNewConTextCPass.value;
+  set isObsecureNewConPassText(bool value) =>
+      _obsecureNewConTextCPass.value = value;
+
+  void toggleCurrentPassObscureText() {
+    _obsecureCurrentTextPass.value = !_obsecureCurrentTextPass.value;
+  }
+
+  void toggleNewPassObscureText() {
+    _obsecureNewTextCPass.value = !_obsecureNewTextCPass.value;
+  }
+
+  void toggleNewConPassObscureText() {
+    _obsecureNewConTextCPass.value = !_obsecureNewConTextCPass.value;
+  }
 
   @override
   void onInit() {
@@ -44,128 +64,61 @@ class ChangePasswordController extends GetxController {
     super.onInit();
   }
 
-  void validateCurrentPass(String? val) {
-    currentPassModel.update((model) {
-      if (val != null && val.toString().trim().isEmpty) {
-        model!.error = ChangPasswordScreenConstant.currentPasswordHint;
-        model.isValidate = false;
-      } else if (val!.contains(' ')) {
-        model!.error = LoginConst.hintSpaceNotAllowed;
-        model.isValidate = false;
-      } else if (val.toString().trim().length <= 7) {
-        model!.error = ChangPasswordScreenConstant.validPasswordHint;
-        model.isValidate = false;
-      } else {
-        model!.error = null;
-        model.isValidate = true;
-      }
-    });
-    enableSignUpButton();
+  @override
+  void onClose() {
+    // newpassNode.dispose();
+    // currentpassNode.dispose();
+    // confirmpassNode.dispose();
+
+    // newpassCtr.dispose();
+    // currentCtr.dispose();
+    // confirmCtr.dispose();
+
+    newpassCtr.clear();
+    currentCtr.clear();
+    confirmCtr.clear();
+
+    isFormInvalidate.value = false;
+    isForgotPasswordValidate.value = false;
+
+    currentPassModel = ValidationModel(null, null, isValidate: false).obs;
+    newPassModel = ValidationModel(null, null, isValidate: false).obs;
+    confirmPassModel = ValidationModel(null, null, isValidate: false).obs;
+
+    super.onClose();
   }
 
-  void validateNewPass(String? val) {
-    newPassModel.update((model) {
-      if (val != null && val.toString().trim().isEmpty) {
-        model!.error = ChangPasswordScreenConstant.newPasswordHint;
-        model.isValidate = false;
-      } else if (val!.contains(' ')) {
-        model!.error = LoginConst.hintSpaceNotAllowed;
-        model.isValidate = false;
-      } else if (val.toString().trim().length <= 7) {
-        model!.error = ChangPasswordScreenConstant.validPasswordHint;
-        model.isValidate = false;
-      } else {
-        model!.error = null;
-        model.isValidate = true;
-      }
-      if (confirmCtr.text.toString().isNotEmpty) {
-        if (val.toString().trim() != confirmCtr.text.toString().trim()) {
-          confirmPassModel.update((model1) {
-            model1!.error = ChangPasswordScreenConstant.notMatchPasswordHint;
-            model1.isValidate = false;
-          });
+  validateFields(val,
+      {model,
+      errorText1,
+      errorText2,
+      errorText3,
+      ispassword = false,
+      isconfirmpassword = false,
+      confirmpasswordctr,
+      isforgotpasswordfunction = false}) {
+    return validateField(
+      val: val,
+      models: model,
+      errorText1: errorText1,
+      errorText2: errorText2,
+      errorText3: errorText3,
+      ispassword: ispassword,
+      isconfirmpassword: isconfirmpassword,
+      confirmpasswordctr: confirmpasswordctr,
+      notifyListeners: () {
+        update();
+      },
+      enableBtnFunction: () {
+        if (isforgotpasswordfunction == true) {
+          enableForgotButton();
+          print('forgotpassword enable function called');
         } else {
-          confirmPassModel.update((model1) {
-            model1!.error = null;
-            model1.isValidate = true;
-          });
+          enableSignUpButton();
+          print('enable signup function called');
         }
-      }
-    });
-
-    enableSignUpButton();
-  }
-
-  void validateConfirmPass(String? val) {
-    confirmPassModel.update((model) {
-      if (val != null && val.toString().trim().isEmpty) {
-        model!.error = ChangPasswordScreenConstant.validConfirmPasswordHint;
-        model.isValidate = false;
-      } else if (val!.contains(' ')) {
-        model!.error = LoginConst.hintSpaceNotAllowed;
-        model.isValidate = false;
-      } else if (val.toString().trim() != newpassCtr.text.toString().trim()) {
-        model!.error = ChangPasswordScreenConstant.notMatchPasswordHint;
-        model.isValidate = false;
-      } else {
-        model!.error = null;
-        model.isValidate = true;
-      }
-    });
-
-    enableSignUpButton();
-  }
-
-  void validateNewPassword(String? val) {
-    newPassModel.update((model) {
-      if (val != null && val.toString().trim().isEmpty) {
-        model!.error = ChangPasswordScreenConstant.newPasswordHint;
-        model.isValidate = false;
-      } else if (val!.contains(' ')) {
-        model!.error = LoginConst.hintSpaceNotAllowed;
-        model.isValidate = false;
-      } else if (val.toString().trim().length <= 7) {
-        model!.error = ChangPasswordScreenConstant.validPasswordHint;
-        model.isValidate = false;
-      } else {
-        model!.error = null;
-        model.isValidate = true;
-      }
-    });
-    if (confirmCtr.text.toString().isNotEmpty) {
-      if (val.toString().trim() != confirmCtr.text.toString().trim()) {
-        confirmPassModel.update((model1) {
-          model1!.error = ChangPasswordScreenConstant.notMatchPasswordHint;
-          model1.isValidate = false;
-        });
-      } else {
-        confirmPassModel.update((model1) {
-          model1!.error = null;
-          model1.isValidate = true;
-        });
-      }
-    }
-
-    enableForgotButton();
-  }
-
-  void validateForgotPass(String? val) {
-    confirmPassModel.update((model) {
-      if (val != null && val.toString().trim().isEmpty) {
-        model!.error = ChangPasswordScreenConstant.validConfirmPasswordHint;
-        model.isValidate = false;
-      } else if (val!.contains(' ')) {
-        model!.error = LoginConst.hintSpaceNotAllowed;
-        model.isValidate = false;
-      } else if (val.toString().trim() != newpassCtr.text.toString().trim()) {
-        model!.error = ChangPasswordScreenConstant.notMatchPasswordHint;
-        model.isValidate = false;
-      } else {
-        model!.error = null;
-        model.isValidate = true;
-      }
-    });
-    enableForgotButton();
+      },
+    );
   }
 
   void enableSignUpButton() {
@@ -223,7 +176,9 @@ class ChangePasswordController extends GetxController {
           "password_confirmation": confirmCtr.text.toString().trim()
         },
         apiEndPoint: ApiUrl.updateForgotPassword, onResponse: (data) {
-      Get.offAll(const Signinscreen());
+      Future.delayed(Duration(milliseconds: 100), () {
+        Get.offAll(const Signinscreen());
+      });
     }, networkManager: networkManager);
   }
 }

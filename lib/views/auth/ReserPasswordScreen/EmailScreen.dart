@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
+import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/emailController.dart';
@@ -19,7 +23,7 @@ class EmailScreen extends StatefulWidget {
 }
 
 class EmailScreenState extends State<EmailScreen> {
-  final controller = Get.put(EmailController());
+  final ctr = Get.put(EmailController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +37,19 @@ class EmailScreenState extends State<EmailScreen> {
       },
       isExtendBodyScreen: true,
       body: Form(
-        key: controller.resetpasskey,
+        key: ctr.resetpasskey,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               getDynamicSizedBox(height: 5.h),
-              getCommonToolbar(EmailScreenConstant.title, showBackButton: true,
-                  onClick: () {
-                Get.back();
-              }),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: getleftsidebackbtn(
+                      title: 'Email',
+                      backFunction: () {
+                        Get.back(result: true);
+                      })),
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -59,24 +66,24 @@ class EmailScreenState extends State<EmailScreen> {
                             duration: const Duration(milliseconds: 300),
                             child: Obx(() {
                               return getReactiveFormField(
-                                node: controller.emailNode,
-                                controller: controller.emailctr,
+                                node: ctr.emailNode,
+                                controller: ctr.emailctr,
                                 hintLabel: LoginConst.emailHint,
                                 onChanged: (val) {
-                                  controller.validateEmail(val);
+                                  ctr.validateEmail(val);
                                 },
-                                errorText: controller.emailModel.value.error,
+                                errorText: ctr.emailModel.value.error,
                                 inputType: TextInputType.emailAddress,
                               );
                             })),
                         getDynamicSizedBox(height: 3.h),
                         Obx(() {
                           return getFormButton(context, () {
-                            if (controller.isFormInvalidate.value == true) {
-                              controller.getForgotOtp(context);
+                            if (ctr.isFormInvalidate.value == true) {
+                              ctr.getForgotOtp(context);
                             }
                           }, Button.continues,
-                              validate: controller.isFormInvalidate.value);
+                              validate: ctr.isFormInvalidate.value);
                         }),
                       ],
                     ),

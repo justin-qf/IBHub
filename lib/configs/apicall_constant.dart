@@ -17,4 +17,5 @@ class ApiUrl {
   static const changePassword = "change_password";
   static const getState = 'state_list';
   static const getCity = 'city_list';
+  static const register = 'register';
 }
