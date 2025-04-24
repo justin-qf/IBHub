@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:ibh/models/Signup_screen_data_model.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -10,6 +10,7 @@ import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -141,7 +142,7 @@ class Signinscreencontroller extends GetxController {
       var responseDetail = LoginModel.fromJson(data);
       UserPreferences().saveSignInInfo(responseDetail.data.user);
       UserPreferences().setToken(responseDetail.data.user.token.toString());
-      // Get.offAll(const MainScreen());
+      Get.offAll(const MainScreen());
     }, networkManager: networkManager, isModelResponse: true);
   }
 

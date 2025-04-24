@@ -51,7 +51,7 @@ styleTextForFieldHintDropDown() {
 styleTextForFieldHint() {
   return TextStyle(
       fontWeight: FontWeight.w500,
-      fontSize: Device.screenType == ScreenType.mobile ? 12.sp : 8.sp,
+      fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 8.sp,
       color: const Color.fromARGB(255, 145, 145, 145));
 }
 

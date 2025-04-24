@@ -90,6 +90,10 @@ String formatPriceDouble(double price) {
   return numberFormat.format(price);
 }
 
+double commonHeight({bool? isSmall}) {
+  return isSmall == true ? 4.h : 5.h;
+}
+
 String getCurrentDate() {
   DateTime now = DateTime.now();
   return DateFormat('yyyy-MM-dd').format(now);

@@ -1,4 +1,3 @@
-
 class ValidationModel {
   String? value;
   String? error;

@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
-import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
-
 import '../Models/sign_in_form_validation.dart';
 
 class EmailController extends GetxController {

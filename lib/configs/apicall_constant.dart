@@ -15,6 +15,12 @@ class ApiUrl {
   static const verifyForgotOtp = "verify-otp";
   static const updateForgotPassword = "reset-password";
   static const changePassword = "change_password";
+  static const getState = 'state_list';
+  static const getCity = 'city_list';
+  static const getCategories = 'categories/dropdown';
+  static const getCategorieList = 'categories/list';
+  static const getSearch = 'searchlist';
+  static const logout = 'logout';
   // static const getState = 'state_list';
   // static const getCity = 'city_list';
   static const register = 'register';

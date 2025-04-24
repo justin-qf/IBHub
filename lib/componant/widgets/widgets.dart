@@ -179,7 +179,7 @@ PreferredSizeWidget getTabbar(
       child: Container(
         height: 6.h,
         margin: EdgeInsets.symmetric(horizontal: 1.w),
-        decoration: BoxDecoration(color: transparent),
+        decoration: const BoxDecoration(color: transparent),
         child: Stack(
           children: [
             Container(
@@ -222,6 +222,56 @@ PreferredSizeWidget getTabbar(
             ),
           ],
         ),
+      ),
+    ),
+  );
+}
+
+Widget getHomeLable(String title, Function onCLick) {
+  return FadeInRight(
+    child: Container(
+      margin: EdgeInsets.only(left: 5.w, right: 2.w),
+      width: double.infinity,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(title,
+              style: TextStyle(
+                color: isDarkMode() ? white : black,
+                fontFamily: fontBold,
+                fontWeight: FontWeight.w800,
+                fontSize:
+                    Device.screenType == ScreenType.mobile ? 16.sp : 13.sp,
+              )),
+          const Spacer(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  onCLick();
+                },
+                child: Text(DashboardText.seeAll,
+                    style: TextStyle(
+                      color: isDarkMode() ? white : primaryColor,
+                      fontFamily: fontRegular,
+                      fontWeight: FontWeight.w500,
+                      fontSize: Device.screenType == ScreenType.mobile
+                          ? 16.sp
+                          : 14.sp,
+                    )),
+              ),
+              getDynamicSizedBox(width: 0.3.w),
+              Icon(
+                Icons.chevron_right_sharp,
+                color: isDarkMode() ? white : primaryColor,
+                size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
+              )
+            ],
+          ),
+        ],
       ),
     ),
   );
@@ -348,21 +398,12 @@ Widget getUpperContainer({
 }) {
   return Container(
     padding: EdgeInsets.only(right: 3.w, left: 3.w, bottom: 5.h, top: 1.h),
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       color: secondaryColor,
       borderRadius: BorderRadius.only(
         bottomLeft: Radius.circular(35),
         bottomRight: Radius.circular(35),
       ),
-      // boxShadow: [
-      //   BoxShadow(
-      //     color:
-      //         black.withOpacity(0.3), // Shadow color with opacity
-      //     blurRadius: 10, // How blurry the shadow is
-      //     spreadRadius: 2, // How much the shadow spreads
-      //     offset: Offset(0, 4), // Position of the shadow (X, Y)
-      //   ),
-      // ],
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -433,6 +474,7 @@ Widget getUpperContainer({
                   : getDynamicSizedBox(height: 0.2.h),
               if (isSecondDescNeeded)
                 Text(
+                  // ignore: prefer_interpolation_to_compose_strings
                   '+91 ' + secondDescText,
                   textAlign: TextAlign
                       .center, // Ensures multi-line text stays left-aligned
@@ -586,7 +628,7 @@ getLable(String title,
                 ),
               ),
               if (isRequired) // Conditionally add the '*'
-                TextSpan(
+                const TextSpan(
                   text: SignUpConstant.required,
                   style: TextStyle(
                     color: red,
@@ -633,7 +675,7 @@ Widget getLogo(islogo) {
 
 Widget noDataFoundWidget({bool? isFromBlog}) {
   return SizedBox(
-    height: isFromBlog == true ? Device.height / 1.4 : Device.height / 1.2,
+    height: Device.height / 1.5,
     child: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -643,7 +685,7 @@ Widget noDataFoundWidget({bool? isFromBlog}) {
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: fontMedium,
-                  fontSize: 12.sp,
+                  fontSize: 16.sp,
                   color: isDarkMode() ? white : black)),
         ])),
   );
