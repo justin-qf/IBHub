@@ -77,9 +77,10 @@ class Updateprofilecontroller extends GetxController {
   bool get isObsecureConPassText => obsecureTextConPass.value;
   set isObsecureConPassText(bool value) => obsecureTextConPass.value = value;
 
-  late TextEditingController searchStatectr;
-  late FocusNode searchStateNode;
-  var searchModel = ValidationModel(null, null, isValidate: false).obs;
+  late TextEditingController searchStatectr, searchCityctr;
+  late FocusNode searchStateNode, searchCityNode;
+  var searchStateModel = ValidationModel(null, null, isValidate: false).obs;
+  var searchCityModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isStateApiCallLoading = false.obs;
   RxList stateFilterList = [].obs;
@@ -520,8 +521,8 @@ class Updateprofilecontroller extends GetxController {
 
         // print(stateList);
 
-        for (var state in cityList) {
-          print('ID: ${state.id}, Name: ${state.name}');
+        for (var city in cityList) {
+          print('ID: ${city.id}, Name: ${city.name}');
         }
       },
       apiEndPoint: ApiUrl.city,
@@ -561,8 +562,8 @@ class Updateprofilecontroller extends GetxController {
                     stateFilterList.addAll(stateList);
                   }
                   // getState(context);
-                  // cityctr.text = "";
-                  // cityId.value = "";
+                  cityCtr.text = "";
+                  cityId.value = "";
                   update();
                   futureDelay(() {
                     // getCityApi(context, stateId.value.toString(), "", "");
@@ -587,22 +588,22 @@ class Updateprofilecontroller extends GetxController {
               },
               isSearch: true,
               inputType: TextInputType.text,
-              errorText: searchModel.value.error));
+              errorText: searchStateModel.value.error));
     });
   }
 
-Widget setcityListDialog() {
+  Widget setcityListDialog() {
     return Obx(() {
-      if (isStateApiCallLoading.value == true) {
+      if (isCityApiCallLoading.value == true) {
         return setDropDownContent([].obs, const Text("Loading"),
-            isApiIsLoading: isStateApiCallLoading.value);
+            isApiIsLoading: isCityApiCallLoading.value);
       }
       return setDropDownContent(
-          stateFilterList,
+          cityFilterList,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            itemCount: stateFilterList.length,
+            itemCount: cityFilterList.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 dense: true,
@@ -615,7 +616,7 @@ Widget setcityListDialog() {
                   Get.back();
                   cityId.value = cityFilterList[index].id.toString();
                   cityCtr.text = cityFilterList[index].name;
-                  if (stateCtr.text.toString().isNotEmpty) {
+                  if (cityCtr.text.toString().isNotEmpty) {
                     cityFilterList.clear();
                     cityFilterList.addAll(cityList);
                   }
@@ -636,21 +637,19 @@ Widget setcityListDialog() {
             },
           ),
           searchcontent: getReactiveFormField(
-              node: searchStateNode,
-              controller: searchStatectr,
+              node: searchCityNode,
+              controller: searchCityctr,
               hintLabel: "Search Here",
               onChanged: (val) {
-                applyFilter(val.toString(),isState: false);
+                applyFilter(val.toString(), isState: false);
 
                 update();
               },
               isSearch: true,
               inputType: TextInputType.text,
-              errorText: searchModel.value.error));
+              errorText: searchCityModel.value.error));
     });
   }
-
-
 
   void applyFilter(String keyword, {isState = false}) {
     if (isState == true) {
@@ -669,12 +668,12 @@ Widget setcityListDialog() {
     } else {
       cityFilterList.clear();
 
-      for (Citydata stateList in stateList) {
-        if (stateList.city
+      for (Citydata citylist in cityList) {
+        if (citylist.city
             .toString()
             .toLowerCase()
             .contains(keyword.toLowerCase())) {
-          cityFilterList.add(stateList);
+          cityFilterList.add(citylist);
         }
       }
       cityFilterList.refresh();

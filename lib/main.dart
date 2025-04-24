@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home:  Updateprofilescreen(),
+        home:  Splashscreen(),
         defaultTransition: Transition.fadeIn,
       );
     });

@@ -204,7 +204,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                           showDropdownMessage(context, ctr.setStateListDialog(),
                               SignUpConstant.stateList,
                               isShowLoading: ctr.stateFilterList, onClick: () {
-                            ctr.applyFilter('');
+                            ctr.applyFilter('',isState: true);
                           }, refreshClick: () {
                             futureDelay(() {
                               ctr.getState(context);
@@ -233,10 +233,10 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                           ctr.unfocusAll();
 
                           ctr.getCity(context);
-                          showDropdownMessage(context, ctr.setStateListDialog(),
+                          showDropdownMessage(context, ctr.setcityListDialog(),
                               SignUpConstant.cityList,
                               isShowLoading: ctr.cityFilterList, onClick: () {
-                            ctr.applyFilter('');
+                            ctr.applyFilter('',isState: false);
                           }, refreshClick: () {
                             futureDelay(() {
                               ctr.getCity(context);
