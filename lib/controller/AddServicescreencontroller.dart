@@ -61,26 +61,6 @@ class AddServicescreencontroller extends GetxController {
   RxList<CategoryData> categoryList = <CategoryData>[].obs;
 
   RxString categoryId = "".obs;
-  var keywords = <String>[].obs;
-
-  void addKeyword(String keyword) {
-    if (keyword.isNotEmpty && !keywords.contains(keyword)) {
-      keywords.add(keyword.trim());
-      keywordsCtr.clear(); // Clear input field after adding
-      validateFields("", // Clear validation temporarily
-          model: keywordsModel,
-          errorText1: ServicesScreenConstant.enterKeyword,
-          iscomman: true,
-          shouldEnableButton: true);
-      update();
-    }
-  }
-
-  // Remove keyword from the list
-  void removeKeyword(String keyword) {
-    keywords.remove(keyword);
-    update();
-  }
 
   void init() {
     serviceTitleNode = FocusNode();

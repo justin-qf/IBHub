@@ -34,7 +34,7 @@ class Repository {
     //logcat("TOKEN", token.toString());
     Map<String, String> headers = {
       'Content-Type': "application/json",
-      'Authorization': token,
+      'Authorization': "Bearer " + token,
     };
     // logcat("PassignData", {
     //   'Content-Type': "application/json",
@@ -73,7 +73,7 @@ class Repository {
     String token = await UserPreferences().getToken();
     logcat("Token::::", token.toString());
     Map<String, String> headers = {
-      'Content-Type': "multipart/form-data",
+      'Content-Type': "application/json",
       'Authorization': "Bearer " + token,
     };
     var response = await client.get(buildUrl(endPoint),

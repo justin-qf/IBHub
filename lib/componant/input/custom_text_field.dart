@@ -77,6 +77,7 @@ class CustomFormField extends StatefulWidget {
   final bool? isReport;
   final bool? isMick;
   final bool? isClose;
+
   final Function? onTap;
   final Function? onPrefixTap;
   final Function? onAddBtn;
@@ -295,8 +296,10 @@ class _CustomFormFieldState extends State<CustomFormField> {
                                         width: 10.w,
                                         child: IconButton(
                                           onPressed: () {
-                                            if (widget.onAddBtn != null) {
-                                              widget.onAddBtn!();
+                                            if (widget.obscureFunction !=
+                                                null) {
+                                              widget.obscureFunction!();
+                                              print('call');
                                             }
                                           },
                                           alignment: Alignment.centerRight,
@@ -375,18 +378,26 @@ class _CustomFormFieldState extends State<CustomFormField> {
                                   : widget.isAdd == true
                                       ? GestureDetector(
                                           onTap: () {
-                                            if (widget.onTap != null) {
-                                              widget.onTap!();
+                                            if (widget.onAddBtn != null) {
+                                              widget.onAddBtn!();
                                             }
                                           },
+                                          behavior: HitTestBehavior.opaque,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(17.0),
-                                            child: SvgPicture.asset(
-                                              Asset.add,
-                                              height: 0.5.h,
-                                              width: 0.5.h,
-                                              // ignore: deprecated_member_use
-                                              color: Colors.grey,
+                                            padding: EdgeInsets.only(
+                                                right: Device.screenType ==
+                                                        ScreenType.mobile
+                                                    ? 0.w
+                                                    : 3.w),
+                                            child: Icon(
+                                              Icons.add,
+                                              size: Device.screenType ==
+                                                      ScreenType.mobile
+                                                  ? 20.sp
+                                                  : 15.sp,
+                                              color: isDarkMode()
+                                                  ? Colors.white
+                                                  : Colors.black,
                                             ),
                                           ),
                                         )

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-// import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -8,26 +7,28 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/controller/category_controller.dart';
-import 'package:ibh/models/categoryListModel.dart';
+import 'package:ibh/controller/service_controller.dart';
+import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
+import 'package:sizer/sizer.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
+// ignore: must_be_immutable
+class ServiceScreen extends StatefulWidget {
+  ServiceScreen({required this.data, super.key});
+  BusinessData data;
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<ServiceScreen> createState() => _ServiceScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
-  var controller = Get.put(CategoryController());
-
+class _ServiceScreenState extends State<ServiceScreen> {
+  var controller = Get.put(ServiceController());
   @override
   void initState() {
-    controller.getCategoryList(context, 1, false);
+    controller.getServiceList(context, 1, false, widget.data.id);
     controller.scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -44,7 +45,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
         Duration.zero,
         () {
           controller
-              .getCategoryList(context, controller.currentPage, true)
+              .getServiceList(
+                  context, controller.currentPage, true, widget.data.id)
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
@@ -58,7 +60,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void dispose() {
     controller.currentPage = 1;
-    controller.categoryList.clear();
+    controller.serviceList.clear();
     super.dispose();
   }
 
@@ -78,7 +80,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           children: [
             getDynamicSizedBox(height: 5.h),
-            getCommonToolbar("Category", showBackButton: true, onClick: () {
+            getCommonToolbar("Service", showBackButton: true, onClick: () {
               Get.back();
             }),
             Expanded(
@@ -89,9 +91,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   case ScreenState.noDataFound:
                   case ScreenState.apiError:
                     return apiOtherStates(controller.state.value, controller,
-                        controller.categoryList, () {
-                      controller.getCategoryList(
-                          context, controller.currentPage, true);
+                        controller.serviceList, () {
+                      controller.getServiceList(context, controller.currentPage,
+                          true, widget.data.id);
                     });
                   case ScreenState.apiSuccess:
                     return apiSuccess(controller.state.value);
@@ -109,20 +111,44 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget apiSuccess(ScreenState state) {
     if (controller.state.value == ScreenState.apiSuccess &&
-        controller.categoryList.isNotEmpty) {
+        controller.serviceList.isNotEmpty) {
+      // return ListView.builder(
+      //   controller: controller.scrollController,
+      //   padding: EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
+      //   physics: const BouncingScrollPhysics(),
+      //   scrollDirection: Axis.vertical,
+      //   shrinkWrap: true,
+      //   clipBehavior: Clip.antiAlias,
+      //   itemCount: controller.serviceList.length +
+      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+      //   itemBuilder: (context, index) {
+      //     if (index < controller.serviceList.length) {
+      //       ServiceDataList data = controller.serviceList[index];
+      //       return controller.getListItem(context, data);
+      //     } else if (controller.isFetchingMore) {
+      //       return Center(
+      //           child: Padding(
+      //               padding: EdgeInsets.symmetric(vertical: 2.h),
+      //               child:
+      //                   const CircularProgressIndicator(color: primaryColor)));
+      //     } else {
+      //       return Container();
+      //     }
+      //   },
+      // );
       return MasonryGridView.count(
         controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
+        padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 1.h),
         crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
         mainAxisSpacing: 10,
         crossAxisSpacing: 4,
-        itemCount: controller.categoryList.length +
+        itemCount: controller.serviceList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index < controller.categoryList.length) {
-            CategoryListData data = controller.categoryList[index];
-            return controller.getOldListItem(data);
+          if (index < controller.serviceList.length) {
+            ServiceDataList data = controller.serviceList[index];
+            return controller.getListItem(context, data);
           } else if (controller.isFetchingMore) {
             return Center(
               child: Padding(

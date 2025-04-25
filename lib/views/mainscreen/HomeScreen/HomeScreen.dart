@@ -9,9 +9,12 @@ import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
+import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import '../../../../configs/colors_constant.dart';
@@ -33,7 +36,34 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     controller.pageController =
         PageController(initialPage: controller.currentPage);
-    controller.getCategoryList(context);
+    controller.scrollController.addListener(scrollListener);
+    futureDelay(() {
+      controller.getCategoryList(context);
+      controller.getBusinessList(context, 0, true);
+    },isOneSecond: false);
+  }
+
+  void scrollListener() {
+    if (controller.scrollController.position.pixels ==
+            controller.scrollController.position.maxScrollExtent &&
+        controller.nextPageURL.value.isNotEmpty &&
+        !controller.isFetchingMore) {
+      if (!mounted) return;
+      setState(() => controller.isFetchingMore = true);
+      controller.currentPage++;
+      Future.delayed(
+        Duration.zero,
+        () {
+          controller
+              .getBusinessList(context, controller.currentPage, true)
+              .whenComplete(() {
+            if (mounted) {
+              setState(() => controller.isFetchingMore = false);
+            }
+          });
+        },
+      );
+    }
   }
 
   @override
@@ -55,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: SingleChildScrollView(
                       controller: controller.scrollController,
-                      padding: EdgeInsets.only(bottom: 10.h),
+                      padding: EdgeInsets.only(bottom: 1.h),
                       physics: const BouncingScrollPhysics(),
                       child: Obx(() {
                         switch (controller.state.value) {
@@ -93,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             getDynamicSizedBox(height: 1.h),
-            setSearchBar(context, controller.searchCtr, 'home',
+            setSearchBars(context, controller.searchCtr, 'home',
                 onCancleClick: () {
               controller.searchCtr.text = '';
               setState(() {
@@ -129,29 +159,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       : Container();
                 })),
             getDynamicSizedBox(height: 1.h),
-            // Obx(
-            //   () {
-            //     return controller.trendingItemList.isNotEmpty
-            //         ? SizedBox(
-            //             height: 24.6.h,
-            //             child: ListView.builder(
-            //                 padding: EdgeInsets.only(left: 2.w, right: 1.w),
-            //                 physics: const BouncingScrollPhysics(),
-            //                 scrollDirection: Axis.horizontal,
-            //                 clipBehavior: Clip.antiAlias,
-            //                 itemBuilder: (context, index) {
-            //                   CommonProductList data =
-            //                       controller.trendingItemList[index];
-            //                   return controller.getListItem(context, data,
-            //                       () async {
-            //                     controller.getTotalProductInCart();
-            //                   }, controller.isGuest, () async {});
-            //                 },
-            //                 itemCount: controller.trendingItemList.length),
-            //           )
-            //         : Container();
-            //   },
-            // )
+            getHomeLable(DashboardText.buisinessTitle, () {
+              Get.to(const AddServicescreen())!.then((value) {});
+            }, isShowSeeMore: false),
+            Obx(
+              () {
+                return controller.businessList.isNotEmpty
+                    ? SizedBox(
+                        height: Device.height / 1,
+                        child: ListView.builder(
+                          controller: controller.scrollController,
+                          padding:
+                              EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          clipBehavior: Clip.antiAlias,
+                          itemCount: controller.businessList.length +
+                              (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index < controller.businessList.length) {
+                              BusinessData data =
+                                  controller.businessList[index];
+                              return controller.getBusinessListItem(
+                                  context, data);
+                            } else if (controller.isFetchingMore) {
+                              return Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.h),
+                                      child: const CircularProgressIndicator(
+                                          color: primaryColor)));
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
+                      )
+                    : Container();
+              },
+            )
           ]);
     } else {
       return noDataFoundWidget();

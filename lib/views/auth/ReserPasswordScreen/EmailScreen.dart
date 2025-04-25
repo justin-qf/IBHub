@@ -45,12 +45,14 @@ class EmailScreenState extends State<EmailScreen> {
             children: [
               getDynamicSizedBox(height: 5.h),
               Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: getleftsidebackbtn(
-                      title: 'Email',
-                      backFunction: () {
-                        Get.back(result: true);
-                      })),
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                child: getleftsidebackbtn(
+                  title: 'Email',
+                  backFunction: () {
+                    Get.back(result: true);
+                  },
+                ),
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),

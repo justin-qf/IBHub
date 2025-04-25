@@ -50,7 +50,11 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ? ResetPasstext.title
                     : ChangPasswordScreenConstant.title,
                 backFunction: () {
-                  Get.close(2);
+                  if (widget.fromProfile == false) {
+                    Get.close(2);
+                  } else {
+                    Get.back();
+                  }
                 }),
           ),
           Expanded(

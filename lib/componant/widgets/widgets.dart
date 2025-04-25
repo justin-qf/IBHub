@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/assets_constant.dart';
@@ -15,26 +13,26 @@ import 'package:sizer/sizer.dart';
 import '../../configs/colors_constant.dart';
 import '../../configs/font_constant.dart';
 
-getleftsidebackbtn({required backFunction, required title}) {
-  return Row(
-    children: [
-      GestureDetector(
-          onTap: () {
-            backFunction();
-          },
-          child: SvgPicture.asset(Asset.arrowBack,
+// getleftsidebackbtn({required backFunction, required title}) {
+//   return Row(
+//     children: [
+//       GestureDetector(
+//           onTap: () {
+//             backFunction();
+//           },
+//           child: SvgPicture.asset(Asset.arrowBack,
 
-              // ignore: deprecated_member_use
-              color: black,
-              height: 4.h)),
-      getDynamicSizedBox(width: 1.w),
-      Text(
-        title,
-        style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
-      )
-    ],
-  );
-}
+//               // ignore: deprecated_member_use
+//               color: black,
+//               height: 4.h)),
+//       getDynamicSizedBox(width: 1.w),
+//       Text(
+//         title,
+//         style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
+//       )
+//     ],
+//   );
+// }
 
 Future<bool?> getpopup(BuildContext context,
     {istimerrunout = false, title, message, function}) async {
@@ -227,7 +225,8 @@ PreferredSizeWidget getTabbar(
   );
 }
 
-Widget getHomeLable(String title, Function onCLick) {
+Widget getHomeLable(String title, Function onCLick,
+    {bool? isShowSeeMore = true}) {
   return FadeInRight(
     child: Container(
       margin: EdgeInsets.only(left: 5.w, right: 2.w),
@@ -245,32 +244,34 @@ Widget getHomeLable(String title, Function onCLick) {
                     Device.screenType == ScreenType.mobile ? 16.sp : 13.sp,
               )),
           const Spacer(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  onCLick();
-                },
-                child: Text(DashboardText.seeAll,
-                    style: TextStyle(
+          isShowSeeMore == true
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        onCLick();
+                      },
+                      child: Text(DashboardText.seeAll,
+                          style: TextStyle(
+                            color: isDarkMode() ? white : primaryColor,
+                            fontFamily: fontRegular,
+                            fontWeight: FontWeight.w500,
+                            fontSize: Device.screenType == ScreenType.mobile
+                                ? 16.sp
+                                : 14.sp,
+                          )),
+                    ),
+                    getDynamicSizedBox(width: 0.3.w),
+                    Icon(
+                      Icons.chevron_right_sharp,
                       color: isDarkMode() ? white : primaryColor,
-                      fontFamily: fontRegular,
-                      fontWeight: FontWeight.w500,
-                      fontSize: Device.screenType == ScreenType.mobile
-                          ? 16.sp
-                          : 14.sp,
-                    )),
-              ),
-              getDynamicSizedBox(width: 0.3.w),
-              Icon(
-                Icons.chevron_right_sharp,
-                color: isDarkMode() ? white : primaryColor,
-                size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
-              )
-            ],
-          ),
+                      size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
+                    )
+                  ],
+                )
+              : Container()
         ],
       ),
     ),
@@ -331,10 +332,13 @@ Widget getTextField(
     bool usegesture = false,
     bool isBorderSideEnable = false,
     bool isRequired = false,
+    bool isMultipline = false,
     Function? gestureFunction,
     bool isobscure = false,
     Function? obscureFunction,
     bool useOnChanged = true,
+    bool isAdd = false,
+    Function? onAddBtn,
     Function? ontap,
     context}) {
   Widget formfield = getReactiveFormField(
@@ -343,13 +347,20 @@ Widget getTextField(
       node: node, // Ensure correct FocusNode
       controller: ctr, // Ensure correct Controller
       hintLabel: hint,
+      onAddBtn: onAddBtn,
       onChanged: useOnChanged
           ? (val) {
               function(val);
             }
           : (val) {},
       errorText: model.error, // Corrected error binding
-      inputType: isNumeric ? TextInputType.number : TextInputType.text,
+      isAdd: isAdd ? true : false,
+      isAddress: isMultipline,
+      inputType: isMultipline
+          ? TextInputType.multiline
+          : isNumeric
+              ? TextInputType.number
+              : TextInputType.text,
       inputFormatters: isNumeric
           ? [
               FilteringTextInputFormatter.digitsOnly,
@@ -1221,7 +1232,7 @@ Widget showSelectedTextInDialog({name, modelId, storeId}) {
           name,
           style: TextStyle(
               fontFamily: fontRegular,
-              fontSize: Device.screenType == ScreenType.mobile ? 13.5.sp : 9.sp,
+              fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 14.sp,
               fontWeight: modelId == storeId ? FontWeight.w700 : null,
               color: modelId == storeId ? primaryColor : black),
         ),

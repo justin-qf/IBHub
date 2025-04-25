@@ -66,6 +66,7 @@ class User {
     required this.token,
   });
 
+
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"] ?? '',
@@ -77,7 +78,7 @@ class User {
         state: json["state"] != null ? StateData.fromJson(json["state"]) : null,
         pincode: json["pincode"] ?? '',
         visitingCardUrl: json["visiting_card_url"] ?? '',
-        isVerified: json["is_verified"] ?? '',
+        isVerified: json["is_verified"],
         token: json["token"] ?? '',
       );
 
@@ -144,3 +145,4 @@ class StateData {
         "country_id": countryId,
       };
 }
+

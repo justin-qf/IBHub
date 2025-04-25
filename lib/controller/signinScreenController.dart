@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
@@ -10,6 +12,7 @@ import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class Signinscreencontroller extends GetxController {
@@ -139,10 +142,14 @@ class Signinscreencontroller extends GetxController {
           "email": emailCtr.text.toString().trim(),
           "password": passCtr.text.toString().trim()
         },
-        apiEndPoint: ApiUrl.login, onResponse: (data) {
+        apiEndPoint: ApiUrl.login, onResponse: (data) async {
       var responseDetail = LoginModel.fromJson(data);
       UserPreferences().saveSignInInfo(responseDetail.data.user);
       UserPreferences().setToken(responseDetail.data.user.token.toString());
+      logcat("LoginResponse::", jsonEncode(responseDetail));
+      User? retrievedObject = await UserPreferences().getSignInInfo();
+      logcat("LoginResponsePref::", jsonEncode(retrievedObject));
+
       Get.offAll(const MainScreen());
     }, networkManager: networkManager, isModelResponse: true);
   }

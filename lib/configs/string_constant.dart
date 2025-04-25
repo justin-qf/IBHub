@@ -256,6 +256,8 @@ class DashboardText {
   static const seeAll = 'See All';
   static const text =
       'Doctors are people \nwho practice medicine \nDoctors are trained to \nkeep people healthy \nand to heal the sick.';
+  static const serviceTitle = 'Services';
+  static const buisinessTitle = 'Business';
 }
 
 class SearchScreenConstant {
@@ -279,6 +281,8 @@ class ServicesScreenConstant {
 
   static const String thumbnail = 'Thumbnail';
   static const String uploadThumbnail = 'Upload Thumbnail';
+  static const String categoryLabel = 'Category';
+  static const String categoryListLable = 'Category List';
 
   static const String submit = 'Submit';
 }
@@ -307,6 +311,7 @@ class SignUpConstant {
   static const subjectHint = 'Select Subject';
   static const statetHint = 'Select State';
   static const stateHint = 'Select State';
+  static const categoryHint = 'Select Category';
   static const stdExamHint = 'Select Exam';
   static const passwordHint = 'Enter Password';
   static const confirmPasswordHint = 'Re-Enter Password';

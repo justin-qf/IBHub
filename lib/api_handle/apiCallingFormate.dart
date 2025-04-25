@@ -18,58 +18,56 @@ commonPostApiCallFormate(context,
     Function? apisLoading,
     bool? isModelResponse = false}) async {
   var loadingIndicator = LoadingProgressDialog();
-  // try {
-  if (networkManager!.connectionType.value == 0) {
-    loadingIndicator.hide(context);
-    showDialogForScreen(context, title!, Connection.noConnection, callback: () {
-      Get.back();
-    });
-    return;
-  }
-  if (apisLoading != null) {
-    apisLoading(true);
-  } else {
-    loadingIndicator.show(context, '');
-  }
-
-  print(body.toString());
-  print(apiEndPoint.toString());
-  var response =
-      await Repository.post(body!, apiEndPoint!, allowHeader: allowHeader);
-  if (apisLoading != null) {
-    apisLoading(false);
-  } else {
-    loadingIndicator.hide(context);
-  }
-  // loadingIndicator.hide(context);
-  var data = jsonDecode(response.body);
-  logcat("RESPOSNE", data);
-  if (response.statusCode == 200) {
-    if (data['success'] == true) {
-      if (isModelResponse == true) {
-        onResponse(data);
-      } else {
-        showDialogForScreen(context, title!, data['message'], callback: () {
+  try {
+    if (networkManager!.connectionType.value == 0) {
+      loadingIndicator.hide(context);
+      showDialogForScreen(context, title!, Connection.noConnection,
+          callback: () {
+        Get.back();
+      });
+      return;
+    }
+    if (apisLoading != null) {
+      apisLoading(true);
+    } else {
+      loadingIndicator.show(context, '');
+    }
+    var response =
+        await Repository.post(body!, apiEndPoint!, allowHeader: allowHeader);
+    if (apisLoading != null) {
+      apisLoading(false);
+    } else {
+      loadingIndicator.hide(context);
+    }
+    // loadingIndicator.hide(context);
+    var data = jsonDecode(response.body);
+    logcat("RESPOSNE", data);
+    if (response.statusCode == 200) {
+      if (data['success'] == true) {
+        if (isModelResponse == true) {
           onResponse(data);
-        });
+        } else {
+          showDialogForScreen(context, title!, data['message'], callback: () {
+            onResponse(data);
+          });
+        }
+      } else {
+        showDialogForScreen(context, title!, data['message'], callback: () {});
       }
     } else {
-      showDialogForScreen(context, title!, data['message'], callback: () {});
+      showDialogForScreen(context, title!, data['message'].toString(),
+          callback: () {});
     }
-  } else {
-    showDialogForScreen(context, title!, data['message'].toString(),
+  } catch (e) {
+    logcat("Exception", e);
+    showDialogForScreen(context, title!, Connection.servererror,
         callback: () {});
+    if (apisLoading != null) {
+      apisLoading(false);
+    } else {
+      loadingIndicator.hide(context);
+    }
   }
-  // } catch (e) {
-  //   logcat("Exception", e);
-  //   showDialogForScreen(context, title!, Connection.servererror,
-  //       callback: () {});
-  //   if (apisLoading != null) {
-  //     apisLoading(false);
-  //   } else {
-  //     loadingIndicator.hide(context);
-  //   }
-  // }
 }
 
 void commonGetApiCallFormate(context,
@@ -81,64 +79,33 @@ void commonGetApiCallFormate(context,
     InternetController? networkManager,
     bool? isFromPartyList}) async {
   apisLoading!(true);
-
-  if (networkManager!.connectionType.value == 0) {
-    Future.delayed(Duration.zero, () {
+  try {
+    if (networkManager!.connectionType.value == 0) {
       showDialogForScreen(context, title!, Connection.noConnection,
           callback: () {
         Get.back();
       });
-    });
-    // showDialogForScreen(context, title!, Connection.noConnection, callback: () {
-    //   Get.back();
-    // });
-    return;
-  }
-  var response =
-      await Repository.get({}, apiEndPoint!, allowHeader: allowHeader);
-  apisLoading(false);
-  var responseData = jsonDecode(response.body);
-  if (response.statusCode == 200) {
-    if (responseData['success'] == true) {
-      onResponse(responseData);
-    } else {
-      showDialogForScreen(context, title!, responseData['message'],
-          callback: () {});
+      return;
     }
-  } else {
-    isFromPartyList != true
-        ? showDialogForScreen(
-            context, title!, responseData['message'] ?? Connection.servererror,
-            callback: () {})
-        : Container();
+    var response = await Repository.get({}, apiEndPoint!, allowHeader: true);
+    apisLoading(false);
+    var responseData = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseData['success'] == true) {
+        onResponse(responseData);
+      } else {
+        showDialogForScreen(context, title!, responseData['message'],
+            callback: () {});
+      }
+    } else {
+      isFromPartyList != true
+          ? showDialogForScreen(context, title!,
+              responseData['message'] ?? Connection.servererror,
+              callback: () {})
+          : Container();
+    }
+  } catch (e) {
+    apisLoading(false);
+    logcat('Exception', e);
   }
-  // try {
-  //   if (networkManager!.connectionType.value == 0) {
-  //     showDialogForScreen(context, title!, Connection.noConnection,
-  //         callback: () {
-  //       Get.back();
-  //     });
-  //     return;
-  //   }
-  //   var response = await Repository.get({}, apiEndPoint!, allowHeader: true);
-  //   apisLoading(false);
-  //   var responseData = jsonDecode(response.body);
-  //   if (response.statusCode == 200) {
-  //     if (responseData['success'] == true) {
-  //       onResponse(responseData);
-  //     } else {
-  //       showDialogForScreen(context, title!, responseData['message'],
-  //           callback: () {});
-  //     }
-  //   } else {
-  //     isFromPartyList != true
-  //         ? showDialogForScreen(context, title!,
-  //             responseData['message'] ?? Connection.servererror,
-  //             callback: () {})
-  //         : Container();
-  //   }
-  // } catch (e) {
-  //   apisLoading(false);
-  //   logcat('Exception', e);
-  // }
 }

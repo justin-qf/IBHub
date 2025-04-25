@@ -103,7 +103,8 @@ class Updateprofilecontroller extends GetxController {
     final String fileName = path.basename(retrievedObject.visitingCardUrl);
     visitingcardCtr.text = fileName;
 
-    // imageFile.value = retrievedObject!.visitingCardUrl;
+    // imageFile.value = retrievedObject!.visitingC+ardUrl;
+
     pincodeCtr.text = retrievedObject.pincode;
     addressCtr.text = retrievedObject.address;
 

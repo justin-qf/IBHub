@@ -20,6 +20,7 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:ibh/views/services/addserviceScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -71,11 +72,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     // getDynamicSizedBox(height: commonHeight()),
                     Container(
-
-                      height: 35.h,
+                      height: 23.h,
                       width: Device.width,
-                      padding: EdgeInsets.only(
-                          right: 3.w, left: 3.w,  top: 1.h),
+                      padding: EdgeInsets.only(right: 3.w, left: 3.w, top: 1.h),
                       decoration: const BoxDecoration(
                         color: secondaryColor,
                         borderRadius: BorderRadius.only(
@@ -87,46 +86,59 @@ class _ProfileScreenState extends State<ProfileScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          getDynamicSizedBox(height: 3.h),
-                        
+                          // getDynamicSizedBox(height: 3.h),
                           Container(
-                            margin: EdgeInsets.only(left: 13.w,top: 2.h),
+                            margin: EdgeInsets.only(left: 6.w, top: 2.h),
+                            decoration: const BoxDecoration(
+                              color: secondaryColor,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(35),
+                                bottomRight: Radius.circular(35),
+                              ),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    if (controller.profilePic.value.isNotEmpty) {
+                                    if (controller
+                                        .profilePic.value.isNotEmpty) {
                                       Get.to(FullScreenImage(
                                         imageUrl: controller.profilePic.value,
                                         fromProfile: true,
                                       ))!
                                           .then((value) => {
-                                                Statusbar().trasparentStatusbar()
+                                                Statusbar()
+                                                    .trasparentStatusbar()
                                               });
                                     }
                                   },
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    height:20.h,
-                                    width:20.w,
-                                    imageUrl: controller.profilePic.value,
-                                    placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator(
-                                          color: primaryColor),
-                                    ),
-                                    imageBuilder: (context, imageProvider) =>
-                                        CircleAvatar(
-                                      radius: 25.h,
-                                      backgroundImage: imageProvider,
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        CircleAvatar(
-                                      radius: 25.h,
-                                      child: Image.asset(
-                                        "assets/pngs/avtar.png",
-                                        height: 15.h,
+                                  child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30)),
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      height: 20.h,
+                                      width: 20.w,
+                                      imageUrl: controller.profilePic.value,
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                        child: CircularProgressIndicator(
+                                            color: primaryColor),
+                                      ),
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: 25.h,
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          CircleAvatar(
+                                        radius: 25.h,
+                                        child: Image.asset(
+                                          "assets/pngs/avtar.png",
+                                          height: 15.h,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -136,8 +148,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 3.w),
                                     child: Column(
-                                      
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
@@ -150,16 +162,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Text(
                                                   controller.userName.value
                                                           .isNotEmpty
-                                                      ? controller.userName.value
-                                                          .capitalize!
+                                                      ? controller.userName
+                                                          .value.capitalize!
                                                       : "Your Name",
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   maxLines: 1,
                                                   style: TextStyle(
-                                                      fontSize: 18.sp,
+                                                      fontSize: 17.sp,
                                                       color: black,
                                                       fontWeight:
-                                                          FontWeight.w500),
+                                                          FontWeight.w800),
                                                 ),
                                               ],
                                             );
@@ -174,13 +187,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Text(
                                                   controller.bussiness.value
                                                           .isNotEmpty
-                                                      ? controller.bussiness.value
-                                                          .capitalize!
+                                                      ? controller.bussiness
+                                                          .value.capitalize!
                                                       : "Your Bussiness",
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   maxLines: 1,
                                                   style: TextStyle(
-                                                      fontSize: 18.sp,
+                                                      fontSize: 16.sp,
                                                       color: black,
                                                       fontWeight:
                                                           FontWeight.w500),

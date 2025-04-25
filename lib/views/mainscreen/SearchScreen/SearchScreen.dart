@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -9,6 +10,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/searchController.dart';
+import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:sizer/sizer.dart';
@@ -28,8 +30,43 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     controller.isSearch = false;
-    // controller.getSearchList(context, controller.searchCtr.text.toString());
+    futureDelay(() {
+      controller.currentPage = 1;
+      controller.getStateApi(context, "");
+      controller.getCategoryApi(context);
+    }, isOneSecond: false);
+    controller.scrollController.addListener(scrollListener);
     super.initState();
+  }
+
+  void scrollListener() {
+    if (controller.scrollController.position.pixels ==
+            controller.scrollController.position.maxScrollExtent &&
+        controller.nextPageURL.value.isNotEmpty &&
+        !controller.isFetchingMore) {
+      if (!mounted) return;
+      setState(() => controller.isFetchingMore = true);
+      controller.currentPage++;
+      Future.delayed(
+        Duration.zero,
+        () {
+          controller
+              .getBusinessList(context, controller.currentPage, true)
+              .whenComplete(() {
+            if (mounted) {
+              setState(() => controller.isFetchingMore = false);
+            }
+          });
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.currentPage = 1;
+    controller.businessList.clear();
+    super.dispose();
   }
 
   @override
@@ -51,21 +88,31 @@ class _SearchScreenState extends State<SearchScreen> {
             Column(children: [
               getDynamicSizedBox(height: 4.h),
               getCommonToolbar("Search", showBackButton: false),
-              setSearchBar(
+              setSearchBars(
                   context, controller.searchCtr, SearchScreenConstant.title,
                   onCancleClick: () {
-                controller.isSearch = false;
-                controller.searchCtr.text = '';
-                setState(() {});
-              }, onClearClick: () {
-                if (controller.searchCtr.text.isNotEmpty) {
-                  futureDelay(() {
-                    // controller.getSearchList(context, "");
-                  });
-                }
-                controller.searchCtr.text = '';
-                setState(() {});
-              }, isCancle: false),
+                    controller.isSearch = false;
+                    controller.searchCtr.text = '';
+                    setState(() {});
+                  },
+                  onClearClick: () {
+                    if (controller.searchCtr.text.isNotEmpty) {
+                      futureDelay(() {
+                        controller.currentPage = 1;
+                        futureDelay(() {
+                          controller.getBusinessList(
+                              context, controller.currentPage, false,
+                              keyword: controller.searchCtr.text.toString());
+                        }, isOneSecond: false);
+                      });
+                    }
+                    controller.searchCtr.text = '';
+                    setState(() {});
+                  },
+                  isCancle: false,
+                  onFilterClick: () {
+                    controller.showBottomSheetDialog(context);
+                  }),
               getDynamicSizedBox(height: 2.h),
               Expanded(
                   child: Container(
@@ -113,31 +160,55 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget apiSuccess(ScreenState state) {
-    if (state == ScreenState.apiSuccess && controller.searchList.isNotEmpty) {
+    if (state == ScreenState.apiSuccess && controller.businessList.isNotEmpty) {
       return ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.only(left: 2.w, right: 1.w, top: 0.5.h),
-          shrinkWrap: false,
-          scrollDirection: Axis.horizontal,
-          clipBehavior: Clip.antiAlias,
-          itemBuilder: (context, index) {
+        controller: controller.scrollController,
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.only(left: 2.w, right: 1.w, top: 0.5.h),
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        clipBehavior: Clip.antiAlias,
+        itemCount: controller.businessList.length +
+            (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index < controller.businessList.length) {
+            BusinessData data = controller.businessList[index];
+            return controller.getBusinessListItem(context, data);
+          } else if (controller.isFetchingMore) {
+            return Center(
+                child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child:
+                        const CircularProgressIndicator(color: primaryColor)));
+          } else {
             return Container();
-            // CommonProductList data = controller.searchList[index];
-            // return controller.getItemListItem(context, data, false);
-          },
-          itemCount: controller.searchList.length);
+          }
+        },
+      );
       // return MasonryGridView.count(
+      //   controller: controller.scrollController,
       //   physics: const BouncingScrollPhysics(),
-      //   padding: EdgeInsets.only(bottom: 3.h, top: 1.h, left: 2.w, right: 2.w),
+      //   padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
       //   crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
       //   mainAxisSpacing: 10,
       //   crossAxisSpacing: 4,
+      //   itemCount: controller.businessList.length +
+      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
       //   itemBuilder: (context, index) {
-      //     CommonProductList data = controller.searchList[index];
-      //     return controller.getItemListItem(
-      //         context, data, controller.isGuest!.value);
+      //     if (index < controller.businessList.length) {
+      //       BusinessData data = controller.businessList[index];
+      //       return controller.getBusinessListItem(context, data);
+      //     } else if (controller.isFetchingMore) {
+      //       return Center(
+      //         child: Padding(
+      //           padding: EdgeInsets.symmetric(vertical: 2.h),
+      //           child: const CircularProgressIndicator(color: primaryColor),
+      //         ),
+      //       );
+      //     } else {
+      //       return Container();
+      //     }
       //   },
-      //   itemCount: controller.searchList.length,
       // );
     } else {
       return noDataFoundWidget();
