@@ -625,6 +625,27 @@ getCommonToolbar(String title,
   );
 }
 
+getleftsidebackbtn({required backFunction, required title}) {
+  return Row(
+    children: [
+      GestureDetector(
+          onTap: () {
+            backFunction();
+          },
+          child: SvgPicture.asset(Asset.arrowBack,
+
+              // ignore: deprecated_member_use
+              color: black,
+              height: 4.h)),
+      getDynamicSizedBox(width: 1.w),
+      Text(
+        title,
+        style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
+      )
+    ],
+  );
+}
+
 getLogoAppBar() {
   return Center(child: getLogo());
 }

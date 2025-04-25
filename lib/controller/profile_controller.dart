@@ -41,8 +41,8 @@ class ProfileController extends GetxController {
     userName.value = retrievedObject!.name;
     email.value = retrievedObject.email;
     number.value = retrievedObject.phone;
-    gender.value = retrievedObject.city;
-    referCode!.value = retrievedObject.state;
+    gender.value = retrievedObject.city.city;
+    referCode!.value = retrievedObject.state.name;
     update();
     states.value = ScreenState.apiSuccess;
     logcat("referCode::", referCode!.value.toString());

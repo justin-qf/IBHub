@@ -91,7 +91,7 @@ void commonGetApiCallFormate(context,
     apisLoading(false);
     var responseData = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      if (responseData['status'] == true) {
+      if (responseData['success'] == true) {
         onResponse(responseData);
       } else {
         showDialogForScreen(context, title!, responseData['message'],

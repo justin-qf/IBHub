@@ -206,7 +206,8 @@ PreferredSizeWidget getTabbar(
   );
 }
 
-Widget getHomeLable(String title, Function onCLick) {
+Widget getHomeLable(String title, Function onCLick,
+    {bool? isShowSeeMore = true}) {
   return FadeInRight(
     child: Container(
       margin: EdgeInsets.only(left: 5.w, right: 2.w),
@@ -224,32 +225,34 @@ Widget getHomeLable(String title, Function onCLick) {
                     Device.screenType == ScreenType.mobile ? 16.sp : 13.sp,
               )),
           const Spacer(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  onCLick();
-                },
-                child: Text(DashboardText.seeAll,
-                    style: TextStyle(
+          isShowSeeMore == true
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        onCLick();
+                      },
+                      child: Text(DashboardText.seeAll,
+                          style: TextStyle(
+                            color: isDarkMode() ? white : primaryColor,
+                            fontFamily: fontRegular,
+                            fontWeight: FontWeight.w500,
+                            fontSize: Device.screenType == ScreenType.mobile
+                                ? 16.sp
+                                : 14.sp,
+                          )),
+                    ),
+                    getDynamicSizedBox(width: 0.3.w),
+                    Icon(
+                      Icons.chevron_right_sharp,
                       color: isDarkMode() ? white : primaryColor,
-                      fontFamily: fontRegular,
-                      fontWeight: FontWeight.w500,
-                      fontSize: Device.screenType == ScreenType.mobile
-                          ? 16.sp
-                          : 14.sp,
-                    )),
-              ),
-              getDynamicSizedBox(width: 0.3.w),
-              Icon(
-                Icons.chevron_right_sharp,
-                color: isDarkMode() ? white : primaryColor,
-                size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
-              )
-            ],
-          ),
+                      size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
+                    )
+                  ],
+                )
+              : Container()
         ],
       ),
     ),
@@ -1199,7 +1202,7 @@ Widget showSelectedTextInDialog({name, modelId, storeId}) {
           name,
           style: TextStyle(
               fontFamily: fontRegular,
-              fontSize: Device.screenType == ScreenType.mobile ? 13.5.sp : 9.sp,
+              fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 14.sp,
               fontWeight: modelId == storeId ? FontWeight.w700 : null,
               color: modelId == storeId ? primaryColor : black),
         ),
