@@ -89,7 +89,7 @@ class Repository {
     logcat("Token::::", token.toString());
     Map<String, String> headers = {
       'Content-Type': "multipart/form-data",
-      'Authorization': token,
+      'Authorization':  'Bearer $token',
     };
 
     var request = http.MultipartRequest(

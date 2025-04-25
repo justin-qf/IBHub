@@ -56,6 +56,7 @@ class Signinscreencontroller extends GetxController {
     _obsecureTextPass.value = true;
     _isLoading.value = false;
     print('call signin screeen');
+    resetForm();
   }
 
   @override

@@ -7,18 +7,27 @@ import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
+import 'package:ibh/componant/input/form_inputs.dart';
+import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/models/categorylistdatamodel.dart';
+import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
+import 'package:ibh/models/stateandcity_models.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
+// import 'package:sizer/sizer.dart';
 
 class AddServicescreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -47,18 +56,138 @@ class AddServicescreencontroller extends GetxController {
   bool get isloading => isLoading.value;
   set isloading(bool value) => isLoading.value = value;
 
+  late TextEditingController searchCategoryCtr;
+  late FocusNode searchCategoryNode;
+  var searchCategoryModel = ValidationModel(null, null, isValidate: false).obs;
+
+  RxBool isCategoryApiCallLoading = false.obs;
+  RxList categoryFilterList = [].obs;
+  RxString categoryId = "".obs;
+  RxList categoryList = [].obs;
+
+  void getCategory(context) async {
+    commonGetApiCallFormate(
+      allowHeader: true,
+      title: 'Category',
+      context,
+      onResponse: (data) {
+        var responsDetails = CategoryData.fromJson(data);
+        categoryList.addAll(responsDetails.data);
+        categoryFilterList.clear();
+        categoryFilterList.addAll(categoryList);
+
+        // print(stateList);
+
+        for (var state in categoryList) {
+          print('ID: ${state.id}, Name: ${state.name}');
+        }
+      },
+      apiEndPoint: ApiUrl.getCategories,
+      networkManager: networkManager,
+      apisLoading: (bool val) {
+        // isloading = val;
+      },
+    );
+  }
+
+  Widget setCategoryListDialog() {
+    return Obx(() {
+      if (isCategoryApiCallLoading.value == true) {
+        return setDropDownContent([].obs, const Text("Loading"),
+            isApiIsLoading: isCategoryApiCallLoading.value);
+      }
+      return setDropDownContent(
+          categoryFilterList,
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemCount: categoryFilterList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                contentPadding:
+                    const EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
+                horizontalTitleGap: null,
+                minLeadingWidth: 5,
+                onTap: () async {
+                  Get.back();
+                  categoryId.value = categoryFilterList[index].id.toString();
+                  categoryCtr.text = categoryFilterList[index].name;
+                  if (categoryCtr.text.toString().isNotEmpty) {
+                    categoryFilterList.clear();
+                    categoryFilterList.addAll(categoryList);
+                  }
+
+                  validateFields(categoryCtr.text,
+                      model: categoryModel,
+                      errorText1: "Category is required",
+                      iscomman: true,
+                      shouldEnableButton: true);
+                  // getState(context);
+                  // categoryCtr.text = "";
+                  // categoryId.value = "";
+                  update();
+                  futureDelay(() {
+                    // getCityApi(context, stateId.value.toString(), "", "");
+                  }, isOneSecond: false);
+                  // validateFields(stateCtr.text);
+                },
+                title: showSelectedTextInDialog(
+                    name: categoryFilterList[index].name,
+                    modelId: categoryFilterList[index].id.toString(),
+                    storeId: categoryId.value),
+              );
+            },
+          ),
+          searchcontent: getReactiveFormField(
+              node: searchCategoryNode,
+              controller: searchCategoryCtr,
+              hintLabel: "Search Here",
+              onChanged: (val) {
+                applyFilter(val.toString());
+
+                update();
+              },
+              isSearch: true,
+              inputType: TextInputType.text,
+              errorText: searchCategoryModel.value.error));
+    });
+  }
+
+  void applyFilter(
+    String keyword,
+  ) {
+    categoryFilterList.clear();
+    for (CatggoryData categoryList in categoryList) {
+      if (categoryList.name
+          .toString()
+          .toLowerCase()
+          .contains(keyword.toLowerCase())) {
+        categoryFilterList.add(categoryList);
+      }
+    }
+    categoryFilterList.refresh();
+    categoryFilterList.call();
+    logcat('filterApply', categoryFilterList.length.toString());
+
+    update();
+  }
+
   void init() {
     serviceTitleNode = FocusNode();
     descriptionNode = FocusNode();
     keywordsNode = FocusNode();
     categoryNode = FocusNode();
     thumbnailNode = FocusNode();
+    searchCategoryNode = FocusNode();
 
     serviceTitleCtr = TextEditingController();
     descriptionCtr = TextEditingController();
     keywordsCtr = TextEditingController();
     categoryCtr = TextEditingController();
     thumbnailCtr = TextEditingController();
+    searchCategoryCtr = TextEditingController();
   }
 
   @override
@@ -78,9 +207,13 @@ class AddServicescreencontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (keywordsModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (categoryModel.value.isValidate == false) {
+    }
+
+    else if (categoryModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (thumbnailModel.value.isValidate == false) {
+    }
+
+    else if (thumbnailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
@@ -95,12 +228,14 @@ class AddServicescreencontroller extends GetxController {
     keywordsCtr.clear();
     categoryCtr.clear();
     thumbnailCtr.clear();
+    searchCategoryCtr.clear();
 
     serviceTitleNode.unfocus();
     descriptionNode.unfocus();
     keywordsNode.unfocus();
     categoryNode.unfocus();
     thumbnailNode.unfocus();
+    searchCategoryNode.unfocus();
 
     serviceTitleModel.value = ValidationModel(null, null, isValidate: false);
     descriptionModel.value = ValidationModel(null, null, isValidate: false);
@@ -121,18 +256,19 @@ class AddServicescreencontroller extends GetxController {
     keywordsCtr.clear();
     categoryCtr.clear();
     thumbnailCtr.clear();
+    searchCategoryCtr.clear();
 
     serviceTitleNode.unfocus();
     descriptionNode.unfocus();
     keywordsNode.unfocus();
     categoryNode.unfocus();
     thumbnailNode.unfocus();
+    searchCategoryNode.unfocus();
 
     serviceTitleModel.value = ValidationModel(null, null, isValidate: false);
     descriptionModel.value = ValidationModel(null, null, isValidate: false);
     keywordsModel.value = ValidationModel(null, null, isValidate: false);
     categoryModel.value = ValidationModel(null, null, isValidate: false);
-    thumbnailModel.value = ValidationModel(null, null, isValidate: false);
     thumbnailModel.value = ValidationModel(null, null, isValidate: false);
 
     isFormInvalidate.value = false;
@@ -164,6 +300,7 @@ class AddServicescreencontroller extends GetxController {
         },
         enableBtnFunction: () {
           enableSubmitButton();
+          print('object');
         });
   }
 
@@ -183,6 +320,7 @@ class AddServicescreencontroller extends GetxController {
       imageFile = File(image.path).obs;
       final String fileName = path.basename(image.path);
       thumbnailCtr.text = fileName;
+
       validateFields(fileName,
           model: thumbnailModel,
           errorText1: "Visiting card is required",
@@ -235,6 +373,7 @@ class AddServicescreencontroller extends GetxController {
       },
     );
   }
+
   void submitServiceAPI(context) async {
     var loadingIndicator = LoadingProgressDialog();
 
@@ -253,24 +392,24 @@ class AddServicescreencontroller extends GetxController {
         "service_title": serviceTitleCtr.text.toString().trim(),
         "description": descriptionCtr.text.toString().trim(),
         "keywords": keywordsCtr.text.toString().trim(),
-        "category_id": categoryCtr.text.toString().trim(),
+        "category_id": categoryId.value.toString().trim(),
       });
 
       var response = await Repository.multiPartPost({
         "service_title": serviceTitleCtr.text.toString().trim(),
         "description": descriptionCtr.text.toString().trim(),
         "keywords": keywordsCtr.text.toString().trim(),
-        "category_id": categoryCtr.text.toString().trim(),
+        "category_id": categoryId.value.toString().trim(),
       }, ApiUrl.createservice,
-          multiPart: imageFile.value != null &&
-                  imageFile.value.toString().isNotEmpty
-              ? http.MultipartFile(
-                  'thumbnail',
-                  imageFile.value!.readAsBytes().asStream(),
-                  imageFile.value!.lengthSync(),
-                  filename: imageFile.value!.path.split('/').last,
-                )
-              : null,
+          multiPart:
+              imageFile.value != null && imageFile.value.toString().isNotEmpty
+                  ? http.MultipartFile(
+                      'thumbnail',
+                      imageFile.value!.readAsBytes().asStream(),
+                      imageFile.value!.lengthSync(),
+                      filename: imageFile.value!.path.split('/').last,
+                    )
+                  : null,
           allowHeader: true);
 
       var responseData = await response.stream.toBytes();

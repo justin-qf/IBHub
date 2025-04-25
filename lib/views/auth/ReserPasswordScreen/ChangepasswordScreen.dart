@@ -12,7 +12,8 @@ import 'package:sizer/sizer.dart';
 
 // ignore: must_be_immutable
 class ChangePasswordScreen extends StatefulWidget {
-  ChangePasswordScreen({super.key, this.email, this.otp, this.fromProfile});
+  ChangePasswordScreen(
+      {super.key, this.email, this.otp, this.fromProfile = false});
   bool? fromProfile;
   String? email;
   String? otp;
@@ -29,7 +30,8 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return CustomParentScaffold(
       onWillPop: () async {
         if (widget.fromProfile == false) {
-          Get.back(result: true);
+          Get.close(2);
+          print('back');
         }
         return true;
       },
@@ -48,7 +50,7 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ? ResetPasstext.title
                     : ChangPasswordScreenConstant.title,
                 backFunction: () {
-                  Get.back(result: true);
+                  Get.close(2);
                 }),
           ),
           Expanded(
@@ -172,7 +174,6 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             obscureFunction: ctr.toggleNewConPassObscureText,
                           );
                         }),
-                       
                         getDynamicSizedBox(height: 5.0.h),
                         Obx(() {
                           return getFormButton(

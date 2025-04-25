@@ -39,8 +39,7 @@ class Updateprofilecontroller extends GetxController {
       cityNode,
       pincodeNode,
       visitingcardNode,
-      passNode,
-      confpassNode;
+      addressNode;
   late TextEditingController nameCtr,
       emailCtr,
       phoneCtr,
@@ -49,8 +48,7 @@ class Updateprofilecontroller extends GetxController {
       cityCtr,
       pincodeCtr,
       visitingcardCtr,
-      passCtr,
-      confpassCtr;
+      addressCtr;
 
   var nameModel = ValidationModel(null, null, isValidate: false).obs;
   var emailModel = ValidationModel(null, null, isValidate: false).obs;
@@ -60,8 +58,7 @@ class Updateprofilecontroller extends GetxController {
   var cityModel = ValidationModel(null, null, isValidate: false).obs;
   var pincodeModel = ValidationModel(null, null, isValidate: false).obs;
   var visitingCardModel = ValidationModel(null, null, isValidate: false).obs;
-  var passModel = ValidationModel(null, null, isValidate: false).obs;
-  var confpassModel = ValidationModel(null, null, isValidate: false).obs;
+  var addressModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isFormInvalidate = false.obs;
 
@@ -92,6 +89,90 @@ class Updateprofilecontroller extends GetxController {
   RxString cityId = "".obs;
   RxList cityList = [].obs;
 
+  getProfileData() async {
+    state.value = ScreenState.apiLoading;
+    User? retrievedObject = await UserPreferences().getSignInInfo();
+    nameCtr.text = retrievedObject!.name;
+    emailCtr.text = retrievedObject.email;
+    phoneCtr.text = retrievedObject.phone;
+    bussinessCtr.text = retrievedObject.businessName;
+    stateCtr.text = retrievedObject.state!.name;
+    cityCtr.text = retrievedObject.city!.city;
+    stateId.value = retrievedObject.state!.id.toString();
+    cityId.value = retrievedObject.city!.id.toString();
+    final String fileName = path.basename(retrievedObject.visitingCardUrl);
+    visitingcardCtr.text = fileName;
+
+    // imageFile.value = retrievedObject!.visitingCardUrl;
+    pincodeCtr.text = retrievedObject.pincode;
+    addressCtr.text = retrievedObject.address;
+
+    validateFields(nameCtr.text,
+        model: nameModel,
+        errorText1: "Name is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    validateFields(emailCtr.text,
+        model: emailModel,
+        errorText1: "Email is required",
+        errorText2: "Invalid email format",
+        isemail: true,
+        shouldEnableButton: false);
+
+    validateFields(phoneCtr.text,
+        model: phoneModel,
+        errorText1: "Phone number is required",
+        isnumber: true,
+        shouldEnableButton: false);
+
+    validateFields(bussinessCtr.text,
+        model: bussinessModel,
+        errorText1: "Business name is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    validateFields(stateCtr.text,
+        model: stateModel,
+        errorText1: "State is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    validateFields(cityCtr.text,
+        model: cityModel,
+        errorText1: "City is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    validateFields(pincodeCtr.text,
+        model: pincodeModel,
+        errorText1: "Pincode is required",
+        isPincode: true,
+        shouldEnableButton: false);
+
+    validateFields(visitingcardCtr.text,
+        model: visitingCardModel,
+        errorText1: "Visiting card is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    validateFields(addressCtr.text,
+        model: addressModel,
+        errorText1: "Address is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    enableSignUpButton();
+
+    // visitingcardCtr.text=retrievedObject.
+
+    // gender.value = retrievedObject.city;
+    // referCode!.value = retrievedObject.state;
+
+    state.value = ScreenState.apiSuccess;
+    update();
+  }
+
   void inti() {
     nameNode = FocusNode();
     emailNode = FocusNode();
@@ -101,9 +182,9 @@ class Updateprofilecontroller extends GetxController {
     cityNode = FocusNode();
     pincodeNode = FocusNode();
     visitingcardNode = FocusNode();
-    passNode = FocusNode();
-    confpassNode = FocusNode();
+    addressNode = FocusNode();
     searchStateNode = FocusNode();
+    searchCityNode = FocusNode();
 
     nameCtr = TextEditingController();
     emailCtr = TextEditingController();
@@ -113,9 +194,9 @@ class Updateprofilecontroller extends GetxController {
     cityCtr = TextEditingController();
     pincodeCtr = TextEditingController();
     visitingcardCtr = TextEditingController();
-    passCtr = TextEditingController();
-    confpassCtr = TextEditingController();
+    addressCtr = TextEditingController();
     searchStatectr = TextEditingController();
+    searchCityctr = TextEditingController();
   }
 
   @override
@@ -140,6 +221,7 @@ class Updateprofilecontroller extends GetxController {
   }
 
   void enableSignUpButton() {
+    print('executed');
     if (nameModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (emailModel.value.isValidate == false) {
@@ -155,10 +237,6 @@ class Updateprofilecontroller extends GetxController {
     } else if (pincodeModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (visitingCardModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (passModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (confpassModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
@@ -201,8 +279,7 @@ class Updateprofilecontroller extends GetxController {
     cityCtr.clear();
     pincodeCtr.clear();
     visitingcardCtr.clear();
-    passCtr.clear();
-    confpassCtr.clear();
+    addressCtr.clear();
 
     // Reset all validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -213,8 +290,7 @@ class Updateprofilecontroller extends GetxController {
     cityModel.value = ValidationModel(null, null, isValidate: false);
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
     visitingCardModel.value = ValidationModel(null, null, isValidate: false);
-    passModel.value = ValidationModel(null, null, isValidate: false);
-    confpassModel.value = ValidationModel(null, null, isValidate: false);
+    addressModel.value = ValidationModel(null, null, isValidate: false);
 
     // Reset reactive variables
     isFormInvalidate.value = false;
@@ -235,9 +311,9 @@ class Updateprofilecontroller extends GetxController {
     cityCtr.clear();
     pincodeCtr.clear();
     visitingcardCtr.clear();
-    passCtr.clear();
-    confpassCtr.clear();
+    addressCtr.clear();
     searchStatectr.clear();
+    searchCityctr.clear();
 
     nameNode.unfocus();
     emailNode.unfocus();
@@ -247,9 +323,9 @@ class Updateprofilecontroller extends GetxController {
     cityNode.unfocus();
     pincodeNode.unfocus();
     visitingcardNode.unfocus();
-    passNode.unfocus();
-    confpassNode.unfocus();
+    addressNode.unfocus();
     searchStateNode.unfocus();
+    searchCityNode.unfocus();
 
     // Reset validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -260,8 +336,7 @@ class Updateprofilecontroller extends GetxController {
     cityModel.value = ValidationModel(null, null, isValidate: false);
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
     visitingCardModel.value = ValidationModel(null, null, isValidate: false);
-    passModel.value = ValidationModel(null, null, isValidate: false);
-    confpassModel.value = ValidationModel(null, null, isValidate: false);
+    addressModel.value = ValidationModel(null, null, isValidate: false);
     isFormInvalidate.value = false;
     isloading = false;
   }
@@ -305,92 +380,92 @@ class Updateprofilecontroller extends GetxController {
         });
   }
 
-  void registerAPI(context) async {
+  void updateProfile(context) async {
     var loadingIndicator = LoadingProgressDialog();
 
-    try {
-      if (networkManager.connectionType == 0) {
-        loadingIndicator.hide(context);
-        showDialogForScreen(context, "Signup Screen", Connection.noConnection,
-            callback: () {
-          Get.back();
-        });
-        return;
-      }
-      loadingIndicator.show(context, '');
-
-      logcat("PartyParam", {
-        "name": nameCtr.text.toString(),
-        "email": emailCtr.text.toString().trim(),
-        "phone": phoneCtr.text.toString(),
-        "password": passCtr.text.toString().trim(),
-        "business_name": bussinessCtr.text.toString(),
-        "city": "Ahmedabad",
-        "state": "Gujarat",
-        "pincode": pincodeCtr.text.toString(),
-        // "visiting_card": visitingcardCtr.text.toString(),
-        "password_confirmation": confpassCtr.text.toString()
-      });
-
-      var response = await Repository.multiPartPost({
-        "name": nameCtr.text.toString(),
-        "email": emailCtr.text.toString().trim(),
-        "phone": phoneCtr.text.toString(),
-        "password": passCtr.text.toString().trim(),
-        "business_name": bussinessCtr.text.toString(),
-        "city": "Ahmedabad",
-        "state": "Gujarat",
-        "pincode": pincodeCtr.text.toString(),
-        // "visiting_card": visitingcardCtr.text.toString(),
-        "password_confirmation": confpassCtr.text.toString()
-      }, ApiUrl.register,
-          multiPart:
-              imageFile.value != null && imageFile.value.toString().isNotEmpty
-                  ? http.MultipartFile(
-                      'visiting_card',
-                      imageFile.value!.readAsBytes().asStream(),
-                      imageFile.value!.lengthSync(),
-                      filename: imageFile.value!.path.split('/').last,
-                    )
-                  : null,
-          allowHeader: true);
-      var responseData = await response.stream.toBytes();
+    // try {
+    if (networkManager.connectionType == 0) {
       loadingIndicator.hide(context);
+      showDialogForScreen(context, "Signup Screen", Connection.noConnection,
+          callback: () {
+        Get.back();
+      });
+      return;
+    }
+    loadingIndicator.show(context, '');
 
-      var result = String.fromCharCodes(responseData);
-      var json = jsonDecode(result);
-      if (response.statusCode == 200) {
-        if (json['success'] == true) {
-          print('pref store succesfully');
+    // logcat("PartyParam", {
+    //   "name": nameCtr.text.toString(),
+    //   "email": emailCtr.text.toString().trim(),
+    //   "phone": phoneCtr.text.toString(),
+    //   "password": passCtr.text.toString().trim(),
+    //   "business_name": bussinessCtr.text.toString(),
+    //   "city": cityId.toString(),
+    //   "state": stateId.toString(),
+    //   "pincode": pincodeCtr.text.toString(),
+    //   // "visiting_card": visitingcardCtr.text.toString(),
+    //   "password_confirmation": confpassCtr.text.toString()
+    // });
 
-          print('print json: ${json.toString()}');
+    var response = await Repository.multiPartPost({
+      "name": nameCtr.text.toString(),
+      "email": emailCtr.text.toString().trim(),
+      "phone": phoneCtr.text.toString(),
+      "business_name": bussinessCtr.text.toString(),
+      "city": cityId.toString(),
+      "state": stateId.toString(),
+      "address": addressCtr.text.toString(),
+      "pincode": pincodeCtr.text.toString(),
+      // "visiting_card": visitingcardCtr.text.toString(),
+    }, ApiUrl.updateProfile,
+        multiPart:
+            imageFile.value != null && imageFile.value.toString().isNotEmpty
+                ? http.MultipartFile(
+                    'visiting_card',
+                    imageFile.value!.readAsBytes().asStream(),
+                    imageFile.value!.lengthSync(),
+                    filename: imageFile.value!.path.split('/').last,
+                  )
+                : null,
+        allowHeader: true);
+    var responseData = await response.stream.toBytes();
+    loadingIndicator.hide(context);
 
-          print(
-              'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
+    var result = String.fromCharCodes(responseData);
+    var json = jsonDecode(result);
+    if (response.statusCode == 200) {
+      if (json['success'] == true) {
+        print('pref store succesfully');
 
-          var responseDetail = LoginModel.fromJson(json);
-          UserPreferences().saveSignInInfo(responseDetail.data.user);
-          UserPreferences().setToken(responseDetail.data.user.token.toString());
-          showDialogForScreen(context, "Signup Screen", json['message'],
-              callback: () {
-            Get.back(result: true); //goto code
-          });
-        } else {
-          showDialogForScreen(context, "Signup Screen", json['message'],
-              callback: () {});
-        }
-      } else {
+        print('print json: ${json.toString()}');
+
+        print(
+            'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
+
+        var responseDetail = LoginModel.fromJson(json);
+        UserPreferences().saveSignInInfo(responseDetail.data.user);
+        UserPreferences().setToken(responseDetail.data.user.token.toString());
         showDialogForScreen(context, "Signup Screen", json['message'],
             callback: () {
-          // Get.back();
+          Get.back(result: true); //goto code
         });
+      } else {
+        showDialogForScreen(context, "Signup Screen", json['message'],
+            callback: () {});
       }
-    } catch (e) {
-      logcat("Exception", e);
-      showDialogForScreen(context, "Signup Screen", Connection.servererror,
-          callback: () {});
-      loadingIndicator.hide(context);
+    } else {
+      showDialogForScreen(context, "Signup Screen", json['message'],
+          callback: () {
+        // Get.back();
+      });
     }
+    // }
+    // catch (e) {
+    //   logcat("Exception", e);
+    //   showDialogForScreen(context, "Signup Screen", Connection.servererror,
+    //       callback: () {});
+    //   loadingIndicator.hide(context);
+    // }
 
     //   commonPostApiCallFormate(context,
     //     title: LoginConst.title,
@@ -514,7 +589,7 @@ class Updateprofilecontroller extends GetxController {
       title: 'City',
       context,
       onResponse: (data) {
-        var responsDetails = StateModel.fromJson(data);
+        var responsDetails = CityData.fromJson(data);
         cityList.addAll(responsDetails.data);
         cityFilterList.clear();
         cityFilterList.addAll(cityList);
@@ -522,10 +597,10 @@ class Updateprofilecontroller extends GetxController {
         // print(stateList);
 
         for (var city in cityList) {
-          print('ID: ${city.id}, Name: ${city.name}');
+          print('ID: ${city.id}, Name: ${city.city}');
         }
       },
-      apiEndPoint: ApiUrl.city,
+      apiEndPoint: '${ApiUrl.city}+${stateId.value}',
       networkManager: networkManager,
       apisLoading: (bool val) {
         // isloading = val;
@@ -561,6 +636,12 @@ class Updateprofilecontroller extends GetxController {
                     stateFilterList.clear();
                     stateFilterList.addAll(stateList);
                   }
+
+                  validateFields(stateCtr.text,
+                      model: stateModel,
+                      errorText1: "State is required",
+                      iscomman: true,
+                      shouldEnableButton: true);
                   // getState(context);
                   cityCtr.text = "";
                   cityId.value = "";
@@ -615,11 +696,17 @@ class Updateprofilecontroller extends GetxController {
                 onTap: () async {
                   Get.back();
                   cityId.value = cityFilterList[index].id.toString();
-                  cityCtr.text = cityFilterList[index].name;
+                  cityCtr.text = cityFilterList[index].city;
                   if (cityCtr.text.toString().isNotEmpty) {
                     cityFilterList.clear();
                     cityFilterList.addAll(cityList);
                   }
+
+                  validateFields(cityCtr.text,
+                      model: cityModel,
+                      errorText1: "City is required",
+                      iscomman: true,
+                      shouldEnableButton: true);
                   // getState(context);
                   // cityctr.text = "";
                   // cityId.value = "";
@@ -630,7 +717,7 @@ class Updateprofilecontroller extends GetxController {
                   // validateFields(stateCtr.text);
                 },
                 title: showSelectedTextInDialog(
-                    name: cityFilterList[index].name,
+                    name: cityFilterList[index].city,
                     modelId: cityFilterList[index].id.toString(),
                     storeId: cityId.value),
               );

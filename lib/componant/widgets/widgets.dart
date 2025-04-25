@@ -36,7 +36,7 @@ getleftsidebackbtn({required backFunction, required title}) {
   );
 }
 
-Future getpopup(BuildContext context,
+Future<bool?> getpopup(BuildContext context,
     {istimerrunout = false, title, message, function}) async {
   return showCupertinoDialog(
     context: context,
@@ -57,7 +57,7 @@ Future getpopup(BuildContext context,
                   style: TextStyle(color: black),
                 ),
                 onPressed: () {
-                  Get.back();
+                  Navigator.of(context).pop(false);
                 }),
           CupertinoDialogAction(
               child: const Text(
@@ -65,7 +65,7 @@ Future getpopup(BuildContext context,
                 style: TextStyle(color: green),
               ),
               onPressed: () {
-                Get.back();
+                Navigator.of(context).pop(true);
                 function();
               })
         ],

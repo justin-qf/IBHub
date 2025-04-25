@@ -146,7 +146,7 @@ class OtpScreenState extends State<OtpScreen> {
                           decoration: getPinTheme().decoration!.copyWith(
                                 color: primaryColor,
                                 borderRadius: BorderRadius.circular(15),
-                                border: Border.all(color: black),
+                                border:null,
                               ),
                         ),
                         errorPinTheme: getPinTheme().copyWith(

@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/componant/button/form_button.dart';
+import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -43,20 +44,26 @@ class _ServicescreenState extends State<AddServicescreen> {
           children: [
             getDynamicSizedBox(height: 2.h),
             SafeArea(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                    onTap: () {
-                      Get.back(result: true);
-                      ctr.resetForm();
-                      ctr.unfocusAll();
-                    },
-                    child: SvgPicture.asset(Asset.arrowBack,
+              child: getleftsidebackbtn(
+                  title: 'Add Service',
+                  backFunction: () {
+                    Get.back(result: true);
+                  }),
 
-                        // ignore: deprecated_member_use
-                        color: black,
-                        height: 4.h)),
-              ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: GestureDetector(
+              //       onTap: () {
+              //         Get.back(result: true);
+              //         ctr.resetForm();
+              //         ctr.unfocusAll();
+              //       },
+              //       child: SvgPicture.asset(Asset.arrowBack,
+
+              //           // ignore: deprecated_member_use
+              //           color: black,
+              //           height: 4.h)),
+              // ),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.start,
               //   children: [
@@ -74,27 +81,27 @@ class _ServicescreenState extends State<AddServicescreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    getDynamicSizedBox(height: 2.h),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Add Service',
-                        style: TextStyle(
-                            fontFamily: dM_sans_bold,
-                            fontSize: 24.sp,
-                            height: 1.1),
-                      ),
-                    ),
-                    getDynamicSizedBox(height: 2.h),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Don’t just wait for opportunity — create it.\nAdd your services and take the lead.',
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold, color: grey),
-                      ),
-                    ),
-                    getDynamicSizedBox(height: 4.h),
+                    getDynamicSizedBox(height: 5.h),
+                    // // Align(
+                    // //   alignment: Alignment.centerLeft,
+                    // //   child: Text(
+                    // //     'Add Service',
+                    // //     style: TextStyle(
+                    // //         fontFamily: dM_sans_bold,
+                    // //         fontSize: 24.sp,
+                    // //         height: 1.1),
+                    // //   ),
+                    // // ),
+                    // getDynamicSizedBox(height: 2.h),
+                    // // Align(
+                    // //   alignment: Alignment.centerLeft,
+                    // //   child: Text(
+                    // //     'Don’t just wait for opportunity — create it.\nAdd your services and take the lead.',
+                    // //     style: TextStyle(
+                    // //         fontFamily: dM_sans_semiBold, color: grey),
+                    // //   ),
+                    // // ),
+                    // getDynamicSizedBox(height: 4.h),
                     Obx(() {
                       return getTextField(
                           label: ServicesScreenConstant.service,
@@ -143,22 +150,58 @@ class _ServicescreenState extends State<AddServicescreen> {
                           hint: ServicesScreenConstant.enterKeyword,
                           isRequired: true);
                     }),
+
                     Obx(() {
                       return getTextField(
-                          label: ServicesScreenConstant.category,
-                          ctr: ctr.categoryCtr,
-                          node: ctr.categoryNode,
-                          model: ctr.categoryModel.value,
-                          function: (val) {
-                            ctr.validateFields(val,
-                                iscomman: true,
-                                model: ctr.categoryModel,
-                                errorText1:
-                                    ServicesScreenConstant.selectCategory);
-                          },
-                          hint: ServicesScreenConstant.selectCategory,
-                          isRequired: true);
+                        useOnChanged: false,
+                        label: SignUpConstant.categoryLabel,
+                        ctr: ctr.categoryCtr,
+                        node: ctr.categoryNode,
+                        model: ctr.categoryModel.value,
+                        hint: SignUpConstant.stateHint,
+                        wantsuffix: true,
+                        isenable: false,
+                        isdropdown: true,
+                        usegesture: true,
+                        isRequired: true,
+                        context: context,
+                        gestureFunction: () {
+                          ctr.searchCategoryCtr.text = "";
+
+                          ctr.getCategory(context);
+                          showDropdownMessage(
+                              context,
+                              ctr.setCategoryListDialog(),
+                              SignUpConstant.stateList,
+                              isShowLoading: ctr.categoryFilterList,
+                              onClick: () {
+                            ctr.applyFilter('');
+                          }, refreshClick: () {
+                            futureDelay(() {
+                              ctr.getCategory(context);
+                            }, isOneSecond: false);
+                          });
+                          ctr.unfocusAll();
+                          // ctr.showSubjectSelectionPopups(context);
+                        },
+                      );
                     }),
+                    // Obx(() {
+                    //   return getTextField(
+                    //       label: ServicesScreenConstant.category,
+                    //       ctr: ctr.categoryCtr,
+                    //       node: ctr.categoryNode,
+                    //       model: ctr.categoryModel.value,
+                    //       function: (val) {
+                    //         ctr.validateFields(val,
+                    //             iscomman: true,
+                    //             model: ctr.categoryModel,
+                    //             errorText1:
+                    //                 ServicesScreenConstant.selectCategory);
+                    //       },
+                    //       hint: ServicesScreenConstant.selectCategory,
+                    //       isRequired: true);
+                    // }),
                     Obx(() {
                       return getTextField(
                         useOnChanged: false,
@@ -179,6 +222,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                         },
                       );
                     }),
+                    getDynamicSizedBox(height: 2.h),
                     Obx(() {
                       return ctr.isloading == false
                           ? Container(
@@ -190,7 +234,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                                   );
                                   // ctr.validateLogin(context);
                                 }
-                              }, LoginConst.title,
+                              }, ServicesScreenConstant.submit,
                                   validate: ctr.isFormInvalidate.value),
                             )
                           : CircularProgressIndicator();

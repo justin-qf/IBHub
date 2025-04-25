@@ -22,6 +22,7 @@ class ProfileController extends GetxController {
   RxString customerId = "".obs;
 
   RxString userName = "".obs;
+  RxString bussiness = "".obs;
   RxString number = "".obs;
   RxString email = "".obs;
   RxString profilePic = "".obs;
@@ -41,8 +42,9 @@ class ProfileController extends GetxController {
     userName.value = retrievedObject!.name;
     email.value = retrievedObject.email;
     number.value = retrievedObject.phone;
-    gender.value = retrievedObject.city;
-    referCode!.value = retrievedObject.state;
+    bussiness.value = retrievedObject.businessName;
+    // gender.value = retrievedObject.city;
+    // referCode!.value = retrievedObject.state;
     update();
     states.value = ScreenState.apiSuccess;
     logcat("referCode::", referCode!.value.toString());

@@ -38,39 +38,43 @@ class LoginData {
 }
 
 class User {
-  String id;
+  int id;
   String name;
   String email;
   String phone;
   String businessName;
-  String city;
-  String state;
+  String address;
+  City? city;
+  StateData? state;
   String pincode;
   String visitingCardUrl;
   bool isVerified;
   String token;
 
-  User(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required this.phone,
-      required this.businessName,
-      required this.city,
-      required this.state,
-      required this.pincode,
-      required this.visitingCardUrl,
-      required this.isVerified,
-      required this.token});
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.businessName,
+    required this.address,
+    required this.city,
+    required this.state,
+    required this.pincode,
+    required this.visitingCardUrl,
+    required this.isVerified,
+    required this.token,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"].toString() ?? '',
+        id: json["id"],
         name: json["name"] ?? '',
         email: json["email"] ?? '',
         phone: json["phone"] ?? '',
         businessName: json["business_name"] ?? '',
-        city: json["city"] ?? '',
-        state: json["state"] ?? '',
+        address: json["address"] ?? '',
+        city: json["city"] != null ? City.fromJson(json["city"]) : null,
+        state: json["state"] != null ? StateData.fromJson(json["state"]) : null,
         pincode: json["pincode"] ?? '',
         visitingCardUrl: json["visiting_card_url"] ?? '',
         isVerified: json["is_verified"] ?? '',
@@ -83,8 +87,9 @@ class User {
         "email": email,
         "phone": phone,
         "business_name": businessName,
-        "city": city,
-        "state": state,
+        "address": address,
+        "city": city?.toJson(),
+        "state": state?.toJson(),
         "pincode": pincode,
         "visiting_card_url": visitingCardUrl,
         "is_verified": isVerified,
@@ -92,3 +97,50 @@ class User {
       };
 }
 
+class City {
+  int id;
+  String city;
+  int stateId;
+
+  City({
+    required this.id,
+    required this.city,
+    required this.stateId,
+  });
+
+  factory City.fromJson(Map<String, dynamic> json) => City(
+        id: json["id"],
+        city: json["city"] ?? '',
+        stateId: json["state_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "city": city,
+        "state_id": stateId,
+      };
+}
+
+class StateData {
+  int id;
+  String name;
+  int countryId;
+
+  StateData({
+    required this.id,
+    required this.name,
+    required this.countryId,
+  });
+
+  factory StateData.fromJson(Map<String, dynamic> json) => StateData(
+        id: json["id"],
+        name: json["name"] ?? '',
+        countryId: json["country_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "country_id": countryId,
+      };
+}

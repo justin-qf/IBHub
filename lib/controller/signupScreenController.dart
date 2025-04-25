@@ -21,6 +21,7 @@ import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/MainScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
@@ -152,9 +153,8 @@ class Signupscreencontroller extends GetxController {
     //   isFormInvalidate.value = false;
     // } else if (visitingCardModel.value.isValidate == false) {
     //   isFormInvalidate.value = false;
-    // } 
-    
-    
+    // }
+
     else if (passModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (confpassModel.value.isValidate == false) {
@@ -265,7 +265,6 @@ class Signupscreencontroller extends GetxController {
     isloading = false;
   }
 
-
   validateFields(val,
       {model,
       errorText1,
@@ -305,12 +304,10 @@ class Signupscreencontroller extends GetxController {
         });
   }
 
-
- void registerAPI(context) async {
+  void registerAPI(context) async {
     // var loadingIndicator = LoadingProgressDialog();
 
-
-      commonPostApiCallFormate(context,
+    commonPostApiCallFormate(context,
         title: LoginConst.title,
         body: {
           "name": nameCtr.text.toString(),
@@ -318,105 +315,99 @@ class Signupscreencontroller extends GetxController {
           "phone": phoneCtr.text.toString(),
           "password": passCtr.text.toString().trim(),
           "business_name": bussinessCtr.text.toString(),
-          "city": "",
-          "state": "",
-          "pincode": "",
-          "visiting_card": "",
           "password_confirmation": confpassCtr.text.toString()
         },
         apiEndPoint: ApiUrl.register, onResponse: (data) {
       var responseDetail = LoginModel.fromJson(data);
       UserPreferences().saveSignInInfo(responseDetail.data.user);
       UserPreferences().setToken(responseDetail.data.user.token.toString());
-      // Get.offAll(const MainScreen());
+      Get.offAll(const MainScreen());
     }, networkManager: networkManager, isModelResponse: true);
-    
   }
 
-
 // try {
-    //   if (networkManager.connectionType == 0) {
-    //     loadingIndicator.hide(context);
-    //     showDialogForScreen(context, "Signup Screen", Connection.noConnection,
-    //         callback: () {
-    //       Get.back();
-    //     });
-    //     return;
-    //   }
-    //   loadingIndicator.show(context, '');
+  //   if (networkManager.connectionType == 0) {
+  //     loadingIndicator.hide(context);
+  //     showDialogForScreen(context, "Signup Screen", Connection.noConnection,
+  //         callback: () {
+  //       Get.back();
+  //     });
+  //     return;
+  //   }
+  //   loadingIndicator.show(context, '');
 
-    //   logcat("PartyParam", {
-    //     "name": nameCtr.text.toString(),
-    //     "email": emailCtr.text.toString().trim(),
-    //     "phone": phoneCtr.text.toString(),
-    //     "password": passCtr.text.toString().trim(),
-    //     "business_name": bussinessCtr.text.toString(),
-    //     "city": "Ahmedabad",
-    //     "state": "Gujarat",
-    //     "pincode": pincodeCtr.text.toString(),
-    //     // "visiting_card": visitingcardCtr.text.toString(),
-    //     "password_confirmation": confpassCtr.text.toString()
-    //   });
+  //   logcat("PartyParam", {
+  //     "name": nameCtr.text.toString(),
+  //     "email": emailCtr.text.toString().trim(),
+  //     "phone": phoneCtr.text.toString(),
+  //     "password": passCtr.text.toString().trim(),
+  //     "business_name": bussinessCtr.text.toString(),
+  //     "city": "Ahmedabad",
+  //     "state": "Gujarat",
+  //     "pincode": pincodeCtr.text.toString(),
+  //     // "visiting_card": visitingcardCtr.text.toString(),
+  //     "password_confirmation": confpassCtr.text.toString()
+  //   });
 
-    //   var response = await Repository.multiPartPost({
-    //     "name": nameCtr.text.toString(),
-    //     "email": emailCtr.text.toString().trim(),
-    //     "phone": phoneCtr.text.toString(),
-    //     "password": passCtr.text.toString().trim(),
-    //     "business_name": bussinessCtr.text.toString(),
-    //     "city": "Ahmedabad",
-    //     "state": "Gujarat",
-    //     "pincode": pincodeCtr.text.toString(),
-    //     // "visiting_card": visitingcardCtr.text.toString(),
-    //     "password_confirmation": confpassCtr.text.toString()
-    //   }, ApiUrl.register,
-    //       multiPart:
-    //           imageFile.value != null && imageFile.value.toString().isNotEmpty
-    //               ? http.MultipartFile(
-    //                   'visiting_card',
-    //                   imageFile.value!.readAsBytes().asStream(),
-    //                   imageFile.value!.lengthSync(),
-    //                   filename: imageFile.value!.path.split('/').last,
-    //                 )
-    //               : null,
-    //       allowHeader: true);
-    //   var responseData = await response.stream.toBytes();
-    //   loadingIndicator.hide(context);
+  //   var response = await Repository.multiPartPost({
+  //     "name": nameCtr.text.toString(),
+  //     "email": emailCtr.text.toString().trim(),
+  //     "phone": phoneCtr.text.toString(),
+  //     "password": passCtr.text.toString().trim(),
+  //     "business_name": bussinessCtr.text.toString(),
+  //     "city": "Ahmedabad",
+  //     "state": "Gujarat",
+  //     "pincode": pincodeCtr.text.toString(),
+  //     // "visiting_card": visitingcardCtr.text.toString(),
+  //     "password_confirmation": confpassCtr.text.toString()
+  //   }, ApiUrl.register,
+  //       multiPart:
+  //           imageFile.value != null && imageFile.value.toString().isNotEmpty
+  //               ? http.MultipartFile(
+  //                   'visiting_card',
+  //                   imageFile.value!.readAsBytes().asStream(),
+  //                   imageFile.value!.lengthSync(),
+  //                   filename: imageFile.value!.path.split('/').last,
+  //                 )
+  //               : null,
+  //       allowHeader: true);
+  //   var responseData = await response.stream.toBytes();
+  //   loadingIndicator.hide(context);
 
-    //   var result = String.fromCharCodes(responseData);
-    //   var json = jsonDecode(result);
-    //   if (response.statusCode == 200) {
-    //     if (json['success'] == true) {
-    //       print('pref store succesfully');
+  //   var result = String.fromCharCodes(responseData);
+  //   var json = jsonDecode(result);
+  //   if (response.statusCode == 200) {
+  //     if (json['success'] == true) {
+  //       print('pref store succesfully');
 
-    //       print('print json: ${json.toString()}');
+  //       print('print json: ${json.toString()}');
 
-    //       print(
-    //           'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
+  //       print(
+  //           'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
 
-    //       var responseDetail = LoginModel.fromJson(json);
-    //       UserPreferences().saveSignInInfo(responseDetail.data.user);
-    //       UserPreferences().setToken(responseDetail.data.user.token.toString());
-    //       showDialogForScreen(context, "Signup Screen", json['message'],
-    //           callback: () {
-    //         Get.back(result: true); //goto code
-    //       });
-    //     } else {
-    //       showDialogForScreen(context, "Signup Screen", json['message'],
-    //           callback: () {});
-    //     }
-    //   } else {
-    //     showDialogForScreen(context, "Signup Screen", json['message'],
-    //         callback: () {
-    //       // Get.back();
-    //     });
-    //   }
-    // } catch (e) {
-    //   logcat("Exception", e);
-    //   showDialogForScreen(context, "Signup Screen", Connection.servererror,
-    //       callback: () {});
-    //   loadingIndicator.hide(context);
-    // }
+  //       var responseDetail = LoginModel.fromJson(json);
+  //       UserPreferences().saveSignInInfo(responseDetail.data.user);
+  //       UserPreferences().setToken(responseDetail.data.user.token.toString());
+  //       showDialogForScreen(context, "Signup Screen", json['message'],
+  //           callback: () {
+  //         Get.back(result: true); //goto code
+  //       });
+  //     } else {
+  //       showDialogForScreen(context, "Signup Screen", json['message'],
+  //           callback: () {});
+  //     }
+  //   } else {
+  //     showDialogForScreen(context, "Signup Screen", json['message'],
+  //         callback: () {
+  //       // Get.back();
+  //     });
+  //   }
+  // } catch (e) {
+  //   logcat("Exception", e);
+  //   showDialogForScreen(context, "Signup Screen", Connection.servererror,
+  //       callback: () {});
+  //   loadingIndicator.hide(context);
+  // }
 
   // final ImagePicker _picker = ImagePicker();
   // Rx<File?> imageFile = null.obs;
@@ -533,9 +524,6 @@ class Signupscreencontroller extends GetxController {
   //     // Get.offAll(const MainScreen());
   //   }, networkManager: networkManager, isModelResponse: true);
   // }
-
- 
-  
 
   // Widget setStateListDialog() {
   //   return Obx(() {

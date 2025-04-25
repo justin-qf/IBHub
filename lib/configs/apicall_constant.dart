@@ -25,6 +25,7 @@ class ApiUrl {
   // static const getCity = 'city_list';
   static const register = 'register';
   static const states = 'states/dropdown';
-  static const city = 'cities/dropdown/5';
+  static const city = 'cities/dropdown/';
   static const createservice = 'services/create';
+  static const updateProfile = 'profile/update';
 }

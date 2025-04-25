@@ -16,22 +16,23 @@ class CustomParentScaffold extends StatelessWidget {
   bool isdraweruse;
   Drawer? drower;
   bool drawerEnableOpenDragGesture;
+  bool extendedbodybehindappbar;
 
   Function()? onTap;
 
-  CustomParentScaffold({
-    this.scaffoldKey,
-    super.key,
-    this.onWillPop,
-    required this.body,
-    this.floatingActionBtn,
-    this.onTap,
-    this.bottomNavigationBar,
-    this.isdraweruse = false,
-    this.drower,
-    this.isExtendBodyScreen = false,
-    this.drawerEnableOpenDragGesture = false,
-  });
+  CustomParentScaffold(
+      {this.scaffoldKey,
+      super.key,
+      this.onWillPop,
+      required this.body,
+      this.floatingActionBtn,
+      this.onTap,
+      this.bottomNavigationBar,
+      this.isdraweruse = false,
+      this.drower,
+      this.isExtendBodyScreen = false,
+      this.drawerEnableOpenDragGesture = false,
+      this.extendedbodybehindappbar = false});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,7 @@ class CustomParentScaffold extends StatelessWidget {
                   drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
                   bottomNavigationBar: bottomNavigationBar,
                   backgroundColor: bgColor,
-                  extendBodyBehindAppBar: true,
+                  extendBodyBehindAppBar: extendedbodybehindappbar,
                   // resizeToAvoidBottomInset: isSmallDevice(context),
                   resizeToAvoidBottomInset: true,
                   body: body,
@@ -78,6 +79,7 @@ class CustomParentScaffold extends StatelessWidget {
               : SafeArea(
                   child: Scaffold(
                     key: scaffoldKey,
+                    extendBodyBehindAppBar: extendedbodybehindappbar,
                     drawer: isdraweruse
                         ? Align(
                             alignment: Alignment.topLeft,

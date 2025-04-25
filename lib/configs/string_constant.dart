@@ -267,7 +267,7 @@ class SearchScreenConstant {
 class ServicesScreenConstant {
   static const service = 'Service';
   static const servicetitle = 'Enter Title';
-  
+
   static const String description = 'Description';
   static const String enterDescription = 'Enter Description';
 
@@ -279,6 +279,8 @@ class ServicesScreenConstant {
 
   static const String thumbnail = 'Thumbnail';
   static const String uploadThumbnail = 'Upload Thumbnail';
+
+  static const String submit = 'Submit';
 }
 
 class SignUpConstant {
@@ -288,6 +290,7 @@ class SignUpConstant {
   static const email = "Email-ID";
   static const enterEmail = "Enter Email-ID";
   static const namehint = 'Enter Name';
+  static const addresshint = 'Enter Address';
   static const schoolHint = 'Enter School Name';
 
   static const emailcontain = 'Email must contain @ symbol';
@@ -324,6 +327,7 @@ class SignUpConstant {
 
   static const nameLabel = 'Name';
   static const bussinessLabel = 'Bussiness Name';
+
   static const schoolLabel = 'School';
   static const addressLabel = 'Address';
   static const cityLabel = 'City';
@@ -333,6 +337,7 @@ class SignUpConstant {
   static const pinCodeLabel = 'Pincode';
   static const subjectLabel = 'Subject';
   static const stateLabel = 'State';
+  static const categoryLabel = 'Category';
 
   static const stdLabel = 'Standard';
   static const examLabel = 'Exam';

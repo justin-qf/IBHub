@@ -25,12 +25,13 @@ class Updateprofilescreen extends StatefulWidget {
 class _UpdateprofilescreenState extends State<Updateprofilescreen> {
   final Updateprofilecontroller ctr = Get.put(Updateprofilecontroller());
 
-  // @override
-  // void initState() {
-  //   super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  //   ctr.getState(context);
-  // }
+    ctr.getProfileData();
+    ctr.getState(context);
+  }
 
   // bool _isInitialized = false;
   // @override
@@ -200,11 +201,11 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         gestureFunction: () {
                           ctr.searchStatectr.text = "";
 
-                          ctr.getState(context);
+                          // ctr.getState(context);
                           showDropdownMessage(context, ctr.setStateListDialog(),
                               SignUpConstant.stateList,
                               isShowLoading: ctr.stateFilterList, onClick: () {
-                            ctr.applyFilter('',isState: true);
+                            ctr.applyFilter('', isState: true);
                           }, refreshClick: () {
                             futureDelay(() {
                               ctr.getState(context);
@@ -236,7 +237,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                           showDropdownMessage(context, ctr.setcityListDialog(),
                               SignUpConstant.cityList,
                               isShowLoading: ctr.cityFilterList, onClick: () {
-                            ctr.applyFilter('',isState: false);
+                            ctr.applyFilter('', isState: false);
                           }, refreshClick: () {
                             futureDelay(() {
                               ctr.getCity(context);
@@ -247,6 +248,23 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         },
                       );
                     }),
+                    Obx(
+                      () {
+                        return getTextField(
+                            label: SignUpConstant.addressLabel,
+                            ctr: ctr.addressCtr,
+                            node: ctr.addressNode,
+                            model: ctr.addressModel.value,
+                            function: (val) {
+                              ctr.validateFields(val,
+                                  iscomman: true,
+                                  model: ctr.addressModel,
+                                  errorText1: SignUpConstant.addressHint);
+                            },
+                            hint: SignUpConstant.addressHint,
+                            isRequired: true);
+                      },
+                    ),
                     Obx(
                       () {
                         return getTextField(
@@ -288,69 +306,69 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         },
                       );
                     }),
-                    Obx(() {
-                      return getTextField(
-                          label: SignUpConstant.passwordLable,
-                          ctr: ctr.passCtr,
-                          node: ctr.passNode,
-                          model: ctr.passModel.value,
-                          function: (val) {
-                            ctr.validateFields(
-                              val,
-                              ispassword: true,
-                              model: ctr.passModel,
-                              errorText1: SignUpConstant.passwordHint,
-                              errorText2: SignUpConstant.hintSpaceNotAllowed,
-                              errorText3: SignUpConstant.validPasswordHint,
-                            );
+                    // Obx(() {
+                    //   return getTextField(
+                    //       label: SignUpConstant.passwordLable,
+                    //       ctr: ctr.passCtr,
+                    //       node: ctr.passNode,
+                    //       model: ctr.passModel.value,
+                    //       function: (val) {
+                    //         ctr.validateFields(
+                    //           val,
+                    //           ispassword: true,
+                    //           model: ctr.passModel,
+                    //           errorText1: SignUpConstant.passwordHint,
+                    //           errorText2: SignUpConstant.hintSpaceNotAllowed,
+                    //           errorText3: SignUpConstant.validPasswordHint,
+                    //         );
 
-                            if (ctr.confpassCtr.text.isNotEmpty) {
-                              ctr.validateFields(
-                                val,
-                                isconfirmpassword: true,
-                                confirmpasswordctr: ctr.confpassCtr.text,
-                                model: ctr.confpassModel,
-                                errorText1: SignUpConstant.confirmPasswordHint,
-                                errorText2: SignUpConstant.hintSpaceNotAllowed,
-                                errorText3: SignUpConstant.passwordMismatchHint,
-                              );
-                            }
-                          },
-                          hint: SignUpConstant.validPasswordHint,
-                          wantsuffix: true,
-                          ispass: true,
-                          isRequired: true,
-                          isobscure: ctr.isObsecurePassText,
-                          obscureFunction: () {
-                            ctr.togglePassObscureText();
-                          });
-                    }),
-                    Obx(() {
-                      return getTextField(
-                          label: SignUpConstant.repasswordLable,
-                          ctr: ctr.confpassCtr,
-                          node: ctr.confpassNode,
-                          model: ctr.confpassModel.value,
-                          function: (val) {
-                            ctr.validateFields(
-                              val,
-                              isconfirmpassword: true,
-                              model: ctr.confpassModel,
-                              errorText1: SignUpConstant.confirmPasswordHint,
-                              errorText2: SignUpConstant.hintSpaceNotAllowed,
-                              errorText3: SignUpConstant.passwordMismatchHint,
-                              confirmpasswordctr: ctr.passCtr.text,
-                            );
-                          },
-                          hint: SignUpConstant.confirmPasswordHint,
-                          wantsuffix: true,
-                          ispass: true,
-                          isRequired: true,
-                          isobscure: ctr.isObsecureConPassText,
-                          obscureFunction: () {
-                            ctr.toggleConfPassObscureText();
-                          });
-                    }),
+                    //         if (ctr.confpassCtr.text.isNotEmpty) {
+                    //           ctr.validateFields(
+                    //             val,
+                    //             isconfirmpassword: true,
+                    //             confirmpasswordctr: ctr.confpassCtr.text,
+                    //             model: ctr.confpassModel,
+                    //             errorText1: SignUpConstant.confirmPasswordHint,
+                    //             errorText2: SignUpConstant.hintSpaceNotAllowed,
+                    //             errorText3: SignUpConstant.passwordMismatchHint,
+                    //           );
+                    //         }
+                    //       },
+                    //       hint: SignUpConstant.validPasswordHint,
+                    //       wantsuffix: true,
+                    //       ispass: true,
+                    //       isRequired: true,
+                    //       isobscure: ctr.isObsecurePassText,
+                    //       obscureFunction: () {
+                    //         ctr.togglePassObscureText();
+                    //       });
+                    // }),
+                    // Obx(() {
+                    //   return getTextField(
+                    //       label: SignUpConstant.repasswordLable,
+                    //       ctr: ctr.confpassCtr,
+                    //       node: ctr.confpassNode,
+                    //       model: ctr.confpassModel.value,
+                    //       function: (val) {
+                    //         ctr.validateFields(
+                    //           val,
+                    //           isconfirmpassword: true,
+                    //           model: ctr.confpassModel,
+                    //           errorText1: SignUpConstant.confirmPasswordHint,
+                    //           errorText2: SignUpConstant.hintSpaceNotAllowed,
+                    //           errorText3: SignUpConstant.passwordMismatchHint,
+                    //           confirmpasswordctr: ctr.passCtr.text,
+                    //         );
+                    //       },
+                    //       hint: SignUpConstant.confirmPasswordHint,
+                    //       wantsuffix: true,
+                    //       ispass: true,
+                    //       isRequired: true,
+                    //       isobscure: ctr.isObsecureConPassText,
+                    //       obscureFunction: () {
+                    //         ctr.toggleConfPassObscureText();
+                    //       });
+                    // }),
                     getDynamicSizedBox(height: 2.h),
                   ],
                 ),
@@ -363,9 +381,10 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       margin: EdgeInsets.symmetric(horizontal: 5.w),
                       child: getFormButton(context, () async {
                         if (ctr.isFormInvalidate.value == true) {
-                          ctr.registerAPI(
+                          ctr.updateProfile(
                             context,
                           );
+
                           // ctr.validateLogin(context);
                         }
                       }, ProfileScreenConst.save,
