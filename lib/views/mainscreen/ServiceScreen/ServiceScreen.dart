@@ -28,7 +28,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
   var controller = Get.put(ServiceController());
   @override
   void initState() {
-    controller.getServiceList(context, 1, false, widget.data.id);
+    controller.getServiceList(context, 1, false, widget.data.id,
+        isFirstTime: true);
     controller.scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -46,7 +47,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
         () {
           controller
               .getServiceList(
-                  context, controller.currentPage, true, widget.data.id)
+                  context, controller.currentPage, true, widget.data.id,
+                  isFirstTime: false)
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
@@ -112,55 +114,55 @@ class _ServiceScreenState extends State<ServiceScreen> {
   Widget apiSuccess(ScreenState state) {
     if (controller.state.value == ScreenState.apiSuccess &&
         controller.serviceList.isNotEmpty) {
-      // return ListView.builder(
-      //   controller: controller.scrollController,
-      //   padding: EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
-      //   physics: const BouncingScrollPhysics(),
-      //   scrollDirection: Axis.vertical,
-      //   shrinkWrap: true,
-      //   clipBehavior: Clip.antiAlias,
-      //   itemCount: controller.serviceList.length +
-      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-      //   itemBuilder: (context, index) {
-      //     if (index < controller.serviceList.length) {
-      //       ServiceDataList data = controller.serviceList[index];
-      //       return controller.getListItem(context, data);
-      //     } else if (controller.isFetchingMore) {
-      //       return Center(
-      //           child: Padding(
-      //               padding: EdgeInsets.symmetric(vertical: 2.h),
-      //               child:
-      //                   const CircularProgressIndicator(color: primaryColor)));
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      // );
-      return MasonryGridView.count(
+      return ListView.builder(
         controller: controller.scrollController,
+        padding: EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 1.h),
-        crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 4,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        clipBehavior: Clip.antiAlias,
         itemCount: controller.serviceList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
         itemBuilder: (context, index) {
           if (index < controller.serviceList.length) {
             ServiceDataList data = controller.serviceList[index];
-            return controller.getListItem(context, data);
+            return controller.getServiceListItem(context, data);
           } else if (controller.isFetchingMore) {
             return Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2.h),
-                child: const CircularProgressIndicator(color: primaryColor),
-              ),
-            );
+                child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child:
+                        const CircularProgressIndicator(color: primaryColor)));
           } else {
             return Container();
           }
         },
       );
+      // return MasonryGridView.count(
+      //   controller: controller.scrollController,
+      //   physics: const BouncingScrollPhysics(),
+      //   padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 1.h),
+      //   crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
+      //   mainAxisSpacing: 10,
+      //   crossAxisSpacing: 4,
+      //   itemCount: controller.serviceList.length +
+      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+      //   itemBuilder: (context, index) {
+      //     if (index < controller.serviceList.length) {
+      //       ServiceDataList data = controller.serviceList[index];
+      //       return controller.getServiceListItem(context, data);
+      //     } else if (controller.isFetchingMore) {
+      //       return Center(
+      //         child: Padding(
+      //           padding: EdgeInsets.symmetric(vertical: 2.h),
+      //           child: const CircularProgressIndicator(color: primaryColor),
+      //         ),
+      //       );
+      //     } else {
+      //       return Container();
+      //     }
+      //   },
+      // );
     } else {
       return noDataFoundWidget();
     }

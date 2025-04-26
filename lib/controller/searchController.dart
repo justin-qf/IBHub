@@ -24,8 +24,7 @@ import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/models/stateModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
-import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
-import 'package:readmore/readmore.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
@@ -464,6 +463,8 @@ class SearchScreenController extends GetxController {
     );
   }
 
+  RxBool isFilterApplied = false.obs;
+
   Future showBottomSheetDialog(BuildContext context) {
     return showModalBottomSheet(
       context: context,
@@ -502,7 +503,12 @@ class SearchScreenController extends GetxController {
                               node: stateNode,
                               controller: statectr,
                               hintLabel: "Select State",
-                              onChanged: (val) {},
+                              onChanged: (val) {
+                                isFilterApplied.value =
+                                    statectr.text.isNotEmpty ||
+                                        cityctr.text.isNotEmpty ||
+                                        categoryCtr.text.isNotEmpty;
+                              },
                               onTap: () {
                                 searchctr.text = "";
                                 showDropdownMessage(
@@ -639,6 +645,7 @@ class SearchScreenController extends GetxController {
                                 cityctr.text = "";
                                 categoryCtr.text = "";
                                 categoryId.value = "";
+                                isFilterApplied.value = false;
                                 futureDelay(() {
                                   getBusinessList(context, currentPage, false,
                                       isFirstTime: true);
@@ -691,6 +698,9 @@ class SearchScreenController extends GetxController {
                     stateFilterList.clear();
                     stateFilterList.addAll(stateList);
                   }
+                  isFilterApplied.value = statectr.text.isNotEmpty ||
+                      cityctr.text.isNotEmpty ||
+                      categoryCtr.text.isNotEmpty;
                   update();
                   futureDelay(() {
                     getCityApi(context, stateId.value.toString(), true);
@@ -779,6 +789,9 @@ class SearchScreenController extends GetxController {
                     cityFilterList.clear();
                     cityFilterList.addAll(cityList);
                   }
+                  isFilterApplied.value = statectr.text.isNotEmpty ||
+                      cityctr.text.isNotEmpty ||
+                      categoryCtr.text.isNotEmpty;
                   validateCity(cityctr.text);
                   update();
                 },
@@ -836,14 +849,14 @@ class SearchScreenController extends GetxController {
                   Get.back();
                   categoryId.value = categoryFilterList[index].id.toString();
                   categoryCtr.text = categoryFilterList[index].name;
-                  // categoryFilterList.clear();
-                  // categoryList.clear();
                   if (categoryCtr.text.toString().isNotEmpty) {
                     categoryFilterList.clear();
                     categoryFilterList.addAll(categoryList);
                   }
+                  isFilterApplied.value = statectr.text.isNotEmpty ||
+                      cityctr.text.isNotEmpty ||
+                      categoryCtr.text.isNotEmpty;
                   update();
-                  // validateState(statectr.text);
                 },
                 title: showSelectedTextInDialog(
                     name: categoryFilterList[index].name,
@@ -1017,7 +1030,7 @@ class SearchScreenController extends GetxController {
       String? categoryId,
       String? keyword,
       bool? isFirstTime = false}) async {
-    var loadingIndicator = LoadingProgressDialog();
+    // var loadingIndicator = LoadingProgressDialog();
 
     // if (hideloading == true) {
     //   state.value = ScreenState.apiLoading;
@@ -1075,9 +1088,10 @@ class SearchScreenController extends GetxController {
             businessList.addAll(businessListData.data.data);
             businessList.refresh();
             update();
+          } else {
+            businessList.clear();
           }
-          if (businessListData.data.nextPageUrl != 'null' ||
-              businessListData.data.nextPageUrl != null) {
+          if (businessListData.data.nextPageUrl != null) {
             nextPageURL.value = businessListData.data.nextPageUrl.toString();
             logcat("nextPageURL-1", nextPageURL.value.toString());
             update();
@@ -1104,9 +1118,9 @@ class SearchScreenController extends GetxController {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
       message.value = ServerError.servererror;
-      if (hideloading != true) {
-        loadingIndicator.hide(context);
-      }
+      // if (hideloading != true) {
+      //   loadingIndicator.hide(context);
+      // }
       showDialogForScreen(
           context, CategoryScreenConstant.title, ServerError.servererror,
           callback: () {});
@@ -1116,8 +1130,8 @@ class SearchScreenController extends GetxController {
   getBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () {
-        // Get.to(ServiceDetailScreen(item: item));
-        Get.to(ServiceScreen(data: item));
+        Get.to(BusinessDetailScreen(item: item));
+        // Get.to(ServiceScreen(data: item));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -1212,7 +1226,8 @@ class SearchScreenController extends GetxController {
                         ),
                         getText(
                           item.businessReviewsAvgRating != null
-                              ? item.businessReviewsAvgRating.toString()
+                              ? (item.businessReviewsAvgRating ?? 0.0)
+                                  .toStringAsFixed(1)
                               : '0.0',
                           TextStyle(
                               fontFamily: fontSemiBold,

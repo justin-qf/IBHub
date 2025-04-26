@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -40,7 +39,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   void initState() {
     futureDelay(() {
       controller.getServiceList(context, 1, true, widget.item.id);
-    }, isOneSecond: true);
+    }, isOneSecond: false);
     logcat("Item::", widget.item.toString());
     super.initState();
   }
@@ -265,60 +264,130 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       getDynamicSizedBox(height: 1.h),
-                      Row(
-                        children: [
-                          controller.getLableText(widget.item.businessName,
-                              isMainTitle: true),
-                          const Spacer(),
-                          RatingBar.builder(
-                            initialRating:
-                                widget.item.businessReviewsAvgRating ?? 0.0,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 1,
-                            itemSize: 4.w,
-                            unratedColor: Colors.orange,
-                            itemBuilder: (context, _) => const Icon(
-                              Icons.star,
-                              color: Colors.orange,
-                            ),
-                            onRatingUpdate: (rating) {
-                              logcat("RATING", rating);
-                            },
-                          ),
-                          Padding(
-                              padding:
-                                  EdgeInsets.only(left: 0.5.w, right: 0.5.w),
-                              child: Text(
-                                widget.item.businessReviewsAvgRating != null
-                                    ? widget.item.businessReviewsAvgRating
-                                        .toString()
-                                    : '0.0',
-                                style: TextStyle(
-                                    fontFamily: fontSemiBold,
-                                    color: lableColor,
-                                    fontSize: Device.screenType ==
-                                            sizer.ScreenType.mobile
-                                        ? 16.sp
-                                        : 14.sp,
-                                    height: 1.2),
-                                maxLines: 1,
-                              ))
-                        ],
-                      ),
+                      controller.getLableText(widget.item.businessName,
+                          isMainTitle: true),
+                      // Row(
+                      //   children: [
+                      //     controller.getLableText(widget.item.businessName,
+                      //         isMainTitle: true),
+                      //     const Spacer(),
+                      //     RatingBar.builder(
+                      //       initialRating:
+                      //           widget.item.businessReviewsAvgRating ?? 0.0,
+                      //       minRating: 1,
+                      //       direction: Axis.horizontal,
+                      //       allowHalfRating: true,
+                      //       itemCount: 1,
+                      //       itemSize: 4.w,
+                      //       unratedColor: Colors.orange,
+                      //       itemBuilder: (context, _) => const Icon(
+                      //         Icons.star,
+                      //         color: Colors.orange,
+                      //       ),
+                      //       onRatingUpdate: (rating) {
+                      //         logcat("RATING", rating);
+                      //       },
+                      //     ),
+                      //     Padding(
+                      //         padding:
+                      //             EdgeInsets.only(left: 0.5.w, right: 0.5.w),
+                      //         child: Text(
+                      //           widget.item.businessReviewsAvgRating != null
+                      //               ? widget.item.businessReviewsAvgRating
+                      //                   .toString()
+                      //               : '0.0',
+                      //           style: TextStyle(
+                      //               fontFamily: fontSemiBold,
+                      //               color: lableColor,
+                      //               fontSize: Device.screenType ==
+                      //                       sizer.ScreenType.mobile
+                      //                   ? 16.sp
+                      //                   : 14.sp,
+                      //               height: 1.2),
+                      //           maxLines: 1,
+                      //         ))
+                      //   ],
+                      // ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.to(ReviewsScreen(
+                      //             businessId: widget.item.id.toString()))!
+                      //         .then((value) {
+                      //       Statusbar().trasparentStatusbarProfile(true);
+                      //     });
+                      //   },
+                      //   child: Row(
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     mainAxisAlignment: MainAxisAlignment.start,
+                      //     children: [
+                      //       RatingBar.builder(
+                      //         ignoreGestures: true,
+                      //         initialRating:
+                      //             widget.item.businessReviewsAvgRating ?? 0.0,
+                      //         minRating: 1,
+                      //         direction: Axis.horizontal,
+                      //         allowHalfRating: true,
+                      //         itemCount: 5,
+                      //         itemSize: 4.5.w,
+                      //         // itemPadding:
+                      //         //     const EdgeInsets.symmetric(horizontal: 5.0),
+                      //         itemBuilder: (context, _) => const Icon(
+                      //           Icons.star,
+                      //           color: Colors.orange,
+                      //         ),
+                      //         onRatingUpdate: (rating) {
+                      //           logcat("RATING", rating);
+                      //         },
+                      //       ),
+                      //       getDynamicSizedBox(width: 1.w),
+                      //       Text(
+                      //           widget.item.businessReviewsAvgRating != null
+                      //               ? (widget.item.businessReviewsAvgRating ??
+                      //                       0.0)
+                      //                   .toStringAsFixed(1)
+                      //               : '0.0',
+                      //           style: TextStyle(
+                      //             fontFamily: fontBold,
+                      //             color: isDarkMode() ? white : black,
+                      //             fontSize: Device.screenType ==
+                      //                     sizer.ScreenType.mobile
+                      //                 ? 16.sp
+                      //                 : 14.sp,
+                      //           )),
+                      //       getDynamicSizedBox(width: 1.w),
+                      //       Icon(
+                      //         Icons.arrow_forward_ios,
+                      //         color: isDarkMode() ? white : black,
+                      //         size: 1.8.h,
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
                       // controller.getCategoryLable(widget.item.businessName),
                       getDynamicSizedBox(height: 1.h),
                       controller.getLableText(widget.item.email,
                           isMainTitle: false),
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText('Address : ', isMainTitle: false),
+                      GestureDetector(
+                        onTap: () {
+                          launchPhoneCall(widget.item.phone);
+                        },
+                        child: controller.getLableText(widget.item.phone,
+                            isMainTitle: false),
+                      ),
+                      getDynamicSizedBox(height: 1.h),
+                      if (widget.item.address.isNotEmpty)
+                        controller.getLableText('Address : ',
+                            isMainTitle: false),
                       getDynamicSizedBox(height: 0.5.h),
-                      controller.getCommonText(widget.item.address.toString(),
-                          isHint: true),
+                      if (widget.item.address.isNotEmpty)
+                        controller.getCommonText(widget.item.address.toString(),
+                            isHint: false),
                       getDynamicSizedBox(
                           height: Device.screenType == sizer.ScreenType.mobile
-                              ? 1.h
+                              ? widget.item.address.isNotEmpty
+                                  ? 1.h
+                                  : 0.0
                               : 0.8.h),
                       // controller.getLableText('Services List',
                       //     isMainTitle: false),
@@ -326,7 +395,12 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         Get.to(ServiceScreen(
                           data: widget.item,
                         ))!
-                            .then((value) {});
+                            .then((value) {
+                          futureDelay(() {
+                            controller.getServiceList(
+                                context, 1, true, widget.item.id);
+                          }, isOneSecond: false);
+                        });
                       }, isFromDetailScreen: true),
                       Obx(
                         () {

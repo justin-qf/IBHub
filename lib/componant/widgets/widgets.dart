@@ -912,21 +912,18 @@ getPartyDetailRow(title, data, {bool? isAddress}) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: Device.screenType == ScreenType.mobile ? 12.sp : 6.sp,
-            fontWeight: FontWeight.w800,
-            fontFamily: fontExtraBold,
-            color: isDarkMode() ? white : black,
-          ),
-        ),
+        Text(title,
+            style: TextStyle(
+                fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 6.sp,
+                fontWeight: FontWeight.w800,
+                fontFamily: fontExtraBold,
+                color: isDarkMode() ? white : black)),
         getDynamicSizedBox(width: 1.w),
         isAddress == true
             ? Expanded(
                 child: SizedBox(
                   width: Device.screenType == ScreenType.mobile ? 25.w : 10.w,
-                  height: Device.screenType == ScreenType.mobile ? 10.h : 10.h,
+                  height: Device.screenType == ScreenType.mobile ? 18.h : 10.h,
                   child: Scrollbar(
                     thumbVisibility: true,
                     thickness: 1.5,
@@ -940,8 +937,8 @@ getPartyDetailRow(title, data, {bool? isAddress}) {
                         // maxLines: 2,
                         style: TextStyle(
                             fontSize: Device.screenType == ScreenType.mobile
-                                ? 12.sp
-                                : 6.sp,
+                                ? 16.sp
+                                : 10.sp,
                             color: isDarkMode() ? white : black,
                             fontFamily: fontRegular),
                       ),
@@ -956,8 +953,9 @@ getPartyDetailRow(title, data, {bool? isAddress}) {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                      fontSize:
-                          Device.screenType == ScreenType.mobile ? 12.sp : 6.sp,
+                      fontSize: Device.screenType == ScreenType.mobile
+                          ? 16.sp
+                          : 12.sp,
                       color: isDarkMode() ? white : black,
                       fontFamily: fontRegular),
                 ),

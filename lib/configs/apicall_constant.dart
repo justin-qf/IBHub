@@ -24,4 +24,6 @@ class ApiUrl {
   static const getServiceList = 'services/list';
   static const addService = 'services/create';
   static const businessesList = 'businesses/list';
+  static const reviewList = 'businesses/review/list';
+  static const addReview = 'businesses/review/create';
 }

@@ -26,7 +26,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   void initState() {
-    controller.getCategoryList(context, 1, false);
+    controller.getCategoryList(context, 1, false, isFirstTime: true);
     controller.scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -43,7 +43,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
         Duration.zero,
         () {
           controller
-              .getCategoryList(context, controller.currentPage, true)
+              .getCategoryList(context, controller.currentPage, true,
+                  isFirstTime: false)
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);

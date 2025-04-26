@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
@@ -31,7 +31,8 @@ class ServiceController extends GetxController {
   bool isFetchingMore = false;
 
   RxList serviceList = [].obs;
-  getServiceList(context, currentPage, bool hideloading, businessId) async {
+  getServiceList(context, currentPage, bool hideloading, businessId,
+      {bool? isFirstTime = false}) async {
     var loadingIndicator = LoadingProgressDialog();
 
     // if (hideloading == true) {
@@ -65,6 +66,9 @@ class ServiceController extends GetxController {
           state.value = ScreenState.apiSuccess;
           message.value = '';
           var serviceListData = ServiceListModel.fromJson(responseData);
+          if (isFirstTime == true && serviceList.isNotEmpty) {
+            serviceList.clear();
+          }
           if (serviceListData.data.data.isNotEmpty) {
             serviceList.addAll(serviceListData.data.data);
             serviceList.refresh();
@@ -110,6 +114,7 @@ class ServiceController extends GetxController {
   getServiceListItem(BuildContext context, ServiceDataList item) {
     return GestureDetector(
       onTap: () {
+        getServiceDetails(context, item);
         // Get.to(BusinessDetailScreen(item: item));
       },
       child: Container(
@@ -172,14 +177,14 @@ class ServiceController extends GetxController {
                     Text(item.categoryName,
                         style: TextStyle(
                             fontFamily: dM_sans_semiBold,
-                            fontSize: 15.sp,
+                            fontSize: 15.8.sp,
                             color: black,
                             fontWeight: FontWeight.w900)),
                     getDynamicSizedBox(height: 1.h),
                     Text(item.categoryName,
                         style: TextStyle(
                             fontFamily: fontRegular,
-                            fontSize: 14.sp,
+                            fontSize: 15.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
                     getDynamicSizedBox(height: 1.h),
@@ -199,21 +204,21 @@ class ServiceController extends GetxController {
                                 overflow: TextOverflow.ellipsis,
                                 fontSize:
                                     Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 10.sp,
+                                        ? 15.sp
+                                        : 12.sp,
                                 fontFamily: fontBold,
                                 color: grey),
                             lessStyle: TextStyle(
                                 fontFamily: fontMedium,
                                 fontSize:
                                     Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
+                                        ? 15.sp
                                         : 12.sp),
                             moreStyle: TextStyle(
                                 fontFamily: fontMedium,
                                 fontSize:
                                     Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
+                                        ? 15.sp
                                         : 12.sp,
                                 color: primaryColor))),
                   ],
@@ -227,10 +232,8 @@ class ServiceController extends GetxController {
   }
 
   getListItem(BuildContext context, ServiceDataList item) {
-    logcat("onCLick", "DONe");
     return GestureDetector(
       onTap: () {
-        logcat("onCLick", "DONe");
         // Get.to(BusinessDetailScreen(item: item));
       },
       child: Container(
@@ -310,4 +313,27 @@ class ServiceController extends GetxController {
     );
   }
 
+  getServiceDetails(BuildContext context, ServiceDataList data) {
+    return commonDetailsDialog(
+      context,
+      "Service Details",
+      isDescription: false,
+      contain: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        if (data.thumbnail != null)
+          getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
+              ? data.thumbnail
+              : ""),
+        getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
+        getPartyDetailRow('Category:', data.categoryName.capitalize.toString()),
+        getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
+        getPartyDetailRow('Service:', data.serviceTitle.capitalize.toString()),
+        // getDynamicSizedBox(height: data.keywords.isNotEmpty ? 1.h : 0.0),
+        // getPartyDetailRow('Keyword:', data.keywords.capitalize.toString()),
+        getDynamicSizedBox(
+            height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
+        if (data.description.toString().isNotEmpty)
+          getPartyDetailRow('Description:', data.description, isAddress: true),
+      ]),
+    );
+  }
 }

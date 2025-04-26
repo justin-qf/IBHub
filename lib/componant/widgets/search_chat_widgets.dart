@@ -121,36 +121,36 @@ setSearchBars(context, controller, String tag,
     {Function? onCancleClick,
     Function? onClearClick,
     Function? onFilterClick,
-    bool? isCancle}) {
+    bool? isCancle,
+    bool? isFilterApplied}) {
   return FadeInLeft(
     child: Row(
       children: [
         Expanded(
           child: Container(
-            decoration: BoxDecoration(
-              color: isDarkMode() ? tileColour : white,
-              borderRadius: BorderRadius.circular(
-                  Device.screenType == sizer.ScreenType.mobile ? 5.h : 6.h),
-              boxShadow: [
-                BoxShadow(
-                    color: black.withOpacity(0.05),
-                    blurRadius: 10.0,
-                    offset: const Offset(0, 5))
-              ],
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal:
-                  Device.screenType == sizer.ScreenType.mobile ? 0.w : 1.2.w,
-            ),
-            margin: EdgeInsets.symmetric(
-                horizontal: Device.screenType == sizer.ScreenType.mobile
-                    ? 3.8.w
-                    : 4.0.w,
-                vertical: Device.screenType == sizer.ScreenType.mobile
-                    ? 0.8.h
-                    : 1.5.h),
-            child: Row(
-              children: [
+              decoration: BoxDecoration(
+                color: isDarkMode() ? tileColour : white,
+                borderRadius: BorderRadius.circular(
+                    Device.screenType == sizer.ScreenType.mobile ? 5.h : 6.h),
+                boxShadow: [
+                  BoxShadow(
+                      color: black.withOpacity(0.05),
+                      blurRadius: 10.0,
+                      offset: const Offset(0, 5))
+                ],
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal:
+                    Device.screenType == sizer.ScreenType.mobile ? 0.w : 1.2.w,
+              ),
+              margin: EdgeInsets.symmetric(
+                  horizontal: Device.screenType == sizer.ScreenType.mobile
+                      ? 3.8.w
+                      : 4.0.w,
+                  vertical: Device.screenType == sizer.ScreenType.mobile
+                      ? 0.8.h
+                      : 1.5.h),
+              child: Row(children: [
                 Expanded(
                   child: TextFormField(
                     controller: controller,
@@ -206,29 +206,29 @@ setSearchBars(context, controller, String tag,
                   ),
                 ),
                 Container(
-                  height: 4.h,
-                  width: 1,
-                  color: Colors.grey.withOpacity(0.5),
-                  margin: EdgeInsets.symmetric(horizontal: 2.w),
-                ),
+                    height: 4.h,
+                    width: 1,
+                    color: Colors.grey.withOpacity(0.5),
+                    margin: EdgeInsets.symmetric(horizontal: 2.w)),
                 Container(
                   margin: EdgeInsets.only(right: 3.w),
                   child: GestureDetector(
-                    onTap: () {
-                      if (onFilterClick != null) {
-                        onFilterClick();
-                      }
-                    },
-                    child: Icon(Icons.filter_list,
-                        color: isDarkMode() ? black : black,
-                        size: Device.screenType == sizer.ScreenType.mobile
-                            ? 20
-                            : 25),
-                  ),
+                      onTap: () {
+                        if (onFilterClick != null) {
+                          onFilterClick();
+                        }
+                      },
+                      child: Icon(Icons.filter_list,
+                          color: isFilterApplied == true
+                              ? primaryColor
+                              : isDarkMode()
+                                  ? black
+                                  : black,
+                          size: Device.screenType == sizer.ScreenType.mobile
+                              ? 20
+                              : 25)),
                 ),
-              ],
-            ),
-          ),
+              ])),
         ),
         if (isCancle == true)
           FadeInRight(

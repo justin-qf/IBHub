@@ -6,6 +6,7 @@ import 'package:ibh/utils/log.dart';
 import 'package:intl/intl.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool isDarkMode() {
   return false;
@@ -191,20 +192,34 @@ DataColumn setColumn(title) {
   ));
 }
 
-// launchPhoneCall(String phoneNumber) async {
-//   try {
-//     String url = 'tel:$phoneNumber'; // Add "+91" to the phone number
-//     // ignore: deprecated_member_use
-//     if (await canLaunch(url)) {
-//       // ignore: deprecated_member_use
-//       await launch(url, forceSafariVC: false);
-//     } else {
-//       throw 'Could not launch $url';
-//     }
-//   } catch (e) {
-//     logcat("Error launching phone call:", e.toString());
-//   }
-// }
+launchPhoneCall(String phoneNumber) async {
+  try {
+    String url = 'tel:$phoneNumber'; // Add "+91" to the phone number
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url, forceSafariVC: false);
+    } else {
+      throw 'Could not launch $url';
+    }
+  } catch (e) {
+    logcat("Error launching phone call:", e.toString());
+  }
+}
+
+void lanchEmail(String email) async {
+  final Uri emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: email,
+  );
+  // ignore: deprecated_member_use
+  if (await canLaunch(emailLaunchUri.toString())) {
+    // ignore: deprecated_member_use
+    await launch(emailLaunchUri.toString());
+  } else {
+    throw 'Could not launch $emailLaunchUri';
+  }
+}
 
 String getStartDateOfCurrentMonth() {
   DateTime now = DateTime.now();

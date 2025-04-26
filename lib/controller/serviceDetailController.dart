@@ -29,6 +29,8 @@ class ServiceDetailScreenController extends GetxController {
   late Timer? timer =
       Timer.periodic(const Duration(seconds: 3), (Timer timer) {});
   RxBool? isFromFavApiCallSuccess = false.obs;
+  late TabController tabController;
+  int selectedTabIndex = 0;
 
   disposePageController() {
     if (timer != null) {
@@ -303,7 +305,6 @@ class ServiceDetailScreenController extends GetxController {
   var isBannerLoading = false.obs;
   getServiceList(context, currentPage, bool hideloading, businessId) async {
     var loadingIndicator = LoadingProgressDialog();
-
     // if (hideloading == true) {
     //   state.value = ScreenState.apiLoading;
     // } else {
@@ -367,6 +368,7 @@ class ServiceDetailScreenController extends GetxController {
             callback: () {});
       }
     } catch (e) {
+      isBannerLoading(false);
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
       message.value = ServerError.servererror;
