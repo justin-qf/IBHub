@@ -320,7 +320,7 @@ class ServiceController extends GetxController {
       "Service Details",
       isDescription: false,
       contain: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        if (data.thumbnail != null)
+        if (data.thumbnail.isNotEmpty)
           getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
               ? data.thumbnail
               : ""),

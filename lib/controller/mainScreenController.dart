@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/models/login_model.dart';
@@ -146,7 +145,7 @@ class MainScreenController extends GetxController {
               getDynamicSizedBox(height: 2.h),
               Text(
                 'Would you like to update it now?',
-                style: TextStyle(fontFamily: dM_sans_medium,fontSize: 18.sp),
+                style: TextStyle(fontFamily: dM_sans_medium, fontSize: 18.sp),
                 textAlign: TextAlign.center,
               ),
               getDynamicSizedBox(height: 2.h),

@@ -15,7 +15,6 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
-import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -127,10 +126,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       errorWidget: (context, url, error) =>
                                           CircleAvatar(
-                                        radius: 25.h,
-                                        child: 
-                                        Icon(Icons.person)
-                                      ),
+                                              radius: 25.h,
+                                              child: Icon(Icons.person)),
                                     ),
                                   );
                                 })),

@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }

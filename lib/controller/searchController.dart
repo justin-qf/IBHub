@@ -1130,7 +1130,7 @@ class SearchScreenController extends GetxController {
   getBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () {
-        Get.to(BusinessDetailScreen(item: item));
+        Get.to(BusinessDetailScreen(item: item,isFromProfile: false,));
         // Get.to(ServiceScreen(data: item));
       },
       child: Container(
