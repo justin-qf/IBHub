@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
@@ -16,6 +17,8 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
 import 'package:marquee/marquee.dart';
 import 'package:readmore/readmore.dart';
@@ -70,13 +73,7 @@ class HomeScreenController extends GetxController {
   getCategoryListItem(BuildContext context, CategoryData item) {
     return GestureDetector(
         onTap: () {
-          // Get.to(SubCategoryScreen(
-          //   categoryId: item.id.toString(),
-          // ))!
-          //     .then((value) {
-          //   getHome(context);
-          //   getTotalProductInCart();
-          // });
+          Get.to(const CategoryScreen())!.then((value) {});
         },
         child: Container(
             width: 8.h,
@@ -102,7 +99,7 @@ class HomeScreenController extends GetxController {
                           fit: BoxFit.cover,
                           height: 7.h,
                           width: 7.h,
-                          imageUrl: ApiUrl.imageUrl,
+                          imageUrl: item.thumbnail,
                           placeholder: (context, url) => const Center(
                             child:
                                 CircularProgressIndicator(color: primaryColor),
@@ -191,8 +188,8 @@ class HomeScreenController extends GetxController {
       var response =
           await Repository.get({}, ApiUrl.getCategories, allowHeader: true);
       logcat("RESPONSE::", response.body);
+      var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
@@ -211,9 +208,9 @@ class HomeScreenController extends GetxController {
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(
-            context, HomeScreenconst.title, ServerError.servererror,
-            callback: () {});
+        // showDialogForScreen(context, HomeScreenconst.title,
+        //     responseData['message'] ?? ServerError.servererror,
+        //     callback: () {});
       }
     } catch (e) {
       logcat("Ecxeption", e);
@@ -312,7 +309,7 @@ class HomeScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, CategoryScreenConstant.title, Connection.noConnection,
+            context, HomeScreenconst.title, Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -325,8 +322,8 @@ class HomeScreenController extends GetxController {
         loadingIndicator.hide(context);
       }
       logcat("RESPONSE::", response.body);
+      var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
@@ -357,8 +354,8 @@ class HomeScreenController extends GetxController {
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(
-            context, CategoryScreenConstant.title, ServerError.servererror,
+        showDialogForScreen(context, HomeScreenconst.title,
+            responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
     } catch (e) {
@@ -369,7 +366,7 @@ class HomeScreenController extends GetxController {
         loadingIndicator.hide(context);
       }
       showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
+          context, HomeScreenconst.title, ServerError.servererror,
           callback: () {});
     }
   }
@@ -377,8 +374,8 @@ class HomeScreenController extends GetxController {
   getBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () {
-        // Get.to(ServiceDetailScreen(item: item));
-        Get.to(ServiceScreen(data: item));
+        Get.to(BusinessDetailScreen(item: item));
+        // Get.to(ServiceScreen(data: item));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -403,7 +400,7 @@ class HomeScreenController extends GetxController {
                 padding: const EdgeInsets.all(5),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
-                height: 12.h,
+                height: 11.h,
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: Colors.grey.withOpacity(0.8),
@@ -437,12 +434,55 @@ class HomeScreenController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.businessName,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            fontSize: 15.sp,
-                            color: black,
-                            fontWeight: FontWeight.w900)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(item.businessName,
+                            style: TextStyle(
+                                fontFamily: dM_sans_semiBold,
+                                fontSize: 15.sp,
+                                color: black,
+                                fontWeight: FontWeight.w900)),
+                        const Spacer(),
+                        // if (item.businessReviewsAvgRating != null)
+                        // Text(item.businessReviewsAvgRating.toString(),
+                        //     style: TextStyle(
+                        //         fontFamily: fontMedium,
+                        //         fontSize: 14.sp,
+                        //         color: grey,
+                        //         fontWeight: FontWeight.w900))
+                        RatingBar.builder(
+                          initialRating: item.businessReviewsAvgRating ?? 0.0,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 1,
+                          itemSize: 3.5.w,
+                          unratedColor: Colors.orange,
+                          itemBuilder: (context, _) => const Icon(
+                            Icons.star,
+                            color: Colors.orange,
+                          ),
+                          onRatingUpdate: (rating) {
+                            logcat("RATING", rating);
+                          },
+                        ),
+                        getText(
+                          item.businessReviewsAvgRating != null
+                              ? item.businessReviewsAvgRating.toString()
+                              : '0.0',
+                          TextStyle(
+                              fontFamily: fontSemiBold,
+                              color: lableColor,
+                              fontSize:
+                                  Device.screenType == sizer.ScreenType.mobile
+                                      ? 14.sp
+                                      : 7.sp,
+                              height: 1.2),
+                        ),
+                      ],
+                    ),
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
@@ -451,39 +491,61 @@ class HomeScreenController extends GetxController {
                             color: black,
                             fontWeight: FontWeight.w500)),
                     getDynamicSizedBox(height: 1.h),
-                    AbsorbPointer(
-                        absorbing: true,
-                        child: ReadMoreText(item.address,
-                            textAlign: TextAlign.start,
-                            trimLines: 2, callback: (val) {
-                          logcat("ONTAP", val.toString());
-                        },
-                            colorClickableText: primaryColor,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: '...Show more',
-                            trimExpandedText: '',
-                            delimiter: ' ',
-                            style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 10.sp,
-                                fontFamily: fontBold,
-                                color: grey),
-                            lessStyle: TextStyle(
-                                fontFamily: fontMedium,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 12.sp),
-                            moreStyle: TextStyle(
-                                fontFamily: fontMedium,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 12.sp,
-                                color: primaryColor))),
+                    Text(
+                        item.address.isNotEmpty
+                            ? item.address
+                            : item.city != null
+                                ? item.city!.city
+                                : item.phone,
+                        maxLines: 2,
+                        style: TextStyle(
+                            fontFamily: fontRegular,
+                            fontSize: 14.sp,
+                            color: black,
+                            fontWeight: FontWeight.w500)),
+                    // getText(
+                    //   item.address,
+                    //   TextStyle(
+                    //       fontFamily: fontSemiBold,
+                    //       color: lableColor,
+                    //       fontSize: Device.screenType == sizer.ScreenType.mobile
+                    //           ? 14.sp
+                    //           : 7.sp,
+                    //       height: 1.2),
+                    // ),
+                    // AbsorbPointer(
+                    //     absorbing: true,
+                    //     child: ReadMoreText(item.address,
+                    //         textAlign: TextAlign.start,
+                    //         trimLines: 2, callback: (val) {
+                    //       logcat("ONTAP", val.toString());
+                    //     },
+                    //         colorClickableText: primaryColor,
+                    //         trimMode: TrimMode.Line,
+                    //         trimCollapsedText: '...Show more',
+                    //         trimExpandedText: '',
+                    //         delimiter: ' ',
+                    //         style: TextStyle(
+                    //             overflow: TextOverflow.ellipsis,
+                    //             fontSize:
+                    //                 Device.screenType == sizer.ScreenType.mobile
+                    //                     ? 14.sp
+                    //                     : 10.sp,
+                    //             fontFamily: fontBold,
+                    //             color: grey),
+                    //         lessStyle: TextStyle(
+                    //             fontFamily: fontMedium,
+                    //             fontSize:
+                    //                 Device.screenType == sizer.ScreenType.mobile
+                    //                     ? 14.sp
+                    //                     : 12.sp),
+                    //         moreStyle: TextStyle(
+                    //             fontFamily: fontMedium,
+                    //             fontSize:
+                    //                 Device.screenType == sizer.ScreenType.mobile
+                    //                     ? 14.sp
+                    //                     : 12.sp,
+                    //             color: primaryColor))),
                   ],
                 ),
               ),
@@ -493,5 +555,4 @@ class HomeScreenController extends GetxController {
       ),
     );
   }
-
 }

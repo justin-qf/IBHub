@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -34,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
       controller.currentPage = 1;
       controller.getStateApi(context, "");
       controller.getCategoryApi(context);
+      controller.getBusinessList(context, 1, false, isFirstTime: true);
     }, isOneSecond: false);
     controller.scrollController.addListener(scrollListener);
     super.initState();
@@ -65,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     controller.currentPage = 1;
+    controller.searchCtr.text = '';
     controller.businessList.clear();
     super.dispose();
   }

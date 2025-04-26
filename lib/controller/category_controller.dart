@@ -210,125 +210,122 @@ class CategoryController extends GetxController {
   }
 
   getOldListItem(CategoryListData data) {
-    return FadeInUp(
-      child: GestureDetector(
-        onTap: () {
-          // Get.to(SubCategoryScreen(
-          //   categoryId: data.id.toString(),
-          // ));
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(
-              Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
-          child: Container(
-              width: 45.w,
-              margin: EdgeInsets.only(bottom: 0.5.h, left: 1.w, right: 2.w),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: grey, // Border color
-                  width: 0.5, // Border width
-                ),
-                color: white,
-                borderRadius: BorderRadius.circular(
-                    Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
+    return GestureDetector(
+      onTap: () {
+        // Get.to(SubCategoryScreen(
+        //   categoryId: data.id.toString(),
+        // ));
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(
+            Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
+        child: Container(
+            width: 45.w,
+            margin: EdgeInsets.only(bottom: 0.5.h, left: 1.w, right: 2.w),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: grey, // Border color
+                width: 0.5, // Border width
               ),
-              child: Stack(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                        left: 1.2.w, right: 1.2.w, top: 0.8.h, bottom: 0.8.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 10.h,
-                          width: 10.h,
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: grey, // Border color
-                              width: 0.5, // Border width
-                            ),
-                            borderRadius: BorderRadius.circular(
-                                Device.screenType == sizer.ScreenType.mobile
-                                    ? 20.w
-                                    : 15.w),
+              color: white,
+              borderRadius: BorderRadius.circular(
+                  Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
+            ),
+            child: Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(
+                      left: 1.2.w, right: 1.2.w, top: 0.8.h, bottom: 0.8.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 10.h,
+                        width: 10.h,
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: grey, // Border color
+                            width: 0.5, // Border width
                           ),
-                          child: ClipOval(
-                            child: CachedNetworkImage(
+                          borderRadius: BorderRadius.circular(
+                              Device.screenType == sizer.ScreenType.mobile
+                                  ? 20.w
+                                  : 15.w),
+                        ),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            imageUrl: data.thumbnail,
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(
+                                  color: primaryColor),
+                            ),
+                            errorWidget: (context, url, error) => Image.asset(
+                              Asset.placeholder,
+                              height: 9.h,
                               fit: BoxFit.cover,
-                              imageUrl: ApiUrl.imageUrl,
-                              placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator(
-                                    color: primaryColor),
-                              ),
-                              errorWidget: (context, url, error) => Image.asset(
-                                Asset.placeholder,
-                                height: 9.h,
-                                fit: BoxFit.cover,
-                              ),
                             ),
                           ),
                         ),
-                        getDynamicSizedBox(height: 1.0.h),
-                        // data.name.length > 9
-                        //     ? Container(
-                        //         width: 20.w,
-                        //         child: Marquee(
-                        //             style: TextStyle(
-                        //               fontFamily: fontRegular,
-                        //               color: black,
-                        //               fontSize: Device.screenType ==
-                        //                       sizer.ScreenType.mobile
-                        //                   ? 14.sp
-                        //                   : 9.sp,
-                        //             ),
-                        //             text: data.name,
-                        //             scrollAxis: Axis.horizontal,
-                        //             crossAxisAlignment:
-                        //                 CrossAxisAlignment.start,
-                        //             blankSpace:
-                        //                 20.0, // Adjust the space between text repetitions
-                        //             velocity:
-                        //                 50.0, // Adjust the scrolling speed
-                        //             pauseAfterRound: const Duration(
-                        //                 seconds:
-                        //                     1), // Time to pause after each scroll
-                        //             startPadding:
-                        //                 10.0, // Adjust the initial padding
-                        //             accelerationDuration: const Duration(
-                        //                 seconds:
-                        //                     1), // Duration for acceleration
-                        //             accelerationCurve:
-                        //                 Curves.linear, // Acceleration curve
-                        //             decelerationDuration: const Duration(
-                        //                 milliseconds:
-                        //                     500), // Duration for deceleration
-                        //             decelerationCurve: Curves.easeOut),
-                        //       )
-                        //     :
-                        Center(
-                          child: Text(data.name,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: fontSemiBold,
-                                  fontWeight: FontWeight.w500,
-                                  color: black,
-                                  fontSize: Device.screenType ==
-                                          sizer.ScreenType.mobile
-                                      ? 14.sp
-                                      : 12.sp,
-                                  height: 1.2)),
-                        ),
+                      ),
+                      getDynamicSizedBox(height: 1.0.h),
+                      // data.name.length > 9
+                      //     ? Container(
+                      //         width: 20.w,
+                      //         child: Marquee(
+                      //             style: TextStyle(
+                      //               fontFamily: fontRegular,
+                      //               color: black,
+                      //               fontSize: Device.screenType ==
+                      //                       sizer.ScreenType.mobile
+                      //                   ? 14.sp
+                      //                   : 9.sp,
+                      //             ),
+                      //             text: data.name,
+                      //             scrollAxis: Axis.horizontal,
+                      //             crossAxisAlignment:
+                      //                 CrossAxisAlignment.start,
+                      //             blankSpace:
+                      //                 20.0, // Adjust the space between text repetitions
+                      //             velocity:
+                      //                 50.0, // Adjust the scrolling speed
+                      //             pauseAfterRound: const Duration(
+                      //                 seconds:
+                      //                     1), // Time to pause after each scroll
+                      //             startPadding:
+                      //                 10.0, // Adjust the initial padding
+                      //             accelerationDuration: const Duration(
+                      //                 seconds:
+                      //                     1), // Duration for acceleration
+                      //             accelerationCurve:
+                      //                 Curves.linear, // Acceleration curve
+                      //             decelerationDuration: const Duration(
+                      //                 milliseconds:
+                      //                     500), // Duration for deceleration
+                      //             decelerationCurve: Curves.easeOut),
+                      //       )
+                      //     :
+                      Center(
+                        child: Text(data.name,
+                            style: TextStyle(
+                                fontFamily: fontSemiBold,
+                                fontWeight: FontWeight.w500,
+                                color: black,
+                                fontSize:
+                                    Device.screenType == sizer.ScreenType.mobile
+                                        ? 14.sp
+                                        : 12.sp,
+                                height: 1.2)),
+                      ),
 
-                        // getDynamicSizedBox(height: 0.2.h),
-                      ],
-                    ),
+                      // getDynamicSizedBox(height: 0.2.h),
+                    ],
                   ),
-                ],
-              )),
-        ),
+                ),
+              ],
+            )),
       ),
     );
   }

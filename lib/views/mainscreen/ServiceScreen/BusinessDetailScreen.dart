@@ -5,28 +5,31 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/serviceDetailController.dart';
 import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
 import 'package:marquee/marquee.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
 
 // ignore: must_be_immutable
-class ServiceDetailScreen extends StatefulWidget {
-  ServiceDetailScreen({required this.item, super.key});
-  ServiceDataList item;
+class BusinessDetailScreen extends StatefulWidget {
+  BusinessDetailScreen({required this.item, super.key});
+  BusinessData item;
 
   @override
-  State<ServiceDetailScreen> createState() => _ServiceDetailScreenState();
+  State<BusinessDetailScreen> createState() => _BusinessDetailScreenState();
 }
 
-class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
+class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   var controller = Get.put(ServiceDetailScreenController());
   bool showTitle = false;
   double? percentage;
@@ -35,7 +38,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   @override
   void initState() {
     futureDelay(() {
-      // ctr.getCategory(context, '');
+      controller.getServiceList(context, 1, true, widget.item.id);
     }, isOneSecond: true);
     logcat("Item::", widget.item.toString());
     super.initState();
@@ -84,7 +87,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         left: 15.w,
                         right: 15.w),
                     title: showTitle
-                        ? widget.item.serviceTitle.toString().length > 9
+                        ? widget.item.businessName.toString().length > 9
                             ? Marquee(
                                 style: TextStyle(
                                   fontFamily: fontRegular,
@@ -94,7 +97,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                       ? 14.sp
                                       : 12.sp,
                                 ),
-                                text: widget.item.serviceTitle
+                                text: widget.item.businessName
                                     .toString()
                                     .length
                                     .toString(),
@@ -145,7 +148,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                   child: CachedNetworkImage(
                                     fit: BoxFit.cover,
                                     height: 14.h,
-                                    imageUrl: widget.item.thumbnail,
+                                    imageUrl: widget.item.visitingCardUrl,
                                     placeholder: (context, url) => const Center(
                                       child: CircularProgressIndicator(
                                           color: primaryColor),
@@ -260,22 +263,61 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+<<<<<<< HEAD:lib/views/mainscreen/ServiceScreen/ServiceDetailScreen.dart
                       getDynamicSizedBox(height: 1.h),
                       controller.getCategoryLable(widget.item.categoryName),
+=======
+>>>>>>> af5196ae33285044bcc736fd14725bce1efd766b:lib/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText(widget.item.serviceTitle,
+                      controller.getLableText(widget.item.businessName,
+                          isMainTitle: true),
+                      // controller.getCategoryLable(widget.item.businessName),
+                      getDynamicSizedBox(height: 1.h),
+                      controller.getLableText(widget.item.email,
                           isMainTitle: false),
                       getDynamicSizedBox(height: 1.h),
                       controller.getLableText('Description : ',
                           isMainTitle: false),
                       getDynamicSizedBox(height: 0.5.h),
-                      controller.getCommonText(
-                          widget.item.description.toString(),
+                      controller.getCommonText(widget.item.address.toString(),
                           isHint: true),
                       getDynamicSizedBox(
                           height: Device.screenType == sizer.ScreenType.mobile
                               ? 1.h
                               : 0.8.h),
+<<<<<<< HEAD:lib/views/mainscreen/ServiceScreen/ServiceDetailScreen.dart
+=======
+                      // controller.getLableText('Services List',
+                      //     isMainTitle: false),
+                      getHomeLable('Services List', () {
+                        Get.to(ServiceScreen(
+                          data: widget.item,
+                        ))!
+                            .then((value) {});
+                      }, isFromDetailScreen: true),
+                      Obx(
+                        () {
+                          return controller.serviceList.isNotEmpty
+                              ? SizedBox(
+                                  height: 20.h,
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.only(
+                                          left: 0.w, right: 1.w),
+                                      physics: const BouncingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      clipBehavior: Clip.antiAlias,
+                                      itemBuilder: (context, index) {
+                                        ServiceDataList data =
+                                            controller.serviceList[index];
+                                        return controller.getListItem(
+                                            context, data);
+                                      },
+                                      itemCount: controller.serviceList.length),
+                                )
+                              : Container();
+                        },
+                      ),
+>>>>>>> af5196ae33285044bcc736fd14725bce1efd766b:lib/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart
                       getDynamicSizedBox(height: 1.h),
                     ],
                   ),

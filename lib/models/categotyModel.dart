@@ -33,16 +33,20 @@ class CategoryModel {
 class CategoryData {
   int id;
   String name;
+  String thumbnail;
 
   CategoryData({
     required this.id,
     required this.name,
+    required this.thumbnail,
   });
 
   factory CategoryData.fromJson(Map<String, dynamic> json) => CategoryData(
         id: json["id"],
         name: json["name"] ?? '',
+        thumbnail: json["thumbnail"] ?? '',
       );
 
-  Map<String, dynamic> toJson() => {"id": id, "name": name};
+  Map<String, dynamic> toJson() =>
+      {"id": id, "name": name, "thumbnail": thumbnail};
 }
