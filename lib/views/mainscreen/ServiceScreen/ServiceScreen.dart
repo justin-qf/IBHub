@@ -97,9 +97,18 @@ class _ServiceScreenState extends State<ServiceScreen> {
         child: Column(
           children: [
             getDynamicSizedBox(height: 5.h),
-            getCommonToolbar("Service", showBackButton: true, onClick: () {
-              Get.back();
-            }),
+           Container(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child:  getleftsidebackbtn(
+              title: 'Services',
+              backFunction: () {
+                Get.back(result: true);
+              },
+            ),
+           ),
+            // getCommonToolbar("Service", showBackButton: true, onClick: () {
+            //   Get.back();
+            // }),
             Expanded(
               child: Obx(() {
                 switch (controller.state.value) {

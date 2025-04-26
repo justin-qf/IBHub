@@ -27,6 +27,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     controller.currentPage = 0;
+    controller.getProfileData();
 
     controller.getTimerPopup(context);
     setState(() {

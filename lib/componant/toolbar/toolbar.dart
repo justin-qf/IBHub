@@ -524,9 +524,7 @@ Widget backButtonWidget(callback, {isWhiteText}) {
       child: Container(
           margin: EdgeInsets.only(
               left: Device.screenType == ScreenType.mobile ? 5.w : 2.w),
-          child:
-          
-           GestureDetector(
+          child: GestureDetector(
               onTap: () {
                 callback();
               },
@@ -627,19 +625,50 @@ getCommonToolbar(String title,
   );
 }
 
+// getleftsidebackbtn({required backFunction, required title}) {
+//   return Row(
+//     children: [
+//       GestureDetector(
+//           onTap: () {
+//             backFunction();
+//           },
+//           child: SvgPicture.asset(Asset.arrowBack,
+
+//               // ignore: deprecated_member_use
+//               color: black,
+//               height: 4.h)),
+//       getDynamicSizedBox(width: 1.w),
+//       Text(
+//         title,
+//         style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
+//       )
+//     ],
+//   );
+// }
+
 getleftsidebackbtn({required backFunction, required title}) {
   return Row(
     children: [
-      GestureDetector(
-          onTap: () {
-            backFunction();
-          },
-          child: SvgPicture.asset(Asset.arrowBack,
-
-              // ignore: deprecated_member_use
-              color: black,
-              height: 4.h)),
-      getDynamicSizedBox(width: 1.w),
+       SizedBox(
+            width: 10.w,
+            height: 4.5.h,
+            child: FloatingActionButton(
+              onPressed: backFunction,
+              backgroundColor: inputBgColor,
+              elevation: 0,
+              mini: true,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+               
+              child: SvgPicture.asset(
+                Asset.arrowBack,
+                colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
+                height: 24,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+      getDynamicSizedBox(width: 2.w),
       Text(
         title,
         style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),

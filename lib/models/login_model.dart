@@ -43,8 +43,6 @@ class User {
   String email;
   String phone;
   String businessName;
-
-  
   String address;
   City? city;
   StateData? state;
@@ -52,6 +50,7 @@ class User {
   String visitingCardUrl;
   bool isVerified;
   String token;
+  double? businessReviewsAvgRating;
 
   User({
     required this.id,
@@ -66,8 +65,8 @@ class User {
     required this.visitingCardUrl,
     required this.isVerified,
     required this.token,
+    required this.businessReviewsAvgRating,
   });
-
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
@@ -82,6 +81,9 @@ class User {
         visitingCardUrl: json["visiting_card_url"] ?? '',
         isVerified: json["is_verified"],
         token: json["token"] ?? '',
+        businessReviewsAvgRating: json["business_reviews_avg_rating"] != null
+            ? json["business_reviews_avg_rating"]?.toDouble()
+            : 0.0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -97,6 +99,7 @@ class User {
         "visiting_card_url": visitingCardUrl,
         "is_verified": isVerified,
         "token": token,
+        "business_reviews_avg_rating": businessReviewsAvgRating,
       };
 }
 
@@ -147,4 +150,3 @@ class StateData {
         "country_id": countryId,
       };
 }
-

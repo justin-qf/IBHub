@@ -44,7 +44,7 @@ class _ServicescreenState extends State<AddServicescreen> {
         hideKeyboard(context);
       },
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 5.w),
+        padding: EdgeInsets.symmetric(horizontal: 4.w),
         child: Column(
           children: [
             getDynamicSizedBox(height: 5.h),

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
+import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
 
@@ -43,41 +47,154 @@ class MainScreenController extends GetxController {
     }
   }
 
-//   RxString address = "".obs;
-//   RxString city = "".obs;
-//   RxString state = "".obs;
-//   RxString pincode = "".obs;
-//   RxString visitingCardUrl = "".obs;
+  RxString address = "".obs;
+  RxString city = "".obs;
+  RxString states = "".obs;
+  RxString pincode = "".obs;
+  RxString visitingCardUrl = "".obs;
 
+  getProfileData() async {
+    state.value = ScreenState.apiLoading;
+    User? retrievedObject = await UserPreferences().getSignInInfo();
+    address.value = retrievedObject!.address;
+    city.value = retrievedObject.city.toString();
+    states.value = retrievedObject.state.toString();
+    pincode.value = retrievedObject.pincode.toString();
+    visitingCardUrl.value = retrievedObject.visitingCardUrl;
 
+    // gender.value = retrievedObject.city;
+    // referCode!.value = retrievedObject.state;
+    update();
+    state.value = ScreenState.apiSuccess;
+  }
 
+  // void getTimerPopup(BuildContext context) {
+  //   Future.delayed(Duration(seconds: 10), () {
+  //     if (!context.mounted) return;
+  //     print('pop up code execute');
+  //     // Check if ANY of the fields are empty
+  //     if (address.value.isEmpty ||
+  //         city.value.isEmpty ||
+  //         states.value.isEmpty ||
+  //         pincode.value.isEmpty ||
+  //         visitingCardUrl.value.isEmpty) {
+  //       getpopup(
+  //         context,
+  //         isFromProfile: false,
+  //         title: 'Incomplete Profile',
+  //         message:
+  //             'Would you like to update it now?',
+  //         function: () {
+  //           Get.to(Updateprofilescreen());
+  //         },
+  //       );
+  //     }
+  //   });
+  // }
 
-// getProfileData() async {
-//     state.value = ScreenState.apiLoading;
-//     User? retrievedObject = await UserPreferences().getSignInInfo();
-//     userName.value = retrievedObject!.name;
-//     email.value = retrievedObject.email;
-//     number.value = retrievedObject.phone;
-//     bussiness.value = retrievedObject.businessName;
-//     profilePic.value = retrievedObject.visitingCardUrl;
-//     // gender.value = retrievedObject.city;
-//     // referCode!.value = retrievedObject.state;
-//     update();
-//     state.value = ScreenState.apiSuccess;
-//     logcat("referCode::", referCode!.value.toString());
-//   }
+  // void getTimerPopup(BuildContext context) {
+  //   Future.delayed(Duration(seconds: 10), () {
+  //     if (!context.mounted) return;
+  //     print('pop up code execute');
+  //     // Check if ANY of the fields are empty
+  //     if (address.value.isEmpty ||
+  //         city.value.isEmpty ||
+  //         states.value.isEmpty ||
+  //         pincode.value.isEmpty ||
+  //         visitingCardUrl.value.isEmpty) {
+  //       showBottomSheetPopup(context);
+  //     }
+  //   });
+  // }
 
   void getTimerPopup(BuildContext context) {
     Future.delayed(Duration(seconds: 10), () {
       if (!context.mounted) return;
-      getpopup(context,
-          isFromProfile: false,
-          title: 'No Business Added',
-          message:
-              'You haven\'t added your business yet. Would you like to add it?',
-          function: () {
-        Get.to(Updateprofilescreen());
-      });
+      print('pop up code execute');
+      // getpopup(context,
+      //     isFromProfile: false,
+      //     title: 'Incomplete Profile',
+      //     message: 'Would you like to update it now?', function: () {
+      //   Get.to(Updateprofilescreen());
+      // });
+
+      showBottomSheetPopup(context);
     });
+  }
+
+  void showBottomSheetPopup(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          width: Device.width,
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              getDynamicSizedBox(height: 2.h),
+              Text(
+                'Incomplete Profile',
+                style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: dM_sans_semiBold),
+              ),
+              getDynamicSizedBox(height: 2.h),
+              Text(
+                'Would you like to update it now?',
+                style: TextStyle(fontFamily: dM_sans_medium,fontSize: 18.sp),
+                textAlign: TextAlign.center,
+              ),
+              getDynamicSizedBox(height: 2.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.black),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  getDynamicSizedBox(width: 2.h),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                        Get.to(Updateprofilescreen());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: green, // your custom green color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'Add',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

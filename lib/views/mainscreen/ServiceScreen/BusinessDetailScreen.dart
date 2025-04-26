@@ -45,6 +45,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String thumbnail = '';
   String email = '';
   String address = '';
+  double? businessReviewsAvgRating = 0.0;
   @override
   void initState() {
     logcat("Item::", widget.item.toString());
@@ -59,6 +60,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     email = retrievedObject.email;
     address = retrievedObject.address;
     businessId = retrievedObject.id.toString();
+    businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
 
     futureDelay(() {
       controller.getServiceList(context, 1, true,
@@ -88,6 +90,14 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         physics: const BouncingScrollPhysics(),
         controller: scrollController,
         slivers: [
+          Container(
+            width: Device.width,
+            decoration: BoxDecoration(
+                color: secondaryColor,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+          ),
           SliverAppBar(
             expandedHeight: 27.h,
             centerTitle: true,
@@ -199,25 +209,42 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 return Container(
                   margin: EdgeInsets.only(
                       left: Device.screenType == sizer.ScreenType.mobile
-                          ? 2.w
+                          ? 4.w
                           : 2.w),
                   child: GestureDetector(
                     onTap: () {
                       Get.back(result: true);
                     },
                     child: Container(
-                        padding: EdgeInsets.all(
-                            Device.screenType == sizer.ScreenType.mobile
-                                ? 8
-                                : 0),
+                      height: 1.5.h,
+                      width: 1.5.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: inputBgColor,
+                      ),
+                      child: Center(
                         child: SvgPicture.asset(
                           Asset.arrowBack,
-                          // ignore: deprecated_member_use
-                          color: black,
-                          height: Device.screenType == sizer.ScreenType.mobile
-                              ? 4.h
-                              : 5.h,
-                        )),
+                          colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
+                          height: 2.h,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+
+                    //  Container(
+                    //     padding: EdgeInsets.all(
+                    //         Device.screenType == sizer.ScreenType.mobile
+                    //             ? 8
+                    //             : 0),
+                    //     child: SvgPicture.asset(
+                    //       Asset.arrowBack,
+                    //       // ignore: deprecated_member_use
+                    //       color: black,
+                    //       height: Device.screenType == sizer.ScreenType.mobile
+                    //           ? 4.h
+                    //           : 5.h,
+                    //     )),
                   ),
                 );
               },
@@ -297,12 +324,17 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       getDynamicSizedBox(height: 1.h),
                       Row(
                         children: [
-                          controller.getLableText(widget.item.businessName,
+                          controller.getLableText(
+                              widget.item != null
+                                  ? widget.item!.businessName
+                                  : businessName,
                               isMainTitle: true),
                           const Spacer(),
                           RatingBar.builder(
                             initialRating:
-                                widget.item.businessReviewsAvgRating ?? 0.0,
+                                (widget.item?.businessReviewsAvgRating ??
+                                        businessReviewsAvgRating) ??
+                                    0.0,
                             minRating: 1,
                             direction: Axis.horizontal,
                             allowHalfRating: true,
@@ -321,10 +353,12 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                               padding:
                                   EdgeInsets.only(left: 0.5.w, right: 0.5.w),
                               child: Text(
-                                widget.item.businessReviewsAvgRating != null
-                                    ? widget.item.businessReviewsAvgRating
+                                widget.item != null &&
+                                        widget.item!.businessReviewsAvgRating !=
+                                            null
+                                    ? widget.item!.businessReviewsAvgRating
                                         .toString()
-                                    : '0.0',
+                                    : businessReviewsAvgRating.toString(),
                                 style: TextStyle(
                                     fontFamily: fontSemiBold,
                                     color: lableColor,
