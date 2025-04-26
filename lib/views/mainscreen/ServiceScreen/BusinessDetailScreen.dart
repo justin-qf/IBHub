@@ -263,11 +263,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-<<<<<<< HEAD:lib/views/mainscreen/ServiceScreen/ServiceDetailScreen.dart
-                      getDynamicSizedBox(height: 1.h),
-                      controller.getCategoryLable(widget.item.categoryName),
-=======
->>>>>>> af5196ae33285044bcc736fd14725bce1efd766b:lib/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart
                       getDynamicSizedBox(height: 1.h),
                       controller.getLableText(widget.item.businessName,
                           isMainTitle: true),
@@ -276,7 +271,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       controller.getLableText(widget.item.email,
                           isMainTitle: false),
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText('Description : ',
+                      controller.getLableText('Description',
                           isMainTitle: false),
                       getDynamicSizedBox(height: 0.5.h),
                       controller.getCommonText(widget.item.address.toString(),
@@ -285,8 +280,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                           height: Device.screenType == sizer.ScreenType.mobile
                               ? 1.h
                               : 0.8.h),
-<<<<<<< HEAD:lib/views/mainscreen/ServiceScreen/ServiceDetailScreen.dart
-=======
                       // controller.getLableText('Services List',
                       //     isMainTitle: false),
                       getHomeLable('Services List', () {
@@ -317,7 +310,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                               : Container();
                         },
                       ),
->>>>>>> af5196ae33285044bcc736fd14725bce1efd766b:lib/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart
                       getDynamicSizedBox(height: 1.h),
                     ],
                   ),
