@@ -61,7 +61,8 @@ class AddServicescreencontroller extends GetxController {
   RxList<CategoryData> categoryList = <CategoryData>[].obs;
 
   RxString categoryId = "".obs;
-  var keywords = <String>[].obs;
+  
+var keywords = <String>[].obs;
 
   void addKeyword(String keyword) {
     if (keyword.isNotEmpty && !keywords.contains(keyword)) {
@@ -97,7 +98,6 @@ class AddServicescreencontroller extends GetxController {
 
 //     print(keywordsCtr.text);
 //   }
-
   void init() {
     serviceTitleNode = FocusNode();
     descriptionNode = FocusNode();
