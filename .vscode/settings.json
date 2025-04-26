@@ -2,5 +2,6 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "files.associations": {
         "xiosbase": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "D:/Flutter/Live Project/BussinessApp/IBHub/linux"
 }

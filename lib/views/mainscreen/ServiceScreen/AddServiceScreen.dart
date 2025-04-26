@@ -1,3 +1,4 @@
+import 'package:advanced_chips_input/advanced_chips_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -5,6 +6,7 @@ import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/addservicescreenController.dart';
@@ -142,74 +144,118 @@ class _ServicescreenState extends State<AddServicescreen> {
                         },
                       );
                     }),
-                    
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: getLable('Keywords', isRequired: true),
+                    ),
+                    AdvancedChipsInput(
+                      onChanged: (val) {
+                        ctr.validateFields(val,
+                            iscomman: true,
+                            model: ctr.keywordsModel,
+                            errorText1: ServicesScreenConstant.enterKeyword);
+                      },
+                      separatorCharacter: ',',
+                      placeChipsSectionAbove: true,
+                      widgetContainerDecoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      chipContainerDecoration: BoxDecoration(
+                        color: secondaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(50)),
+                      ),
+                      chipTextStyle: TextStyle(color: primaryColor),
+                      validateInput: true,
+                      onSubmitted: (text) {
+                        ctr.addKeyword(text);
+                        print('${ctr.keywords.length}');
+                        print(ctr.keywords);
+                      },
+                      validateInputMethod: (value) {
+                        if (value.length < 3) {
+                          return 'Input should be at least 3 characters long';
+                        }
+                        return null;
+                      },
+                      deleteIcon: Icon(
+                        Icons.close,
+                        size: 20.sp,
+                      ),
+                      eraseKeyLabel: 'erase',
+                      onChipDeleted: (chipText, index) {
+                        print('Before deletion: ${ctr.keywords}');
 
-                    
-                    Obx(() {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getTextField(
-                            label: ServicesScreenConstant.keyword,
-                            ctr: ctr.keywordsCtr,
-                            node: ctr.keywordsNode,
-                            model: ctr.keywordsModel.value,
-                            wantsuffix: true,
-                            isAdd: true,
-                            onAddBtn: () {
-                              print('call');
-                              if (ctr.keywordsCtr.text.isNotEmpty) {
-                                ctr.addKeyword(ctr.keywordsCtr.text);
-                              }
-                            },
-                            function: (val) {
-                              ctr.validateFields(val,
-                                  iscomman: true,
-                                  model: ctr.keywordsModel,
-                                  errorText1:
-                                      ServicesScreenConstant.enterKeyword);
-                            },
-                            hint: ServicesScreenConstant.enterKeyword,
-                            isRequired: true,
-                            context: context,
-                          ),
-                          getDynamicSizedBox(height: 1.h), // Add some spacing
-                          Obx(() => Wrap(
-                                spacing: 8.0,
-                                runSpacing: 4.0,
-                                children: ctr.keywords
-                                    .map((keyword) => Chip(
-                                          label: Text(keyword,
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: isDarkMode()
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                              )),
-                                          deleteIcon:
-                                              Icon(Icons.close, size: 18),
-                                          onDeleted: () {
-                                            ctr.removeKeyword(keyword);
-                                          },
-                                          backgroundColor: isDarkMode()
-                                              ? Colors.grey[800]
-                                              : Colors.grey[200],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            side: BorderSide(
-                                              color: isDarkMode()
-                                                  ? Colors.grey[600]!
-                                                  : Colors.grey[400]!,
-                                              width: 0.5,
-                                            ),
-                                          ),
-                                        ))
-                                    .toList(),
-                              )),
-                        ],
-                      );
-                    }),
+                        if (index >= 0 && index < ctr.keywords.length) {
+                          // Remove only by index — this is sufficient
+                          ctr.keywords.removeAt(index);
+                        }
+                        ctr.enableSubmitButton();
+
+                        print('After deletion: ${ctr.keywords}');
+                      },
+                    ),
+
+                    // Obx(() {
+                    //   return Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       getTextField(
+                    //         label: ServicesScreenConstant.keyword,
+                    //         ctr: ctr.keywordsCtr,
+                    //         node: ctr.keywordsNode,
+                    //         model: ctr.keywordsModel.value,
+                    //         wantsuffix: true,
+                    //         isAdd: true,
+                    //         onAddBtn: () {
+                    //           print('call');
+                    //           if (ctr.keywordsCtr.text.isNotEmpty) {
+                    //             ctr.addKeyword(ctr.keywordsCtr.text);
+                    //           }
+                    //         },
+                    //         function: (val) {
+                    //           // ctr.validateFields(val,
+                    //           //     iscomman: true,
+                    //           //     model: ctr.keywordsModel,
+                    //           //     errorText1:
+                    //           //         ServicesScreenConstant.enterKeyword);
+                    //         },
+                    //         hint: ServicesScreenConstant.enterKeyword,
+                    //         isRequired: true,
+                    //         context: context,
+                    //       ),
+                    //       getDynamicSizedBox(height: 1.h), // Add some spacing
+                    //       Obx(() => Wrap(
+                    //             spacing: 8.0,
+                    //             runSpacing: 4.0,
+                    //             children: ctr.keywords
+                    //                 .map((keyword) => Chip(
+                    //                       label: Text(keyword,
+                    //                           style: TextStyle(
+                    //                             fontSize: 14,
+                    //                             color: isDarkMode()
+                    //                                 ? Colors.white
+                    //                                 : Colors.black,
+                    //                           )),
+                    //                       deleteIcon:
+                    //                           Icon(Icons.close, size: 18),
+                    //                       onDeleted: () {
+                    //                         ctr.removeKeyword(keyword);
+                    //                       },
+                    //                       backgroundColor: Colors.grey[200],
+                    //                       shape: RoundedRectangleBorder(
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(10),
+                    //                         side: BorderSide(
+                    //                           color: Colors.grey[400]!,
+                    //                           width: 0.5,
+                    //                         ),
+                    //                       ),
+                    //                     ))
+                    //                 .toList(),
+                    //           )),
+                    //     ],
+                    //   );
+                    // }),
                     // Obx(() {
                     //   return getTextField(
                     //       label: ServicesScreenConstant.keyword,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
+import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/apicall_constant.dart';
@@ -48,6 +49,23 @@ class ProfileController extends GetxController {
     update();
     states.value = ScreenState.apiSuccess;
     logcat("referCode::", referCode!.value.toString());
+  }
+
+  void getApiProfile(context) async {
+    commonGetApiCallFormate(context,
+        title: 'Profile',
+        apiEndPoint: ApiUrl.profile,
+        allowHeader: true, apisLoading: (isTrue) {
+      logcat("IsProfile:", isTrue.toString());
+      update();
+    }, onResponse: (response) {
+      var userData = User.fromJson(response);
+      
+      profilePic.value = userData.visitingCardUrl;
+
+      logcat("Profile", jsonEncode(userData));
+      update();
+    }, networkManager: networkManager);
   }
 
   BuildContext? contexts;

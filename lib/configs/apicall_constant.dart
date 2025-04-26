@@ -11,6 +11,7 @@ class ApiUrl {
 
   //AUTH
   static const login = "login";
+  static const profile = "profile";
   static const forgotPass = "forgot-password-otp";
   static const verifyForgotOtp = "verify-otp";
   static const updateForgotPassword = "reset-password";

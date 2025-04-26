@@ -41,6 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     controller.getProfileData();
+    controller.getApiProfile(context);
     controller.controllers = BottomSheet.createAnimationController(this);
     super.initState();
   }
@@ -100,21 +101,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    if (controller
-                                        .profilePic.value.isNotEmpty) {
-                                      Get.to(FullScreenImage(
-                                        imageUrl: controller.profilePic.value,
-                                        fromProfile: true,
-                                      ))!
-                                          .then((value) => {
-                                                Statusbar()
-                                                    .trasparentStatusbar()
-                                              });
-                                    }
-                                  },
-                                  child: ClipRRect(
+                                GestureDetector(onTap: () {
+                                  if (controller.profilePic.value.isNotEmpty) {
+                                    Get.to(FullScreenImage(
+                                      imageUrl: controller.profilePic.value,
+                                      fromProfile: true,
+                                    ))!
+                                        .then((value) => {
+                                              Statusbar().trasparentStatusbar()
+                                            });
+                                  }
+                                }, child: Obx(() {
+                                  return ClipRRect(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(30)),
                                     child: CachedNetworkImage(
@@ -141,8 +139,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                })),
                                 Expanded(
                                   child: Container(
                                     padding:
@@ -496,6 +494,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ?.then((value) {
                                         if (value == true) {
                                           controller.getProfileData();
+                                          // ignore: use_build_context_synchronously
+                                          controller.getApiProfile(context);
                                           // controller.getProfile(context);
                                         }
                                       });

@@ -75,7 +75,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                  
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,
@@ -289,7 +288,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                   ctr.updateProfile(
                                     context,
                                   );
-                                  // Get.back(result: true);
+
                                   // ctr.validateLogin(context);
                                 }
                               }, ProfileScreenConst.save,

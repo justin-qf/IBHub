@@ -445,17 +445,18 @@ class Updateprofilecontroller extends GetxController {
 
         var responseDetail = LoginModel.fromJson(json);
         UserPreferences().saveSignInInfo(responseDetail.data.user);
-        UserPreferences().setToken(responseDetail.data.user.token.toString());
-        showDialogForScreen(context, "Signup Screen", json['message'],
+        // UserPreferences().setToken(responseDetail.data.user.token.toString());
+        showDialogForScreen(context, "Update Profile Screen", json['message'],
             callback: () {
+          print('go back');
           Get.back(result: true); //goto code
         });
       } else {
-        showDialogForScreen(context, "Signup Screen", json['message'],
+        showDialogForScreen(context, "Update Profile Screen", json['message'],
             callback: () {});
       }
     } else {
-      showDialogForScreen(context, "Signup Screen", json['message'],
+      showDialogForScreen(context, "Update Profile Screen", json['message'],
           callback: () {
         // Get.back();
       });

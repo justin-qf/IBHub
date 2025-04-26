@@ -65,22 +65,38 @@ class AddServicescreencontroller extends GetxController {
 
   void addKeyword(String keyword) {
     if (keyword.isNotEmpty && !keywords.contains(keyword)) {
-      keywords.add(keyword.trim());
-      keywordsCtr.clear(); // Clear input field after adding
-      validateFields("", // Clear validation temporarily
-          model: keywordsModel,
-          errorText1: ServicesScreenConstant.enterKeyword,
-          iscomman: true,
-          shouldEnableButton: true);
+      final parts = keyword.split(',');
+      for (var part in parts) {
+        final trimmed = part.trim();
+        if (trimmed.isNotEmpty && !keywords.contains(trimmed)) {
+          keywords.add(trimmed);
+        }
+      }
+      enableSubmitButton();
+      // keywords.add(keyword.trim());
+      // keywordsCtr.clear(); // Clear input field after adding
+      // validateFields("", // Clear validation temporarily
+      //     model: keywordsModel,
+      //     errorText1: ServicesScreenConstant.enterKeyword,
+      //     iscomman: true,
+      //     shouldEnableButton: true);
       update();
     }
   }
 
-  // Remove keyword from the list
+// //
+//   // Remove keyword from the list
   void removeKeyword(String keyword) {
     keywords.remove(keyword);
+
     update();
   }
+
+//   void updateKeywordsTextController() {
+//     keywordsCtr.text = keywords.join(', ');
+
+//     print(keywordsCtr.text);
+//   }
 
   void init() {
     serviceTitleNode = FocusNode();
@@ -113,9 +129,14 @@ class AddServicescreencontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (descriptionModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (keywordsModel.value.isValidate == false) {
+    } else if (keywords.isEmpty) {
       isFormInvalidate.value = false;
-    } else if (categoryModel.value.isValidate == false) {
+    }
+    //  else if (keywordsModel.value.isValidate == false) {
+    //   isFormInvalidate.value = false;
+    // }
+
+    else if (categoryModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (thumbnailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
@@ -133,6 +154,7 @@ class AddServicescreencontroller extends GetxController {
     categoryCtr.clear();
     thumbnailCtr.clear();
     searchCategoryCtr.clear();
+    keywords.clear();
 
     serviceTitleNode.unfocus();
     descriptionNode.unfocus();
@@ -161,6 +183,7 @@ class AddServicescreencontroller extends GetxController {
     categoryCtr.clear();
     thumbnailCtr.clear();
     searchCategoryCtr.clear();
+    keywords.clear();
 
     serviceTitleNode.unfocus();
     descriptionNode.unfocus();
@@ -304,6 +327,7 @@ class AddServicescreencontroller extends GetxController {
         },
         enableBtnFunction: () {
           enableSubmitButton();
+          print('called');
         });
   }
 
@@ -393,7 +417,8 @@ class AddServicescreencontroller extends GetxController {
       var response = await Repository.multiPartPost({
         "service_title": serviceTitleCtr.text.toString().trim(),
         "description": descriptionCtr.text.toString().trim(),
-        "keywords": keywordsCtr.text.toString().trim(),
+        "keywords":
+            jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
         "category_id": categoryId.value.toString().trim(),
       }, ApiUrl.addService,
           multiPart:
