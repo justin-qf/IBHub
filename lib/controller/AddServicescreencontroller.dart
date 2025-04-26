@@ -18,7 +18,6 @@ import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
-import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;

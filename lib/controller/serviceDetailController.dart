@@ -300,6 +300,7 @@ class ServiceDetailScreenController extends GetxController {
 
   RxList serviceList = [].obs;
   RxString nextPageURL = "".obs;
+  var isBannerLoading = false.obs;
   getServiceList(context, currentPage, bool hideloading, businessId) async {
     var loadingIndicator = LoadingProgressDialog();
 
@@ -312,6 +313,7 @@ class ServiceDetailScreenController extends GetxController {
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
+    isBannerLoading(true);
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
@@ -328,6 +330,7 @@ class ServiceDetailScreenController extends GetxController {
       //   loadingIndicator.hide(context);
       // }
       logcat("RESPONSE::", response.body);
+      isBannerLoading(false);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
