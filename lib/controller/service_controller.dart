@@ -16,7 +16,6 @@ import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
-import 'package:ibh/views/mainscreen/ServiceScreen/ServiceDetailScreen.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -111,7 +110,7 @@ class ServiceController extends GetxController {
   getServiceListItem(BuildContext context, ServiceDataList item) {
     return GestureDetector(
       onTap: () {
-        Get.to(ServiceDetailScreen(item: item));
+        // Get.to(BusinessDetailScreen(item: item));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -232,7 +231,7 @@ class ServiceController extends GetxController {
     return GestureDetector(
       onTap: () {
         logcat("onCLick", "DONe");
-        Get.to(ServiceDetailScreen(item: item));
+        // Get.to(BusinessDetailScreen(item: item));
       },
       child: Container(
         height: 19.h,
@@ -254,7 +253,7 @@ class ServiceController extends GetxController {
         ),
         child: GestureDetector(
           onTap: () {
-            Get.to(ServiceDetailScreen(item: item));
+            // Get.to(BusinessDetailScreen(item: item));
           },
           child: Column(children: [
             Container(
@@ -310,4 +309,5 @@ class ServiceController extends GetxController {
       ),
     );
   }
+
 }

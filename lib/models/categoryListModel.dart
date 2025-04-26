@@ -92,11 +92,13 @@ class Data {
 class CategoryListData {
   int id;
   String name;
+  String thumbnail;
   String description;
 
   CategoryListData({
     required this.id,
     required this.name,
+    required this.thumbnail,
     required this.description,
   });
 
@@ -104,12 +106,14 @@ class CategoryListData {
       CategoryListData(
         id: json["id"],
         name: json["name"] ?? '',
+        thumbnail: json["thumbnail"] ?? '',
         description: json["description"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "thumbnail": thumbnail,
         "description": description,
       };
 }

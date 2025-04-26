@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/search_chat_widgets.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
@@ -117,20 +117,45 @@ class _HomeScreenState extends State<HomeScreen> {
     if (state == ScreenState.apiSuccess) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getDynamicSizedBox(height: 1.h),
-            setSearchBars(context, controller.searchCtr, 'home',
-                onCancleClick: () {
-              controller.searchCtr.text = '';
-              setState(() {
-                controller.isSearch = false;
-              });
-            }, onClearClick: () {
-              controller.searchCtr.text = '';
-              setState(() {});
-            }),
-            getDynamicSizedBox(height: 2.h),
+            Padding(
+              padding: EdgeInsets.only(left: 5.w),
+              child: Text("Welcome...👋",
+                  style: TextStyle(
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.w800,
+                    fontSize: Device.screenType == sizer.ScreenType.mobile
+                        ? 20.sp
+                        : 14.sp,
+                  )),
+            ),
+            getDynamicSizedBox(height: 1.h),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 5.w),
+            //   child: Text("Bhoomi",
+            //       style: TextStyle(
+            //         color: black,
+            //         fontFamily: fontBold,
+            //         fontWeight: FontWeight.w800,
+            //         fontSize: Device.screenType == sizer.ScreenType.mobile
+            //             ? 18.sp
+            //             : 13.sp,
+            //       )),
+            // ),
+            // setSearchBars(context, controller.searchCtr, 'home',
+            //     onCancleClick: () {
+            //   controller.searchCtr.text = '';
+            //   setState(() {
+            //     controller.isSearch = false;
+            //   });
+            // }, onClearClick: () {
+            //   controller.searchCtr.text = '';
+            //   setState(() {});
+            // }),
+            getDynamicSizedBox(height: 0.h),
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {});
             }),

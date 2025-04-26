@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
@@ -631,7 +632,7 @@ class SearchScreenController extends GetxController {
                                 Navigator.pop(context);
                                 currentPage = 1;
                                 cityFilterList.clear();
-                                isFormInvalidate.value = false;
+                                isFormInvalidate.value = true;
                                 cityId.value = "";
                                 stateId.value = "";
                                 statectr.text = "";
@@ -924,9 +925,9 @@ class SearchScreenController extends GetxController {
 
   void updateFormInvalidate() {
     if (cityModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      // isFormInvalidate.value = false;
     } else {
-      isFormInvalidate.value = true;
+      // isFormInvalidate.value = true;
     }
     update();
   }
@@ -1175,12 +1176,55 @@ class SearchScreenController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.businessName,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            fontSize: 15.sp,
-                            color: black,
-                            fontWeight: FontWeight.w900)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(item.businessName,
+                            style: TextStyle(
+                                fontFamily: dM_sans_semiBold,
+                                fontSize: 15.sp,
+                                color: black,
+                                fontWeight: FontWeight.w900)),
+                        const Spacer(),
+                        // if (item.businessReviewsAvgRating != null)
+                        // Text(item.businessReviewsAvgRating.toString(),
+                        //     style: TextStyle(
+                        //         fontFamily: fontMedium,
+                        //         fontSize: 14.sp,
+                        //         color: grey,
+                        //         fontWeight: FontWeight.w900))
+                        RatingBar.builder(
+                          initialRating: item.businessReviewsAvgRating ?? 0.0,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 1,
+                          itemSize: 3.5.w,
+                          unratedColor: Colors.orange,
+                          itemBuilder: (context, _) => const Icon(
+                            Icons.star,
+                            color: Colors.orange,
+                          ),
+                          onRatingUpdate: (rating) {
+                            logcat("RATING", rating);
+                          },
+                        ),
+                        getText(
+                          item.businessReviewsAvgRating != null
+                              ? item.businessReviewsAvgRating.toString()
+                              : '0.0',
+                          TextStyle(
+                              fontFamily: fontSemiBold,
+                              color: lableColor,
+                              fontSize:
+                                  Device.screenType == sizer.ScreenType.mobile
+                                      ? 14.sp
+                                      : 7.sp,
+                              height: 1.2),
+                        ),
+                      ],
+                    ),
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
@@ -1189,39 +1233,61 @@ class SearchScreenController extends GetxController {
                             color: black,
                             fontWeight: FontWeight.w500)),
                     getDynamicSizedBox(height: 1.h),
-                    AbsorbPointer(
-                        absorbing: true,
-                        child: ReadMoreText(item.address,
-                            textAlign: TextAlign.start,
-                            trimLines: 2, callback: (val) {
-                          logcat("ONTAP", val.toString());
-                        },
-                            colorClickableText: primaryColor,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: '...Show more',
-                            trimExpandedText: '',
-                            delimiter: ' ',
-                            style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 10.sp,
-                                fontFamily: fontBold,
-                                color: grey),
-                            lessStyle: TextStyle(
-                                fontFamily: fontMedium,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 12.sp),
-                            moreStyle: TextStyle(
-                                fontFamily: fontMedium,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 12.sp,
-                                color: primaryColor))),
+                    Text(
+                        item.address.isNotEmpty
+                            ? item.address
+                            : item.city != null
+                                ? item.city!.city
+                                : item.phone,
+                        maxLines: 2,
+                        style: TextStyle(
+                            fontFamily: fontRegular,
+                            fontSize: 14.sp,
+                            color: black,
+                            fontWeight: FontWeight.w500)),
+                    // getText(
+                    //   item.address,
+                    //   TextStyle(
+                    //       fontFamily: fontSemiBold,
+                    //       color: lableColor,
+                    //       fontSize: Device.screenType == sizer.ScreenType.mobile
+                    //           ? 14.sp
+                    //           : 7.sp,
+                    //       height: 1.2),
+                    // ),
+                    // AbsorbPointer(
+                    //     absorbing: true,
+                    //     child: ReadMoreText(item.address,
+                    //         textAlign: TextAlign.start,
+                    //         trimLines: 2, callback: (val) {
+                    //       logcat("ONTAP", val.toString());
+                    //     },
+                    //         colorClickableText: primaryColor,
+                    //         trimMode: TrimMode.Line,
+                    //         trimCollapsedText: '...Show more',
+                    //         trimExpandedText: '',
+                    //         delimiter: ' ',
+                    //         style: TextStyle(
+                    //             overflow: TextOverflow.ellipsis,
+                    //             fontSize:
+                    //                 Device.screenType == sizer.ScreenType.mobile
+                    //                     ? 14.sp
+                    //                     : 10.sp,
+                    //             fontFamily: fontBold,
+                    //             color: grey),
+                    //         lessStyle: TextStyle(
+                    //             fontFamily: fontMedium,
+                    //             fontSize:
+                    //                 Device.screenType == sizer.ScreenType.mobile
+                    //                     ? 14.sp
+                    //                     : 12.sp),
+                    //         moreStyle: TextStyle(
+                    //             fontFamily: fontMedium,
+                    //             fontSize:
+                    //                 Device.screenType == sizer.ScreenType.mobile
+                    //                     ? 14.sp
+                    //                     : 12.sp,
+                    //             color: primaryColor))),
                   ],
                 ),
               ),

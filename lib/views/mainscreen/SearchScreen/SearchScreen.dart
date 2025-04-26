@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -34,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
       controller.currentPage = 1;
       controller.getStateApi(context, "");
       controller.getCategoryApi(context);
+      controller.getBusinessList(context, 1, false, isFirstTime: true);
     }, isOneSecond: false);
     controller.scrollController.addListener(scrollListener);
     super.initState();
@@ -65,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     controller.currentPage = 1;
+    controller.searchCtr.text = '';
     controller.businessList.clear();
     super.dispose();
   }
@@ -161,37 +162,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget apiSuccess(ScreenState state) {
     if (state == ScreenState.apiSuccess && controller.businessList.isNotEmpty) {
-      // return ListView.builder(
-      //   controller: controller.scrollController,
-      //   physics: const BouncingScrollPhysics(),
-      //   padding: EdgeInsets.only(left: 2.w, right: 1.w, top: 0.5.h),
-      //   scrollDirection: Axis.vertical,
-      //   shrinkWrap: true,
-      //   clipBehavior: Clip.antiAlias,
-      //   itemCount: controller.businessList.length +
-      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-      //   itemBuilder: (context, index) {
-      //     if (index < controller.businessList.length) {
-      //       BusinessData data = controller.businessList[index];
-      //       return controller.getBusinessListItem(context, data);
-      //     } else if (controller.isFetchingMore) {
-      //       return Center(
-      //           child: Padding(
-      //               padding: EdgeInsets.symmetric(vertical: 2.h),
-      //               child:
-      //                   const CircularProgressIndicator(color: primaryColor)));
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      // );
-      return MasonryGridView.count(
+      return ListView.builder(
         controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
-        crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 4,
+        padding: EdgeInsets.only(left: 2.w, right: 1.w, top: 0.5.h),
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        clipBehavior: Clip.antiAlias,
         itemCount: controller.businessList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
         itemBuilder: (context, index) {
@@ -200,16 +177,40 @@ class _SearchScreenState extends State<SearchScreen> {
             return controller.getBusinessListItem(context, data);
           } else if (controller.isFetchingMore) {
             return Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2.h),
-                child: const CircularProgressIndicator(color: primaryColor),
-              ),
-            );
+                child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child:
+                        const CircularProgressIndicator(color: primaryColor)));
           } else {
             return Container();
           }
         },
       );
+      // return MasonryGridView.count(
+      //   controller: controller.scrollController,
+      //   physics: const BouncingScrollPhysics(),
+      //   padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
+      //   crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
+      //   mainAxisSpacing: 10,
+      //   crossAxisSpacing: 4,
+      //   itemCount: controller.businessList.length +
+      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+      //   itemBuilder: (context, index) {
+      //     if (index < controller.businessList.length) {
+      //       BusinessData data = controller.businessList[index];
+      //       return controller.getBusinessListItem(context, data);
+      //     } else if (controller.isFetchingMore) {
+      //       return Center(
+      //         child: Padding(
+      //           padding: EdgeInsets.symmetric(vertical: 2.h),
+      //           child: const CircularProgressIndicator(color: primaryColor),
+      //         ),
+      //       );
+      //     } else {
+      //       return Container();
+      //     }
+      //   },
+      // );
     } else {
       return noDataFoundWidget();
     }

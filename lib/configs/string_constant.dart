@@ -168,7 +168,7 @@ class ProfileScreenConst {
 }
 
 class HomeScreenconst {
-  static const title = 'Learning App';
+  static const title = 'Home';
   static const search = 'Search';
   static const categories = 'Categories';
   static const popularSubject = 'Popular subjects';

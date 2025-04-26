@@ -207,10 +207,12 @@ PreferredSizeWidget getTabbar(
 }
 
 Widget getHomeLable(String title, Function onCLick,
-    {bool? isShowSeeMore = true}) {
+    {bool? isShowSeeMore = true, bool? isFromDetailScreen = false}) {
   return FadeInRight(
     child: Container(
-      margin: EdgeInsets.only(left: 5.w, right: 2.w),
+      margin: EdgeInsets.only(
+          left: isFromDetailScreen == true ? 0.0 : 5.w,
+          right: isFromDetailScreen == true ? 0.0 : 2.w),
       width: double.infinity,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,7 +224,7 @@ Widget getHomeLable(String title, Function onCLick,
                 fontFamily: fontBold,
                 fontWeight: FontWeight.w800,
                 fontSize:
-                    Device.screenType == ScreenType.mobile ? 16.sp : 13.sp,
+                    Device.screenType == ScreenType.mobile ? 18.sp : 13.sp,
               )),
           const Spacer(),
           isShowSeeMore == true
