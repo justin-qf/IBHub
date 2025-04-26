@@ -802,7 +802,7 @@ getText(String title) {
       style: TextStyle(
           fontFamily: fontRegular,
           color: isDarkMode() ? white : black,
-          fontSize: Device.screenType == ScreenType.mobile ? 15.sp : 8.sp,
+          fontSize: Device.screenType == ScreenType.mobile ? 18.sp : 8.sp,
           fontWeight: FontWeight.w900));
 }
 

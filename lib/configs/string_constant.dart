@@ -214,6 +214,15 @@ class SubjectScreenConst {
   static const development = 'Development';
 }
 
+class ReviewsScreenConstant {
+  static const title = "Reviews";
+  static const editPic = "Edit Photo";
+  static const update = "Update";
+  static const hiny = "Write a review";
+  static const btnTitle = "Write a Review";
+  static const hint = "Write a Review...";
+}
+
 class LoginConst {
   static const title = 'Sign In';
   static const mobileHint = 'Enter Phone Number';

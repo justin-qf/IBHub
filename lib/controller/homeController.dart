@@ -19,9 +19,7 @@ import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
-import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
 import 'package:marquee/marquee.dart';
-import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import '../utils/enum.dart';
@@ -473,7 +471,8 @@ class HomeScreenController extends GetxController {
                         ),
                         getText(
                           item.businessReviewsAvgRating != null
-                              ? item.businessReviewsAvgRating.toString()
+                              ? (item.businessReviewsAvgRating ?? 0.0)
+                                  .toStringAsFixed(1)
                               : '0.0',
                           TextStyle(
                               fontFamily: fontSemiBold,
@@ -558,4 +557,5 @@ class HomeScreenController extends GetxController {
       ),
     );
   }
+
 }

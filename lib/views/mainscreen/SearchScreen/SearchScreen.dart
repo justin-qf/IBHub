@@ -51,7 +51,8 @@ class _SearchScreenState extends State<SearchScreen> {
         Duration.zero,
         () {
           controller
-              .getBusinessList(context, controller.currentPage, true)
+              .getBusinessList(context, controller.currentPage, true,
+                  isFirstTime: false)
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
@@ -66,6 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     controller.currentPage = 1;
     controller.searchCtr.text = '';
+    controller.isFilterApplied.value = false;
     controller.businessList.clear();
     super.dispose();
   }
@@ -89,32 +91,35 @@ class _SearchScreenState extends State<SearchScreen> {
             Column(children: [
               getDynamicSizedBox(height: 4.h),
               getCommonToolbar("Search", showBackButton: false),
-              setSearchBars(
-                  context, controller.searchCtr, SearchScreenConstant.title,
-                  onCancleClick: () {
-                    controller.isSearch = false;
-                    controller.searchCtr.text = '';
-                    setState(() {});
-                  },
-                  onClearClick: () {
-                    if (controller.searchCtr.text.isNotEmpty) {
-                      futureDelay(() {
-                        controller.currentPage = 1;
+              Obx(() {
+                return setSearchBars(
+                    context, controller.searchCtr, SearchScreenConstant.title,
+                    onCancleClick: () {
+                      controller.isSearch = false;
+                      controller.searchCtr.text = '';
+                      setState(() {});
+                    },
+                    onClearClick: () {
+                      if (controller.searchCtr.text.isNotEmpty) {
                         futureDelay(() {
-                          controller.getBusinessList(
-                              context, controller.currentPage, false,
-                              keyword: controller.searchCtr.text.toString(),
-                              isFirstTime: true);
-                        }, isOneSecond: false);
-                      });
-                    }
-                    controller.searchCtr.text = '';
-                    setState(() {});
-                  },
-                  isCancle: false,
-                  onFilterClick: () {
-                    controller.showBottomSheetDialog(context);
-                  }),
+                          controller.currentPage = 1;
+                          futureDelay(() {
+                            controller.getBusinessList(
+                                context, controller.currentPage, false,
+                                keyword: controller.searchCtr.text.toString(),
+                                isFirstTime: true);
+                          }, isOneSecond: false);
+                        });
+                      }
+                      controller.searchCtr.text = '';
+                      setState(() {});
+                    },
+                    isCancle: false,
+                    onFilterClick: () {
+                      controller.showBottomSheetDialog(context);
+                    },
+                    isFilterApplied: controller.isFilterApplied.value);
+              }),
               getDynamicSizedBox(height: 2.h),
               Expanded(
                   child: Container(
