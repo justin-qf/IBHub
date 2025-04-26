@@ -103,7 +103,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         futureDelay(() {
                           controller.getBusinessList(
                               context, controller.currentPage, false,
-                              keyword: controller.searchCtr.text.toString(),isFirstTime: true);
+                              keyword: controller.searchCtr.text.toString(),
+                              isFirstTime: true);
                         }, isOneSecond: false);
                       });
                     }
@@ -165,7 +166,8 @@ class _SearchScreenState extends State<SearchScreen> {
       return ListView.builder(
         controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(left: 2.w, right: 1.w, top: 0.5.h),
+        padding:
+            EdgeInsets.only(left: 2.w, right: 1.w, top: 0.5.h, bottom: 12.h),
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         clipBehavior: Clip.antiAlias,

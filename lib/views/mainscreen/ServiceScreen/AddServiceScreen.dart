@@ -150,137 +150,182 @@ class _ServicescreenState extends State<AddServicescreen> {
                       alignment: Alignment.centerLeft,
                       child: getLable('Keywords', isRequired: true),
                     ),
-                    AdvancedChipsInput(
-                      onChanged: (val) {
-                        ctr.validateFields(val,
-                            iscomman: true,
-                            model: ctr.keywordsModel,
-                            errorText1: ServicesScreenConstant.enterKeyword);
-                      },
-                      separatorCharacter: ',',
-                      placeChipsSectionAbove: true,
-                      widgetContainerDecoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      chipContainerDecoration: BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                      chipTextStyle: TextStyle(color: primaryColor),
-                      validateInput: true,
-                      onSubmitted: (text) {
-                        ctr.addKeyword(text);
-                        print('${ctr.keywords.length}');
-                        print(ctr.keywords);
-                      },
-                      validateInputMethod: (value) {
-                        if (value.length < 3) {
-                          return 'Input should be at least 3 characters long';
-                        }
-                        return null;
-                      },
-                      deleteIcon: Icon(
-                        Icons.close,
-                        size: 20.sp,
-                      ),
-                      eraseKeyLabel: 'erase',
-                      onChipDeleted: (chipText, index) {
-                        print('Before deletion: ${ctr.keywords}');
 
-                        if (index >= 0 && index < ctr.keywords.length) {
-                          // Remove only by index — this is sufficient
-                          ctr.keywords.removeAt(index);
-                        }
-                        ctr.enableSubmitButton();
+                    // Input field
 
-                        print('After deletion: ${ctr.keywords}');
-                      },
+                    Obx(
+                      () => TextField(
+                        controller: ctr.keywordsCtr,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            // <--- Add this
+                            borderRadius: BorderRadius.circular(
+                                30), // Circular border radius
+                            borderSide:
+                                BorderSide.none, // No visible border line
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            // <--- Add this
+                            
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // <--- Add this
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: 'Enter keyword',
+                          hintStyle: TextStyle(color: grey),
+                          errorText: ctr.keywordsModel.value.error,
+                          filled: true,
+                          fillColor: inputBgColor,
+                        ),
+                        style: TextStyle(
+                          color: black,
+                        ),
+                        onChanged: (val) {
+                          ctr.validateFields(val,
+                              iscomman: true,
+                              model: ctr.keywordsModel,
+                              errorText1: ServicesScreenConstant.enterKeyword);
+                        },
+                        onSubmitted: (text) {
+                          if (text.trim().isNotEmpty &&
+                              text.trim().length >= 3) {
+                            ctr.addKeyword(text);
+                            print(ctr.keywords);
+                            ctr.enableSubmitButton();
+                          }
+                        },
+                      ),
+                    ),
+                    getDynamicSizedBox(height: 2.h),
+                    Obx(
+                      () => Container(
+                        width: 100.w,
+                        padding: EdgeInsets.symmetric(vertical: 2.w),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: inputBgColor),
+                        child: Wrap(
+                          spacing: 8.0,
+                          children: ctr.keywords.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final chipText = entry.value;
+                            return Chip(
+                              label: Text(chipText,
+                                  style: TextStyle(color: primaryColor)),
+                              backgroundColor: secondaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              deleteIcon: Icon(Icons.close, size: 20.sp),
+                              onDeleted: () {
+                                ctr.keywords.removeAt(index);
+
+                                ctr.enableSubmitButton();
+                                print(ctr.keywords);
+                                ctr.update();
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
                     ),
 
-                    // Obx(() {
-                    //   return Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       getTextField(
-                    //         label: ServicesScreenConstant.keyword,
-                    //         ctr: ctr.keywordsCtr,
-                    //         node: ctr.keywordsNode,
-                    //         model: ctr.keywordsModel.value,
-                    //         wantsuffix: true,
-                    //         isAdd: true,
-                    //         onAddBtn: () {
-                    //           print('call');
-                    //           if (ctr.keywordsCtr.text.isNotEmpty) {
-                    //             ctr.addKeyword(ctr.keywordsCtr.text);
-                    //           }
-                    //         },
-                    //         function: (val) {
-                    //           // ctr.validateFields(val,
-                    //           //     iscomman: true,
-                    //           //     model: ctr.keywordsModel,
-                    //           //     errorText1:
-                    //           //         ServicesScreenConstant.enterKeyword);
-                    //         },
-                    //         hint: ServicesScreenConstant.enterKeyword,
-                    //         isRequired: true,
-                    //         context: context,
-                    //       ),
-                    //       getDynamicSizedBox(height: 1.h), // Add some spacing
-                    //       Obx(() => Wrap(
-                    //             spacing: 8.0,
-                    //             runSpacing: 4.0,
-                    //             children: ctr.keywords
-                    //                 .map((keyword) => Chip(
-                    //                       label: Text(keyword,
-                    //                           style: TextStyle(
-                    //                             fontSize: 14,
-                    //                             color: isDarkMode()
-                    //                                 ? Colors.white
-                    //                                 : Colors.black,
-                    //                           )),
-                    //                       deleteIcon:
-                    //                           Icon(Icons.close, size: 18),
-                    //                       onDeleted: () {
-                    //                         ctr.removeKeyword(keyword);
-                    //                       },
-                    //                       backgroundColor: Colors.grey[200],
-                    //                       shape: RoundedRectangleBorder(
-                    //                         borderRadius:
-                    //                             BorderRadius.circular(10),
-                    //                         side: BorderSide(
-                    //                           color: Colors.grey[400]!,
-                    //                           width: 0.5,
-                    //                         ),
-                    //                       ),
-                    //                     ))
-                    //                 .toList(),
-                    //           )),
-                    //     ],
-                    //   );
-                    // }),
-                    // Obx(() {
-                    //   return getTextField(
-                    //       label: ServicesScreenConstant.keyword,
-                    //       ctr: ctr.keywordsCtr,
-                    //       node: ctr.keywordsNode,
-                    //       model: ctr.keywordsModel.value,
-                    //       wantsuffix: true,
-                    //       isAdd: true,
-                    //       onAddBtn: () {
-                    //         ctr.addKeyword(ctr.keywordsCtr.text);
+                    // AdvancedChipsInput(
+                    //   onChanged: (val) {
+                    //     ctr.validateFields(val,
+                    //         iscomman: true,
+                    //         model: ctr.keywordsModel,
+                    //         errorText1: ServicesScreenConstant.enterKeyword);
+                    //   },
+                    //   separatorCharacter: ',',
+                    //   placeChipsSectionAbove: true,
+                    //   widgetContainerDecoration: BoxDecoration(
+                    //     border: Border.all(color: Colors.grey),
+                    //   ),
+                    //   chipContainerDecoration: BoxDecoration(
+                    //     color: secondaryColor,
+                    //     borderRadius: BorderRadius.all(Radius.circular(50)),
+                    //   ),
+                    //   chipTextStyle: TextStyle(color: primaryColor),
+                    //   validateInput: true,
+                    //   onSubmitted: (text) {
+                    //     if (text.trim().isNotEmpty) {
+                    //       ctr.addKeyword(
+                    //           text); // Add the entire keyword (including spaces)
+                    //       ctr.enableSubmitButton();
+                    //     }
+                    //     // Clear the input field after submission
+                    //   },
+                    //   validateInputMethod: (value) {
+                    //     if (value.trim().length < 3) {
+                    //       return 'Input should be at least 3 characters long';
+                    //     }
+                    //     return null;
+                    //   },
+                    //   deleteIcon: Icon(
+                    //     Icons.close,
+                    //     size: 20.sp,
+                    //   ),
+                    //   eraseKeyLabel: 'erase',
+                    //   onChipDeleted: (chipText, index) {
+                    //     print('Before deletion: ${ctr.keywords}');
+                    //     if (index >= 0 && index < ctr.keywords.length) {
+                    //       ctr.keywords.removeAt(
+                    //           index); // Remove the chip at the given index
+                    //     }
+                    //     ctr.enableSubmitButton();
+                    //     print('After deletion: ${ctr.keywords}');
+                    //   },
+                    // ),
+                    // AdvancedChipsInput(
+                    //   onChanged: (val) {
+                    //     ctr.validateFields(val,
+                    //         iscomman: true,
+                    //         model: ctr.keywordsModel,
+                    //         errorText1: ServicesScreenConstant.enterKeyword);
+                    //   },
+                    //   separatorCharacter: ',',
+                    //   placeChipsSectionAbove: true,
+                    //   widgetContainerDecoration: BoxDecoration(
+                    //     border: Border.all(color: Colors.grey),
+                    //   ),
+                    //   chipContainerDecoration: BoxDecoration(
+                    //     color: secondaryColor,
+                    //     borderRadius: BorderRadius.all(Radius.circular(50)),
+                    //   ),
+                    //   chipTextStyle: TextStyle(color: primaryColor),
+                    //   validateInput: true,
+                    //   onSubmitted: (text) {
+                    //     ctr.addKeyword(text);
+                    //     ctr.enableSubmitButton();
+                    //   },
+                    //   validateInputMethod: (value) {
+                    //     if (value.length < 3) {
+                    //       return 'Input should be at least 3 characters long';
+                    //     }
+                    //     return null;
+                    //   },
+                    //   deleteIcon: Icon(
+                    //     Icons.close,
+                    //     size: 20.sp,
+                    //   ),
+                    //   eraseKeyLabel: 'erase',
+                    //   onChipDeleted: (chipText, index) {
+                    //     print('Before deletion: ${ctr.keywords}');
 
-                    //         print('${ctr.keywords}');
-                    //       },
-                    //       function: (val) {
-                    //         ctr.validateFields(val,
-                    //             iscomman: true,
-                    //             model: ctr.keywordsModel,
-                    //             errorText1:
-                    //                 ServicesScreenConstant.enterKeyword);
-                    //       },
-                    //       hint: ServicesScreenConstant.enterKeyword,
-                    //       isRequired: true);
-                    // }),
+                    //     if (index >= 0 && index < ctr.keywords.length) {
+                    //       // Remove only by index — this is sufficient
+                    //       ctr.keywords.removeAt(index);
+                    //     }
+                    //     ctr.enableSubmitButton();
+
+                    //     print('After deletion: ${ctr.keywords}');
+                    //   },
+                    // ),
                     getDynamicSizedBox(height: 2.h),
                     Obx(() {
                       return ctr.isloading == false

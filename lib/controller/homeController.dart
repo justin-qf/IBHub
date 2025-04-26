@@ -306,69 +306,69 @@ class HomeScreenController extends GetxController {
       loadingIndicator.show(context, '');
       update();
     }
-    try {
-      if (networkManager.connectionType.value == 0) {
-        showDialogForScreen(
-            context, HomeScreenconst.title, Connection.noConnection,
-            callback: () {
-          Get.back();
-        });
-        return;
-      }
+    //  try {
+    if (networkManager.connectionType.value == 0) {
+      showDialogForScreen(
+          context, HomeScreenconst.title, Connection.noConnection,
+          callback: () {
+        Get.back();
+      });
+      return;
+    }
 
-      var pageURL = '${ApiUrl.businessesList}?page=$currentPage';
-      var response = await Repository.post({}, pageURL, allowHeader: true);
-      if (hideloading != true) {
-        loadingIndicator.hide(context);
-      }
-      logcat("RESPONSE::", response.body);
-      var responseData = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        if (responseData['success'] == true) {
-          state.value = ScreenState.apiSuccess;
-          message.value = '';
-          businessList.clear();
-          var businessListData = BusinessModel.fromJson(responseData);
-          if (businessListData.data.data.isNotEmpty) {
-            businessList.addAll(businessListData.data.data);
-            businessList.refresh();
-            update();
-          }
-          if (businessListData.data.nextPageUrl != 'null' ||
-              businessListData.data.nextPageUrl != null) {
-            nextPageURL.value = businessListData.data.nextPageUrl.toString();
-            logcat("nextPageURL-1", nextPageURL.value.toString());
-            update();
-          } else {
-            nextPageURL.value = "";
-            logcat("nextPageURL-2", nextPageURL.value.toString());
-            update();
-          }
-          logcat("nextPageURL", nextPageURL.value.toString());
-        } else {
-          message.value = responseData['message'];
-          showDialogForScreen(
-              context, CategoryScreenConstant.title, responseData['message'],
-              callback: () {});
+    var pageURL = '${ApiUrl.businessesList}?page=$currentPage';
+    var response = await Repository.post({}, pageURL, allowHeader: true);
+    if (hideloading != true) {
+      loadingIndicator.hide(context);
+    }
+    logcat("RESPONSE::", response.body);
+    var responseData = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseData['success'] == true) {
+        state.value = ScreenState.apiSuccess;
+        message.value = '';
+        businessList.clear();
+        var businessListData = BusinessModel.fromJson(responseData);
+        if (businessListData.data.data.isNotEmpty) {
+          businessList.addAll(businessListData.data.data);
+          businessList.refresh();
+          update();
         }
+        if (businessListData.data.nextPageUrl != 'null' ||
+            businessListData.data.nextPageUrl != null) {
+          nextPageURL.value = businessListData.data.nextPageUrl.toString();
+          logcat("nextPageURL-1", nextPageURL.value.toString());
+          update();
+        } else {
+          nextPageURL.value = "";
+          logcat("nextPageURL-2", nextPageURL.value.toString());
+          update();
+        }
+        logcat("nextPageURL", nextPageURL.value.toString());
       } else {
-        state.value = ScreenState.apiError;
-        message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(context, HomeScreenconst.title,
-            responseData['message'] ?? ServerError.servererror,
+        message.value = responseData['message'];
+        showDialogForScreen(
+            context, CategoryScreenConstant.title, responseData['message'],
             callback: () {});
       }
-    } catch (e) {
-      logcat("Ecxeption", e);
+    } else {
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
-      if (hideloading != true) {
-        loadingIndicator.hide(context);
-      }
-      showDialogForScreen(
-          context, HomeScreenconst.title, ServerError.servererror,
+      message.value = APIResponseHandleText.serverError;
+      showDialogForScreen(context, HomeScreenconst.title,
+          responseData['message'] ?? ServerError.servererror,
           callback: () {});
     }
+    // } catch (e) {
+    //   logcat("Ecxeption", e);
+    //   state.value = ScreenState.apiError;
+    //   message.value = ServerError.servererror;
+    //   if (hideloading != true) {
+    //     loadingIndicator.hide(context);
+    //   }
+    //   showDialogForScreen(
+    //       context, HomeScreenconst.title, ServerError.servererror,
+    //       callback: () {});
+    // }
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {

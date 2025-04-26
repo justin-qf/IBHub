@@ -190,37 +190,34 @@ class _HomeScreenState extends State<HomeScreen> {
             Obx(
               () {
                 return controller.businessList.isNotEmpty
-                    ? SizedBox(
-                        height: Device.height / 1,
-                        child: ListView.builder(
-                          controller: controller.scrollController,
-                          padding:
-                              EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          clipBehavior: Clip.antiAlias,
-                          itemCount: controller.businessList.length +
-                              (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            if (index < controller.businessList.length) {
-                              BusinessData data =
-                                  controller.businessList[index];
-                              return controller.getBusinessListItem(
-                                  context, data);
-                            } else if (controller.isFetchingMore) {
-                              return Center(
-                                  child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: const CircularProgressIndicator(
-                                          color: primaryColor)));
-                            } else {
-                              return Container();
-                            }
-                          },
-                        ),
-                      )
+                    ? ListView.builder(
+                      controller: controller.scrollController,
+                      padding:
+                          EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      clipBehavior: Clip.antiAlias,
+                      itemCount: controller.businessList.length +
+                          (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index < controller.businessList.length) {
+                          BusinessData data =
+                              controller.businessList[index];
+                          return controller.getBusinessListItem(
+                              context, data);
+                        } else if (controller.isFetchingMore) {
+                          return Center(
+                              child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 2.h),
+                                  child: const CircularProgressIndicator(
+                                      color: primaryColor)));
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )
                     : Container();
               },
             )

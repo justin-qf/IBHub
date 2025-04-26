@@ -1,0 +1,212 @@
+//   SliverAppBar(
+//               expandedHeight: 27.h,
+//               centerTitle: true,
+//               clipBehavior: Clip.antiAlias,
+//               elevation: 0.2,
+//               floating: false,
+//               pinned: true,
+//               stretch: true,
+//               titleSpacing: 0,
+//               automaticallyImplyLeading: true,
+//               backgroundColor: showTitle == true ? primaryColor : white,
+//               flexibleSpace: LayoutBuilder(
+//                 builder: (BuildContext context, BoxConstraints constraints) {
+//                   percentage = ((constraints.maxHeight - kToolbarHeight) /
+//                           (27.h - kToolbarHeight))
+//                       .clamp(0.0, 1.0);
+//                   showTitle = percentage! <= 0.5;
+//                   return FlexibleSpaceBar(
+//                       centerTitle: true,
+//                       titlePadding: EdgeInsets.only(
+//                           top: isSmallDevice(context)
+//                               ? 6.3.h
+//                               : Device.screenType == sizer.ScreenType.mobile
+//                                   ? 6.6.h
+//                                   : 3.2.h,
+//                           left: 15.w,
+//                           right: 15.w),
+//                       title: showTitle
+//                           ? widget.item!.businessName.toString().length > 9
+//                               ? Marquee(
+//                                   style: TextStyle(
+//                                     fontFamily: fontRegular,
+//                                     color: isDarkMode() ? white : white,
+//                                     fontSize: Device.screenType ==
+//                                             sizer.ScreenType.mobile
+//                                         ? 14.sp
+//                                         : 12.sp,
+//                                   ),
+//                                   text: widget.item!.businessName
+//                                       .toString()
+//                                       .length
+//                                       .toString(),
+//                                   scrollAxis: Axis.horizontal,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   blankSpace: 20.0,
+//                                   velocity: 20,
+//                                   pauseAfterRound: const Duration(seconds: 1),
+//                                   accelerationDuration:
+//                                       const Duration(seconds: 1),
+//                                   accelerationCurve: Curves.linear,
+//                                   decelerationDuration:
+//                                       const Duration(milliseconds: 500),
+//                                   decelerationCurve: Curves.easeOut,
+//                                 )
+//                               : Text(
+//                                   "Product Detail",
+//                                   textAlign: TextAlign.center,
+//                                   style: TextStyle(
+//                                     fontFamily: fontRegular,
+//                                     color: isDarkMode() ? white : white,
+//                                     fontSize: 12.sp,
+//                                   ),
+//                                 )
+//                           : null,
+//                       background: Container(
+//                           color:
+//                               isDarkMode() ? darkBackgroundColor : transparent,
+//                           child: FadeInDown(
+//                               child: Container(
+//                                   margin: EdgeInsets.only(bottom: 0.9.h),
+//                                   decoration: BoxDecoration(
+//                                       boxShadow: isDarkMode()
+//                                           ? null
+//                                           : [
+//                                               BoxShadow(
+//                                                   color: grey.withOpacity(0.5),
+//                                                   blurRadius: 1,
+//                                                   offset: const Offset(0, 3),
+//                                                   spreadRadius: 0.2)
+//                                             ],
+//                                       borderRadius: BorderRadius.only(
+//                                           bottomLeft: Radius.circular(7.w),
+//                                           bottomRight: Radius.circular(7.w))),
+//                                   child: ClipRRect(
+//                                     borderRadius: BorderRadius.only(
+//                                         bottomLeft: Radius.circular(7.w),
+//                                         bottomRight: Radius.circular(7.w)),
+//                                     child: CachedNetworkImage(
+//                                       fit: BoxFit.cover,
+//                                       height: 14.h,
+//                                       imageUrl: widget.item != null
+//                                           ? widget.item!.visitingCardUrl
+//                                           : thumbnail,
+//                                       placeholder: (context, url) =>
+//                                           const Center(
+//                                         child: CircularProgressIndicator(
+//                                             color: primaryColor),
+//                                       ),
+//                                       errorWidget: (context, url, error) =>
+//                                           Image.asset(
+//                                         Asset.placeholder,
+//                                         height: 9.h,
+//                                         fit: BoxFit.cover,
+//                                       ),
+//                                     ),
+//                                   )))));
+//                 },
+//               ),
+//               leading: Builder(
+//                 builder: (context) {
+//                   return Container(
+//                     margin: EdgeInsets.only(
+//                         left: Device.screenType == sizer.ScreenType.mobile
+//                             ? 4.w
+//                             : 2.w),
+//                     child: GestureDetector(
+//                       onTap: () {
+//                         Get.back(result: true);
+//                       },
+//                       child: Container(
+//                         height: 1.5.h,
+//                         width: 1.5.h,
+//                         decoration: BoxDecoration(
+//                           shape: BoxShape.circle,
+//                           color: inputBgColor,
+//                         ),
+//                         child: Center(
+//                           child: SvgPicture.asset(
+//                             Asset.arrowBack,
+//                             colorFilter:
+//                                 ColorFilter.mode(black, BlendMode.srcIn),
+//                             height: 2.h,
+//                             fit: BoxFit.contain,
+//                           ),
+//                         ),
+//                       ),
+
+//                       //  Container(
+//                       //     padding: EdgeInsets.all(
+//                       //         Device.screenType == sizer.ScreenType.mobile
+//                       //             ? 8
+//                       //             : 0),
+//                       //     child: SvgPicture.asset(
+//                       //       Asset.arrowBack,
+//                       //       // ignore: deprecated_member_use
+//                       //       color: black,
+//                       //       height: Device.screenType == sizer.ScreenType.mobile
+//                       //           ? 4.h
+//                       //           : 5.h,
+//                       //     )),
+//                     ),
+//                   );
+//                 },
+//               ),
+//               actions: [
+//                 // Builder(
+//                 //   builder: (context) {
+//                 //     return Container(
+//                 //         margin: EdgeInsets.only(
+//                 //             right: SizerUtil.deviceType == DeviceType.mobile
+//                 //                 ? 2.w
+//                 //                 : 3.w),
+//                 //         child: GetBuilder<ProductDetailScreenController>(
+//                 //           builder: (controller) {
+//                 //             return GestureDetector(
+//                 //               onTap: () {
+//                 //                 if (controller.isGuest!.value == true) {
+//                 //                   getGuestUserAlertDialog(
+//                 //                       context, ProductDetailScreenConstant.title);
+//                 //                 } else {
+//                 //                   addFavouriteAPI(
+//                 //                       context,
+//                 //                       controller.networkManager,
+//                 //                       widget.fromFav != null &&
+//                 //                               widget.fromFav == true
+//                 //                           ? widget.data!.productId.toString()
+//                 //                           : widget.data!.id.toString(),
+//                 //                       '1', onClick: (isDone) {
+//                 //                     controller.isFromFavApiCallSuccess!.value =
+//                 //                         isDone;
+//                 //                     setState(() {});
+//                 //                   }, ProductDetailScreenConstant.title);
+//                 //                 }
+//                 //               },
+//                 //               child: Obx(
+//                 //                 () {
+//                 //                   return Container(
+//                 //                       padding: EdgeInsets.all(
+//                 //                           SizerUtil.deviceType ==
+//                 //                                   DeviceType.mobile
+//                 //                               ? 10
+//                 //                               : 0),
+//                 //                       child: Icon(
+//                 //                           controller.isLiked!.value == true
+//                 //                               ? Icons.favorite_rounded
+//                 //                               : Icons.favorite_border,
+//                 //                           color: isDarkMode()
+//                 //                               ? showTitle == true
+//                 //                                   ? Color.lerp(black, white,
+//                 //                                       percentage ?? 0.0)
+//                 //                                   : black
+//                 //                               : black,
+//                 //                           size: 3.5.h));
+//                 //                 },
+//                 //               ),
+//                 //             );
+//                 //           },
+//                 //         ));
+//                 //   },
+//                 // ),
+//               ],
+//             ),

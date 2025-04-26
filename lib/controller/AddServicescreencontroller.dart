@@ -63,26 +63,41 @@ class AddServicescreencontroller extends GetxController {
 
   var keywords = <String>[].obs;
 
-  void addKeyword(String keyword) {
-    if (keyword.isNotEmpty && !keywords.contains(keyword)) {
-      final parts = keyword.split(',');
-      for (var part in parts) {
-        final trimmed = part.trim();
-        if (trimmed.isNotEmpty && !keywords.contains(trimmed)) {
-          keywords.add(trimmed);
-        }
-      }
-      enableSubmitButton();
-      // keywords.add(keyword.trim());
-      // keywordsCtr.clear(); // Clear input field after adding
-      // validateFields("", // Clear validation temporarily
-      //     model: keywordsModel,
-      //     errorText1: ServicesScreenConstant.enterKeyword,
-      //     iscomman: true,
-      //     shouldEnableButton: true);
-      update();
-    }
+
+void addKeyword(String keyword) {
+  final trimmedKeyword = keyword.trim(); // Trim only leading/trailing spaces
+  if (trimmedKeyword.isNotEmpty && !keywords.contains(trimmedKeyword)) {
+    keywords.add(trimmedKeyword); // Add the entire keyword as one entry
+    keywordsCtr.clear(); // Clear the input field
+    validateFields(trimmedKeyword,
+        model: keywordsModel,
+        errorText1: ServicesScreenConstant.enterKeyword,
+        iscomman: true,
+        shouldEnableButton: true);
+    enableSubmitButton();
+    update();
   }
+}
+  // void addKeyword(String keyword) {
+  //   if (keyword.isNotEmpty && !keywords.contains(keyword)) {
+  //     final parts = keyword.split(',');
+  //     for (var part in parts) {
+  //       final trimmed = part.trim();
+  //       if (trimmed.isNotEmpty && !keywords.contains(trimmed)) {
+  //         keywords.add(trimmed);
+  //       }
+  //     }
+  //     enableSubmitButton();
+  //     // keywords.add(keyword.trim());
+  //     // keywordsCtr.clear(); // Clear input field after adding
+  //     // validateFields("", // Clear validation temporarily
+  //     //     model: keywordsModel,
+  //     //     errorText1: ServicesScreenConstant.enterKeyword,
+  //     //     iscomman: true,
+  //     //     shouldEnableButton: true);
+  //     update();
+  //   }
+  // }
 
 // //
 //   // Remove keyword from the list
@@ -142,6 +157,8 @@ class AddServicescreencontroller extends GetxController {
     } else {
       isFormInvalidate.value = true;
     }
+
+    print('called');
     update();
   }
 
