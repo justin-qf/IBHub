@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -212,7 +213,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         child: SvgPicture.asset(
                           Asset.arrowBack,
                           // ignore: deprecated_member_use
-                          color: white,
+                          color: black,
                           height: Device.screenType == sizer.ScreenType.mobile
                               ? 4.h
                               : 5.h,
@@ -294,19 +295,55 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText(
-                          widget.item != null
-                              ? widget.item!.businessName
-                              : businessName,
-                          isMainTitle: true),
+                      Row(
+                        children: [
+                          controller.getLableText(widget.item.businessName,
+                              isMainTitle: true),
+                          const Spacer(),
+                          RatingBar.builder(
+                            initialRating:
+                                widget.item.businessReviewsAvgRating ?? 0.0,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 1,
+                            itemSize: 4.w,
+                            unratedColor: Colors.orange,
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                            ),
+                            onRatingUpdate: (rating) {
+                              logcat("RATING", rating);
+                            },
+                          ),
+                          Padding(
+                              padding:
+                                  EdgeInsets.only(left: 0.5.w, right: 0.5.w),
+                              child: Text(
+                                widget.item.businessReviewsAvgRating != null
+                                    ? widget.item.businessReviewsAvgRating
+                                        .toString()
+                                    : '0.0',
+                                style: TextStyle(
+                                    fontFamily: fontSemiBold,
+                                    color: lableColor,
+                                    fontSize: Device.screenType ==
+                                            sizer.ScreenType.mobile
+                                        ? 16.sp
+                                        : 14.sp,
+                                    height: 1.2),
+                                maxLines: 1,
+                              ))
+                        ],
+                      ),
                       // controller.getCategoryLable(widget.item.businessName),
                       getDynamicSizedBox(height: 1.h),
                       controller.getLableText(
                           widget.item != null ? widget.item!.email : email,
                           isMainTitle: false),
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText('Description',
-                          isMainTitle: false),
+                      controller.getLableText('Address : ', isMainTitle: false),
                       getDynamicSizedBox(height: 0.5.h),
                       controller.getCommonText(
                           widget.item != null ? widget.item!.address : address,
@@ -327,24 +364,33 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       }, isFromDetailScreen: true),
                       Obx(
                         () {
-                          return controller.serviceList.isNotEmpty
+                          return controller.isBannerLoading.value
                               ? SizedBox(
-                                  height: 20.h,
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.only(
-                                          left: 0.w, right: 1.w),
-                                      physics: const BouncingScrollPhysics(),
-                                      scrollDirection: Axis.horizontal,
-                                      clipBehavior: Clip.antiAlias,
-                                      itemBuilder: (context, index) {
-                                        ServiceDataList data =
-                                            controller.serviceList[index];
-                                        return controller.getListItem(
-                                            context, data);
-                                      },
-                                      itemCount: controller.serviceList.length),
+                                  height: 22.h,
+                                  child: const Center(
+                                      child: CircularProgressIndicator(
+                                          color: primaryColor)),
                                 )
-                              : Container();
+                              : controller.serviceList.isNotEmpty
+                                  ? SizedBox(
+                                      height: 20.h,
+                                      child: ListView.builder(
+                                          padding: EdgeInsets.only(
+                                              left: 0.w, right: 1.w),
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          scrollDirection: Axis.horizontal,
+                                          clipBehavior: Clip.antiAlias,
+                                          itemBuilder: (context, index) {
+                                            ServiceDataList data =
+                                                controller.serviceList[index];
+                                            return controller.getListItem(
+                                                context, data);
+                                          },
+                                          itemCount:
+                                              controller.serviceList.length),
+                                    )
+                                  : Container();
                         },
                       ),
                       getDynamicSizedBox(height: 1.h),
