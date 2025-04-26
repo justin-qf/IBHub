@@ -103,7 +103,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         futureDelay(() {
                           controller.getBusinessList(
                               context, controller.currentPage, false,
-                              keyword: controller.searchCtr.text.toString());
+                              keyword: controller.searchCtr.text.toString(),isFirstTime: true);
                         }, isOneSecond: false);
                       });
                     }

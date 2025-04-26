@@ -43,11 +43,11 @@ class SplashscreenState extends State<Splashscreen> {
     return Container(
       height: sizer.Device.height,
       width: sizer.Device.width,
-      decoration: const BoxDecoration(color: secondaryColor),
+      decoration: const BoxDecoration(color: white),
       child: Bounce(
         from: 150,
         child: Center(
-          child: SvgPicture.asset(Asset.logo,
+          child: Image.asset(Asset.applogo,
               fit: BoxFit.cover,
               width: sizer.Device.screenType == sizer.ScreenType.mobile
                   ? 150

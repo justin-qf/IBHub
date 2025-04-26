@@ -12,13 +12,15 @@ import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
 
 // ignore: must_be_immutable
 class ServiceScreen extends StatefulWidget {
-  ServiceScreen({required this.data, super.key});
-  BusinessData data;
+  ServiceScreen({required this.data, this.id, super.key});
+  BusinessData? data;
+  String? id;
 
   @override
   State<ServiceScreen> createState() => _ServiceScreenState();
@@ -28,7 +30,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
   var controller = Get.put(ServiceController());
   @override
   void initState() {
-    controller.getServiceList(context, 1, false, widget.data.id);
+    controller.getServiceList(
+        context, 1, false, widget.data != null ? widget.data!.id : widget.id);
     controller.scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -45,8 +48,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
         Duration.zero,
         () {
           controller
-              .getServiceList(
-                  context, controller.currentPage, true, widget.data.id)
+              .getServiceList(context, controller.currentPage, true,
+                  widget.data != null ? widget.data!.id : widget.id)
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
@@ -74,6 +77,20 @@ class _ServiceScreenState extends State<ServiceScreen> {
       onTap: () {
         hideKeyboard(context);
       },
+      bottomNavigationBar: widget.data == null
+          ? Container(
+              width: 7.h,
+              height: 7.h,
+              margin: EdgeInsets.only(bottom: 2.h, right: 1.0.w),
+              child: getFloatingActionButton(onClick: () {
+                Get.to(AddServicescreen())?.then((value) {
+                  if (value == true) {
+                    controller.getServiceList(context, 1, false,
+                        widget.data != null ? widget.data!.id : widget.id);
+                  }
+                });
+              }))
+          : null,
       isExtendBodyScreen: true,
       body: Container(
         color: transparent,
@@ -92,8 +109,11 @@ class _ServiceScreenState extends State<ServiceScreen> {
                   case ScreenState.apiError:
                     return apiOtherStates(controller.state.value, controller,
                         controller.serviceList, () {
-                      controller.getServiceList(context, controller.currentPage,
-                          true, widget.data.id);
+                      controller.getServiceList(
+                          context,
+                          controller.currentPage,
+                          true,
+                          widget.data != null ? widget.data!.id : widget.id);
                     });
                   case ScreenState.apiSuccess:
                     return apiSuccess(controller.state.value);

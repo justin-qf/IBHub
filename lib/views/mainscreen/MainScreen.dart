@@ -27,6 +27,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     controller.currentPage = 0;
+
+    controller.getTimerPopup(context);
     setState(() {
       pageOptions = [
         HomeScreen(callback),
@@ -34,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
         ProfileScreen(callback)
       ];
     });
+
     super.initState();
   }
 

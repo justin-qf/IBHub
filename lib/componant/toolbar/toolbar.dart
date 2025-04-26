@@ -563,7 +563,7 @@ Widget getLogoWithTitle() {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
           ),
-          child: FadeInLeft(child: Image.asset(Asset.appLogo, height: 4.h)))
+          child: FadeInLeft(child: Image.asset(Asset.applogo, height: 4.h)))
     ],
   );
 }

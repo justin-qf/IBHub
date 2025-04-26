@@ -43,6 +43,8 @@ class User {
   String email;
   String phone;
   String businessName;
+
+  
   String address;
   City? city;
   StateData? state;

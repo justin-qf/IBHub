@@ -53,7 +53,7 @@ class ServiceController extends GetxController {
         return;
       }
 
-      var pageURL = '${ApiUrl.getServiceList}/1?page=$currentPage';
+      var pageURL = '${ApiUrl.getServiceList}/${businessId}?page=$currentPage';
       var response = await Repository.get({}, pageURL, allowHeader: true);
       // if (hideloading != true) {
       //   loadingIndicator.hide(context);
@@ -64,6 +64,7 @@ class ServiceController extends GetxController {
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
+          serviceList.clear();
           var serviceListData = ServiceListModel.fromJson(responseData);
           if (serviceListData.data.data.isNotEmpty) {
             serviceList.addAll(serviceListData.data.data);
@@ -309,5 +310,4 @@ class ServiceController extends GetxController {
       ),
     );
   }
-
 }

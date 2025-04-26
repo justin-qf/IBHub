@@ -37,6 +37,7 @@ class _ServicescreenState extends State<AddServicescreen> {
     return CustomParentScaffold(
       isExtendBodyScreen: true,
       onWillPop: () async {
+        ctr.resetForm();
         return true;
       },
       onTap: () {
@@ -51,6 +52,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                 title: 'Add Service',
                 backFunction: () {
                   Get.back(result: true);
+                  ctr.resetForm();
                 }),
             Expanded(
               child: SingleChildScrollView(

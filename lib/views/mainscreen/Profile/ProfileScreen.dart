@@ -4,24 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/full_image_viewer.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
-import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
-import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/profile_controller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
-import 'package:ibh/views/services/addserviceScreen.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -133,10 +128,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       errorWidget: (context, url, error) =>
                                           CircleAvatar(
                                         radius: 25.h,
-                                        child: Image.asset(
-                                          "assets/pngs/avtar.png",
-                                          height: 15.h,
-                                        ),
+                                        child: 
+                                        Icon(Icons.person)
                                       ),
                                     ),
                                   );
@@ -503,15 +496,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                             FadeInUp(
                                 duration: getAnimationDuration(),
                                 child: getMenuListItem(
-                                    title: "Add Services",
-                                    icon: Asset.add,
+                                    title: "My Bussiness",
+                                    // icon: Asset.add,
+                                    icons: Icons.business,
                                     callback: () async {
-                                      Get.to(AddServicescreen())?.then((value) {
-                                        if (value == true) {
-                                          controller.getProfileData();
-                                          // controller.getProfile(context);
-                                        }
-                                      });
+                                      Get.to(BusinessDetailScreen(
+                                        item: null,
+                                        isFromProfile: true,
+                                      ));
+                                      // Get.to(AddServicescreen())?.then((value) {
+                                      //   if (value == true) {
+                                      //     controller.getProfileData();
+                                      //     // controller.getProfile(context);
+                                      //   }
+                                      // });
                                     })),
                             FadeInUp(
                               duration: getAnimationDuration(),

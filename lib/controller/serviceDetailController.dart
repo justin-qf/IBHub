@@ -322,7 +322,8 @@ class ServiceDetailScreenController extends GetxController {
         return;
       }
 
-      var pageURL = '${ApiUrl.getServiceList}/1?page=$currentPage';
+      // var pageURL = '${ApiUrl.getServiceList}/1?page=$currentPage';
+      var pageURL = '${ApiUrl.getServiceList}/${businessId}?page=$currentPage';
       var response = await Repository.get({}, pageURL, allowHeader: true);
       // if (hideloading != true) {
       //   loadingIndicator.hide(context);

@@ -44,6 +44,7 @@ class ProfileController extends GetxController {
     email.value = retrievedObject.email;
     number.value = retrievedObject.phone;
     bussiness.value = retrievedObject.businessName;
+    profilePic.value = retrievedObject.visitingCardUrl;
     // gender.value = retrievedObject.city;
     // referCode!.value = retrievedObject.state;
     update();
@@ -60,8 +61,10 @@ class ProfileController extends GetxController {
       update();
     }, onResponse: (response) {
       var userData = User.fromJson(response);
-      
+
       profilePic.value = userData.visitingCardUrl;
+
+      print(profilePic.value);
 
       logcat("Profile", jsonEncode(userData));
       update();

@@ -13,6 +13,8 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/serviceDetailController.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/businessListModel.dart';
+import 'package:ibh/models/login_model.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
@@ -22,8 +24,10 @@ import 'package:sizer/sizer.dart';
 
 // ignore: must_be_immutable
 class BusinessDetailScreen extends StatefulWidget {
-  BusinessDetailScreen({required this.item, super.key});
-  BusinessData item;
+  BusinessDetailScreen(
+      {required this.item, required this.isFromProfile, super.key});
+  BusinessData? item;
+  bool? isFromProfile;
 
   @override
   State<BusinessDetailScreen> createState() => _BusinessDetailScreenState();
@@ -35,13 +39,37 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   double? percentage;
   final ScrollController scrollController = ScrollController();
 
+  String businessName = '';
+  String businessId = '';
+  String thumbnail = '';
+  String email = '';
+  String address = '';
   @override
   void initState() {
-    futureDelay(() {
-      controller.getServiceList(context, 1, true, widget.item.id);
-    }, isOneSecond: true);
     logcat("Item::", widget.item.toString());
+    getUserData();
     super.initState();
+  }
+
+  getUserData() async {
+    User? retrievedObject = await UserPreferences().getSignInInfo();
+    businessName = retrievedObject!.businessName;
+    thumbnail = retrievedObject.visitingCardUrl;
+    email = retrievedObject.email;
+    address = retrievedObject.address;
+    businessId = retrievedObject.id.toString();
+
+    futureDelay(() {
+      controller.getServiceList(context, 1, true,
+          widget.item != null ? widget.item!.id : retrievedObject.id);
+    }, isOneSecond: true);
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    businessId = "";
+    super.dispose();
   }
 
   @override
@@ -87,7 +115,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         left: 15.w,
                         right: 15.w),
                     title: showTitle
-                        ? widget.item.businessName.toString().length > 9
+                        ? widget.item!.businessName.toString().length > 9
                             ? Marquee(
                                 style: TextStyle(
                                   fontFamily: fontRegular,
@@ -97,7 +125,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                       ? 14.sp
                                       : 12.sp,
                                 ),
-                                text: widget.item.businessName
+                                text: widget.item!.businessName
                                     .toString()
                                     .length
                                     .toString(),
@@ -148,7 +176,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   child: CachedNetworkImage(
                                     fit: BoxFit.cover,
                                     height: 14.h,
-                                    imageUrl: widget.item.visitingCardUrl,
+                                    imageUrl: widget.item != null
+                                        ? widget.item!.visitingCardUrl
+                                        : thumbnail,
                                     placeholder: (context, url) => const Center(
                                       child: CircularProgressIndicator(
                                           color: primaryColor),
@@ -264,17 +294,22 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText(widget.item.businessName,
+                      controller.getLableText(
+                          widget.item != null
+                              ? widget.item!.businessName
+                              : businessName,
                           isMainTitle: true),
                       // controller.getCategoryLable(widget.item.businessName),
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText(widget.item.email,
+                      controller.getLableText(
+                          widget.item != null ? widget.item!.email : email,
                           isMainTitle: false),
                       getDynamicSizedBox(height: 1.h),
                       controller.getLableText('Description',
                           isMainTitle: false),
                       getDynamicSizedBox(height: 0.5.h),
-                      controller.getCommonText(widget.item.address.toString(),
+                      controller.getCommonText(
+                          widget.item != null ? widget.item!.address : address,
                           isHint: true),
                       getDynamicSizedBox(
                           height: Device.screenType == sizer.ScreenType.mobile
@@ -284,7 +319,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       //     isMainTitle: false),
                       getHomeLable('Services List', () {
                         Get.to(ServiceScreen(
-                          data: widget.item,
+                          data:
+                              widget.isFromProfile == true ? null : widget.item,
+                          id: businessId,
                         ))!
                             .then((value) {});
                       }, isFromDetailScreen: true),

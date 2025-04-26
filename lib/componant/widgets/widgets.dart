@@ -35,7 +35,11 @@ import '../../configs/font_constant.dart';
 // }
 
 Future<bool?> getpopup(BuildContext context,
-    {istimerrunout = false, title, message, function}) async {
+    {istimerrunout = false,
+    title,
+    message,
+    function,
+    isFromProfile = true}) async {
   return showCupertinoDialog(
     context: context,
     builder: (BuildContext context) {
@@ -58,8 +62,8 @@ Future<bool?> getpopup(BuildContext context,
                   Navigator.of(context).pop(false);
                 }),
           CupertinoDialogAction(
-              child: const Text(
-                'Confirm',
+              child: Text(
+                isFromProfile == true ? 'Confirm' : 'Add',
                 style: TextStyle(color: green),
               ),
               onPressed: () {
@@ -739,9 +743,11 @@ getFloatingActionButton({Function? onClick}) {
       onPressed: () {
         onClick!();
       },
-      child: Icon(Icons.add,
-          color: isDarkMode() ? black : white,
-          size: Device.screenType == ScreenType.mobile ? null : 3.h));
+      child: Icon(
+        Icons.add,
+        color: isDarkMode() ? black : white,
+        size: Device.screenType == ScreenType.mobile ? null : 3.h,
+      ));
 }
 
 getEmptyListUi() {

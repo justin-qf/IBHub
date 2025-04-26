@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
@@ -61,7 +58,7 @@ class _ViewservicescreenState extends State<Viewservicescreen> {
                     color: white,
                     elevation: 0,
                     shadowColor: white,
-                    margin: EdgeInsets.only(left: 5.w, right: 5.w,bottom: 2.h),
+                    margin: EdgeInsets.only(left: 5.w, right: 5.w, bottom: 2.h),
                     child: Padding(
                       padding: EdgeInsets.only(
                           left: 4.w, right: 2.w, top: 2.h, bottom: 2.h),
@@ -85,7 +82,7 @@ class _ViewservicescreenState extends State<Viewservicescreen> {
                               Text(
                                 'Title Here',
                                 style: TextStyle(
-                                  fontFamily: dM_sans_semiBold,
+                                    fontFamily: dM_sans_semiBold,
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.w900),
                               ),

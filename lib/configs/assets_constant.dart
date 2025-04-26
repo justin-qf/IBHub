@@ -107,7 +107,7 @@ class Asset {
   static const forward_10 = '$assets${svgFolder}forward_10.svg';
   static const backward_10 = '$assets${svgFolder}backward_10.svg';
   static const practiceidea = '$assets${svgFolder}practice_idea.svg';
-  
+
   //PNGS//
 
   static const appBarBg = '$assets${pngFolder}home_appbar_bg.png';
@@ -122,7 +122,7 @@ class Asset {
   static const logoIcon = '$assets${pngFolder}Logo_Icon.png';
   static const login = '$assets${pngFolder}login.png';
   static const splashBg = '$assets${pngFolder}splash_bg.png';
-  static const appLogo = '$assets${pngFolder}app_logo.png';
+
   static const noInternet = '$assets${pngFolder}no_internet_image.png';
   static const placeholder = '$assets${pngFolder}avtar.png';
   static const productPlaceholder =
@@ -147,15 +147,16 @@ class Asset {
   static const levelup = '$assets${pngFolder}levelup.png';
   static const levelup2 = '$assets${pngFolder}levelup2.png';
   static const levelup3 = '$assets${pngFolder}levelup3.png';
-   static const practice = '$assets${pngFolder}practice.png';
+  static const practice = '$assets${pngFolder}practice.png';
 
   static const subject1 = '$assets${pngFolder}subject1.png';
   static const subject2 = '$assets${pngFolder}subject2.png';
   //jpg
   static const splashjpg = '$assets${pngFolder}splashbg.jpg';
+  static const applogo = '$assets${pngFolder}app_logo.jpeg';
 
   //Splash Screen and intro
-  static const logo = '$assets${svgFolder}logo.svg';
+  static const logo = '$assets${svgFolder}app_logo.svg';
   static const logopurple = '$assets${svgFolder}logo_purple.svg';
   static const introbg = '$assets${pngFolder}intro_screen.png';
   static const splashPng = '$assets${pngFolder}logo_img.png';

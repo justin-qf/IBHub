@@ -1,22 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/views/Profile/updateprofilescreen.dart';
-import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
-import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
-import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
-import 'package:ibh/views/mainscreen/HomeScreen/HomeScreen.dart';
-import 'package:ibh/views/mainscreen/MainScreen.dart';
-import 'package:ibh/views/mainscreen/Profile/ProfileScreen.dart';
-import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
-import 'package:ibh/views/services/addserviceScreen.dart';
-import 'package:ibh/views/services/viewserviceScreen.dart';
-import 'package:ibh/views/sigin_signup/signinScreen.dart';
-import 'package:ibh/views/sigin_signup/signupScreen.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
 
