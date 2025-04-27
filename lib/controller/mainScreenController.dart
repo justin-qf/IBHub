@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
@@ -60,41 +61,14 @@ class MainScreenController extends GetxController {
     states.value = retrievedObject.state.toString();
     pincode.value = retrievedObject.pincode.toString();
     visitingCardUrl.value = retrievedObject.visitingCardUrl;
-
-    // gender.value = retrievedObject.city;
-    // referCode!.value = retrievedObject.state;
     update();
     state.value = ScreenState.apiSuccess;
   }
 
-  // void getTimerPopup(BuildContext context) {
-  //   Future.delayed(Duration(seconds: 10), () {
-  //     if (!context.mounted) return;
-  //     print('pop up code execute');
-  //     // Check if ANY of the fields are empty
-  //     if (address.value.isEmpty ||
-  //         city.value.isEmpty ||
-  //         states.value.isEmpty ||
-  //         pincode.value.isEmpty ||
-  //         visitingCardUrl.value.isEmpty) {
-  //       getpopup(
-  //         context,
-  //         isFromProfile: false,
-  //         title: 'Incomplete Profile',
-  //         message:
-  //             'Would you like to update it now?',
-  //         function: () {
-  //           Get.to(Updateprofilescreen());
-  //         },
-  //       );
-  //     }
-  //   });
-  // }
 
   void getTimerPopup(BuildContext context) {
     Future.delayed(Duration(seconds: 10), () {
       if (!context.mounted) return;
-      print('pop up code execute');
       // Check if ANY of the fields are empty
       if (address.value.isEmpty ||
           city.value.isEmpty ||
@@ -106,20 +80,6 @@ class MainScreenController extends GetxController {
     });
   }
 
-  // void getTimerPopup(BuildContext context) {
-  //   Future.delayed(Duration(seconds: 10), () {
-  //     if (!context.mounted) return;
-  //     print('pop up code execute');
-  //     // getpopup(context,
-  //     //     isFromProfile: false,
-  //     //     title: 'Incomplete Profile',
-  //     //     message: 'Would you like to update it now?', function: () {
-  //     //   Get.to(Updateprofilescreen());
-  //     // });
-
-  //     showBottomSheetPopup(context);
-  //   });
-  // }
 
   void showBottomSheetPopup(BuildContext context) {
     showModalBottomSheet(
@@ -136,7 +96,7 @@ class MainScreenController extends GetxController {
             children: [
               getDynamicSizedBox(height: 2.h),
               Text(
-                'Incomplete Profile',
+                MainScreenConstant.incompleteProfile,
                 style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -144,7 +104,7 @@ class MainScreenController extends GetxController {
               ),
               getDynamicSizedBox(height: 2.h),
               Text(
-                'Would you like to update it now?',
+                MainScreenConstant.updatePrompt,
                 style: TextStyle(fontFamily: dM_sans_medium, fontSize: 18.sp),
                 textAlign: TextAlign.center,
               ),
@@ -164,7 +124,7 @@ class MainScreenController extends GetxController {
                         ),
                       ),
                       child: const Text(
-                        'Cancel',
+                        MainScreenConstant.cancelButton,
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
@@ -183,7 +143,7 @@ class MainScreenController extends GetxController {
                         ),
                       ),
                       child: Text(
-                        'Add',
+                        MainScreenConstant.addButton,
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),

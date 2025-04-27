@@ -23,8 +23,6 @@ class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }
 
-
-
 class SubjectDetailsConst {
   static const tabtitleTutorial = 'Tutorials';
   static const tabtitlePractice = 'Practice';
@@ -596,11 +594,10 @@ class EmailScreenConstant {
 }
 
 class MainScreenConstant {
-  static const retailerTitle = 'Retailer';
-  static const orderTitle = 'Orders';
-  static const totalOrderTitle = 'Total Orders';
-  static const productTitle = 'Products';
-  static const home = 'Home';
+  static const incompleteProfile = 'Incomplete Profile';
+  static const updatePrompt = 'Would you like to update it now?';
+  static const cancelButton = 'Cancel';
+  static const addButton = 'Add';
 }
 
 class ProfileScreenConstant {

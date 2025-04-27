@@ -67,12 +67,14 @@ class _MainScreenState extends State<MainScreen> {
                     padding: const EdgeInsets.only(
                         left: 10, right: 10, bottom: 10, top: 10),
                     decoration: BoxDecoration(
+                      // ignore: deprecated_member_use
                       color: white.withOpacity(0.8),
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 10,
                           spreadRadius: 2,
+                          // ignore: deprecated_member_use
                           color: black.withOpacity(0.2),
                         )
                       ],

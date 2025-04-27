@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     futureDelay(() {
       controller.getCategoryList(context);
       controller.getBusinessList(context, 0, true);
-    },isOneSecond: false);
+    }, isOneSecond: false);
   }
 
   void scrollListener() {
@@ -81,7 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Column(
                 children: [
-                  getCommonToolbar("Dashboard", showBackButton: false),
+                  getCommonToolbar(HomeScreenconst.dashboard,
+                      showBackButton: false),
                   Expanded(
                     child: SingleChildScrollView(
                       // padding: EdgeInsets.only(bottom: 1.h),
@@ -135,29 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   )),
             ),
             getDynamicSizedBox(height: 1.h),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 5.w),
-            //   child: Text("Bhoomi",
-            //       style: TextStyle(
-            //         color: black,
-            //         fontFamily: fontBold,
-            //         fontWeight: FontWeight.w800,
-            //         fontSize: Device.screenType == sizer.ScreenType.mobile
-            //             ? 18.sp
-            //             : 13.sp,
-            //       )),
-            // ),
-            // setSearchBars(context, controller.searchCtr, 'home',
-            //     onCancleClick: () {
-            //   controller.searchCtr.text = '';
-            //   setState(() {
-            //     controller.isSearch = false;
-            //   });
-            // }, onClearClick: () {
-            //   controller.searchCtr.text = '';
-            //   setState(() {});
-            // }),
-            getDynamicSizedBox(height: 0.h),
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {});
             }),
@@ -184,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 })),
             getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.buisinessTitle, () {
-              Get.to( AddServicescreen())!.then((value) {});
+              Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
             Obx(
               () {

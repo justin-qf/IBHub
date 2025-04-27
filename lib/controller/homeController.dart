@@ -356,17 +356,7 @@ class HomeScreenController extends GetxController {
           responseData['message'] ?? ServerError.servererror,
           callback: () {});
     }
-    // } catch (e) {
-    //   logcat("Ecxeption", e);
-    //   state.value = ScreenState.apiError;
-    //   message.value = ServerError.servererror;
-    //   if (hideloading != true) {
-    //     loadingIndicator.hide(context);
-    //   }
-    //   showDialogForScreen(
-    //       context, HomeScreenconst.title, ServerError.servererror,
-    //       callback: () {});
-    // }
+
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {
@@ -446,13 +436,7 @@ class HomeScreenController extends GetxController {
                                 color: black,
                                 fontWeight: FontWeight.w900)),
                         const Spacer(),
-                        // if (item.businessReviewsAvgRating != null)
-                        // Text(item.businessReviewsAvgRating.toString(),
-                        //     style: TextStyle(
-                        //         fontFamily: fontMedium,
-                        //         fontSize: 14.sp,
-                        //         color: grey,
-                        //         fontWeight: FontWeight.w900))
+                  
                         RatingBar.builder(
                           initialRating: item.businessReviewsAvgRating ?? 0.0,
                           minRating: 1,
@@ -505,49 +489,7 @@ class HomeScreenController extends GetxController {
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
-                    // getText(
-                    //   item.address,
-                    //   TextStyle(
-                    //       fontFamily: fontSemiBold,
-                    //       color: lableColor,
-                    //       fontSize: Device.screenType == sizer.ScreenType.mobile
-                    //           ? 14.sp
-                    //           : 7.sp,
-                    //       height: 1.2),
-                    // ),
-                    // AbsorbPointer(
-                    //     absorbing: true,
-                    //     child: ReadMoreText(item.address,
-                    //         textAlign: TextAlign.start,
-                    //         trimLines: 2, callback: (val) {
-                    //       logcat("ONTAP", val.toString());
-                    //     },
-                    //         colorClickableText: primaryColor,
-                    //         trimMode: TrimMode.Line,
-                    //         trimCollapsedText: '...Show more',
-                    //         trimExpandedText: '',
-                    //         delimiter: ' ',
-                    //         style: TextStyle(
-                    //             overflow: TextOverflow.ellipsis,
-                    //             fontSize:
-                    //                 Device.screenType == sizer.ScreenType.mobile
-                    //                     ? 14.sp
-                    //                     : 10.sp,
-                    //             fontFamily: fontBold,
-                    //             color: grey),
-                    //         lessStyle: TextStyle(
-                    //             fontFamily: fontMedium,
-                    //             fontSize:
-                    //                 Device.screenType == sizer.ScreenType.mobile
-                    //                     ? 14.sp
-                    //                     : 12.sp),
-                    //         moreStyle: TextStyle(
-                    //             fontFamily: fontMedium,
-                    //             fontSize:
-                    //                 Device.screenType == sizer.ScreenType.mobile
-                    //                     ? 14.sp
-                    //                     : 12.sp,
-                    //             color: primaryColor))),
+                   
                   ],
                 ),
               ),
