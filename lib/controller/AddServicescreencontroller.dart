@@ -21,9 +21,9 @@ import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:image_picker/image_picker.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
-// import 'package:sizer/sizer.dart';
 
 class AddServicescreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -81,40 +81,13 @@ class AddServicescreencontroller extends GetxController {
     }
   }
 
-  // void addKeyword(String keyword) {
-  //   if (keyword.isNotEmpty && !keywords.contains(keyword)) {
-  //     final parts = keyword.split(',');
-  //     for (var part in parts) {
-  //       final trimmed = part.trim();
-  //       if (trimmed.isNotEmpty && !keywords.contains(trimmed)) {
-  //         keywords.add(trimmed);
-  //       }
-  //     }
-  //     enableSubmitButton();
-  //     // keywords.add(keyword.trim());
-  //     // keywordsCtr.clear(); // Clear input field after adding
-  //     // validateFields("", // Clear validation temporarily
-  //     //     model: keywordsModel,
-  //     //     errorText1: ServicesScreenConstant.enterKeyword,
-  //     //     iscomman: true,
-  //     //     shouldEnableButton: true);
-  //     update();
-  //   }
-  // }
-
-// //
-//   // Remove keyword from the list
+  // Remove keyword from the list
   void removeKeyword(String keyword) {
     keywords.remove(keyword);
 
     update();
   }
 
-//   void updateKeywordsTextController() {
-//     keywordsCtr.text = keywords.join(', ');
-
-//     print(keywordsCtr.text);
-//   }
   void init() {
     serviceTitleNode = FocusNode();
     descriptionNode = FocusNode();
@@ -148,12 +121,7 @@ class AddServicescreencontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (keywords.isEmpty) {
       isFormInvalidate.value = false;
-    }
-    //  else if (keywordsModel.value.isValidate == false) {
-    //   isFormInvalidate.value = false;
-    // }
-
-    else if (categoryModel.value.isValidate == false) {
+    } else if (categoryModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (thumbnailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
@@ -161,7 +129,6 @@ class AddServicescreencontroller extends GetxController {
       isFormInvalidate.value = true;
     }
 
-    print('called');
     update();
   }
 
@@ -203,13 +170,6 @@ class AddServicescreencontroller extends GetxController {
     thumbnailCtr.clear();
     searchCategoryCtr.clear();
     keywords.clear();
-
-    // serviceTitleNode.unfocus();
-    // descriptionNode.unfocus();
-    // keywordsNode.unfocus();
-    // categoryNode.unfocus();
-    // thumbnailNode.unfocus();
-    // searchCategoryNode.unfocus();
 
     serviceTitleModel.value = ValidationModel(null, null, isValidate: false);
     descriptionModel.value = ValidationModel(null, null, isValidate: false);
@@ -260,11 +220,11 @@ class AddServicescreencontroller extends GetxController {
 
   void getCategory(context, stateID, {isfromHomescreen}) async {
     commonGetApiCallFormate(context,
-        title: 'Category',
+        title: AddServiceScreenViewConst.category,
         apiEndPoint: ApiUrl.getCategories,
         allowHeader: true, apisLoading: (isTrue) {
       isCategoryApiCallLoading.value = isTrue;
-      logcat("isCityList:", isTrue.toString());
+
       update();
     }, onResponse: (response) {
       var categoryData = CategoryModel.fromJson(response);
@@ -272,8 +232,6 @@ class AddServicescreencontroller extends GetxController {
       categoryFilterList.clear();
       categoryList.addAll(categoryData.data);
       categoryFilterList.addAll(categoryData.data);
-
-      logcat("CATEGORY_RESPONSE", jsonEncode(categoryFilterList));
 
       if (isfromHomescreen && categoryEditid.value.isNotEmpty) {
         final selectedCategory = categoryList.firstWhere(
@@ -294,7 +252,8 @@ class AddServicescreencontroller extends GetxController {
   Widget setCategoryListDialog({isFromHomeScreen}) {
     return Obx(() {
       if (isCategoryApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text("Loading"),
+        return setDropDownContent(
+            [].obs, const Text(AddServiceScreenViewConst.loading),
             isApiIsLoading: isCategoryApiCallLoading.value);
       }
       return setDropDownContent(
@@ -329,7 +288,7 @@ class AddServicescreencontroller extends GetxController {
 
                   validateFields(categoryCtr.text,
                       model: categoryModel,
-                      errorText1: "Category is required",
+                      errorText1: AddServiceScreenViewConst.categoryReq,
                       iscomman: true,
                       shouldEnableButton: true);
                   update();
@@ -347,7 +306,7 @@ class AddServicescreencontroller extends GetxController {
           searchcontent: getReactiveFormField(
               node: searchCategoryNode,
               controller: searchCategoryCtr,
-              hintLabel: "Search Here",
+              hintLabel: AddServiceScreenViewConst.searchHere,
               onChanged: (val) {
                 applyFilter(val.toString());
                 update();
@@ -399,7 +358,6 @@ class AddServicescreencontroller extends GetxController {
         },
         enableBtnFunction: () {
           enableSubmitButton();
-          print('called');
         });
   }
 
@@ -417,14 +375,14 @@ class AddServicescreencontroller extends GetxController {
       thumbnailCtr.text = fileName;
       validateFields(fileName,
           model: thumbnailModel,
-          errorText1: "Visiting card is required",
+          errorText1: AddServiceScreenViewConst.visitingCardReq,
           iscomman: true,
           shouldEnableButton: true);
       update(); // not needed if you're using Obx(), but required for GetBuilder
     } else {
       validateFields("",
           model: thumbnailModel,
-          errorText1: "Visiting card is required",
+          errorText1: AddServiceScreenViewConst.visitingCardReq,
           iscomman: true,
           shouldEnableButton: true);
     }
@@ -434,25 +392,25 @@ class AddServicescreencontroller extends GetxController {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      barrierLabel: "Background",
+      barrierLabel: AddServiceScreenViewConst.background,
       barrierColor: black.withOpacity(0.6), // Dark overlay, no blur
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation1, animation2) {
         return Center(
           child: CupertinoAlertDialog(
-            title: const Text('Choose an Option'),
-            content: const Text('Select how you want to add the picture.',
+            title: const Text(AddServiceScreenViewConst.chooseOpt),
+            content: const Text(AddServiceScreenViewConst.selectPic,
                 style: TextStyle(fontFamily: dM_sans_medium)),
             actions: [
               CupertinoDialogAction(
-                child: const Text('Camera', style: TextStyle(color: black)),
+                child: const Text(AddServiceScreenViewConst.camera, style: TextStyle(color: black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _pickImage(iscamera: true);
                 },
               ),
               CupertinoDialogAction(
-                child: const Text('Gallery', style: TextStyle(color: black)),
+                child: const Text(AddServiceScreenViewConst.gallery, style: TextStyle(color: black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _pickImage(iscamera: false);
@@ -471,7 +429,7 @@ class AddServicescreencontroller extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, "Service Screen", Connection.noConnection,
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -500,21 +458,21 @@ class AddServicescreencontroller extends GetxController {
 
       if (response.statusCode == 200) {
         if (json['success'] == true) {
-          showDialogForScreen(context, "Service Screen", json['message'],
+          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
               callback: () {
             Get.back(result: true);
           });
         } else {
-          showDialogForScreen(context, "Service Screen", json['message'],
+          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
               callback: () {});
         }
       } else {
-        showDialogForScreen(context, "Service Screen", json['message'],
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
             callback: () {});
       }
     } catch (e) {
       logcat("Service Creation Exception", e.toString());
-      showDialogForScreen(context, "Service Screen", Connection.servererror,
+      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
           callback: () {});
       loadingIndicator.hide(context);
     }
@@ -526,7 +484,7 @@ class AddServicescreencontroller extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, "Service Screen", Connection.noConnection,
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -567,21 +525,21 @@ class AddServicescreencontroller extends GetxController {
 
       if (response.statusCode == 200) {
         if (json['success'] == true) {
-          showDialogForScreen(context, "Service Screen", json['message'],
+          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
               callback: () {
             Get.back(result: true);
           });
         } else {
-          showDialogForScreen(context, "Service Screen", json['message'],
+          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
               callback: () {});
         }
       } else {
-        showDialogForScreen(context, "Service Screen", json['message'],
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
             callback: () {});
       }
     } catch (e) {
       logcat("Service Creation Exception", e.toString());
-      showDialogForScreen(context, "Service Screen", Connection.servererror,
+      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
           callback: () {});
       loadingIndicator.hide(context);
     }
@@ -593,7 +551,7 @@ class AddServicescreencontroller extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, "Service Screen", Connection.noConnection,
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -609,22 +567,22 @@ class AddServicescreencontroller extends GetxController {
       var result = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (result['success'] == true) {
-          showDialogForScreen(context, "Service Screen", result['message'],
+          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, result['message'],
               callback: () {
             Get.back(result: true); // Go back and pass result true
           });
         } else {
-          showDialogForScreen(context, "Service Screen", result['message'],
+          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, result['message'],
               callback: () {});
         }
       } else {
-        showDialogForScreen(context, "Service Screen", result['message'],
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, result['message'],
             callback: () {});
       }
     } catch (e) {
       loadingIndicator.hide(context);
       logcat("Delete Service Exception", e.toString());
-      showDialogForScreen(context, "Service Screen", Connection.servererror,
+      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
           callback: () {});
     }
   }

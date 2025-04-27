@@ -46,7 +46,7 @@ Widget getRadioButton(
 
                   enableFunction(groupvalue);
                   notifyListeners();
-                  print(groupvalue.toString());
+             
                 },
               ),
               GestureDetector(
@@ -57,7 +57,7 @@ Widget getRadioButton(
                   isSelected = false;
                   enableFunction(groupvalue);
                   notifyListeners();
-                  print(groupvalue.toString());
+              
                 },
                 child: Text(
                   firstText,
@@ -73,7 +73,7 @@ Widget getRadioButton(
                   isSelected = false;
                   enableFunction(groupvalue);
                   notifyListeners();
-                  print(groupvalue.toString());
+                 
                 },
               ),
               GestureDetector(
@@ -83,7 +83,7 @@ Widget getRadioButton(
                   isSelected = false;
                   enableFunction(groupvalue);
                   notifyListeners();
-                  print(groupvalue.toString());
+                 
                 },
                 child: Text(
                   secondText,
@@ -155,7 +155,7 @@ fetchSelectionPopup<T>(
                       filterFunction(val!);
 
                       setState(() {});
-                      print(val);
+               
                     },
                     inputType: TextInputType.text,
                     isBorderSideEnable: false,
@@ -265,7 +265,7 @@ void showSelectionPopup(
                       filterFunction(val!);
 
                       setState(() {});
-                      print(val);
+                    
                     },
                     inputType: TextInputType.text,
                     isBorderSideEnable: false,
@@ -278,6 +278,7 @@ void showSelectionPopup(
                 child: ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (context, index) {
+                    // ignore: prefer_typing_uninitialized_variables
                     var data;
                     if (isCityData == true) {
                       data = list[index];
@@ -454,6 +455,7 @@ void showDropdownMessages(double insetPaddingVertical, BuildContext context,
           return AlertDialog(
               clipBehavior: Clip.antiAliasWithSaveLayer,
               backgroundColor:
+                  // ignore: deprecated_member_use
                   isDarkMode() ? darkBackgroundColor.withOpacity(0.9) : white,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(32.0))),
@@ -644,6 +646,7 @@ Widget setDropDownContent(RxList<dynamic> list, Widget content,
 Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
     {Function? cameraClick, Function? galleryClick}) {
   return showGeneralDialog(
+      // ignore: deprecated_member_use
       barrierColor: black.withOpacity(isDarkMode() ? 0.4 : 0.6),
       transitionBuilder: (context, a1, a2, widget) {
         return Transform.scale(

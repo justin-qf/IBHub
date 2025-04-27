@@ -1,3 +1,20 @@
+class AddServiceScreenViewConst {
+  static const category = 'Category';
+  static const categoryReq = 'Category is required';
+  static const loading = 'Loading';
+  static const searchHere = 'Search Here';
+  static const visitingCardReq = 'Visiting card is required';
+  static const background = 'Background';
+  static const chooseOpt = 'Choose an Option';
+  static const selectPic = 'Select how you want to add the picture.';
+  static const camera = 'Camera';
+  static const gallery = 'Gallery';
+  static const serviceScr = 'Service Screen';
+  static const editService = 'Edit Service';
+  static const addService = 'Add Service';
+  static const keyword = 'Keywords';
+}
+
 class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }

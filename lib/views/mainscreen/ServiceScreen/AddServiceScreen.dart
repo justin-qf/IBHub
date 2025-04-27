@@ -1,4 +1,3 @@
-import 'package:advanced_chips_input/advanced_chips_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -11,7 +10,6 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/addservicescreenController.dart';
 import 'package:ibh/models/ServiceListModel.dart';
-import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:sizer/sizer.dart';
 
@@ -62,8 +60,9 @@ class _ServicescreenState extends State<AddServicescreen> {
           children: [
             getDynamicSizedBox(height: 5.h),
             getleftsidebackbtn(
-                title:
-                    ctr.isFromHomeScreen.value ? 'Edit Service' : 'Add Service',
+                title: ctr.isFromHomeScreen.value
+                    ? AddServiceScreenViewConst.editService
+                    : AddServiceScreenViewConst.addService,
                 backFunction: () {
                   Get.back(result: true);
                   ctr.resetForm();
@@ -90,8 +89,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                         gestureFunction: () {
                           ctr.unfocusAll();
                           ctr.showOptionsCupertinoDialog(context: context);
-
-                          // ctr.showSubjectSelectionPopups(context);
                         },
                       );
                     }),
@@ -162,30 +159,22 @@ class _ServicescreenState extends State<AddServicescreen> {
                     }),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: getLable('Keywords', isRequired: true),
+                      child: getLable(AddServiceScreenViewConst.keyword,
+                          isRequired: true),
                     ),
-
-                    // Input field
-
                     Obx(
                       () => TextField(
                         controller: ctr.keywordsCtr,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            // <--- Add this
-                            borderRadius: BorderRadius.circular(
-                                30), // Circular border radius
-                            borderSide:
-                                BorderSide.none, // No visible border line
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
                           ),
                           enabledBorder: OutlineInputBorder(
-                            // <--- Add this
-
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
                           focusedBorder: OutlineInputBorder(
-                            // <--- Add this
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
@@ -208,14 +197,13 @@ class _ServicescreenState extends State<AddServicescreen> {
                           if (text.trim().isNotEmpty &&
                               text.trim().length >= 3) {
                             ctr.addKeyword(text);
-                            print(ctr.keywords);
+
                             ctr.enableSubmitButton();
                           }
                         },
                       ),
                     ),
                     getDynamicSizedBox(height: 2.h),
-
                     Obx(() => ctr.keywords.isNotEmpty
                         ? Container(
                             width: 100.w,
@@ -241,7 +229,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                                     ctr.keywords.removeAt(index);
 
                                     ctr.enableSubmitButton();
-                                    print(ctr.keywords);
+
                                     ctr.update();
                                   },
                                 );
@@ -249,99 +237,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                             ),
                           )
                         : SizedBox.shrink()),
-
-                    // AdvancedChipsInput(
-                    //   onChanged: (val) {
-                    //     ctr.validateFields(val,
-                    //         iscomman: true,
-                    //         model: ctr.keywordsModel,
-                    //         errorText1: ServicesScreenConstant.enterKeyword);
-                    //   },
-                    //   separatorCharacter: ',',
-                    //   placeChipsSectionAbove: true,
-                    //   widgetContainerDecoration: BoxDecoration(
-                    //     border: Border.all(color: Colors.grey),
-                    //   ),
-                    //   chipContainerDecoration: BoxDecoration(
-                    //     color: secondaryColor,
-                    //     borderRadius: BorderRadius.all(Radius.circular(50)),
-                    //   ),
-                    //   chipTextStyle: TextStyle(color: primaryColor),
-                    //   validateInput: true,
-                    //   onSubmitted: (text) {
-                    //     if (text.trim().isNotEmpty) {
-                    //       ctr.addKeyword(
-                    //           text); // Add the entire keyword (including spaces)
-                    //       ctr.enableSubmitButton();
-                    //     }
-                    //     // Clear the input field after submission
-                    //   },
-                    //   validateInputMethod: (value) {
-                    //     if (value.trim().length < 3) {
-                    //       return 'Input should be at least 3 characters long';
-                    //     }
-                    //     return null;
-                    //   },
-                    //   deleteIcon: Icon(
-                    //     Icons.close,
-                    //     size: 20.sp,
-                    //   ),
-                    //   eraseKeyLabel: 'erase',
-                    //   onChipDeleted: (chipText, index) {
-                    //     print('Before deletion: ${ctr.keywords}');
-                    //     if (index >= 0 && index < ctr.keywords.length) {
-                    //       ctr.keywords.removeAt(
-                    //           index); // Remove the chip at the given index
-                    //     }
-                    //     ctr.enableSubmitButton();
-                    //     print('After deletion: ${ctr.keywords}');
-                    //   },
-                    // ),
-                    // AdvancedChipsInput(
-                    //   onChanged: (val) {
-                    //     ctr.validateFields(val,
-                    //         iscomman: true,
-                    //         model: ctr.keywordsModel,
-                    //         errorText1: ServicesScreenConstant.enterKeyword);
-                    //   },
-                    //   separatorCharacter: ',',
-                    //   placeChipsSectionAbove: true,
-                    //   widgetContainerDecoration: BoxDecoration(
-                    //     border: Border.all(color: Colors.grey),
-                    //   ),
-                    //   chipContainerDecoration: BoxDecoration(
-                    //     color: secondaryColor,
-                    //     borderRadius: BorderRadius.all(Radius.circular(50)),
-                    //   ),
-                    //   chipTextStyle: TextStyle(color: primaryColor),
-                    //   validateInput: true,
-                    //   onSubmitted: (text) {
-                    //     ctr.addKeyword(text);
-                    //     ctr.enableSubmitButton();
-                    //   },
-                    //   validateInputMethod: (value) {
-                    //     if (value.length < 3) {
-                    //       return 'Input should be at least 3 characters long';
-                    //     }
-                    //     return null;
-                    //   },
-                    //   deleteIcon: Icon(
-                    //     Icons.close,
-                    //     size: 20.sp,
-                    //   ),
-                    //   eraseKeyLabel: 'erase',
-                    //   onChipDeleted: (chipText, index) {
-                    //     print('Before deletion: ${ctr.keywords}');
-
-                    //     if (index >= 0 && index < ctr.keywords.length) {
-                    //       // Remove only by index — this is sufficient
-                    //       ctr.keywords.removeAt(index);
-                    //     }
-                    //     ctr.enableSubmitButton();
-
-                    //     print('After deletion: ${ctr.keywords}');
-                    //   },
-                    // ),
                     getDynamicSizedBox(height: 2.h),
                     Obx(() {
                       return ctr.isloading == false
@@ -350,7 +245,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
                                   if (ctr.isFromHomeScreen.value == true) {
-                                    //update api calling code put here
+                                  
 
                                     ctr.updateServiceApi(context);
                                   } else {
@@ -366,7 +261,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                           : const CircularProgressIndicator();
                     }),
                     getDynamicSizedBox(height: 2.h),
-
                     if (ctr.isFromHomeScreen.value == true)
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 5.w),

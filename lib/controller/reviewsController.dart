@@ -73,7 +73,6 @@ class ReviewsScreenController extends GetxController {
         return;
       }
 
-      User? getUserData = await UserPreferences().getSignInInfo();
       logcat('ReviewPassingData', {
         // "business_id": getUserData!.id.toString().trim(),
         "business_id": businessId,
@@ -154,6 +153,7 @@ class ReviewsScreenController extends GetxController {
             color: white,
             boxShadow: [
               BoxShadow(
+                  // ignore: deprecated_member_use
                   color: grey.withOpacity(0.8),
                   blurRadius: 2.0,
                   offset: const Offset(0, 1),
@@ -187,143 +187,6 @@ class ReviewsScreenController extends GetxController {
     );
   }
 
-  // getItemListItem(SavedItem data) {
-  //   return Obx(
-  //     () {
-  //       return Wrap(
-  //         children: [
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.circular(
-  //                 Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
-  //             child: Container(
-  //               width: double.infinity,
-  //               margin: EdgeInsets.only(bottom: 0.5.h, left: 1.w, right: 2.w),
-  //               padding: EdgeInsets.only(left: 1.2.w, right: 1.2.w, top: 1.2.w),
-  //               decoration: BoxDecoration(
-  //                 color: Colors.white,
-  //                 borderRadius: BorderRadius.circular(
-  //                     Device.screenType == sizer.ScreenType.mobile
-  //                         ? 4.w
-  //                         : 2.2.w),
-  //                 boxShadow: [
-  //                   BoxShadow(
-  //                       color: Colors.black.withOpacity(0.05),
-  //                       blurRadius: 10.0,
-  //                       offset: const Offset(0, 5))
-  //                 ],
-  //               ),
-  //               child: Column(
-  //                 mainAxisAlignment: MainAxisAlignment.start,
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Container(
-  //                     width: double.infinity,
-  //                     decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(
-  //                           Device.screenType == sizer.ScreenType.mobile
-  //                               ? 3.5.w
-  //                               : 2.5.w),
-  //                     ),
-  //                     child: ClipRRect(
-  //                       borderRadius: BorderRadius.circular(
-  //                           Device.screenType == sizer.ScreenType.mobile
-  //                               ? 3.5.w
-  //                               : 2.5.w),
-  //                       child: data.icon,
-  //                     ),
-  //                   ),
-  //                   SizedBox(
-  //                     height: 1.5.h,
-  //                   ),
-  //                   getText(
-  //                     data.name,
-  //                     TextStyle(
-  //                         fontFamily: fontMedium,
-  //                         color: black,
-  //                         fontSize: Device.screenType == sizer.ScreenType.mobile
-  //                             ? 10.sp
-  //                             : 7.sp,
-  //                         height: 1.2),
-  //                   ),
-  //                   getDynamicSizedBox(
-  //                     height: 0.5.h,
-  //                   ),
-  //                   getText(
-  //                     data.price,
-  //                     TextStyle(
-  //                         fontFamily: fontMedium,
-  //                         color: primaryColor,
-  //                         fontSize: Device.screenType == sizer.ScreenType.mobile
-  //                             ? 9.sp
-  //                             : 7.sp,
-  //                         height: 1.2),
-  //                   ),
-  //                   getDynamicSizedBox(
-  //                     height: 0.5.h,
-  //                   ),
-  //                   Row(
-  //                     crossAxisAlignment: CrossAxisAlignment.center,
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: [
-  //                       Expanded(
-  //                         child: RatingBar.builder(
-  //                           initialRating: 3.5,
-  //                           minRating: 1,
-  //                           direction: Axis.horizontal,
-  //                           allowHalfRating: true,
-  //                           itemCount: 5,
-  //                           itemSize: 3.5.w,
-  //                           // itemPadding:
-  //                           //     const EdgeInsets.symmetric(horizontal: 5.0),
-  //                           itemBuilder: (context, _) => const Icon(
-  //                             Icons.star,
-  //                             color: Colors.orange,
-  //                           ),
-  //                           onRatingUpdate: (rating) {
-  //                             logcat("RATING", rating);
-  //                           },
-  //                         ),
-  //                       ),
-  //                       Expanded(
-  //                         child: getText(
-  //                           "35 Reviews",
-  //                           TextStyle(
-  //                               fontFamily: fontMedium,
-  //                               color: lableColor,
-  //                               fontSize:
-  //                                   Device.screenType == sizer.ScreenType.mobile
-  //                                       ? 8.sp
-  //                                       : 7.sp,
-  //                               height: 1.2),
-  //                         ),
-  //                       ),
-  //                       GestureDetector(
-  //                         onTap: () {
-  //                           data.isSelected.value = !data.isSelected.value;
-  //                           update();
-  //                         },
-  //                         child: Icon(
-  //                           data.isSelected.value
-  //                               ? Icons.favorite_rounded
-  //                               : Icons.favorite_border,
-  //                           size: 3.h,
-  //                           color: primaryColor,
-  //                         ),
-  //                       )
-  //                     ],
-  //                   ),
-  //                   getDynamicSizedBox(
-  //                     height: 1.h,
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   Widget getText(title, TextStyle? style) {
     return Padding(
@@ -364,6 +227,7 @@ class ReviewsScreenController extends GetxController {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(1.7.h),
                       border: Border.all(
+                        // ignore: deprecated_member_use
                         color: grey.withOpacity(0.8), // Border color
                         width: 0.5, // Border width
                       ),
@@ -622,14 +486,7 @@ class ReviewsScreenController extends GetxController {
 
   getReviewList(context, currentPage, bool hideloading,
       {bool? isRefress}) async {
-    // var loadingIndicator = LoadingProgressDialog();
-    // if (hideloading == true) {
-    //   state.value = ScreenState.apiLoading;
-    // } else {
-    //   loadingIndicator.show(context, '');
-    //   isLoading.value = true;
-    //   update();
-    // }
+
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -647,9 +504,7 @@ class ReviewsScreenController extends GetxController {
       var pageURL = '${ApiUrl.reviewList}?page=$currentPage';
       logcat("URL", pageURL.toString());
       var response = await Repository.get({}, pageURL, allowHeader: true);
-      // if (hideloading != true) {
-      //   loadingIndicator.hide(context);
-      // }
+ 
       Statusbar().transparentStatusbarIsNormalScreen();
       // loadingIndicator.hide(context);
       var data = jsonDecode(response.body);
