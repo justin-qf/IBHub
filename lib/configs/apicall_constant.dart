@@ -30,6 +30,7 @@ class ApiUrl {
   // static const getState = 'state_list';
   // static const getCity = 'city_list';
   static const register = 'register';
+  static const pdfDownload = 'user/visiting-card';
   static const states = 'states/dropdown';
   static const city = 'cities/dropdown/';
   static const createservice = 'services/create';

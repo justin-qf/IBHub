@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,11 +10,15 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/login_model.dart';
+import 'package:ibh/models/pdfModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import '../../preference/UserPreference.dart';
 import '../../utils/log.dart';
 import 'internet_controller.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProfileController extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -72,45 +77,117 @@ class ProfileController extends GetxController {
   }
 
   BuildContext? contexts;
-  // void getProfile(context) async {
-  //   states.value = ScreenState.apiLoading;
-  //   message.value = "There is error from the server";
-  //   try {
-  //     if (networkManager.connectionType.value == 0) {
-  //       showDialogForScreen(context, "No Connection", callback: () {
-  //         Get.back();
-  //       });
-  //       return;
-  //     }
 
-  //     var response = await Repository.get(
-  //         {}, "${ApiUrl.getProfile}/$customerId",
-  //         list: true);
-  //     var data = jsonDecode(response.body);
+  // Function to download PDF and return the file path
+  Future<String?> downloadPDF(String url, String fileName) async {
+    try {
+      // Make HTTP request to download the PDF
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // Get the temporary directory
+        final directory = await getTemporaryDirectory();
+        final filePath = '${directory.path}/$fileName';
+        // Write the PDF to a file
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        return filePath;
+      } else {
+        print('Failed to download PDF: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error downloading PDF: $e');
+      return null;
+    }
+  }
 
-  //     if (response.statusCode == 200) {
-  //       if (data['status'] == true) {
-  //         var models = User.fromJson(data['user_info']);
-  //         UserPreferences().saveSignInInfo(data['user_info']);
-  //         userName.value = models.fullName;
-  //         email.value = models.emailId;
-  //         number.value = models.mobileNumber;
-  //         profilePic.value = models.profilePic;
-  //         gender.value = models.gender;
-  //       } else {
-  //         showDialogForScreen(context, data['message'], callback: () {});
-  //       }
-  //       states.value = ScreenState.apiSuccess;
-  //       message.value = "Server Error";
-  //       update();
-  //     } else {
-  //       states.value = ScreenState.apiError;
-  //       showDialogForScreen(context, data['message'], callback: () {});
-  //     }
-  //   } catch (e) {
-  //     states.value = ScreenState.apiError;
-  //   }
-  // }
+  // Function to share PDF to WhatsApp
+  Future<void> sharePDF(String filePath) async {
+    try {
+      // ignore: deprecated_member_use
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        text: 'Check out my profile PDF!',
+        subject: 'Profile PDF',
+      );
+    } catch (e) {
+      print('Error sharing PDF: $e');
+    }
+  }
+
+  RxString pdflink = "".obs;
+  RxString pdfname = "".obs;
+  void getpdfFromApi(BuildContext context, {theme}) async {
+    pdflink.value = '';
+    pdfname.value = '';
+    try {
+      if (networkManager.connectionType.value == 0) {
+        showDialogForScreen(context, "Profile", Connection.noConnection,
+            callback: () {
+          Get.back();
+        });
+        return;
+      }
+
+      // Direct API call (instead of using commonPostApiCallFormate)
+      var response = await Repository.post(
+        {"theme": theme},
+        ApiUrl.pdfDownload,
+        allowHeader: true,
+      );
+
+      var data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        var responseDetail = PdfData.fromJson(data);
+
+        if (responseDetail.success == true) {
+          pdflink.value = responseDetail.data.url;
+          pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+          showDialogForScreen(context, "Profile", data['message'],
+              callback: () {
+            Get.back();
+          });
+
+          states.value = ScreenState.apiSuccess;
+          message.value = "";
+          update();
+        } else {
+          states.value = ScreenState.apiError;
+          showDialogForScreen(context, "Profile", data['message'],
+              callback: () {});
+        }
+      } else {
+        states.value = ScreenState.apiError;
+        showDialogForScreen(
+            context, "Profile", data['message'] ?? "Server Error",
+            callback: () {});
+      }
+    } catch (e) {
+      states.value = ScreenState.apiError;
+      showDialogForScreen(context, "Profile", ServerError.retryServererror,
+          callback: () {});
+      print('Exception in getpdfFromApi: $e');
+    }
+  }
+
+  String extractPdfNameFromUrl(String url) {
+    // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
+    Uri uri = Uri.parse(url);
+    String path = uri.path;
+
+    // Split the path into segments
+    List<String> pathSegments = path.split('/');
+
+    // The PDF name should be the last segment (the filename)
+    String pdfFileName = pathSegments.last;
+
+    // Remove the file extension (.pdf)
+    String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
+
+    // Return the extracted PDF name
+    return pdfNameWithoutExtension;
+  }
 
   void logoutApi(context) async {
     var loadingIndicator = LoadingProgressDialog();

@@ -283,6 +283,159 @@ Future<Object?> popupDialogs(
       });
 }
 
+Future<Object?> pdfPopupDialogs(BuildContext context,
+    {required Function(String isDarkMode) function}) {
+  return showGeneralDialog(
+    barrierColor: black.withOpacity(0.6),
+    transitionBuilder: (context, a1, a2, widget) {
+      return Transform.scale(
+        scale: a1.value,
+        child: Opacity(
+          opacity: a1.value,
+          child: CupertinoAlertDialog(
+            title: const Text(
+              "Download PDF",
+              style: TextStyle(
+                fontSize: 18,
+                color: black,
+                fontFamily: fontBold,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: const Text(
+              "Do you want to download the PDF in Dark Mode or Light Mode?",
+              style: TextStyle(
+                fontSize: 13,
+                color: black,
+                fontFamily: fontMedium,
+              ),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  function('dark'); // true = Dark Mode
+                },
+                isDefaultAction: true,
+                isDestructiveAction: false,
+                child: const Text(
+                  "Dark Mode",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  function('light'); // false = Light Mode
+                },
+                isDefaultAction: true,
+                isDestructiveAction: false,
+                child: const Text(
+                  "Light Mode",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 200),
+    barrierDismissible: true,
+    barrierLabel: '',
+    context: context,
+    pageBuilder: (context, animation1, animation2) {
+      return Container();
+    },
+  );
+}
+
+Future<Object?> sharefPopupDialogs(BuildContext context,
+    {required Function() function}) {
+  return showGeneralDialog(
+    barrierColor: black.withOpacity(0.6),
+    transitionBuilder: (context, a1, a2, widget) {
+      return Transform.scale(
+        scale: a1.value,
+        child: Opacity(
+          opacity: a1.value,
+          child: CupertinoAlertDialog(
+            title: const Text(
+              "Download Complete",
+              style: TextStyle(
+                fontSize: 18,
+                color: black,
+                fontFamily: fontBold,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: const Text(
+              "Do you want to share the PDF?",
+              style: TextStyle(
+                fontSize: 13,
+                color: black,
+                fontFamily: fontMedium,
+              ),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                isDefaultAction: true,
+                isDestructiveAction: false,
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  function(); // false = Light Mode
+                },
+                isDefaultAction: true,
+                isDestructiveAction: false,
+                child: const Text(
+                  "Share",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 200),
+    barrierDismissible: true,
+    barrierLabel: '',
+    context: context,
+    pageBuilder: (context, animation1, animation2) {
+      return Container();
+    },
+  );
+}
+
 Future<Object?> logoutPopupDialogs(BuildContext context) {
   return showGeneralDialog(
       barrierColor: black.withOpacity(0.6),

@@ -55,10 +55,10 @@ class _ProfileScreenState extends State<ProfileScreen>
               case ScreenState.apiLoading:
               case ScreenState.noDataFound:
               case ScreenState.apiError:
-                return SizedBox(
-                  height: Device.height / 1.5,
-                  child: apiOtherStates(controller.states.value),
-                );
+              // return SizedBox(
+              //   height: Device.height / 1.5,
+              //   child: apiOtherStates(controller.states.value),
+              // );
               case ScreenState.apiSuccess:
               case ScreenState.noNetwork:
                 return Column(
@@ -66,407 +66,202 @@ class _ProfileScreenState extends State<ProfileScreen>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // getDynamicSizedBox(height: commonHeight()),
-                    Container(
-                      height: 23.h,
-                      width: Device.width,
-                      padding: EdgeInsets.only(right: 3.w, left: 3.w, top: 1.h),
-                      decoration: const BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(35),
-                          bottomRight: Radius.circular(35),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // getDynamicSizedBox(height: 3.h),
-                          Container(
-                            margin: EdgeInsets.only(left: 6.w, top: 2.h),
-                            decoration: const BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(35),
-                                bottomRight: Radius.circular(35),
-                              ),
+                    Stack(
+                      children: [
+                        Container(
+                          height: 23.h,
+                          width: Device.width,
+                          padding:
+                              EdgeInsets.only(right: 3.w, left: 3.w, top: 1.h),
+                          decoration: const BoxDecoration(
+                            color: secondaryColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(35),
+                              bottomRight: Radius.circular(35),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                GestureDetector(onTap: () {
-                                  if (controller.profilePic.value.isNotEmpty) {
-                                    Get.to(FullScreenImage(
-                                      imageUrl: controller.profilePic.value,
-                                      fromProfile: true,
-                                    ))!
-                                        .then((value) => {
-                                              Statusbar().trasparentStatusbar()
-                                            });
-                                  }
-                                }, child: Obx(() {
-                                  return ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30)),
-                                    child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      height: 20.h,
-                                      width: 20.w,
-                                      imageUrl: controller.profilePic.value,
-                                      placeholder: (context, url) =>
-                                          const Center(
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // getDynamicSizedBox(height: 3.h),
+                              Container(
+                                margin: EdgeInsets.only(left: 6.w, top: 2.h),
+                                decoration: const BoxDecoration(
+                                  color: secondaryColor,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(35),
+                                    bottomRight: Radius.circular(35),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(onTap: () {
+                                      if (controller
+                                          .profilePic.value.isNotEmpty) {
+                                        Get.to(FullScreenImage(
+                                          imageUrl: controller.profilePic.value,
+                                          fromProfile: true,
+                                        ))!
+                                            .then((value) => {
+                                                  Statusbar()
+                                                      .trasparentStatusbar()
+                                                });
+                                      }
+                                    }, child: Obx(() {
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(30)),
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          height: 20.h,
+                                          width: 20.w,
+                                          imageUrl: controller.profilePic.value,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                            child: CircularProgressIndicator(
+                                                color: primaryColor),
+                                          ),
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  CircleAvatar(
+                                            radius: 25.h,
+                                            backgroundImage: imageProvider,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              CircleAvatar(
+                                                  radius: 25.h,
+                                                  child: Icon(Icons.person)),
+                                        ),
+                                      );
+                                    })),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 3.w),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Obx(
+                                              () {
+                                                return Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      controller.userName.value
+                                                              .isNotEmpty
+                                                          ? controller.userName
+                                                              .value.capitalize!
+                                                          : "Your Name",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 17.sp,
+                                                          color: black,
+                                                          fontWeight:
+                                                              FontWeight.w800),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                            Obx(
+                                              () {
+                                                return Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      controller.bussiness.value
+                                                              .isNotEmpty
+                                                          ? controller.bussiness
+                                                              .value.capitalize!
+                                                          : "Your Bussiness",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          color: black,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          top: 10.h,
+                          right: 12.w,
+                          child: IconButton(
+                              onPressed: () async {
+                                pdfPopupDialogs(
+                                  context,
+                                  function: (String val) async {
+                                    print(val);
+                                    controller.getpdfFromApi(context,
+                                        theme: val);
+
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) => const Center(
                                         child: CircularProgressIndicator(
                                             color: primaryColor),
                                       ),
-                                      imageBuilder: (context, imageProvider) =>
-                                          CircleAvatar(
-                                        radius: 25.h,
-                                        backgroundImage: imageProvider,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          CircleAvatar(
-                                              radius: 25.h,
-                                              child: Icon(Icons.person)),
-                                    ),
-                                  );
-                                })),
-                                Expanded(
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 3.w),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Obx(
-                                          () {
-                                            return Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  controller.userName.value
-                                                          .isNotEmpty
-                                                      ? controller.userName
-                                                          .value.capitalize!
-                                                      : "Your Name",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      fontSize: 17.sp,
-                                                      color: black,
-                                                      fontWeight:
-                                                          FontWeight.w800),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                        Obx(
-                                          () {
-                                            return Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  controller.bussiness.value
-                                                          .isNotEmpty
-                                                      ? controller.bussiness
-                                                          .value.capitalize!
-                                                      : "Your Bussiness",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      fontSize: 16.sp,
-                                                      color: black,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Obx(
-                          //   () {
-                          //     return Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       crossAxisAlignment: CrossAxisAlignment.center,
-                          //       children: [
-                          //         Text(
-                          //           controller.userName.value.isNotEmpty
-                          //               ? controller.userName.value.capitalize!
-                          //               : "Your Name",
-                          //           overflow: TextOverflow.ellipsis,
-                          //           maxLines: 1,
-                          //           style: TextStyle(
-                          //               fontSize: 20.sp,
-                          //               color: black,
-                          //               fontWeight: FontWeight.w500),
-                          //         ),
-                          //       ],
-                          //     );
-                          //   },
-                          // ),
+                                    );
 
-                          // if (controller.email.value.isNotEmpty)
-                          //   Row(
-                          //     mainAxisAlignment: MainAxisAlignment.center,
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     children: [
-                          //       Icon(Icons.mail_outline,
-                          //           size: Device.screenType ==
-                          //                   sizer.ScreenType.mobile
-                          //               ? 12
-                          //               : 2.2.h,
-                          //           color: black),
-                          //       SizedBox(
-                          //         width: 1.w,
-                          //       ),
-                          //       Text(
-                          //           controller.email.value.isNotEmpty
-                          //               ? controller.email.value
-                          //               : "Your Email",
-                          //           overflow: TextOverflow.ellipsis,
-                          //           maxLines: 1,
-                          //           style: TextStyle(
-                          //               fontSize: 15.sp,
-                          //               color: black,
-                          //               fontWeight: FontWeight.w400)),
-                          //     ],
-                          //   ),
-                          // RichText(
-                          //   text: TextSpan(
-                          //     children: [
-                          //       TextSpan(
-                          //         text: firstpurpleText,
-                          //         style: TextStyle(
-                          //             fontFamily: Poppins_SemiBold,
-                          //             fontSize: 20.sp,
-                          //             fontWeight: FontWeight.bold,
-                          //             color: black),
-                          //       ),
-                          //       TextSpan(
-                          //         text: secondwhiteText,
-                          //         style: TextStyle(
-                          //             fontFamily: Poppins_SemiBold,
-                          //             fontSize: 20.sp,
-                          //             fontWeight: FontWeight.bold,
-                          //             color: black),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
-                      ),
+                                    // const pdfUrl =
+                                    //     'https://pdfobject.com/pdf/sample.pdf';
+                                    // const fileName = 'profile.pdf';
+
+                                    final filePath =
+                                        await controller.downloadPDF(
+                                            controller.pdflink.value,
+                                            controller.pdfname.value);
+
+                                    // final filePath =
+                                    //     await controller.downloadPDF(
+                                    //         pdfUrl,
+                                    //         fileName);
+
+                                    Get.back();
+
+                                    if (filePath != null) {
+                                      sharefPopupDialogs(
+                                        context,
+                                        function: () {
+                                          controller.sharePDF(filePath);
+                                        },
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                              icon: Icon(Icons.download)),
+                        )
+                      ],
                     ),
-                    // getCommonToolbar("Profile", showBackButton: false),
+
                     SizedBox(height: 1.5.h),
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     // Get.to(const ViewUserProfile());
-                    //   },
-                    //   child: Container(
-                    //     margin: EdgeInsets.only(left: 5.w, right: 5.w),
-                    //     height: 17.h,
-                    //     width: 85.w,
-                    //     padding: EdgeInsets.only(
-                    //         left: Device.screenType == sizer.ScreenType.mobile
-                    //             ? 6.w
-                    //             : 3.w,
-                    //         right: 6.w),
-                    //     decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(2.8.h),
-                    //         gradient: LinearGradient(
-                    //             colors: [
-                    //               primaryColor,
-                    //               primaryColor.withOpacity(0.5)
-                    //             ],
-                    //             begin: const FractionalOffset(1.0, 0.0),
-                    //             end: const FractionalOffset(0.0, 0.0),
-                    //             stops: const [0.0, 1.0],
-                    //             tileMode: TileMode.clamp)),
-                    //     child: Obx(
-                    //       () {
-                    //         return Row(
-                    //             mainAxisAlignment:
-                    //                 MainAxisAlignment.spaceBetween,
-                    //             crossAxisAlignment: CrossAxisAlignment.center,
-                    //             children: [
-                    //               GestureDetector(
-                    //                 onTap: () {
-                    //                   if (controller
-                    //                       .profilePic.value.isNotEmpty) {
-                    //                     Get.to(FullScreenImage(
-                    //                       imageUrl: controller.profilePic.value,
-                    //                       fromProfile: true,
-                    //                     ))!
-                    //                         .then((value) => {
-                    //                               Statusbar()
-                    //                                   .trasparentStatusbar()
-                    //                             });
-                    //                   }
-                    //                 },
-                    //                 child: ClipRRect(
-                    //                   borderRadius: const BorderRadius.all(
-                    //                       Radius.circular(10)),
-                    //                   child: CachedNetworkImage(
-                    //                     fit: BoxFit.cover,
-                    //                     height: Device.screenType ==
-                    //                             sizer.ScreenType.mobile
-                    //                         ? 9.h
-                    //                         : 10.h,
-                    //                     width: Device.screenType ==
-                    //                             sizer.ScreenType.mobile
-                    //                         ? 20.w
-                    //                         : 11.h,
-                    //                     imageUrl: controller.profilePic.value,
-                    //                     placeholder: (context, url) =>
-                    //                         const Center(
-                    //                       child: CircularProgressIndicator(
-                    //                           color: primaryColor),
-                    //                     ),
-                    //                     imageBuilder:
-                    //                         (context, imageProvider) =>
-                    //                             CircleAvatar(
-                    //                       radius: Device.screenType ==
-                    //                               sizer.ScreenType.mobile
-                    //                           ? 6.h
-                    //                           : 8.h,
-                    //                       backgroundImage: imageProvider,
-                    //                     ),
-                    //                     errorWidget: (context, url, error) =>
-                    //                         CircleAvatar(
-                    //                       radius: 6.h,
-                    //                       child: Image.asset(
-                    //                         "assets/pngs/avtar.png",
-                    //                         height: 10.h,
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               Expanded(
-                    //                 child: Container(
-                    //                   padding:
-                    //                       EdgeInsets.symmetric(horizontal: 3.w),
-                    //                   child: Column(
-                    //                     mainAxisAlignment:
-                    //                         MainAxisAlignment.center,
-                    //                     crossAxisAlignment:
-                    //                         CrossAxisAlignment.start,
-                    //                     children: [
-                    //                       Obx(
-                    //                         () {
-                    //                           return Row(
-                    //                             children: [
-                    //                               Expanded(
-                    //                                 child: Text(
-                    //                                   controller.userName.value
-                    //                                           .isNotEmpty
-                    //                                       ? controller.userName
-                    //                                           .value.capitalize!
-                    //                                       : "Your Name",
-                    //                                   overflow:
-                    //                                       TextOverflow.ellipsis,
-                    //                                   maxLines: 1,
-                    //                                   style: TextStyle(
-                    //                                       fontSize: 16.sp,
-                    //                                       color: white,
-                    //                                       fontWeight:
-                    //                                           FontWeight.w500),
-                    //                                 ),
-                    //                               ),
-                    //                             ],
-                    //                           );
-                    //                         },
-                    //                       ),
-                    //                       Row(
-                    //                         crossAxisAlignment:
-                    //                             CrossAxisAlignment.center,
-                    //                         children: [
-                    //                           Icon(Icons.phone,
-                    //                               size: Device.screenType ==
-                    //                                       sizer
-                    //                                           .ScreenType.mobile
-                    //                                   ? 12
-                    //                                   : 2.2.h,
-                    //                               color: white),
-                    //                           SizedBox(
-                    //                             width: 1.w,
-                    //                           ),
-                    //                           Expanded(
-                    //                             child: Text(
-                    //                                 controller.number.value
-                    //                                         .isNotEmpty
-                    //                                     ? controller
-                    //                                         .number.value
-                    //                                     : "Your Number",
-                    //                                 overflow:
-                    //                                     TextOverflow.ellipsis,
-                    //                                 maxLines: 1,
-                    //                                 style: TextStyle(
-                    //                                     fontSize: 14.sp,
-                    //                                     color: white,
-                    //                                     fontWeight:
-                    //                                         FontWeight.w400)),
-                    //                           ),
-                    //                         ],
-                    //                       ),
-                    //                       SizedBox(height: 0.4.h),
-                    //                       if (controller.email.value.isNotEmpty)
-                    //                         Row(
-                    //                           crossAxisAlignment:
-                    //                               CrossAxisAlignment.center,
-                    //                           children: [
-                    //                             Icon(Icons.mail_outline,
-                    //                                 size: Device.screenType ==
-                    //                                         sizer.ScreenType
-                    //                                             .mobile
-                    //                                     ? 12
-                    //                                     : 2.2.h,
-                    //                                 color: white),
-                    //                             SizedBox(
-                    //                               width: 1.w,
-                    //                             ),
-                    //                             Expanded(
-                    //                               child: Text(
-                    //                                   controller.email.value
-                    //                                           .isNotEmpty
-                    //                                       ? controller
-                    //                                           .email.value
-                    //                                       : "Your Email",
-                    //                                   overflow:
-                    //                                       TextOverflow.ellipsis,
-                    //                                   maxLines: 1,
-                    //                                   style: TextStyle(
-                    //                                       fontSize: 14.sp,
-                    //                                       color: white,
-                    //                                       fontWeight:
-                    //                                           FontWeight.w400)),
-                    //                             ),
-                    //                           ],
-                    //                         )
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ]);
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
+
                     SizedBox(height: 1.h),
                     Expanded(
                       child: SingleChildScrollView(
@@ -610,27 +405,27 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget apiOtherStates(state) {
-    if (state == ScreenState.apiLoading) {
-      return Center(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: SizedBox(
-            height: 30,
-            width: 30,
-            child: Image.asset(
-              "assets/gif/ZKZg.gif",
-              width: 40,
-              height: 40,
-            ),
-          ),
-        ),
-      );
-    }
-    return Image.asset(
-      "assets/gif/ZKZg.gif",
-      width: 50,
-      height: 50,
-    );
-  }
+  // Widget apiOtherStates(state) {
+  //   if (state == ScreenState.apiLoading) {
+  //     return Center(
+  //       child: ClipRRect(
+  //         borderRadius: BorderRadius.circular(100),
+  //         child: SizedBox(
+  //           height: 30,
+  //           width: 30,
+  //           child: Image.asset(
+  //             "assets/gif/ZKZg.gif",
+  //             width: 40,
+  //             height: 40,
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   return Image.asset(
+  //     "assets/gif/ZKZg.gif",
+  //     width: 50,
+  //     height: 50,
+  //   );
+  // }
 }
