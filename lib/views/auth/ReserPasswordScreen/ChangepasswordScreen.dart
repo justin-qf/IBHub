@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
-import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -31,7 +30,6 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
       onWillPop: () async {
         if (widget.fromProfile == false) {
           Get.close(2);
-          print('back');
         }
         return true;
       },
@@ -186,8 +184,6 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               if (widget.fromProfile == true) {
                                 if (ctr.isFormInvalidate.value == true) {
                                   ctr.changePasswordApi(context, true);
-
-                                  print('changepasword api called');
                                 }
                               } else {
                                 if (ctr.isForgotPasswordValidate.value ==
@@ -196,8 +192,6 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                       context,
                                       widget.email.toString(),
                                       widget.otp.toString());
-
-                                  print('forgotpassword api called');
                                 }
                               }
                             },

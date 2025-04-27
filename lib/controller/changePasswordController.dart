@@ -66,14 +66,6 @@ class ChangePasswordController extends GetxController {
 
   @override
   void onClose() {
-    // newpassNode.dispose();
-    // currentpassNode.dispose();
-    // confirmpassNode.dispose();
-
-    // newpassCtr.dispose();
-    // currentCtr.dispose();
-    // confirmCtr.dispose();
-
     newpassCtr.clear();
     currentCtr.clear();
     confirmCtr.clear();
@@ -112,10 +104,8 @@ class ChangePasswordController extends GetxController {
       enableBtnFunction: () {
         if (isforgotpasswordfunction == true) {
           enableForgotButton();
-          print('forgotpassword enable function called');
         } else {
           enableSignUpButton();
-          print('enable signup function called');
         }
       },
     );

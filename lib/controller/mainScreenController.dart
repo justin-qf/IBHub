@@ -91,35 +91,35 @@ class MainScreenController extends GetxController {
   //   });
   // }
 
-  // void getTimerPopup(BuildContext context) {
-  //   Future.delayed(Duration(seconds: 10), () {
-  //     if (!context.mounted) return;
-  //     print('pop up code execute');
-  //     // Check if ANY of the fields are empty
-  //     if (address.value.isEmpty ||
-  //         city.value.isEmpty ||
-  //         states.value.isEmpty ||
-  //         pincode.value.isEmpty ||
-  //         visitingCardUrl.value.isEmpty) {
-  //       showBottomSheetPopup(context);
-  //     }
-  //   });
-  // }
-
   void getTimerPopup(BuildContext context) {
     Future.delayed(Duration(seconds: 10), () {
       if (!context.mounted) return;
       print('pop up code execute');
-      // getpopup(context,
-      //     isFromProfile: false,
-      //     title: 'Incomplete Profile',
-      //     message: 'Would you like to update it now?', function: () {
-      //   Get.to(Updateprofilescreen());
-      // });
-
-      showBottomSheetPopup(context);
+      // Check if ANY of the fields are empty
+      if (address.value.isEmpty ||
+          city.value.isEmpty ||
+          states.value.isEmpty ||
+          pincode.value.isEmpty ||
+          visitingCardUrl.value.isEmpty) {
+        showBottomSheetPopup(context);
+      }
     });
   }
+
+  // void getTimerPopup(BuildContext context) {
+  //   Future.delayed(Duration(seconds: 10), () {
+  //     if (!context.mounted) return;
+  //     print('pop up code execute');
+  //     // getpopup(context,
+  //     //     isFromProfile: false,
+  //     //     title: 'Incomplete Profile',
+  //     //     message: 'Would you like to update it now?', function: () {
+  //     //   Get.to(Updateprofilescreen());
+  //     // });
+
+  //     showBottomSheetPopup(context);
+  //   });
+  // }
 
   void showBottomSheetPopup(BuildContext context) {
     showModalBottomSheet(
