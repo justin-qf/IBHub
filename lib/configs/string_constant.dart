@@ -274,6 +274,9 @@ class SearchScreenConstant {
 }
 
 class ServicesScreenConstant {
+  static const delete = 'Delete';
+  static const update = 'Update';
+
   static const service = 'Service';
   static const servicetitle = 'Enter Title';
 

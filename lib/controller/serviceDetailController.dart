@@ -15,6 +15,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
@@ -384,120 +385,163 @@ class ServiceDetailScreenController extends GetxController {
     }
   }
 
-  getServiceListItem(BuildContext context, ServiceDataList item) {
-    return GestureDetector(
-      onTap: () {
-        getServiceDetails(context, item);
-        // Get.to(BusinessDetailScreen(item: item));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: white,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          boxShadow: [
-            BoxShadow(
-                color: black.withOpacity(0.2),
-                spreadRadius: 0.1,
-                blurRadius: 5,
-                offset: const Offset(0.5, 0.5)),
-          ],
-        ),
-        padding: EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h) ,
-        margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(5),
-              margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-              width: 25.w,
-              height: 12.h,
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: Colors.grey.withOpacity(0.8),
-                    width: 1), // border color and width
-                borderRadius: BorderRadius.circular(
-                    Device.screenType == sizer.ScreenType.mobile
-                        ? 3.5.w
-                        : 2.5.w),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    Device.screenType == sizer.ScreenType.mobile
-                        ? 3.5.w
-                        : 2.5.w),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  height: 18.h,
-                  imageUrl: item.thumbnail,
-                  placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(color: primaryColor)),
-                  errorWidget: (context, url, error) => Image.asset(
-                      Asset.placeholder,
-                      height: 10.h,
-                      fit: BoxFit.cover),
-                ),
-              ),
+  RxInt bussinessID = 0.obs;
+
+  getServiceListItem(BuildContext context, ServiceDataList item,
+      {isFromProfile = false}) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: () {
+            getServiceDetails(context, item);
+            // Get.to(BusinessDetailScreen(item: item));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              boxShadow: [
+                BoxShadow(
+                    color: black.withOpacity(0.2),
+                    spreadRadius: 0.1,
+                    blurRadius: 5,
+                    offset: const Offset(0.5, 0.5)),
+              ],
             ),
-            getDynamicSizedBox(width: 2.w),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(item.categoryName,
-                      style: TextStyle(
-                          fontFamily: dM_sans_semiBold,
-                          fontSize: 15.8.sp,
-                          color: black,
-                          fontWeight: FontWeight.w900)),
-                  getDynamicSizedBox(height: 1.h),
-                  Text(item.categoryName,
-                      style: TextStyle(
-                          fontFamily: fontRegular,
-                          fontSize: 15.sp,
-                          color: black,
-                          fontWeight: FontWeight.w500)),
-                  getDynamicSizedBox(height: 1.h),
-                  AbsorbPointer(
-                      absorbing: true,
-                      child: ReadMoreText(item.description,
-                          textAlign: TextAlign.start,
-                          trimLines: 2, callback: (val) {
-                        logcat("ONTAP", val.toString());
-                      },
-                          colorClickableText: primaryColor,
-                          trimMode: TrimMode.Line,
-                          trimCollapsedText: '...Show more',
-                          trimExpandedText: '',
-                          delimiter: ' ',
+            padding: EdgeInsets.only(
+                left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+            margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                  width: 25.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.grey.withOpacity(0.8),
+                        width: 1), // border color and width
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 3.5.w
+                            : 2.5.w),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 3.5.w
+                            : 2.5.w),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      height: 18.h,
+                      imageUrl: item.thumbnail,
+                      placeholder: (context, url) => const Center(
+                          child:
+                              CircularProgressIndicator(color: primaryColor)),
+                      errorWidget: (context, url, error) => Image.asset(
+                          Asset.placeholder,
+                          height: 10.h,
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
+                getDynamicSizedBox(width: 2.w),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.categoryName,
                           style: TextStyle(
-                              overflow: TextOverflow.ellipsis,
-                              fontSize:
-                                  Device.screenType == sizer.ScreenType.mobile
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 15.8.sp,
+                              color: black,
+                              fontWeight: FontWeight.w900)),
+                      getDynamicSizedBox(height: 1.h),
+                      Text(item.categoryName,
+                          style: TextStyle(
+                              fontFamily: fontRegular,
+                              fontSize: 15.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                      getDynamicSizedBox(height: 1.h),
+                      AbsorbPointer(
+                          absorbing: true,
+                          child: ReadMoreText(item.description,
+                              textAlign: TextAlign.start,
+                              trimLines: 2, callback: (val) {
+                            logcat("ONTAP", val.toString());
+                          },
+                              colorClickableText: primaryColor,
+                              trimMode: TrimMode.Line,
+                              trimCollapsedText: '...Show more',
+                              trimExpandedText: '',
+                              delimiter: ' ',
+                              style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: Device.screenType ==
+                                          sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp,
-                              fontFamily: fontBold,
-                              color: grey),
-                          lessStyle: TextStyle(
-                              fontFamily: fontMedium,
-                              fontSize:
-                                  Device.screenType == sizer.ScreenType.mobile
+                                  fontFamily: fontBold,
+                                  color: grey),
+                              lessStyle: TextStyle(
+                                  fontFamily: fontMedium,
+                                  fontSize: Device.screenType ==
+                                          sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp),
-                          moreStyle: TextStyle(
-                              fontFamily: fontMedium,
-                              fontSize:
-                                  Device.screenType == sizer.ScreenType.mobile
+                              moreStyle: TextStyle(
+                                  fontFamily: fontMedium,
+                                  fontSize: Device.screenType ==
+                                          sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp,
-                              color: primaryColor))),
-                ],
-              ),
+                                  color: primaryColor))),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        isFromProfile
+            ? Positioned(
+                top: 1.h,
+                right: 7.w,
+                child: GestureDetector(
+                  onTap: () {
+                    print('goto add service screen');
+                    Get.to(AddServicescreen(
+                      item: item,
+                      isFromHomeScreen: true,
+                    ))?.then((value) {
+                      if (value == true) {
+                        if (!context.mounted) return;
+                        getServiceList(context, 1, true, bussinessID.value);
+                      }
+                    });
+                  },
+                  child: Icon(
+                    Icons.edit,
+                    size: 20.sp,
+                  ),
+                ),
+
+                // Text(
+                //   'Edit',
+                //   style: TextStyle(
+                //       fontFamily: dM_sans_semiBold,
+                //       fontSize: 15.8.sp,
+                //       color: black,
+                //       fontWeight: FontWeight.w900),
+                // ),
+              )
+            : SizedBox()
+      ],
     );
   }
 

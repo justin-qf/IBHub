@@ -10,11 +10,16 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/addservicescreenController.dart';
+import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class AddServicescreen extends StatefulWidget {
-  const AddServicescreen({super.key});
+  bool isFromHomeScreen;
+  ServiceDataList? item;
+  AddServicescreen({super.key, this.isFromHomeScreen = false, this.item});
 
   @override
   State<AddServicescreen> createState() => _ServicescreenState();
@@ -25,8 +30,16 @@ class _ServicescreenState extends State<AddServicescreen> {
 
   @override
   void initState() {
+    ctr.isFromHomeScreen.value = widget.isFromHomeScreen;
+    ctr.editServiceItems = widget.item;
+
     futureDelay(() {
-      ctr.getCategory(context, '');
+      ctr.getCategory(context, '', isfromHomescreen: widget.isFromHomeScreen);
+
+      // Only fill the data if editing an existing item
+      if (ctr.editServiceItems != null && widget.isFromHomeScreen) {
+        ctr.fillEditData();
+      }
     }, isOneSecond: true);
     super.initState();
   }
@@ -49,7 +62,8 @@ class _ServicescreenState extends State<AddServicescreen> {
           children: [
             getDynamicSizedBox(height: 5.h),
             getleftsidebackbtn(
-                title: 'Add Service',
+                title:
+                    ctr.isFromHomeScreen.value ? 'Edit Service' : 'Add Service',
                 backFunction: () {
                   Get.back(result: true);
                   ctr.resetForm();
@@ -166,7 +180,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             // <--- Add this
-                            
+
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
@@ -201,38 +215,40 @@ class _ServicescreenState extends State<AddServicescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 2.h),
-                    Obx(
-                      () => Container(
-                        width: 100.w,
-                        padding: EdgeInsets.symmetric(vertical: 2.w),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: inputBgColor),
-                        child: Wrap(
-                          spacing: 8.0,
-                          children: ctr.keywords.asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final chipText = entry.value;
-                            return Chip(
-                              label: Text(chipText,
-                                  style: TextStyle(color: primaryColor)),
-                              backgroundColor: secondaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              deleteIcon: Icon(Icons.close, size: 20.sp),
-                              onDeleted: () {
-                                ctr.keywords.removeAt(index);
 
-                                ctr.enableSubmitButton();
-                                print(ctr.keywords);
-                                ctr.update();
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
+                    Obx(() => ctr.keywords.isNotEmpty
+                        ? Container(
+                            width: 100.w,
+                            padding: EdgeInsets.symmetric(vertical: 2.w),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: inputBgColor),
+                            child: Wrap(
+                              spacing: 8.0,
+                              children:
+                                  ctr.keywords.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final chipText = entry.value;
+                                return Chip(
+                                  label: Text(chipText,
+                                      style: TextStyle(color: primaryColor)),
+                                  backgroundColor: secondaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  deleteIcon: Icon(Icons.close, size: 20.sp),
+                                  onDeleted: () {
+                                    ctr.keywords.removeAt(index);
+
+                                    ctr.enableSubmitButton();
+                                    print(ctr.keywords);
+                                    ctr.update();
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          )
+                        : SizedBox.shrink()),
 
                     // AdvancedChipsInput(
                     //   onChanged: (val) {
@@ -333,13 +349,31 @@ class _ServicescreenState extends State<AddServicescreen> {
                               margin: EdgeInsets.symmetric(horizontal: 5.w),
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
-                                  ctr.addServiceApi(context);
+                                  if (ctr.isFromHomeScreen.value == true) {
+                                    //update api calling code put here
+
+                                    ctr.updateServiceApi(context);
+                                  } else {
+                                    ctr.addServiceApi(context);
+                                  }
                                 }
-                              }, ServicesScreenConstant.submit,
+                              },
+                                  ctr.isFromHomeScreen.value
+                                      ? ServicesScreenConstant.update
+                                      : ServicesScreenConstant.submit,
                                   validate: ctr.isFormInvalidate.value),
                             )
                           : const CircularProgressIndicator();
                     }),
+                    getDynamicSizedBox(height: 2.h),
+
+                    if (ctr.isFromHomeScreen.value == true)
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: getFormButton(isdelete: true, context, () async {
+                          //delete api call put here
+                        }, ServicesScreenConstant.delete, validate: true),
+                      )
                   ],
                 ),
               ),

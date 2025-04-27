@@ -15,6 +15,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
@@ -63,21 +64,23 @@ class AddServicescreencontroller extends GetxController {
 
   var keywords = <String>[].obs;
 
+  RxBool isFromHomeScreen = false.obs;
 
-void addKeyword(String keyword) {
-  final trimmedKeyword = keyword.trim(); // Trim only leading/trailing spaces
-  if (trimmedKeyword.isNotEmpty && !keywords.contains(trimmedKeyword)) {
-    keywords.add(trimmedKeyword); // Add the entire keyword as one entry
-    keywordsCtr.clear(); // Clear the input field
-    validateFields(trimmedKeyword,
-        model: keywordsModel,
-        errorText1: ServicesScreenConstant.enterKeyword,
-        iscomman: true,
-        shouldEnableButton: true);
-    enableSubmitButton();
-    update();
+  void addKeyword(String keyword) {
+    final trimmedKeyword = keyword.trim(); // Trim only leading/trailing spaces
+    if (trimmedKeyword.isNotEmpty && !keywords.contains(trimmedKeyword)) {
+      keywords.add(trimmedKeyword); // Add the entire keyword as one entry
+      keywordsCtr.clear(); // Clear the input field
+      validateFields(trimmedKeyword,
+          model: keywordsModel,
+          errorText1: ServicesScreenConstant.enterKeyword,
+          iscomman: true,
+          shouldEnableButton: true);
+      enableSubmitButton();
+      update();
+    }
   }
-}
+
   // void addKeyword(String keyword) {
   //   if (keyword.isNotEmpty && !keywords.contains(keyword)) {
   //     final parts = keyword.split(',');
@@ -219,7 +222,43 @@ void addKeyword(String keyword) {
     imageFile.value = null;
   }
 
-  void getCategory(context, stateID) async {
+//for edit screen
+  ServiceDataList? editServiceItems;
+
+  RxString thumbnail = "".obs;
+  RxString service = "".obs;
+  RxString description = "".obs;
+  RxString categoryEditid = "".obs;
+  RxString keyword = "".obs;
+
+  void fillEditData() {
+    thumbnail.value = editServiceItems!.thumbnail.toString();
+    service.value = editServiceItems!.serviceTitle.toString();
+    description.value = editServiceItems!.description.toString();
+    keyword.value = editServiceItems!.keywords.toString();
+    categoryEditid.value = editServiceItems!.categoryId.toString();
+
+    thumbnailCtr.text = editServiceItems!.thumbnail.toString();
+    serviceTitleCtr.text = editServiceItems!.serviceTitle.toString();
+    descriptionCtr.text = editServiceItems!.description.toString();
+    keywordsCtr.text = '';
+
+    keywords.clear();
+    if (editServiceItems!.keywords.isNotEmpty) {
+      try {
+        final keywordList = jsonDecode(editServiceItems!.keywords);
+        if (keywordList is List) {
+          keywords
+              .addAll(keywordList.map((e) => e['value'].toString()).toList());
+        }
+      } catch (e) {
+        keywords
+            .addAll(editServiceItems!.keywords.split(',').map((e) => e.trim()));
+      }
+    }
+  }
+
+  void getCategory(context, stateID, {isfromHomescreen}) async {
     commonGetApiCallFormate(context,
         title: 'Category',
         apiEndPoint: ApiUrl.getCategories,
@@ -233,19 +272,26 @@ void addKeyword(String keyword) {
       categoryFilterList.clear();
       categoryList.addAll(categoryData.data);
       categoryFilterList.addAll(categoryData.data);
-      // for (StateDataList stateList in stateFilterList) {
-      //   if (stateID == stateList.id) {
-      //     statectr.text = stateList.name.capitalize.toString();
-      //     stateId.value = stateList.id.toString();
-      //     validateState(statectr.text);
-      //   }
-      // }
+
       logcat("CATEGORY_RESPONSE", jsonEncode(categoryFilterList));
+
+      if (isfromHomescreen && categoryEditid.value.isNotEmpty) {
+        final selectedCategory = categoryList.firstWhere(
+          (category) => category.id.toString() == categoryEditid.value,
+        );
+        // ignore: unnecessary_null_comparison
+        if (selectedCategory != null) {
+          categoryCtr.text = selectedCategory.name;
+        } else {
+          categoryEditid.value = '';
+          categoryCtr.text = '';
+        }
+      }
       update();
     }, networkManager: networkManager);
   }
 
-  Widget setCategoryListDialog() {
+  Widget setCategoryListDialog({isFromHomeScreen}) {
     return Obx(() {
       if (isCategoryApiCallLoading.value == true) {
         return setDropDownContent([].obs, const Text("Loading"),
@@ -267,7 +313,14 @@ void addKeyword(String keyword) {
                 minLeadingWidth: 5,
                 onTap: () async {
                   Get.back();
-                  categoryId.value = categoryFilterList[index].id.toString();
+
+                  if (isFromHomeScreen == true) {
+                    categoryEditid.value =
+                        categoryFilterList[index].id.toString();
+                  } else {
+                    categoryId.value = categoryFilterList[index].id.toString();
+                  }
+
                   categoryCtr.text = categoryFilterList[index].name;
                   if (categoryCtr.text.toString().isNotEmpty) {
                     categoryFilterList.clear();
@@ -282,9 +335,12 @@ void addKeyword(String keyword) {
                   update();
                 },
                 title: showSelectedTextInDialog(
-                    name: categoryFilterList[index].name,
-                    modelId: categoryFilterList[index].id.toString(),
-                    storeId: categoryId.value),
+                  name: categoryFilterList[index].name,
+                  modelId: categoryFilterList[index].id.toString(),
+                  storeId: isFromHomeScreen
+                      ? categoryEditid.value
+                      : categoryId.value,
+                ),
               );
             },
           ),
@@ -407,6 +463,61 @@ void addKeyword(String keyword) {
         );
       },
     );
+  }
+
+  void updateServiceApi(context) async {
+    var loadingIndicator = LoadingProgressDialog();
+
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, "Service Screen", Connection.noConnection,
+            callback: () {
+          Get.back();
+        });
+        return;
+      }
+      loadingIndicator.show(context, '');
+
+      logcat("ServiceParam", {
+        "service_title": serviceTitleCtr.text.toString().trim(),
+        "description": descriptionCtr.text.toString().trim(),
+        "keywords": keywordsCtr.text.toString().trim(),
+        "category_id": categoryId.value.toString().trim(),
+      });
+
+      var response = await Repository.update({
+        "service_title": serviceTitleCtr.text.toString().trim(),
+        "description": descriptionCtr.text.toString().trim(),
+        "keywords":
+            jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
+        "category_id": categoryId.value.toString().trim(),
+      }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
+
+      loadingIndicator.hide(context);
+
+      var json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        if (json['success'] == true) {
+          showDialogForScreen(context, "Service Screen", json['message'],
+              callback: () {
+            Get.back(result: true);
+          });
+        } else {
+          showDialogForScreen(context, "Service Screen", json['message'],
+              callback: () {});
+        }
+      } else {
+        showDialogForScreen(context, "Service Screen", json['message'],
+            callback: () {});
+      }
+    } catch (e) {
+      logcat("Service Creation Exception", e.toString());
+      showDialogForScreen(context, "Service Screen", Connection.servererror,
+          callback: () {});
+      loadingIndicator.hide(context);
+    }
   }
 
   void addServiceApi(context) async {

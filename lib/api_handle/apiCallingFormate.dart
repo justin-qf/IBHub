@@ -108,4 +108,6 @@ void commonGetApiCallFormate(context,
     apisLoading(false);
     logcat('Exception', e);
   }
+
+  
 }

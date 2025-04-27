@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 })),
             getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.buisinessTitle, () {
-              Get.to(const AddServicescreen())!.then((value) {});
+              Get.to( AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
             Obx(
               () {

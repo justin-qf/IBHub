@@ -38,6 +38,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   double? percentage;
   final ScrollController scrollController = ScrollController();
 
+ 
   String businessName = '';
   String businessId = '';
   String thumbnail = '';
@@ -48,11 +49,13 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   @override
   void initState() {
     getUserData();
+
     super.initState();
   }
 
   getUserData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
+   
     businessName = retrievedObject!.businessName;
     thumbnail = retrievedObject.visitingCardUrl;
     email = retrievedObject.email;
@@ -61,71 +64,74 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     phone = retrievedObject.phone.toString();
     businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
 
+    final idUsedinCtr =
+        widget.item != null ? widget.item!.id : retrievedObject.id;
+    controller.bussinessID(idUsedinCtr);
+
     futureDelay(() {
-      controller.getServiceList(context, 1, true,
-          widget.item != null ? widget.item!.id : retrievedObject.id);
+      controller.getServiceList(context, 1, true, idUsedinCtr);
     }, isOneSecond: true);
 
-    // // Set mock data for serviceList
-    // controller.isServiceLoading.value = false; // Disable loading state
-    // controller.serviceList.clear(); // Clear any existing data
-    // controller.serviceList.addAll([
-    //   ServiceDataList(
-    //     id: 1,
-    //     categoryName: "Mock Service 1",
-    //     serviceTitle: "Service Title 1",
-    //     thumbnail: "https://via.placeholder.com/150",
-    //     description: "This is a mock service description for testing purposes.",
-    //     keywords: '',
-    //     categoryId: '',
-    //   ),
-    //   ServiceDataList(
-    //     id: 2,
-    //     categoryName: "Mock Service 2",
-    //     serviceTitle: "Service Title 2",
-    //     thumbnail: "https://via.placeholder.com/150",
-    //     description: "This is another mock service description for testing.",
-    //     keywords: '',
-    //     categoryId: '',
-    //   ),
-    //   ServiceDataList(
-    //     id: 2,
-    //     categoryName: "Mock Service 2",
-    //     serviceTitle: "Service Title 2",
-    //     thumbnail: "https://via.placeholder.com/150",
-    //     description: "This is another mock service description for testing.",
-    //     keywords: '',
-    //     categoryId: '',
-    //   ),
-    //   ServiceDataList(
-    //     id: 2,
-    //     categoryName: "Mock Service 2",
-    //     serviceTitle: "Service Title 2",
-    //     thumbnail: "https://via.placeholder.com/150",
-    //     description: "This is another mock service description for testing.",
-    //     keywords: '',
-    //     categoryId: '',
-    //   ),
-    //   ServiceDataList(
-    //     id: 2,
-    //     categoryName: "Mock Service 2",
-    //     serviceTitle: "Service Title 2",
-    //     thumbnail: "https://via.placeholder.com/150",
-    //     description: "This is another mock service description for testing.",
-    //     keywords: '',
-    //     categoryId: '',
-    //   ),
-    //   ServiceDataList(
-    //     id: 2,
-    //     categoryName: "Mock Service 2",
-    //     serviceTitle: "Service Title 2",
-    //     thumbnail: "https://via.placeholder.com/150",
-    //     description: "This is another mock service description for testing.",
-    //     keywords: '',
-    //     categoryId: '',
-    //   ),
-    // ]);
-    // controller.serviceList.refresh(); // Notify UI to update
+    // Set mock data for serviceList
+    controller.isServiceLoading.value = false; // Disable loading state
+    controller.serviceList.clear(); // Clear any existing data
+    controller.serviceList.addAll([
+      ServiceDataList(
+        id: 1,
+        categoryName: "Mock Service 1",
+        serviceTitle: "Service Title 1",
+        thumbnail: "https://via.placeholder.com/150",
+        description: "This is a mock service description for testing purposes.",
+        keywords: '',
+        categoryId: '',
+      ),
+      ServiceDataList(
+        id: 2,
+        categoryName: "Mock Service 2",
+        serviceTitle: "Service Title 2",
+        thumbnail: "https://via.placeholder.com/150",
+        description: "This is another mock service description for testing.",
+        keywords: '',
+        categoryId: '',
+      ),
+      ServiceDataList(
+        id: 2,
+        categoryName: "Mock Service 2",
+        serviceTitle: "Service Title 2",
+        thumbnail: "https://via.placeholder.com/150",
+        description: "This is another mock service description for testing.",
+        keywords: '',
+        categoryId: '',
+      ),
+      ServiceDataList(
+        id: 2,
+        categoryName: "Mock Service 2",
+        serviceTitle: "Service Title 2",
+        thumbnail: "https://via.placeholder.com/150",
+        description: "This is another mock service description for testing.",
+        keywords: '',
+        categoryId: '',
+      ),
+      ServiceDataList(
+        id: 2,
+        categoryName: "Mock Service 2",
+        serviceTitle: "Service Title 2",
+        thumbnail: "https://via.placeholder.com/150",
+        description: "This is another mock service description for testing.",
+        keywords: '',
+        categoryId: '',
+      ),
+      ServiceDataList(
+        id: 2,
+        categoryName: "Mock Service 2",
+        serviceTitle: "Service Title 2",
+        thumbnail: "https://via.placeholder.com/150",
+        description: "This is another mock service description for testing.",
+        keywords: '',
+        categoryId: '',
+      ),
+    ]);
+    controller.serviceList.refresh(); // Notify UI to update
 
     setState(() {});
   }
@@ -310,7 +316,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   ServiceDataList data =
                                       controller.serviceList[index];
                                   return controller.getServiceListItem(
-                                      context, data);
+                                      isFromProfile: widget.isFromProfile,
+                                      context,
+                                      data);
                                 },
                                 itemCount: controller.serviceList.length)
                             : Container();
