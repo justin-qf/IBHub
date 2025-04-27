@@ -33,12 +33,6 @@ class CategoryController extends GetxController {
   getCategoryList(context, currentPage, bool hideloading,
       {bool? isFirstTime = false}) async {
     var loadingIndicator = LoadingProgressDialog();
-    // if (hideloading == true) {
-    //   state.value = ScreenState.apiLoading;
-    // } else {
-    //   // loadingIndicator.show(context, '');
-    //   update();
-    // }
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -54,9 +48,7 @@ class CategoryController extends GetxController {
 
       var pageURL = '${ApiUrl.getCategorieList}?page=$currentPage';
       var response = await Repository.get({}, pageURL, allowHeader: true);
-      // if (hideloading != true) {
-      //   loadingIndicator.hide(context);
-      // }
+
       logcat("RESPONSE::", response.body);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
@@ -114,11 +106,7 @@ class CategoryController extends GetxController {
       children: [
         FadeInUp(
           child: GestureDetector(
-            onTap: () {
-              // Get.to(SubCategoryScreen(
-              //   categoryId: data.id.toString(),
-              // ));
-            },
+            onTap: () {},
             child: ClipRRect(
               borderRadius: BorderRadius.circular(
                   Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
@@ -175,6 +163,7 @@ class CategoryController extends GetxController {
                           gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
+                            // ignore: deprecated_member_use
                             colors: [black.withOpacity(0.6), transparent],
                           ),
                         ),
@@ -215,11 +204,7 @@ class CategoryController extends GetxController {
 
   getOldListItem(CategoryListData data) {
     return GestureDetector(
-      onTap: () {
-        // Get.to(SubCategoryScreen(
-        //   categoryId: data.id.toString(),
-        // ));
-      },
+      onTap: () {},
       child: ClipRRect(
         borderRadius: BorderRadius.circular(
             Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
@@ -262,42 +247,6 @@ class CategoryController extends GetxController {
                     ),
                   ),
                   getDynamicSizedBox(height: 1.0.h),
-                  // data.name.length > 9
-                  //     ? Container(
-                  //         width: 20.w,
-                  //         child: Marquee(
-                  //             style: TextStyle(
-                  //               fontFamily: fontRegular,
-                  //               color: black,
-                  //               fontSize: Device.screenType ==
-                  //                       sizer.ScreenType.mobile
-                  //                   ? 14.sp
-                  //                   : 9.sp,
-                  //             ),
-                  //             text: data.name,
-                  //             scrollAxis: Axis.horizontal,
-                  //             crossAxisAlignment:
-                  //                 CrossAxisAlignment.start,
-                  //             blankSpace:
-                  //                 20.0, // Adjust the space between text repetitions
-                  //             velocity:
-                  //                 50.0, // Adjust the scrolling speed
-                  //             pauseAfterRound: const Duration(
-                  //                 seconds:
-                  //                     1), // Time to pause after each scroll
-                  //             startPadding:
-                  //                 10.0, // Adjust the initial padding
-                  //             accelerationDuration: const Duration(
-                  //                 seconds:
-                  //                     1), // Duration for acceleration
-                  //             accelerationCurve:
-                  //                 Curves.linear, // Acceleration curve
-                  //             decelerationDuration: const Duration(
-                  //                 milliseconds:
-                  //                     500), // Duration for deceleration
-                  //             decelerationCurve: Curves.easeOut),
-                  //       )
-                  //     :
                   Center(
                     child: Text(data.name,
                         style: TextStyle(
@@ -310,8 +259,6 @@ class CategoryController extends GetxController {
                                     : 12.sp,
                             height: 1.2)),
                   ),
-
-                  // getDynamicSizedBox(height: 0.2.h),
                 ],
               ),
             ),

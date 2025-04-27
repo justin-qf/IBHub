@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-// import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -8,6 +7,7 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/category_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
@@ -44,6 +44,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         Duration.zero,
         () {
           controller
+              // ignore: use_build_context_synchronously
               .getCategoryList(context, controller.currentPage, true,
                   isFirstTime: false)
               .whenComplete(() {
@@ -79,7 +80,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           children: [
             getDynamicSizedBox(height: 5.h),
-            getCommonToolbar("Category", showBackButton: true, onClick: () {
+            getCommonToolbar(CategoryScreenViewConst.category, showBackButton: true, onClick: () {
               Get.back();
             }),
             Expanded(

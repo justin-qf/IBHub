@@ -15,6 +15,10 @@ class AddServiceScreenViewConst {
   static const keyword = 'Keywords';
 }
 
+class CategoryScreenViewConst {
+  static const category = 'Category';
+}
+
 class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }
