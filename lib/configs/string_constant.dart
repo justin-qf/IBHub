@@ -23,6 +23,8 @@ class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }
 
+
+
 class SubjectDetailsConst {
   static const tabtitleTutorial = 'Tutorials';
   static const tabtitlePractice = 'Practice';

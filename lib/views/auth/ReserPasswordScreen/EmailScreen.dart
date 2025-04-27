@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
-import 'package:ibh/configs/assets_constant.dart';
-import 'package:ibh/configs/colors_constant.dart';
-import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/emailController.dart';
@@ -47,7 +43,7 @@ class EmailScreenState extends State<EmailScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 5.w),
                 child: getleftsidebackbtn(
-                  title: 'Email',
+                  title: EmailScreenConstant.title,
                   backFunction: () {
                     Get.back(result: true);
                   },
