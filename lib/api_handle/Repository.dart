@@ -89,7 +89,7 @@ class Repository {
     logcat("Token::::", token.toString());
     Map<String, String> headers = {
       'Content-Type': "multipart/form-data",
-      'Authorization':  'Bearer $token',
+      'Authorization': 'Bearer $token',
     };
 
     var request = http.MultipartRequest(
@@ -108,6 +108,25 @@ class Repository {
 
     var response = await request.send();
 
+    return response;
+  }
+
+  static Future<http.Response> delete(String endPoint,
+      {bool? allowHeader, bool? isToken}) async {
+    logcat("APIURL:::", buildUrl(endPoint));
+
+    String token = await UserPreferences().getToken();
+    logcat("Token::::", token.toString());
+
+    Map<String, String> headers = {
+      'Content-Type': "application/json",
+      'Authorization': "Bearer " + token,
+    };
+
+    var response = await client.delete(
+      buildUrl(endPoint),
+      headers: allowHeader == true ? headers : await buildHeader,
+    );
     return response;
   }
 }

@@ -372,6 +372,8 @@ class _ServicescreenState extends State<AddServicescreen> {
                         margin: EdgeInsets.symmetric(horizontal: 5.w),
                         child: getFormButton(isdelete: true, context, () async {
                           //delete api call put here
+
+                          ctr.deleteService(context);
                         }, ServicesScreenConstant.delete, validate: true),
                       )
                   ],

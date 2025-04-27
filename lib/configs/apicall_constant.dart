@@ -34,5 +34,6 @@ class ApiUrl {
   static const city = 'cities/dropdown/';
   static const createservice = 'services/create';
   static const updateService = 'services/edit/';
+  static const deleteService = 'services/delete/';
   static const updateProfile = 'profile/update';
 }
