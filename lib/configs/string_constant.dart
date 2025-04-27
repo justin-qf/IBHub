@@ -101,6 +101,11 @@ class ExamScreenconst {
   static const tabTitleSchedulektest = 'Schedule test';
 }
 
+class OtpScreenconst {
+  static const timeremian = 'Time remaining: ';
+  static const seconds = ' seconds';
+}
+
 class AnalysisScreenconst {
   static const title = 'Question Analysis';
   static const question = 'Question';

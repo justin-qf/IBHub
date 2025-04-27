@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -85,9 +84,6 @@ class OtpScreenState extends State<OtpScreen> {
                   backFunction: () {
                     Get.back(result: true);
                   })),
-          // getCommonToolbar(OtpConstant.title, onClick: () {
-          //   Get.back();
-          // }, showBackButton: true),
           Expanded(
               child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -146,7 +142,7 @@ class OtpScreenState extends State<OtpScreen> {
                           decoration: getPinTheme().decoration!.copyWith(
                                 color: primaryColor,
                                 borderRadius: BorderRadius.circular(15),
-                                border:null,
+                                border: null,
                               ),
                         ),
                         errorPinTheme: getPinTheme().copyWith(
@@ -204,7 +200,7 @@ class OtpScreenState extends State<OtpScreen> {
                                 ],
                               )
                             : Text(
-                                'Time remaining: ${controller.countdown} seconds',
+                                '${OtpScreenconst.timeremian}${controller.countdown}${OtpScreenconst.seconds} ',
                                 style: TextStyle(
                                     fontSize: Device.screenType ==
                                             sizer.ScreenType.mobile
@@ -228,18 +224,6 @@ class OtpScreenState extends State<OtpScreen> {
                   child: Obx(() {
                     return getFormButton(context, () {
                       if (controller.isFormInvalidate.value == true) {
-                        // Get.to(ChangePasswordScreen(
-                        //   fromProfile: false,
-                        //   email: '',
-                        //   otp: controller.otpController.text.toString(),
-                        // ))!
-                        //     .then((value) {
-                        //   if (Get.isRegistered<OtpController>()) {
-                        //     controller.otpController.text = '';
-                        //     FocusScope.of(context)
-                        //         .requestFocus(controller.otpNode);
-                        //   }
-                        // });
                         controller.verifyForgotOtp(context, widget.email!);
                       }
                     }, OtpConstant.verify,
