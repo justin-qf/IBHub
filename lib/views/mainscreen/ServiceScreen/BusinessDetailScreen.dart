@@ -48,7 +48,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   @override
   void initState() {
     getUserData();
-
     super.initState();
   }
 
@@ -69,6 +68,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
     futureDelay(() {
       controller.getServiceList(context, 1, true, idUsedinCtr);
+      controller.getImageColor(
+          url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
     }, isOneSecond: true);
 
     setState(() {});
@@ -94,65 +95,67 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.only(top: 4.h),
-              width: Device.width,
-              decoration: BoxDecoration(
-                color: secondaryColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
+            Obx(
+              () => Container(
+                padding: EdgeInsets.only(top: 4.h),
+                width: Device.width,
+                decoration: BoxDecoration(
+                  color: controller.bgColor.value,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 2.w),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        width: 15.w,
-                        height: 7.h,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            Get.back(result: true);
-                          },
-                          backgroundColor: inputBgColor,
-                          elevation: 0,
-                          mini: true,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50)),
-                          child: SvgPicture.asset(
-                            Asset.arrowBack,
-                            colorFilter:
-                                ColorFilter.mode(black, BlendMode.srcIn),
-                            height: 24,
-                            fit: BoxFit.contain,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 2.w),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          width: 15.w,
+                          height: 7.h,
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              Get.back(result: true);
+                            },
+                            backgroundColor: inputBgColor,
+                            elevation: 0,
+                            mini: true,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            child: SvgPicture.asset(
+                              Asset.arrowBack,
+                              colorFilter:
+                                  ColorFilter.mode(black, BlendMode.srcIn),
+                              height: 24,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    padding:
-                        EdgeInsets.only(left: 2.w, right: 2.w, bottom: 4.h),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 14.h,
-                      imageUrl: widget.item != null
-                          ? widget.item!.visitingCardUrl
-                          : thumbnail,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(color: primaryColor),
-                      ),
-                      errorWidget: (context, url, error) => Image.asset(
-                        Asset.placeholder,
-                        height: 9.h,
+                    Container(
+                      padding:
+                          EdgeInsets.only(left: 2.w, right: 2.w, bottom: 4.h),
+                      child: CachedNetworkImage(
                         fit: BoxFit.cover,
+                        height: 14.h,
+                        imageUrl: widget.item != null
+                            ? widget.item!.visitingCardUrl
+                            : thumbnail,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(color: primaryColor),
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          Asset.placeholder,
+                          height: 9.h,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             Container(

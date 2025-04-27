@@ -16,6 +16,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
@@ -50,182 +51,14 @@ class ServiceDetailScreenController extends GetxController {
     }
   }
 
-  // getItemListItem(CommonProductList data, BuildContext context) {
-  //   return GestureDetector(
-  //     onTap: () async {
-  //       Get.to(
-  //         ProductDetailScreen(
-  //           'SameProduct',
-  //           data: data,
-  //         ),
-  //         preventDuplicates: false,
-  //         transition: Transition.fadeIn,
-  //         curve: Curves.easeInOut,
-  //       );
-  //     },
-  //     child: Wrap(
-  //       children: [
-  //         FadeInUp(
-  //           child: Container(
-  //               width: 50.w,
-  //               height: SizerUtil.deviceType == DeviceType.mobile ? null : 20.h,
-  //               margin: EdgeInsets.only(right: 4.5.w),
-  //               // padding: EdgeInsets.only(
-  //               //     left: 5.w, right: 5.w, top: 5.w, bottom: 10.w),
-  //               decoration: BoxDecoration(
-  //                 border: isDarkMode()
-  //                     ? null
-  //                     : Border.all(
-  //                         color: grey, // Border color
-  //                         width: 0.5, // Border width
-  //                       ),
-  //                 color: isDarkMode() ? itemDarkBackgroundColor : white,
-  //                 borderRadius: BorderRadius.circular(
-  //                     SizerUtil.deviceType == DeviceType.mobile ? 4.w : 2.2.w),
-  //               ),
-  //               child: ClipRRect(
-  //                 borderRadius: BorderRadius.circular(
-  //                     SizerUtil.deviceType == DeviceType.mobile ? 4.w : 2.2.w),
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.start,
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                     Container(
-  //                       width: SizerUtil.width,
-  //                       decoration: BoxDecoration(
-  //                           borderRadius: BorderRadius.circular(
-  //                               SizerUtil.deviceType == DeviceType.mobile
-  //                                   ? 3.5.w
-  //                                   : 2.5.w),
-  //                           border: Border.all(
-  //                             color: grey, // Border color
-  //                             width: isDarkMode() ? 1 : 0.2, // Border width
-  //                           )),
-  //                       child: ClipRRect(
-  //                         borderRadius: BorderRadius.circular(
-  //                             SizerUtil.deviceType == DeviceType.mobile
-  //                                 ? 3.5.w
-  //                                 : 2.5.w),
-  //                         child: CachedNetworkImage(
-  //                           fit: BoxFit.cover,
-  //                           height: 12.h,
-  //                           imageUrl: ApiUrl.imageUrl + data.images[0],
-  //                           placeholder: (context, url) => const Center(
-  //                             child: CircularProgressIndicator(
-  //                                 color: primaryColor),
-  //                           ),
-  //                           errorWidget: (context, url, error) => Image.asset(
-  //                             Asset.productPlaceholder,
-  //                             height: 9.h,
-  //                             fit: BoxFit.contain,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     SizedBox(
-  //                       height: SizerUtil.deviceType == DeviceType.mobile
-  //                           ? 1.0.h
-  //                           : 0.5.h,
-  //                     ),
-  //                     Container(
-  //                       margin: EdgeInsets.only(left: 1.w, right: 1.w),
-  //                       child: Column(
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: [
-  //                           getText(
-  //                             data.name,
-  //                             TextStyle(
-  //                                 fontFamily: fontSemiBold,
-  //                                 color: isDarkMode() ? black : black,
-  //                                 fontSize:
-  //                                     SizerUtil.deviceType == DeviceType.mobile
-  //                                         ? 12.sp
-  //                                         : 7.sp,
-  //                                 height: 1.2),
-  //                           ),
-  //                           getDynamicSizedBox(
-  //                             height: 0.5.h,
-  //                           ),
-  //                           Row(
-  //                             children: [
-  //                               getText(
-  //                                 '${IndiaRupeeConstant.inrCode}${data.price}',
-  //                                 TextStyle(
-  //                                     fontFamily: fontBold,
-  //                                     color: primaryColor,
-  //                                     fontSize: SizerUtil.deviceType ==
-  //                                             DeviceType.mobile
-  //                                         ? 12.sp
-  //                                         : 7.sp,
-  //                                     height: 1.2),
-  //                               ),
-  //                               const Spacer(),
-  //                               Row(
-  //                                 crossAxisAlignment: CrossAxisAlignment.center,
-  //                                 mainAxisAlignment: MainAxisAlignment.start,
-  //                                 children: [
-  //                                   RatingBar.builder(
-  //                                     initialRating: 3.5,
-  //                                     minRating: 1,
-  //                                     direction: Axis.horizontal,
-  //                                     allowHalfRating: true,
-  //                                     itemCount: 1,
-  //                                     itemSize: 3.5.w,
-  //                                     itemBuilder: (context, _) => const Icon(
-  //                                       Icons.star,
-  //                                       color: Colors.orange,
-  //                                     ),
-  //                                     onRatingUpdate: (rating) {
-  //                                       logcat("RATING", rating);
-  //                                     },
-  //                                   ),
-  //                                   getText(
-  //                                     "3.5",
-  //                                     TextStyle(
-  //                                         fontFamily: fontSemiBold,
-  //                                         color: lableColor,
-  //                                         fontWeight: isDarkMode()
-  //                                             ? FontWeight.w600
-  //                                             : null,
-  //                                         fontSize: SizerUtil.deviceType ==
-  //                                                 DeviceType.mobile
-  //                                             ? 9.sp
-  //                                             : 7.sp,
-  //                                         height: 1.2),
-  //                                   ),
-  //                                   // const Spacer(),
-  //                                   // GestureDetector(
-  //                                   //   onTap: () {
-  //                                   //     data.isSelected.value =
-  //                                   //         !data.isSelected.value;
-  //                                   //     update();
-  //                                   //   },
-  //                                   //   child: Icon(
-  //                                   //     data.isSelected.value
-  //                                   //         ? Icons.favorite_rounded
-  //                                   //         : Icons.favorite_border,
-  //                                   //     size: 3.h,
-  //                                   //     color: primaryColor,
-  //                                   //   ),
-  //                                   // )
-  //                                 ],
-  //                               ),
-  //                             ],
-  //                           ),
-  //                           getDynamicSizedBox(
-  //                             height: 0.5.h,
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               )),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Rx<Color> bgColor = Rx<Color>(Colors.white); // Default background color
+  Future<void> getImageColor({url}) async {
+    final PaletteGenerator paletteGenerator =
+        await PaletteGenerator.fromImageProvider(
+      NetworkImage(url), // Network Image (or use AssetImage for local images)
+    );
+    bgColor.value = paletteGenerator.dominantColor?.color ?? white;
+  }
 
   Widget getText(title, TextStyle? style) {
     return Padding(
