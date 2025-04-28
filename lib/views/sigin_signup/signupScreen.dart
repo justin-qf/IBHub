@@ -111,6 +111,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         errorText3: SignUpConstant.validPasswordHint,
                       );
 
+
                       if (ctr.confpassCtr.text.isNotEmpty) {
                         ctr.validateFields(
                           val,
@@ -173,14 +174,14 @@ class _SignupscreenState extends State<Signupscreen> {
                         }, SignUpConstant.signup,
                             validate: ctr.isFormInvalidate.value),
                       )
-                    : CircularProgressIndicator();
+                    : const CircularProgressIndicator();
               }),
               getDynamicSizedBox(height: 2.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     SignUpConstant.alreadyhaveaccount,
                     style: TextStyle(color: grey, fontFamily: dM_sans_medium),
                   ),
@@ -194,9 +195,9 @@ class _SignupscreenState extends State<Signupscreen> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          Text(
+                          const Text(
                             SignUpConstant.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: dM_sans_medium,
                               color: primaryColor,
                               fontWeight: FontWeight.bold,

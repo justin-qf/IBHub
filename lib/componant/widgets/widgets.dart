@@ -731,9 +731,7 @@ getBgDividerWeb(Color? selectedColor, {size}) {
 }
 
 Widget getFooterLogoWeb() {
-  return FadeInLeft(
-    child: SvgPicture.asset(Asset.logo, width: 120),
-  );
+  return SvgPicture.asset(Asset.logo, width: 120);
 }
 
 getFloatingActionButton({Function? onClick}) {
@@ -1038,153 +1036,149 @@ getExtendedAppBar(context, title, isFromProfile,
       top: 0,
       left: 0,
       right: 0,
-      child: FadeInDown(
-        child: Container(
-          height: 35.h,
-          padding: EdgeInsets.symmetric(
-              horizontal: 1.h,
-              vertical: Device.screenType == ScreenType.mobile ? 2.h : 2.5.h),
-          decoration: BoxDecoration(
-              image: const DecorationImage(
-                  image: AssetImage(Asset.appBarBg),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center),
-              color: isDarkMode()
-                  ? darkBackgroundColor
-                  : primaryColor.withOpacity(0.8),
-              // border: Border(
-              //   bottom: BorderSide(
-              //     color: grey.withOpacity(0.6),
-              //   ),
-              // ),
-              boxShadow: [
-                BoxShadow(
-                    color: grey.withOpacity(0.2),
-                    blurRadius: 1.0,
-                    offset: const Offset(0, 1),
-                    //offset: const Offset(0, 1),
-                    spreadRadius: 1.0)
-              ],
-              // gradient: LinearGradient(
-              //     colors: [
-              //       primaryColor,
-              //       secondaryColor.withOpacity(0.7)
-              //     ],
-              //     begin: const FractionalOffset(0.0, 0.0),
-              //     // end: FractionalOffset(0.8, 0.0),
-              //     end: const FractionalOffset(0.0, 1.0),
-              //     stops: const [0.0, 1.0],
-              //     tileMode: TileMode.clamp),
-              borderRadius:
-                  BorderRadius.only(bottomLeft: Radius.circular(5.h))),
-          child: Column(
-            children: [
-              getDynamicSizedBox(height: isFromProfile == true ? 2.h : 2.5.h),
-              isFromProfile == true
-                  ? getCommonToolbar(title,
-                      onClick: () {},
-                      isLogo: true,
-                      showBackButton: false,
-                      isWhiteText: false)
-                  : getLogoAppBar(),
-              getDynamicSizedBox(height: isFromProfile == true ? 5.5.h : 8.h),
-              if (isFromProfile != true)
-                Column(
-                  children: [
-                    Text(
-                      'Welcome',
-                      style: TextStyle(
-                          color: isDarkMode() ? white : black,
-                          fontFamily: fontBold,
-                          fontSize: Device.screenType == ScreenType.mobile
-                              ? 18.sp
-                              : 12.sp,
-                          fontWeight: FontWeight.w700),
+      child: Container(
+        height: 35.h,
+        padding: EdgeInsets.symmetric(
+            horizontal: 1.h,
+            vertical: Device.screenType == ScreenType.mobile ? 2.h : 2.5.h),
+        decoration: BoxDecoration(
+            image: const DecorationImage(
+                image: AssetImage(Asset.appBarBg),
+                fit: BoxFit.cover,
+                alignment: Alignment.center),
+            color: isDarkMode()
+                ? darkBackgroundColor
+                : primaryColor.withOpacity(0.8),
+            // border: Border(
+            //   bottom: BorderSide(
+            //     color: grey.withOpacity(0.6),
+            //   ),
+            // ),
+            boxShadow: [
+              BoxShadow(
+                  color: grey.withOpacity(0.2),
+                  blurRadius: 1.0,
+                  offset: const Offset(0, 1),
+                  //offset: const Offset(0, 1),
+                  spreadRadius: 1.0)
+            ],
+            // gradient: LinearGradient(
+            //     colors: [
+            //       primaryColor,
+            //       secondaryColor.withOpacity(0.7)
+            //     ],
+            //     begin: const FractionalOffset(0.0, 0.0),
+            //     // end: FractionalOffset(0.8, 0.0),
+            //     end: const FractionalOffset(0.0, 1.0),
+            //     stops: const [0.0, 1.0],
+            //     tileMode: TileMode.clamp),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5.h))),
+        child: Column(
+          children: [
+            getDynamicSizedBox(height: isFromProfile == true ? 2.h : 2.5.h),
+            isFromProfile == true
+                ? getCommonToolbar(title,
+                    onClick: () {},
+                    isLogo: true,
+                    showBackButton: false,
+                    isWhiteText: false)
+                : getLogoAppBar(),
+            getDynamicSizedBox(height: isFromProfile == true ? 5.5.h : 8.h),
+            if (isFromProfile != true)
+              Column(
+                children: [
+                  Text(
+                    'Welcome',
+                    style: TextStyle(
+                        color: isDarkMode() ? white : black,
+                        fontFamily: fontBold,
+                        fontSize: Device.screenType == ScreenType.mobile
+                            ? 18.sp
+                            : 12.sp,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    salesPersonName,
+                    style: TextStyle(
+                        color: isDarkMode() ? white : black,
+                        fontFamily: fontBold,
+                        fontSize: Device.screenType == ScreenType.mobile
+                            ? 18.sp
+                            : 12.sp,
+                        fontWeight: FontWeight.w700),
+                  )
+                ],
+              ),
+            if (isFromProfile == true)
+              Column(
+                children: [
+                  Center(
+                      child: Container(
+                    height: 10.h,
+                    width: 10.h,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: black, width: 0.5.w),
+                      borderRadius: BorderRadius.circular(100.w),
+                      boxShadow: [
+                        BoxShadow(
+                          color: black.withOpacity(0.1),
+                          blurRadius: 5.0,
+                        )
+                      ],
                     ),
-                    Text(
-                      salesPersonName,
-                      style: TextStyle(
-                          color: isDarkMode() ? white : black,
-                          fontFamily: fontBold,
-                          fontSize: Device.screenType == ScreenType.mobile
-                              ? 18.sp
-                              : 12.sp,
-                          fontWeight: FontWeight.w700),
-                    )
-                  ],
-                ),
-              if (isFromProfile == true)
-                Column(
-                  children: [
-                    Center(
-                        child: Container(
-                      height: 10.h,
-                      width: 10.h,
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: black, width: 0.5.w),
-                        borderRadius: BorderRadius.circular(100.w),
-                        boxShadow: [
-                          BoxShadow(
-                            color: black.withOpacity(0.1),
-                            blurRadius: 5.0,
-                          )
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(50)),
-                        child: profilePic != null &&
-                                profilePic.toString().isNotEmpty
-                            ? CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                height: 15.h,
-                                width: 40.w,
-                                imageUrl: profilePic.toString(),
-                                placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator(
-                                      color: primaryColor),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    SvgPicture.asset(
-                                  Asset.male,
-                                  height: 11.h,
-                                  fit: BoxFit.cover,
-                                ),
-                                imageBuilder: (context, imageProvider) => Image(
-                                  image: imageProvider,
-                                  height: 11.h,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : SvgPicture.asset(
-                                gender == null
-                                    ? Asset.male
-                                    : gender == 'Male'
-                                        ? Asset.male
-                                        : Asset.female,
-                                height: 8.h,
-                                width: 8.h,
-                                // ignore: deprecated_member_use
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: profilePic != null &&
+                              profilePic.toString().isNotEmpty
+                          ? CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              height: 15.h,
+                              width: 40.w,
+                              imageUrl: profilePic.toString(),
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(
+                                    color: primaryColor),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  SvgPicture.asset(
+                                Asset.male,
+                                height: 11.h,
                                 fit: BoxFit.cover,
                               ),
-                      ),
-                    )),
-                    getDynamicSizedBox(height: 1.h),
-                    Text(
-                      salesPersonName,
-                      style: TextStyle(
-                          color: isDarkMode() ? white : black,
-                          fontFamily: fontBold,
-                          fontSize: Device.screenType == ScreenType.mobile
-                              ? 18.sp
-                              : 12.sp,
-                          fontWeight: FontWeight.w700),
-                    )
-                  ],
-                )
-            ],
-          ),
+                              imageBuilder: (context, imageProvider) => Image(
+                                image: imageProvider,
+                                height: 11.h,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : SvgPicture.asset(
+                              gender == null
+                                  ? Asset.male
+                                  : gender == 'Male'
+                                      ? Asset.male
+                                      : Asset.female,
+                              height: 8.h,
+                              width: 8.h,
+                              // ignore: deprecated_member_use
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  )),
+                  getDynamicSizedBox(height: 1.h),
+                  Text(
+                    salesPersonName,
+                    style: TextStyle(
+                        color: isDarkMode() ? white : black,
+                        fontFamily: fontBold,
+                        fontSize: Device.screenType == ScreenType.mobile
+                            ? 18.sp
+                            : 12.sp,
+                        fontWeight: FontWeight.w700),
+                  )
+                ],
+              )
+          ],
         ),
       ));
 }

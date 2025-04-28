@@ -636,6 +636,7 @@ class MainScreenConstant {
 class ProfileScreenConstant {
   static const salesPersonCode = 'Employee Id';
   static const role = 'Role';
+  static const logo = 'Logo';
 }
 
 class BottomConstant {
@@ -734,6 +735,7 @@ class AlertDialogList {
   static const city = 'City List';
   static const state = 'State List';
   static const emptylist = 'List is Empty';
+  static const searchlist = 'Searched data not found';
   static const photo = 'Photo';
   static const selectPhotoFrom = 'Select Photo From';
   static const camera = 'Camera';

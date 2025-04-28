@@ -240,59 +240,55 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: FadeInDown(
-                                  child: AnimatedSize(
-                                    duration: const Duration(milliseconds: 300),
-                                    child: Obx(() {
-                                      return getReactiveFormField(
-                                          node: controller.commentNode,
-                                          controller: controller.commentctr,
-                                          hintLabel: "Please Enter Review",
-                                          obscuretext: false,
-                                          isReview: true,
-                                          onChanged: (val) {
-                                            if (val!.isEmpty) {
-                                              controller.isFormInvalidate
-                                                  .value = false;
-                                            } else {
-                                              controller.isFormInvalidate
-                                                  .value = true;
-                                            }
-                                            // controller.validateComment(val);
-                                          },
-                                          inputType: TextInputType.text,
-                                          errorText: controller
-                                              .commentModel.value.error);
-                                    }),
-                                  ),
+                                child: AnimatedSize(
+                                  duration: const Duration(milliseconds: 300),
+                                  child: Obx(() {
+                                    return getReactiveFormField(
+                                        node: controller.commentNode,
+                                        controller: controller.commentctr,
+                                        hintLabel: "Please Enter Review",
+                                        obscuretext: false,
+                                        isReview: true,
+                                        onChanged: (val) {
+                                          if (val!.isEmpty) {
+                                            controller.isFormInvalidate.value =
+                                                false;
+                                          } else {
+                                            controller.isFormInvalidate.value =
+                                                true;
+                                          }
+                                          // controller.validateComment(val);
+                                        },
+                                        inputType: TextInputType.text,
+                                        errorText: controller
+                                            .commentModel.value.error);
+                                  }),
                                 ),
                               ),
                               getDynamicSizedBox(width: 3.w),
                               Obx(
                                 () {
-                                  return FadeInDown(
-                                    child: AnimatedSize(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (controller
-                                                  .isFormInvalidate.value ==
-                                              true) {
-                                            controller.addReviewAPI(
-                                                context, widget.businessId);
-                                            // controller.isReviewvisible = false;
-                                            setState(() {});
-                                          }
-                                        },
-                                        child: Icon(Icons.send,
-                                            size: 4.5.h,
-                                            color: controller.isFormInvalidate
-                                                        .value ==
-                                                    true
-                                                ? primaryColor
-                                                : grey),
-                                      ),
+                                  return AnimatedSize(
+                                    duration:
+                                        const Duration(milliseconds: 300),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (controller
+                                                .isFormInvalidate.value ==
+                                            true) {
+                                          controller.addReviewAPI(
+                                              context, widget.businessId);
+                                          // controller.isReviewvisible = false;
+                                          setState(() {});
+                                        }
+                                      },
+                                      child: Icon(Icons.send,
+                                          size: 4.5.h,
+                                          color: controller.isFormInvalidate
+                                                      .value ==
+                                                  true
+                                              ? primaryColor
+                                              : grey),
                                     ),
                                   );
                                 },

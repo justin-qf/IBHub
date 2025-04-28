@@ -1,19 +1,22 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
+import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/full_image_viewer.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
+import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/profile_controller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
@@ -82,114 +85,129 @@ class _ProfileScreenState extends State<ProfileScreen>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               // getDynamicSizedBox(height: 3.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(onTap: () {
-                                    if (controller
-                                        .profilePic.value.isNotEmpty) {
-                                      Get.to(FullScreenImage(
-                                        imageUrl: controller.profilePic.value,
-                                        fromProfile: true,
-                                      ))!
-                                          .then((value) => {
-                                                Statusbar()
-                                                    .trasparentStatusbar()
-                                              });
-                                    }
-                                  }, child: Obx(() {
-                                    return ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(30)),
-                                      child: CachedNetworkImage(
-                                        fit: BoxFit.cover,
-                                        height: 20.h,
-                                        width: 20.w,
-                                        imageUrl: controller.profilePic.value,
-                                        placeholder: (context, url) =>
-                                            const Center(
-                                          child: CircularProgressIndicator(
-                                              color: primaryColor),
+                              Container(
+                                margin: EdgeInsets.only(left: 6.w, top: 2.h),
+                                decoration: const BoxDecoration(
+                                  color: secondaryColor,
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(35),
+                                      bottomRight: Radius.circular(35)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(onTap: () {
+                                      if (controller
+                                          .profilePic.value.isNotEmpty) {
+                                        Get.to(FullScreenImage(
+                                          imageUrl: controller.profilePic.value,
+                                          fromProfile: true,
+                                        ))!
+                                            .then((value) => {
+                                                  Statusbar()
+                                                      .trasparentStatusbar()
+                                                });
+                                      }
+                                    }, child: Obx(() {
+                                      return ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(30)),
+                                          child: CachedNetworkImage(
+                                            fit: BoxFit.cover,
+                                            height: 20.h,
+                                            width: 20.w,
+                                            imageUrl:
+                                                controller.profilePic.value,
+                                            placeholder: (context, url) =>
+                                                const Center(
+                                              child: CircularProgressIndicator(
+                                                  color: primaryColor),
+                                            ),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    CircleAvatar(
+                                              radius: 25.h,
+                                              backgroundImage: imageProvider,
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    CircleAvatar(
+                                                        radius: 25.h,
+                                                        child: const Icon(
+                                                            Icons.person)),
+                                          ));
+                                    })),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 3.w),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Obx(
+                                              () {
+                                                return Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      controller.userName.value
+                                                              .isNotEmpty
+                                                          ? controller.userName
+                                                              .value.capitalize!
+                                                          : "Your Name",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 17.sp,
+                                                          color: black,
+                                                          fontFamily:
+                                                              fontSemiBold,
+                                                          fontWeight:
+                                                              FontWeight.w800),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                            Obx(
+                                              () {
+                                                return Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      controller.bussiness.value
+                                                              .isNotEmpty
+                                                          ? controller.bussiness
+                                                              .value.capitalize!
+                                                          : "Your Bussiness",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          color: black,
+                                                          fontFamily:
+                                                              fontSemiBold,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                CircleAvatar(
-                                          radius: 25.h,
-                                          backgroundImage: imageProvider,
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            CircleAvatar(
-                                                radius: 25.h,
-                                                child: Icon(Icons.person)),
-                                      ),
-                                    );
-                                  })),
-                                  Expanded(
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 3.w),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Obx(
-                                            () {
-                                              return Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    controller.userName.value
-                                                            .isNotEmpty
-                                                        ? controller.userName
-                                                            .value.capitalize!
-                                                        : "Your Name",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                        fontSize: 17.sp,
-                                                        color: black,
-                                                        fontWeight:
-                                                            FontWeight.w800),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                          Obx(
-                                            () {
-                                              return Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    controller.bussiness.value
-                                                            .isNotEmpty
-                                                        ? controller.bussiness
-                                                            .value.capitalize!
-                                                        : "Your Bussiness",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        color: black,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -199,101 +217,77 @@ class _ProfileScreenState extends State<ProfileScreen>
                           right: 12.w,
                           child: IconButton(
                               onPressed: () async {
-                                pdfPopupDialogs(
-                                  context,
-                                  function: (String val) async {
-                                    print(val);
-                                    controller.getpdfFromApi(context,
-                                        theme: val);
-
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) => const Center(
-                                        child: CircularProgressIndicator(
-                                            color: primaryColor),
-                                      ),
-                                    );
-
-                                    final filePath =
-                                        await controller.downloadPDF(
-                                            controller.pdflink.value,
-                                            controller.pdfname.value);
-
-                                    Get.back();
-
-                                    if (filePath != null) {
-                                      sharefPopupDialogs(
-                                        context,
-                                        function: () {
-                                          controller.sharePDF(filePath);
-                                        },
-                                      );
-                                    }
-                                  },
-                                );
+                                bool isEmpty = await isAnyFieldEmpty();
+                                if (isEmpty) {
+                                  // ignore: use_build_context_synchronously
+                                  showBottomSheetPopup(context);
+                                } else {
+                                  pdfPopupDialogs(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    function: (String val) async {
+                                      logcat("SelectedValue::", val);
+                                      controller.visitingCardAPI(context,
+                                          theme: val);
+                                    },
+                                  );
+                                }
                               },
-                              icon: Icon(Icons.download)),
+                              icon: const Icon(Icons.share)),
                         )
                       ],
                     ),
-
-                    SizedBox(height: 1.5.h),
-
-                    SizedBox(height: 1.h),
+                    getDynamicSizedBox(height: 2.5.h),
                     Expanded(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.only(bottom: 2.h),
                         physics: const BouncingScrollPhysics(),
                         child: Column(
                           children: [
-                            FadeInUp(
-                                duration: getAnimationDuration(),
-                                child: getMenuListItem(
-                                    title: ProfileScreenConst.updateProfile,
-                                    icon: Asset.profile,
-                                    callback: () async {
-                                      Get.to(const Updateprofilescreen())
-                                          ?.then((value) {
-                                        if (value == true) {
-                                          controller.getProfileData();
-                                          // ignore: use_build_context_synchronously
-                                          controller.getApiProfile(context);
-                                        }
-                                      });
-                                    })),
-                            FadeInUp(
-                                duration: getAnimationDuration(),
-                                child: getMenuListItem(
-                                    title: ProfileScreenConst.mybusiness,
-                                    // icon: Asset.add,
-                                    icons: Icons.business,
-                                    callback: () async {
-                                      Get.to(BusinessDetailScreen(
-                                        item: null,
-                                        isFromProfile: true,
-                                      ));
-                                    })),
-                            FadeInUp(
-                              duration: getAnimationDuration(),
-                              child: getMenuListItem(
-                                  callback: () {
-                                    Get.to(ChangePasswordScreen(
-                                      email: "",
-                                      fromProfile: true,
+                            getMenuListItem(
+                                title: ProfileScreenConst.updateProfile,
+                                icon: Asset.profile,
+                                callback: () async {
+                                  Get.to(const Updateprofilescreen())
+                                      ?.then((value) {
+                                    if (value == true) {
+                                      controller.getProfileData();
+                                      controller.getApiProfile(context);
+                                      isAnyFieldEmpty();
+                                    }
+                                  });
+                                }),
+                            getMenuListItem(
+                                title: ProfileScreenConst.mybusiness,
+                                // icon: Asset.add,
+                                icons: Icons.business,
+                                callback: () async {
+                                  bool isEmpty = await isAnyFieldEmpty();
+                                  if (isEmpty) {
+                                    // ignore: use_build_context_synchronously
+                                    showBottomSheetPopup(context);
+                                  } else {
+                                    Get.to(BusinessDetailScreen(
+                                      item: null,
+                                      isFromProfile: true,
                                     ));
-                                  },
-                                  title: ProfileScreenConst.changepassword,
-                                  icon: Asset.resetpass),
-                            ),
-                            FadeInUp(
-                                duration: getAnimationDuration(),
-                                child: getMenuListItem(
-                                    callback: () {
-                                      logoutPopupDialogs(context);
-                                    },
-                                    title: ProfileScreenConst.logout,
-                                    icon: Asset.logout)),
+                                  }
+                                }),
+                            getMenuListItem(
+                                callback: () {
+                                  Get.to(ChangePasswordScreen(
+                                    email: "",
+                                    fromProfile: true,
+                                  ));
+                                },
+                                title: ProfileScreenConst.changepassword,
+                                icon: Asset.resetpass),
+                            getMenuListItem(
+                                callback: () {
+                                  logoutPopupDialogs(context);
+                                },
+                                title: ProfileScreenConst.logout,
+                                icon: Asset.logout),
                             // getFormButton(context, () {
                             //   Get.to(AddServicescreen());
                             // }, 'add services', validate: true),

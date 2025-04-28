@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
+import 'package:ibh/models/login_model.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:intl/intl.dart';
 import 'package:pinput/pinput.dart';
@@ -190,6 +192,29 @@ DataColumn setColumn(title) {
       ),
     ),
   ));
+}
+
+Future<bool> isAnyFieldEmpty() async {
+  User? retrievedObject = await UserPreferences().getSignInInfo();
+
+  String phone = retrievedObject?.phone ?? '';
+  // String address = retrievedObject?.address ?? '';
+  String city = retrievedObject?.city?.city.toString() ?? '';
+  String states = retrievedObject?.state?.name.toString() ?? '';
+  String pincode = retrievedObject?.pincode.toString() ?? '';
+  String visitingCardUrl = retrievedObject?.visitingCardUrl ?? '';
+
+  // logcat("address::", address);
+  logcat("city::", city);
+  logcat("states::", states);
+  logcat("pincode::", pincode);
+  logcat("visitingCardUrl::", visitingCardUrl);
+
+  return phone.trim().isEmpty ||
+      city.trim().isEmpty ||
+      states.trim().isEmpty ||
+      pincode.trim().isEmpty ||
+      visitingCardUrl.trim().isEmpty;
 }
 
 launchPhoneCall(String phoneNumber) async {

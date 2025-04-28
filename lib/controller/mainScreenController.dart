@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/configs/colors_constant.dart';
-import 'package:ibh/configs/font_constant.dart';
-import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
-import 'package:ibh/views/Profile/updateprofilescreen.dart';
-import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
 
@@ -72,7 +66,7 @@ class MainScreenController extends GetxController {
   }
 
   void getTimerPopup(BuildContext context) {
-    Future.delayed(Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 10), () {
       if (!context.mounted) return;
       // Check if ANY of the fields are empty
       if (address.value.isEmpty ||

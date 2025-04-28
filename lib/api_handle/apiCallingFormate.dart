@@ -17,7 +17,7 @@ commonPostApiCallFormate(context,
     InternetController? networkManager,
     Function? apisLoading,
     bool? isModelResponse = false}) async {
-  var loadingIndicator = LoadingProgressDialog();
+  var loadingIndicator = LoadingProgressDialogs();
   try {
     if (networkManager!.connectionType.value == 0) {
       loadingIndicator.hide(context);

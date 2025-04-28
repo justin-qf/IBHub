@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/string_constant.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:sizer/sizer.dart';
 import '../../configs/colors_constant.dart';
 import '../../configs/font_constant.dart';
@@ -313,18 +314,18 @@ class FullScreenImageState extends State<FullScreenImage> {
             SizedBox(
               height: 5.h,
             ),
-            getCommonToolbar(ProductScreenConstant.productImage, onClick: () {
+            getCommonToolbar(ProfileScreenConstant.logo, onClick: () {
               Get.back();
             }, showBackButton: true, isWhiteText: true),
             Expanded(
-              child: Center(child: Container()
-                  // PhotoView(
-                  //   imageProvider: NetworkImage(widget.imageUrl),
-                  //   backgroundDecoration: const BoxDecoration(
-                  //     color: black,
-                  //   ),
-                  // ),
+              child: Center(
+                child: PhotoView(
+                  imageProvider: NetworkImage(widget.imageUrl),
+                  backgroundDecoration: const BoxDecoration(
+                    color: black,
                   ),
+                ),
+              ),
             ),
           ],
         ),

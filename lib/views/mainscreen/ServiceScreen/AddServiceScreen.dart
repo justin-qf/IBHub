@@ -24,22 +24,25 @@ class AddServicescreen extends StatefulWidget {
 }
 
 class _ServicescreenState extends State<AddServicescreen> {
-  final AddServicescreencontroller ctr = Get.put(AddServicescreencontroller());
+  final ctr = Get.put(AddServicescreencontroller());
 
   @override
   void initState() {
     ctr.isFromHomeScreen.value = widget.isFromHomeScreen;
     ctr.editServiceItems = widget.item;
-
+    if (ctr.editServiceItems != null && widget.isFromHomeScreen) {
+      ctr.fillEditData();
+    }
     futureDelay(() {
       ctr.getCategory(context, '', isfromHomescreen: widget.isFromHomeScreen);
-
-      // Only fill the data if editing an existing item
-      if (ctr.editServiceItems != null && widget.isFromHomeScreen) {
-        ctr.fillEditData();
-      }
-    }, isOneSecond: true);
+    }, isOneSecond: false);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    ctr.categoryId.value = "";
+    super.dispose();
   }
 
   @override
@@ -181,14 +184,12 @@ class _ServicescreenState extends State<AddServicescreen> {
                             borderSide: BorderSide.none,
                           ),
                           hintText: 'Enter keyword',
-                          hintStyle: TextStyle(color: grey),
+                          hintStyle: const TextStyle(color: grey),
                           errorText: ctr.keywordsModel.value.error,
                           filled: true,
                           fillColor: inputBgColor,
                         ),
-                        style: TextStyle(
-                          color: black,
-                        ),
+                        style: const TextStyle(color: black),
                         onChanged: (val) {
                           ctr.validateFields(val,
                               iscomman: true,
@@ -221,7 +222,8 @@ class _ServicescreenState extends State<AddServicescreen> {
                                 final chipText = entry.value;
                                 return Chip(
                                   label: Text(chipText,
-                                      style: TextStyle(color: primaryColor)),
+                                      style:
+                                          const TextStyle(color: primaryColor)),
                                   backgroundColor: secondaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -229,16 +231,14 @@ class _ServicescreenState extends State<AddServicescreen> {
                                   deleteIcon: Icon(Icons.close, size: 20.sp),
                                   onDeleted: () {
                                     ctr.keywords.removeAt(index);
-
                                     ctr.enableSubmitButton();
-
                                     ctr.update();
                                   },
                                 );
                               }).toList(),
                             ),
                           )
-                        : SizedBox.shrink()),
+                        : const SizedBox.shrink()),
                     getDynamicSizedBox(height: 2.h),
                     Obx(() {
                       return ctr.isloading == false
@@ -247,9 +247,9 @@ class _ServicescreenState extends State<AddServicescreen> {
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
                                   if (ctr.isFromHomeScreen.value == true) {
-                                    ctr.updateServiceApi(context);
+                                    ctr.addUpdateServiceApi(context, false);
                                   } else {
-                                    ctr.addServiceApi(context);
+                                    ctr.addUpdateServiceApi(context, true);
                                   }
                                 }
                               },

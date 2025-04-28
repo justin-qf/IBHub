@@ -8,6 +8,8 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/Profile/updateprofilescreen.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
 import '../../configs/colors_constant.dart';
 import '../../configs/font_constant.dart';
@@ -46,7 +48,6 @@ Widget getRadioButton(
 
                   enableFunction(groupvalue);
                   notifyListeners();
-             
                 },
               ),
               GestureDetector(
@@ -57,7 +58,6 @@ Widget getRadioButton(
                   isSelected = false;
                   enableFunction(groupvalue);
                   notifyListeners();
-              
                 },
                 child: Text(
                   firstText,
@@ -73,7 +73,6 @@ Widget getRadioButton(
                   isSelected = false;
                   enableFunction(groupvalue);
                   notifyListeners();
-                 
                 },
               ),
               GestureDetector(
@@ -83,7 +82,6 @@ Widget getRadioButton(
                   isSelected = false;
                   enableFunction(groupvalue);
                   notifyListeners();
-                 
                 },
                 child: Text(
                   secondText,
@@ -155,7 +153,6 @@ fetchSelectionPopup<T>(
                       filterFunction(val!);
 
                       setState(() {});
-               
                     },
                     inputType: TextInputType.text,
                     isBorderSideEnable: false,
@@ -265,7 +262,6 @@ void showSelectionPopup(
                       filterFunction(val!);
 
                       setState(() {});
-                    
                     },
                     inputType: TextInputType.text,
                     isBorderSideEnable: false,
@@ -328,58 +324,54 @@ void showMessage(
   showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) => FadeInUp(
-          duration: const Duration(milliseconds: 300),
-          animate: true,
-          from: 30,
-          child: CupertinoAlertDialog(
-              title: Text(
-                title!,
-                style: TextStyle(
-                  fontFamily: fontBold,
-                  fontSize:
-                      Device.screenType == ScreenType.mobile ? 18.sp : 12.sp,
-                ),
-              ),
-              content: Text(
-                message!,
-                style: const TextStyle(fontFamily: fontRegular),
-              ),
-              actions: [
-                if (negativeButton != null && negativeButton.isNotEmpty)
-                  CupertinoDialogAction(
-                      child: Text(
-                        negativeButton,
-                        style: TextStyle(
-                            fontSize: Device.screenType == ScreenType.mobile
-                                ? 17.sp
-                                : 16.sp,
-                            fontFamily: fontMedium,
-                            color: isDarkMode() ? white : black),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                if (positiveButton != null && positiveButton.isNotEmpty)
-                  CupertinoDialogAction(
-                      child: Text(
-                        positiveButton,
-                        style: TextStyle(
-                            fontSize: Device.screenType == ScreenType.mobile
-                                ? 17.sp
-                                : 16.sp,
-                            fontFamily: fontMedium,
-                            color: isDarkMode()
-                                ? isFromLogin == true
-                                    ? white
-                                    : white
-                                : black),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        callback!();
-                      })
-              ])));
+      builder: (BuildContext context) => CupertinoAlertDialog(
+          title: Text(
+            title!,
+            style: TextStyle(
+              fontFamily: fontBold,
+              fontSize:
+                  Device.screenType == ScreenType.mobile ? 18.sp : 12.sp,
+            ),
+          ),
+          content: Text(
+            message!,
+            style: const TextStyle(fontFamily: fontRegular),
+          ),
+          actions: [
+            if (negativeButton != null && negativeButton.isNotEmpty)
+              CupertinoDialogAction(
+                  child: Text(
+                    negativeButton,
+                    style: TextStyle(
+                        fontSize: Device.screenType == ScreenType.mobile
+                            ? 17.sp
+                            : 16.sp,
+                        fontFamily: fontMedium,
+                        color: isDarkMode() ? white : black),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            if (positiveButton != null && positiveButton.isNotEmpty)
+              CupertinoDialogAction(
+                  child: Text(
+                    positiveButton,
+                    style: TextStyle(
+                        fontSize: Device.screenType == ScreenType.mobile
+                            ? 17.sp
+                            : 16.sp,
+                        fontFamily: fontMedium,
+                        color: isDarkMode()
+                            ? isFromLogin == true
+                                ? white
+                                : white
+                            : black),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    callback!();
+                  })
+          ]));
 }
 
 showDialogForScreen(context, String title, String message,
@@ -404,46 +396,41 @@ void showShareMessage(
   showDialog(
       barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) => FadeInUp(
-            duration: const Duration(milliseconds: 300),
-            animate: true,
-            from: 30,
-            child: CupertinoAlertDialog(
-              title: Text(
-                title,
-                style: const TextStyle(
-                  fontFamily: fontMedium,
-                ),
-              ),
-              content: const Text(
-                "Do you want to share?",
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontFamily: fontMedium,
+          ),
+        ),
+        content: const Text(
+          "Do you want to share?",
+          style: TextStyle(
+            fontFamily: fontRegular,
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+              child: const Text(
+                "Cancel",
                 style: TextStyle(
-                  fontFamily: fontRegular,
-                ),
+                    fontFamily: fontRegular, color: Colors.grey),
               ),
-              actions: [
-                CupertinoDialogAction(
-                    child: const Text(
-                      "Cancel",
-                      style: TextStyle(
-                          fontFamily: fontRegular, color: Colors.grey),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }),
-                CupertinoDialogAction(
-                    child: const Text(
-                      "Share",
-                      style: TextStyle(
-                          fontFamily: fontMedium, color: primaryColor),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      shareCallback();
-                    })
-              ],
-            ),
-          ));
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          CupertinoDialogAction(
+              child: const Text(
+                "Share",
+                style: TextStyle(
+                    fontFamily: fontMedium, color: primaryColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                shareCallback();
+              })
+        ],
+      ));
 }
 
 void showDropdownMessages(double insetPaddingVertical, BuildContext context,
@@ -491,6 +478,82 @@ void showDropdownMessages(double insetPaddingVertical, BuildContext context,
               content: content);
         });
       });
+}
+
+void showBottomSheetPopup(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isDismissible: false,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Container(
+        width: Device.width,
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            getDynamicSizedBox(height: 2.h),
+            Text(
+              MainScreenConstant.incompleteProfile,
+              style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: dM_sans_semiBold),
+            ),
+            getDynamicSizedBox(height: 2.h),
+            Text(
+              MainScreenConstant.updatePrompt,
+              style: TextStyle(fontFamily: dM_sans_medium, fontSize: 18.sp),
+              textAlign: TextAlign.center,
+            ),
+            getDynamicSizedBox(height: 2.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.black),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      MainScreenConstant.cancelButton,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                getDynamicSizedBox(width: 2.h),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                      Get.to(const Updateprofilescreen());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor, // your custom green color
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Text(
+                      MainScreenConstant.addButton,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
 
 Future showDropDownDialog(BuildContext context, Widget content, String title) {
@@ -603,7 +666,9 @@ void showDropdownMessage(
 }
 
 Widget setDropDownContent(RxList<dynamic> list, Widget content,
-    {Widget? searchcontent, bool isApiIsLoading = false}) {
+    {Widget? searchcontent,
+    bool isApiIsLoading = false,
+    TextEditingController? controller}) {
   return SizedBox(
       height: Device.screenType == ScreenType.mobile
           ? Device.height / 2
@@ -617,7 +682,9 @@ Widget setDropDownContent(RxList<dynamic> list, Widget content,
             Expanded(
               child: Center(
                   child: Text(
-                AlertDialogList.emptylist,
+                controller != null && controller.text.isNotEmpty
+                    ? AlertDialogList.searchlist
+                    : AlertDialogList.emptylist,
                 style: TextStyle(fontSize: 4.5.w, fontFamily: fontMedium),
               )),
             )
@@ -629,11 +696,13 @@ Widget setDropDownContent(RxList<dynamic> list, Widget content,
                 child: SizedBox(
                   height: 30,
                   width: 30,
-                  child: Image.asset(
-                    "assets/gif/loading.gif",
-                    width: 50,
-                    height: 50,
-                  ),
+                  child: LoadingAnimationWidget.discreteCircle(
+                      color: primaryColor, size: 35),
+                  // Image.asset(
+                  //   "assets/gif/loading.gif",
+                  //   width: 50,
+                  //   height: 50,
+                  // ),
                 ),
               )),
             ),
@@ -657,7 +726,7 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
                     title: Text(
                       AlertDialogList.photo,
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16.sp,
                           color: isDarkMode() ? white : black,
                           fontFamily: fontMedium,
                           fontWeight: FontWeight.bold),
@@ -665,7 +734,7 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
                     content: Text(
                       AlertDialogList.selectPhotoFrom,
                       style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 16.sp,
                           color: isDarkMode() ? white : black,
                           fontFamily: fontBold),
                     ),
@@ -684,7 +753,7 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
                                   fontFamily: fontRegular,
                                   fontSize:
                                       Device.screenType == ScreenType.mobile
-                                          ? 13.sp
+                                          ? 16.sp
                                           : 11.sp))),
                       CupertinoDialogAction(
                           onPressed: () {
@@ -700,7 +769,7 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
                                 color: isDarkMode() ? white : black,
                                 fontFamily: fontRegular,
                                 fontSize: Device.screenType == ScreenType.mobile
-                                    ? 13.sp
+                                    ? 16.sp
                                     : 11.sp),
                           ))
                     ])));

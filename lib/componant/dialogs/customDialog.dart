@@ -77,49 +77,40 @@ class CustomCartItemDetailDialog extends StatelessWidget {
                           left: 5.w,
                           right: 5.w,
                         ),
-                        child: FadeInUp(
-                          from: 50,
-                          child: getSecondaryFormButton(() {
-                            Navigator.of(context).pop();
-                          }, Button.continues,
-                              isvalidate: true, isFromDialog: true),
-                        ))
+                        child: getSecondaryFormButton(() {
+                          Navigator.of(context).pop();
+                        }, Button.continues,
+                            isvalidate: true, isFromDialog: true))
                   ])),
           Positioned(
-            child: FadeInDown(
-              from: 50,
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: grey,
-                      width: 0.8,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                        sizer.Device.screenType == sizer.ScreenType.mobile
-                            ? 3.w
-                            : 2.2.w)),
-                child: ClipRRect(
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: grey,
+                    width: 0.8,
+                  ),
                   borderRadius: BorderRadius.circular(
                       sizer.Device.screenType == sizer.ScreenType.mobile
                           ? 3.w
-                          : 2.2.w),
-                  child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 15.h,
-                      width: 40.w,
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) => const Center(
-                          child:
-                              CircularProgressIndicator(color: primaryColor)),
-                      errorWidget: (context, url, error) => Image.asset(
-                          Asset.productPlaceholder,
-                          height: 11.h,
-                          fit: BoxFit.cover),
-                      imageBuilder: (context, imageProvider) => Image(
-                          image: imageProvider,
-                          height: 11.h,
-                          fit: BoxFit.cover)),
-                ),
+                          : 2.2.w)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(
+                    sizer.Device.screenType == sizer.ScreenType.mobile
+                        ? 3.w
+                        : 2.2.w),
+                child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    height: 15.h,
+                    width: 40.w,
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(color: primaryColor)),
+                    errorWidget: (context, url, error) => Image.asset(
+                        Asset.productPlaceholder,
+                        height: 11.h,
+                        fit: BoxFit.cover),
+                    imageBuilder: (context, imageProvider) => Image(
+                        image: imageProvider, height: 11.h, fit: BoxFit.cover)),
               ),
             ),
           ),
@@ -176,27 +167,22 @@ class CustomLoginAlertRoundedDialog extends StatelessWidget {
                 getDynamicSizedBox(height: 4.h),
                 Container(
                     margin: EdgeInsets.only(left: 5.w, right: 5.w),
-                    child: FadeInUp(
-                        from: 50,
-                        child: getSecondaryFormButton(() {
-                          getx.Get.back();
-                        }, LoginConst.buttonLabel, isvalidate: true)))
+                    child: getSecondaryFormButton(() {
+                      getx.Get.back();
+                    }, LoginConst.buttonLabel, isvalidate: true))
               ])),
           Positioned(
             top: 1.5.h,
-            child: FadeInDown(
-              from: 50,
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: SvgPicture.asset(Asset.alertLogin,
-                    height: sizer.Device.screenType == sizer.ScreenType.mobile
-                        ? 15.h
-                        : 10.h),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(100),
               ),
+              child: SvgPicture.asset(Asset.alertLogin,
+                  height: sizer.Device.screenType == sizer.ScreenType.mobile
+                      ? 15.h
+                      : 10.h),
             ),
           ),
           Positioned(
@@ -208,21 +194,18 @@ class CustomLoginAlertRoundedDialog extends StatelessWidget {
               },
               child: Align(
                 alignment: Alignment.topRight,
-                child: FadeInDown(
-                  from: 50,
-                  child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Icon(Icons.clear_outlined,
-                          color: white,
-                          size:
-                              sizer.Device.screenType == sizer.ScreenType.mobile
-                                  ? 3.h
-                                  : 5.h)),
-                ),
+                child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Icon(Icons.clear_outlined,
+                        color: white,
+                        size:
+                            sizer.Device.screenType == sizer.ScreenType.mobile
+                                ? 3.h
+                                : 5.h)),
               ),
             ),
           ),

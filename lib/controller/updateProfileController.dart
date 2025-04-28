@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
@@ -12,6 +14,7 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
@@ -27,10 +30,13 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
+import 'package:sizer/sizer.dart';
+import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -835,8 +841,7 @@ class Updateprofilecontroller extends GetxController {
               controller: searchStatectr,
               hintLabel: "Search Here",
               onChanged: (val) {
-                applyFilter(val.toString());
-
+                applyFilter(val.toString(), isState: true);
                 update();
               },
               isSearch: true,
@@ -901,7 +906,6 @@ class Updateprofilecontroller extends GetxController {
               hintLabel: "Search Here",
               onChanged: (val) {
                 applyFilter(val.toString(), isState: false);
-
                 update();
               },
               isSearch: true,
@@ -926,7 +930,6 @@ class Updateprofilecontroller extends GetxController {
       logcat('filterApply', stateFilterList.length.toString());
     } else {
       cityFilterList.clear();
-
       for (CityListData citylist in cityList) {
         if (citylist.city
             .toString()
@@ -942,4 +945,170 @@ class Updateprofilecontroller extends GetxController {
 
     update();
   }
+
+  getImage() {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          child: Container(
+            width: 12.h,
+          ),
+        ),
+        Container(
+          height: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+          margin: const EdgeInsets.only(right: 10),
+          width: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+          decoration: BoxDecoration(
+            border: Border.all(color: white, width: 1.w),
+            borderRadius: BorderRadius.circular(100.w),
+            boxShadow: [
+              BoxShadow(
+                color: black.withOpacity(0.1),
+                blurRadius: 5.0,
+              )
+            ],
+          ),
+          child: CircleAvatar(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50.0),
+              child: avatarFile.value == null && profilePic.value.isNotEmpty
+                  ? CachedNetworkImage(
+                      fit: BoxFit.fitWidth,
+                      imageUrl: profilePic.value,
+                      placeholder: (context, url) => const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor),
+                          ),
+                      imageBuilder: (context, imageProvider) => Image.network(
+                            profilePic.value,
+                            fit: BoxFit.fitWidth,
+                          ),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                            Asset.profileimg,
+                            height: 8.0.h,
+                            width: 8.0.h,
+                          ))
+                  : avatarFile.value == null
+                      ? SvgPicture.asset(
+                          Asset.profileimg,
+                          height: 8.0.h,
+                          width: 8.0.h,
+                        )
+                      : Image.file(
+                          avatarFile.value!,
+                          height: Device.screenType == sizer.ScreenType.mobile
+                              ? 8.0.h
+                              : 8.5.h,
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 8.0.h
+                              : 8.5.h,
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.asset(
+                              Asset.profileimg,
+                              height: 8.0.h,
+                              width: 8.0.h,
+                            );
+                          },
+                        ),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 5,
+          bottom: 0.5.h,
+          child: Container(
+            height: 3.3.h,
+            width: 3.3.h,
+            padding: const EdgeInsets.all(5),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              border: Border.all(color: white, width: 0.6.w),
+              borderRadius: BorderRadius.circular(100.w),
+              boxShadow: [
+                BoxShadow(
+                  color: black.withOpacity(0.1),
+                  blurRadius: 5.0,
+                )
+              ],
+            ),
+            child: SvgPicture.asset(
+              Asset.add,
+              height: 12.0.h,
+              width: 15.0.h,
+              fit: BoxFit.cover,
+              // ignore: deprecated_member_use
+              color: white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
+    await ImagePicker()
+        .pickImage(
+            source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+            maxWidth: 1080,
+            maxHeight: 1080,
+            imageQuality: 100)
+        .then((file) async {
+      if (file != null) {
+        //Cropping the image
+        CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: file.path,
+            maxWidth: 1080,
+            maxHeight: 1080,
+            cropStyle: CropStyle.rectangle,
+            aspectRatioPresets: Platform.isAndroid
+                ? [
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio3x2,
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPreset.ratio16x9
+                  ]
+                : [
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio3x2,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPreset.ratio5x3,
+                    CropAspectRatioPreset.ratio5x4,
+                    CropAspectRatioPreset.ratio7x5,
+                    CropAspectRatioPreset.ratio16x9
+                  ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Crop Image',
+                  cropGridColor: primaryColor,
+                  toolbarColor: primaryColor,
+                  statusBarColor: primaryColor,
+                  toolbarWidgetColor: white,
+                  activeControlsWidgetColor: primaryColor,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Crop Image',
+                cancelButtonTitle: 'Cancel',
+                doneButtonTitle: 'Done',
+                aspectRatioLockEnabled: false,
+              ),
+            ],
+            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+        if (croppedFile != null) {
+          avatarFile = File(croppedFile.path).obs;
+          profilePic.value = croppedFile.path;
+
+          update();
+        }
+      }
+    });
+
+    update();
+  }
+
 }

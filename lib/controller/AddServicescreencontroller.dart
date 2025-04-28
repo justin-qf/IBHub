@@ -84,7 +84,6 @@ class AddServicescreencontroller extends GetxController {
   // Remove keyword from the list
   void removeKeyword(String keyword) {
     keywords.remove(keyword);
-
     update();
   }
 
@@ -184,7 +183,6 @@ class AddServicescreencontroller extends GetxController {
 
 //for edit screen
   ServiceDataList? editServiceItems;
-
   RxString thumbnail = "".obs;
   RxString service = "".obs;
   RxString description = "".obs;
@@ -192,6 +190,7 @@ class AddServicescreencontroller extends GetxController {
   RxString keyword = "".obs;
 
   void fillEditData() {
+<<<<<<< HEAD
     thumbnail.value = editServiceItems!.thumbnail.toString();
     service.value = editServiceItems!.serviceTitle.toString();
     description.value = editServiceItems!.description.toString();
@@ -211,10 +210,31 @@ class AddServicescreencontroller extends GetxController {
         if (keywordList is List) {
           keywords
               .addAll(keywordList.map((e) => e['value'].toString()).toList());
+=======
+    if (editServiceItems != null) {
+      thumbnail.value = editServiceItems!.thumbnail.toString();
+      service.value = editServiceItems!.serviceTitle.toString();
+      description.value = editServiceItems!.description.toString();
+      keyword.value = editServiceItems!.keywords.toString();
+      // categoryEditid.value = editServiceItems!.categoryId.toString();
+      categoryId.value = editServiceItems!.categoryId.toString();
+      thumbnailCtr.text = editServiceItems!.thumbnail.toString();
+      serviceTitleCtr.text = editServiceItems!.serviceTitle.toString();
+      descriptionCtr.text = editServiceItems!.description.toString();
+      keywordsCtr.text = '';
+      keywords.clear();
+      if (editServiceItems!.keywords.isNotEmpty) {
+        try {
+          final keywordList = jsonDecode(editServiceItems!.keywords);
+          if (keywordList is List) {
+            keywords
+                .addAll(keywordList.map((e) => e['value'].toString()).toList());
+          }
+        } catch (e) {
+          keywords.addAll(
+              editServiceItems!.keywords.split(',').map((e) => e.trim()));
+>>>>>>> 643ec4f104d01bc12902643599e3c6aff27402d5
         }
-      } catch (e) {
-        keywords
-            .addAll(editServiceItems!.keywords.split(',').map((e) => e.trim()));
       }
     }
 // Validate all fields
@@ -280,16 +300,16 @@ class AddServicescreencontroller extends GetxController {
       categoryList.addAll(categoryData.data);
       categoryFilterList.addAll(categoryData.data);
 
-      if (isfromHomescreen && categoryEditid.value.isNotEmpty) {
+      if (isfromHomescreen && categoryId.value.isNotEmpty) {
         final selectedCategory = categoryList.firstWhere(
-          (category) => category.id.toString() == categoryEditid.value,
+          (category) => category.id.toString() == categoryId.value,
         );
         // ignore: unnecessary_null_comparison
         if (selectedCategory != null) {
           categoryCtr.text = selectedCategory.name;
-          categoryEditid.value = selectedCategory.id.toString();
+          categoryId.value = selectedCategory.id.toString();
         } else {
-          categoryEditid.value = '';
+          categoryId.value = '';
           categoryCtr.text = '';
         }
       }
@@ -320,13 +340,12 @@ class AddServicescreencontroller extends GetxController {
                 minLeadingWidth: 5,
                 onTap: () async {
                   Get.back();
-
-                  if (isFromHomeScreen == true) {
-                    categoryEditid.value =
-                        categoryFilterList[index].id.toString();
-                  } else {
-                    categoryId.value = categoryFilterList[index].id.toString();
-                  }
+                  // if (isFromHomeScreen == true) {
+                  //   categoryEditid.value =
+                  //       categoryFilterList[index].id.toString();
+                  // } else {
+                  categoryId.value = categoryFilterList[index].id.toString();
+                  // }
 
                   categoryCtr.text = categoryFilterList[index].name;
                   if (categoryCtr.text.toString().isNotEmpty) {
@@ -344,9 +363,7 @@ class AddServicescreencontroller extends GetxController {
                 title: showSelectedTextInDialog(
                   name: categoryFilterList[index].name,
                   modelId: categoryFilterList[index].id.toString(),
-                  storeId: isFromHomeScreen
-                      ? categoryEditid.value
-                      : categoryId.value,
+                  storeId: categoryId.value,
                 ),
               );
             },
@@ -476,65 +493,6 @@ class AddServicescreencontroller extends GetxController {
   void updateServiceApi(context) async {
     var loadingIndicator = LoadingProgressDialog();
 
-    // try {
-    if (networkManager.connectionType.value == 0) {
-      loadingIndicator.hide(context);
-      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
-          Connection.noConnection, callback: () {
-        Get.back();
-      });
-      return;
-    }
-    loadingIndicator.show(context, '');
-
-    logcat("ServiceParam", {
-      "service_title": serviceTitleCtr.text.toString().trim(),
-      "description": descriptionCtr.text.toString().trim(),
-      "keywords": keywordsCtr.text.toString().trim(),
-      "category_id": categoryId.value.toString().trim(),
-    });
-
-    var response = await Repository.update({
-      "service_title": serviceTitleCtr.text.toString().trim(),
-      "description": descriptionCtr.text.toString().trim(),
-      "keywords":
-          jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
-      "category_id": categoryId.value.toString().trim(),
-    }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
-
-    loadingIndicator.hide(context);
-
-    var json = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      if (json['success'] == true) {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, json['message'],
-            callback: () {
-          Get.back(result: true);
-        });
-      } else {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, json['message'],
-            callback: () {});
-      }
-    } else {
-      showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, json['message'],
-          callback: () {});
-    }
-    // } catch (e) {
-    //   logcat("Service Creation Exception", e.toString());
-    //   showDialogForScreen(
-    //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-    //       callback: () {});
-    //   loadingIndicator.hide(context);
-    // }
-  }
-
-  void addServiceApi(context) async {
-    var loadingIndicator = LoadingProgressDialog();
-
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
@@ -553,13 +511,76 @@ class AddServicescreencontroller extends GetxController {
         "category_id": categoryId.value.toString().trim(),
       });
 
-      var response = await Repository.multiPartPost({
+      var response = await Repository.update({
         "service_title": serviceTitleCtr.text.toString().trim(),
         "description": descriptionCtr.text.toString().trim(),
         "keywords":
             jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
         "category_id": categoryId.value.toString().trim(),
-      }, ApiUrl.addService,
+      }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
+
+      loadingIndicator.hide(context);
+
+      var json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        if (json['success'] == true) {
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, json['message'],
+              callback: () {
+            Get.back(result: true);
+          });
+        } else {
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, json['message'],
+              callback: () {});
+        }
+      } else {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, json['message'],
+            callback: () {});
+      }
+    } catch (e) {
+      logcat("Service Creation Exception", e.toString());
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+          callback: () {});
+      loadingIndicator.hide(context);
+    }
+  }
+
+  void addUpdateServiceApi(BuildContext context, bool isFromAdd) async {
+    var loadingIndicator = LoadingProgressDialog();
+    loadingIndicator.show(context, '');
+
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+            Connection.noConnection, callback: () {
+          Get.back();
+        });
+        return;
+      }
+
+      logcat("ServiceParam", {
+        "service_title": serviceTitleCtr.text.toString().trim(),
+        "description": descriptionCtr.text.toString().trim(),
+        "keywords": keywordsCtr.text.toString().trim(),
+        "category_id": categoryId.value.toString().trim(),
+      });
+
+      var response = await Repository.multiPartPost(
+          {
+            "service_title": serviceTitleCtr.text.toString().trim(),
+            "description": descriptionCtr.text.toString().trim(),
+            "keywords": jsonEncode(
+                keywords.map((keyword) => {"value": keyword}).toList()),
+            "category_id": categoryId.value.toString().trim(),
+          },
+          isFromAdd == true
+              ? ApiUrl.addService
+              : '${ApiUrl.updateService}${editServiceItems!.id}',
           multiPart:
               imageFile.value != null && imageFile.value.toString().isNotEmpty
                   ? http.MultipartFile(
@@ -621,6 +642,7 @@ class AddServicescreencontroller extends GetxController {
   //         '${ApiUrl.deleteService}${editServiceItems!.id}',
   //         allowHeader: true);
 
+<<<<<<< HEAD
   //     loadingIndicator.hide(context);
   //     var result = jsonDecode(response.body);
   //     if (response.statusCode == 200) {
@@ -648,4 +670,35 @@ class AddServicescreencontroller extends GetxController {
   //         callback: () {});
   //   }
   // }
+=======
+      loadingIndicator.hide(context);
+      var result = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        if (result['success'] == true) {
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, result['message'],
+              callback: () {
+            Get.back(result: true); // Go back and pass result true
+          });
+        } else {
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, result['message'],
+              callback: () {});
+        }
+      } else {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, result['message'],
+            callback: () {});
+      }
+    } catch (e) {
+      loadingIndicator.hide(context);
+      logcat("Delete Service Exception", e.toString());
+
+      void servicerAPI(BuildContext context, bool bool) {}
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+          callback: () {});
+    }
+  }
+>>>>>>> 643ec4f104d01bc12902643599e3c6aff27402d5
 }

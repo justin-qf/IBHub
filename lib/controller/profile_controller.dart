@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
+import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/apicall_constant.dart';
@@ -44,16 +45,15 @@ class ProfileController extends GetxController {
   getProfileData() async {
     states.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
-    userName.value = retrievedObject!.name;
-    email.value = retrievedObject.email;
-    number.value = retrievedObject.phone;
-    bussiness.value = retrievedObject.businessName;
-    profilePic.value = retrievedObject.visitingCardUrl;
-    // gender.value = retrievedObject.city;
-    // referCode!.value = retrievedObject.state;
+    if (retrievedObject != null) {
+      userName.value = retrievedObject.name;
+      email.value = retrievedObject.email;
+      number.value = retrievedObject.phone;
+      bussiness.value = retrievedObject.businessName;
+      profilePic.value = retrievedObject.visitingCardUrl;
+    }
     update();
     states.value = ScreenState.apiSuccess;
-    logcat("referCode::", referCode!.value.toString());
   }
 
   void getApiProfile(context) async {
@@ -64,13 +64,8 @@ class ProfileController extends GetxController {
       logcat("IsProfile:", isTrue.toString());
       update();
     }, onResponse: (response) {
-      var userData = User.fromJson(response);
-
-      profilePic.value = userData.visitingCardUrl;
-
-      print(profilePic.value);
-
-      logcat("Profile", jsonEncode(userData));
+      var profileData = LoginModel.fromJson(response);
+      profilePic.value = profileData.data.user.visitingCardUrl;
       update();
     }, networkManager: networkManager);
   }
@@ -117,10 +112,13 @@ class ProfileController extends GetxController {
   RxString pdflink = "".obs;
   RxString pdfname = "".obs;
   void getpdfFromApi(BuildContext context, {theme}) async {
+    var loadingIndicator = LoadingProgressDialogs();
+    loadingIndicator.show(context, '');
     pdflink.value = '';
     pdfname.value = '';
     try {
       if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
         showDialogForScreen(context, "Profile", Connection.noConnection,
             callback: () {
           Get.back();
@@ -128,46 +126,93 @@ class ProfileController extends GetxController {
         return;
       }
 
-      // Direct API call (instead of using commonPostApiCallFormate)
       var response = await Repository.post(
         {"theme": theme},
         ApiUrl.pdfDownload,
         allowHeader: true,
       );
-
+      // ignore: use_build_context_synchronously
+      loadingIndicator.hide(context);
       var data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
         var responseDetail = PdfData.fromJson(data);
-
+        logcat("responseData::", jsonEncode(responseDetail));
         if (responseDetail.success == true) {
           pdflink.value = responseDetail.data.url;
           pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
-          showDialogForScreen(context, "Profile", data['message'],
-              callback: () {
-            Get.back();
-          });
-
-          states.value = ScreenState.apiSuccess;
-          message.value = "";
+          final filePath = await downloadPDF(pdflink.value, pdfname.value);
+          if (filePath != null) {
+            sharefPopupDialogs(
+              // ignore: use_build_context_synchronously
+              context,
+              function: () {
+                sharePDF(filePath);
+              },
+            );
+          }
+          // // ignore: use_build_context_synchronously
+          // showDialogForScreen(context, "Profile", data['message'],
+          //     callback: () async {
+          //   // Get.back();
+          //   final filePath = await downloadPDF(pdflink.value, pdfname.value);
+          //   // Get.back();
+          //   if (filePath != null) {
+          //     sharefPopupDialogs(
+          //       context,
+          //       function: () {
+          //         sharePDF(filePath);
+          //       },
+          //     );
+          //   }
+          // });
+          // states.value = ScreenState.apiSuccess;
+          // message.value = "";
           update();
         } else {
+          logcat("SUccess-2", "NOT DONE");
           states.value = ScreenState.apiError;
+          // ignore: use_build_context_synchronously
           showDialogForScreen(context, "Profile", data['message'],
               callback: () {});
         }
       } else {
         states.value = ScreenState.apiError;
         showDialogForScreen(
-            context, "Profile", data['message'] ?? "Server Error",
+            // ignore: use_build_context_synchronously
+            context,
+            "Profile",
+            data['message'] ?? "Server Error",
             callback: () {});
       }
     } catch (e) {
       states.value = ScreenState.apiError;
-      showDialogForScreen(context, "Profile", ServerError.retryServererror,
-          callback: () {});
-      print('Exception in getpdfFromApi: $e');
+      // ignore: use_build_context_synchronously
+      loadingIndicator.hide(context);
+      logcat("Error::", e.toString());
     }
+  }
+
+  void visitingCardAPI(context, {theme}) async {
+    commonPostApiCallFormate(context,
+        title: "Profile",
+        body: {"theme": theme},
+        apiEndPoint: ApiUrl.pdfDownload, onResponse: (data) async {
+      var responseDetail = PdfData.fromJson(data);
+      pdflink.value = responseDetail.data.url;
+      pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+      final filePath = await downloadPDF(pdflink.value, pdfname.value);
+      if (filePath != null) {
+        sharefPopupDialogs(
+          context,
+          function: () {
+            sharePDF(filePath);
+          },
+        );
+      }
+    },
+        networkManager: networkManager,
+        isModelResponse: true,
+        allowHeader: true);
   }
 
   String extractPdfNameFromUrl(String url) {
