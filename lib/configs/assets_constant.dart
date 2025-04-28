@@ -153,7 +153,7 @@ class Asset {
   static const subject2 = '$assets${pngFolder}subject2.png';
   //jpg
   static const splashjpg = '$assets${pngFolder}splashbg.jpg';
-  static const applogo = '$assets${pngFolder}app_logo.jpeg';
+  static const applogo = '$assets${pngFolder}app_logo.png';
 
   //Splash Screen and intro
   static const logo = '$assets${svgFolder}app_logo.svg';

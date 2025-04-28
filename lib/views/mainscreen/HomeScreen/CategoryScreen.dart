@@ -7,7 +7,6 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/category_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
@@ -80,9 +79,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           children: [
             getDynamicSizedBox(height: 5.h),
-            getCommonToolbar(CategoryScreenViewConst.category, showBackButton: true, onClick: () {
-              Get.back();
-            }),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.w),
+              child: getleftsidebackbtn(
+                title: 'Category',
+                backFunction: () {
+                  Get.back(result: true);
+                },
+              ),
+            ),
             Expanded(
               child: Obx(() {
                 switch (controller.state.value) {

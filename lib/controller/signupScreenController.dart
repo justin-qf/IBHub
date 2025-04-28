@@ -21,7 +21,6 @@ class Signupscreencontroller extends GetxController {
   late TextEditingController emailCtr, passCtr, confpassCtr;
 
   var emailModel = ValidationModel(null, null, isValidate: false).obs;
-  var phoneModel = ValidationModel(null, null, isValidate: false).obs;
   var passModel = ValidationModel(null, null, isValidate: false).obs;
   var confpassModel = ValidationModel(null, null, isValidate: false).obs;
 
@@ -83,8 +82,6 @@ class Signupscreencontroller extends GetxController {
   void enableSignUpButton() {
     if (emailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (phoneModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
     } else if (passModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (confpassModel.value.isValidate == false) {
@@ -99,11 +96,10 @@ class Signupscreencontroller extends GetxController {
   @override
   void onClose() {
     emailCtr.clear();
-  
+
     passCtr.clear();
     confpassCtr.clear();
     emailModel.value = ValidationModel(null, null, isValidate: false);
-    phoneModel.value = ValidationModel(null, null, isValidate: false);
     passModel.value = ValidationModel(null, null, isValidate: false);
     confpassModel.value = ValidationModel(null, null, isValidate: false);
 
@@ -129,7 +125,6 @@ class Signupscreencontroller extends GetxController {
 
     // Reset validation models
     emailModel.value = ValidationModel(null, null, isValidate: false);
-    phoneModel.value = ValidationModel(null, null, isValidate: false);
     passModel.value = ValidationModel(null, null, isValidate: false);
     confpassModel.value = ValidationModel(null, null, isValidate: false);
     isFormInvalidate.value = false;

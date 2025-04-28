@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
@@ -10,6 +12,7 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -23,10 +26,13 @@ import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
+import 'package:sizer/sizer.dart';
+import 'package:sizer/sizer.dart' as sizer;
 
 class Updateprofilecontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -40,7 +46,7 @@ class Updateprofilecontroller extends GetxController {
       stateNode,
       cityNode,
       pincodeNode,
-      visitingcardNode,
+      // visitingcardNode,
       addressNode;
   late TextEditingController nameCtr,
       emailCtr,
@@ -49,7 +55,7 @@ class Updateprofilecontroller extends GetxController {
       stateCtr,
       cityCtr,
       pincodeCtr,
-      visitingcardCtr,
+      // visitingcardCtr,
       addressCtr;
 
   var nameModel = ValidationModel(null, null, isValidate: false).obs;
@@ -59,7 +65,8 @@ class Updateprofilecontroller extends GetxController {
   var stateModel = ValidationModel(null, null, isValidate: false).obs;
   var cityModel = ValidationModel(null, null, isValidate: false).obs;
   var pincodeModel = ValidationModel(null, null, isValidate: false).obs;
-  var visitingCardModel = ValidationModel(null, null, isValidate: false).obs;
+  var imageModel = ValidationModel(null, null, isValidate: false).obs;
+  // var visitingCardModel = ValidationModel(null, null, isValidate: false).obs;
   var addressModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isFormInvalidate = false.obs;
@@ -91,24 +98,32 @@ class Updateprofilecontroller extends GetxController {
   RxString cityId = "".obs;
   RxList cityList = [].obs;
 
+  RxString imageURl = "".obs;
+
   getProfileData() async {
-    state.value = ScreenState.apiLoading;
+    // state.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
     nameCtr.text = retrievedObject!.name;
     emailCtr.text = retrievedObject.email;
+
     phoneCtr.text = retrievedObject.phone;
     bussinessCtr.text = retrievedObject.businessName;
-    stateCtr.text = retrievedObject.state!.name;
-    cityCtr.text = retrievedObject.city!.city;
-    stateId.value = retrievedObject.state!.id.toString();
-    cityId.value = retrievedObject.city!.id.toString();
-    final String fileName = path.basename(retrievedObject.visitingCardUrl);
-    visitingcardCtr.text = fileName;
+    if (retrievedObject.state != null) {
+      stateCtr.text = retrievedObject.state!.name;
+      stateId.value = retrievedObject.state!.id.toString();
+    }
+    if (retrievedObject.city != null) {
+      cityCtr.text = retrievedObject.city!.city;
+      cityId.value = retrievedObject.city!.id.toString();
+    }
 
-    // imageFile.value = retrievedObject!.visitingC+ardUrl;
+    imageURl.value = retrievedObject.visitingCardUrl;
+    print('imageUrl is ::::$imageURl');
 
     pincodeCtr.text = retrievedObject.pincode;
     addressCtr.text = retrievedObject.address;
+
+    // if( nameCtr.text.isNotEmpty &&emailCtr.text.isNotEmpty&&bussinessCtr.text.isNotEmpty&&phoneCtr.text.isNotEmpty && stateCtr.text.isNotEmpty&&cityCtr.text.isNotEmpty&&pincodeCtr. ){}
 
     validateFields(nameCtr.text,
         model: nameModel,
@@ -116,7 +131,7 @@ class Updateprofilecontroller extends GetxController {
         iscomman: true,
         shouldEnableButton: false);
 
-    validateFields(emailCtr.text,
+    validateFields(retrievedObject.email,
         model: emailModel,
         errorText1: "Email is required",
         errorText2: "Invalid email format",
@@ -132,6 +147,12 @@ class Updateprofilecontroller extends GetxController {
     validateFields(bussinessCtr.text,
         model: bussinessModel,
         errorText1: "Business name is required",
+        iscomman: true,
+        shouldEnableButton: false);
+
+    validateFields(imageURl.value,
+        model: imageModel,
+        errorText1: "Profile picture is required",
         iscomman: true,
         shouldEnableButton: false);
 
@@ -153,11 +174,11 @@ class Updateprofilecontroller extends GetxController {
         isPincode: true,
         shouldEnableButton: false);
 
-    validateFields(visitingcardCtr.text,
-        model: visitingCardModel,
-        errorText1: "Visiting card is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    // validateFields(visitingcardCtr.text,
+    //     model: visitingCardModel,
+    //     errorText1: "Visiting card is required",
+    //     iscomman: true,
+    //     shouldEnableButton: false);
 
     validateFields(addressCtr.text,
         model: addressModel,
@@ -165,9 +186,9 @@ class Updateprofilecontroller extends GetxController {
         iscomman: true,
         shouldEnableButton: false);
 
-    enableSignUpButton();
+    enableSignUpButton(); // Call explicitly after initial validation
 
-    state.value = ScreenState.apiSuccess;
+    // state.value = ScreenState.apiSuccess;
     update();
   }
 
@@ -179,7 +200,7 @@ class Updateprofilecontroller extends GetxController {
     stateNode = FocusNode();
     cityNode = FocusNode();
     pincodeNode = FocusNode();
-    visitingcardNode = FocusNode();
+    // visitingcardNode = FocusNode();
     addressNode = FocusNode();
     searchStateNode = FocusNode();
     searchCityNode = FocusNode();
@@ -191,7 +212,7 @@ class Updateprofilecontroller extends GetxController {
     stateCtr = TextEditingController();
     cityCtr = TextEditingController();
     pincodeCtr = TextEditingController();
-    visitingcardCtr = TextEditingController();
+    // visitingcardCtr = TextEditingController();
     addressCtr = TextEditingController();
     searchStatectr = TextEditingController();
     searchCityctr = TextEditingController();
@@ -219,12 +240,24 @@ class Updateprofilecontroller extends GetxController {
   }
 
   void enableSignUpButton() {
-    print('executed');
+    print('enableSignUpButton executed');
+    print('nameModel.isValidate: ${nameModel.value.isValidate}');
+    print('emailModel.isValidate: ${emailModel.value.isValidate}');
+    print('phoneModel.isValidate: ${phoneModel.value.isValidate}');
+    print('imageModel.isValidate: ${imageModel.value.isValidate}');
+    print('bussinessModel.isValidate: ${bussinessModel.value.isValidate}');
+    print('stateModel.isValidate: ${stateModel.value.isValidate}');
+    print('cityModel.isValidate: ${cityModel.value.isValidate}');
+    print('pincodeModel.isValidate: ${pincodeModel.value.isValidate}');
+    print('addressModel.isValidate: ${addressModel.value.isValidate}');
+
     if (nameModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (emailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (phoneModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
+    } else if (imageModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (bussinessModel.value.isValidate == false) {
       isFormInvalidate.value = false;
@@ -234,7 +267,7 @@ class Updateprofilecontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (pincodeModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (visitingCardModel.value.isValidate == false) {
+    } else if (addressModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
@@ -245,8 +278,6 @@ class Updateprofilecontroller extends GetxController {
 
   @override
   void onClose() {
-
-
     nameCtr.clear();
     emailCtr.clear();
     phoneCtr.clear();
@@ -254,7 +285,7 @@ class Updateprofilecontroller extends GetxController {
     stateCtr.clear();
     cityCtr.clear();
     pincodeCtr.clear();
-    visitingcardCtr.clear();
+    // visitingcardCtr.clear();
     addressCtr.clear();
 
     // Reset all validation models
@@ -265,7 +296,7 @@ class Updateprofilecontroller extends GetxController {
     stateModel.value = ValidationModel(null, null, isValidate: false);
     cityModel.value = ValidationModel(null, null, isValidate: false);
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
-    visitingCardModel.value = ValidationModel(null, null, isValidate: false);
+    // visitingCardModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
 
     // Reset reactive variables
@@ -286,7 +317,7 @@ class Updateprofilecontroller extends GetxController {
     stateCtr.clear();
     cityCtr.clear();
     pincodeCtr.clear();
-    visitingcardCtr.clear();
+    // visitingcardCtr.clear();
     addressCtr.clear();
     searchStatectr.clear();
     searchCityctr.clear();
@@ -298,7 +329,7 @@ class Updateprofilecontroller extends GetxController {
     stateNode.unfocus();
     cityNode.unfocus();
     pincodeNode.unfocus();
-    visitingcardNode.unfocus();
+    // visitingcardNode.unfocus();
     addressNode.unfocus();
     searchStateNode.unfocus();
     searchCityNode.unfocus();
@@ -311,7 +342,7 @@ class Updateprofilecontroller extends GetxController {
     stateModel.value = ValidationModel(null, null, isValidate: false);
     cityModel.value = ValidationModel(null, null, isValidate: false);
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
-    visitingCardModel.value = ValidationModel(null, null, isValidate: false);
+    // visitingCardModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
     isFormInvalidate.value = false;
     isloading = false;
@@ -356,6 +387,9 @@ class Updateprofilecontroller extends GetxController {
         });
   }
 
+  // final ImagePicker _picker = ImagePicker();
+  Rx<File?> imageFile = null.obs;
+
   void updateProfile(context) async {
     var loadingIndicator = LoadingProgressDialog();
 
@@ -369,7 +403,6 @@ class Updateprofilecontroller extends GetxController {
       return;
     }
     loadingIndicator.show(context, '');
-
 
     var response = await Repository.multiPartPost({
       "name": nameCtr.text.toString(),
@@ -424,77 +457,278 @@ class Updateprofilecontroller extends GetxController {
         // Get.back();
       });
     }
-    
   }
 
-  final ImagePicker _picker = ImagePicker();
-  Rx<File?> imageFile = null.obs;
+  // Rx<File?> avatarFile = null.obs;
+  // RxString profilePic = "".obs;
 
-  // String imagePath = "";
-
-  Future<void> _pickImage({bool iscamera = false}) async {
-    final XFile? image = await _picker.pickImage(
-      source: iscamera ? ImageSource.camera : ImageSource.gallery,
-    );
-
-    if (image != null) {
-      print('Picked Image Path: ${image.path}');
-      // imagePath = image.path;
-      imageFile = File(image.path).obs;
-      final String fileName = path.basename(image.path);
-      visitingcardCtr.text = fileName;
-      validateFields(fileName,
-          model: visitingCardModel,
-          errorText1: "Visiting card is required",
-          iscomman: true,
-          shouldEnableButton: true);
-      update(); // not needed if you're using Obx(), but required for GetBuilder
-    } else {
-      validateFields("",
-          model: visitingCardModel,
-          errorText1: "Visiting card is required",
-          iscomman: true,
-          shouldEnableButton: true);
-      print('No image selected');
-    }
-  }
-
-  void showOptionsCupertinoDialog({required BuildContext context}) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Background",
-      barrierColor: black.withOpacity(0.6), // Dark overlay, no blur
-      transitionDuration: Duration(milliseconds: 200),
-      pageBuilder: (context, animation1, animation2) {
-        return Center(
-          child: CupertinoAlertDialog(
-            title: Text('Choose an Option'),
-            content: Text(
-              'Select how you want to add the picture.',
-              style: TextStyle(fontFamily: dM_sans_medium),
-            ),
-            actions: [
-              CupertinoDialogAction(
-                child: Text('Camera', style: TextStyle(color: black)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickImage(iscamera: true);
-                },
-              ),
-              CupertinoDialogAction(
-                child: Text('Gallery', style: TextStyle(color: black)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickImage(iscamera: false);
-                },
-              ),
+  getImage() {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          child: Container(
+            width: 12.h,
+          ),
+        ),
+        Container(
+          height: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+          margin: const EdgeInsets.only(right: 10),
+          width: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+          decoration: BoxDecoration(
+            border: Border.all(color: white, width: 1.w),
+            borderRadius: BorderRadius.circular(100.w),
+            boxShadow: [
+              BoxShadow(
+                color: black.withOpacity(0.1),
+                blurRadius: 5.0,
+              )
             ],
           ),
-        );
-      },
+          child: CircleAvatar(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50.0),
+              child: imageFile.value == null && imageURl.value.isNotEmpty
+                  ? CachedNetworkImage(
+                      fit: BoxFit.fitWidth,
+                      imageUrl: imageURl.value,
+                      placeholder: (context, url) => const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor),
+                          ),
+                      imageBuilder: (context, imageProvider) => Image.network(
+                            imageURl.value,
+                            fit: BoxFit.fitWidth,
+                          ),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                            Asset.profileimg,
+                            height: 8.0.h,
+                            width: 8.0.h,
+                          ))
+                  : imageFile.value == null
+                      ? SvgPicture.asset(
+                          Asset.profileimg,
+                          height: 8.0.h,
+                          width: 8.0.h,
+                        )
+                      : Image.file(
+                          imageFile.value!,
+                          height: Device.screenType == sizer.ScreenType.mobile
+                              ? 8.0.h
+                              : 8.5.h,
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 8.0.h
+                              : 8.5.h,
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.asset(
+                              Asset.profileimg,
+                              height: 8.0.h,
+                              width: 8.0.h,
+                            );
+                          },
+                        ),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 5,
+          bottom: 0.5.h,
+          child: Container(
+            height: 3.3.h,
+            width: 3.3.h,
+            padding: const EdgeInsets.all(5),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              border: Border.all(color: white, width: 0.6.w),
+              borderRadius: BorderRadius.circular(100.w),
+              boxShadow: [
+                BoxShadow(
+                  color: black.withOpacity(0.1),
+                  blurRadius: 5.0,
+                )
+              ],
+            ),
+            child: SvgPicture.asset(
+              Asset.add,
+              height: 12.0.h,
+              width: 15.0.h,
+              fit: BoxFit.cover,
+              // ignore: deprecated_member_use
+              color: white,
+            ),
+          ),
+        ),
+      ],
     );
   }
+
+  actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
+    await ImagePicker()
+        .pickImage(
+            source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+            maxWidth: 1080,
+            maxHeight: 1080,
+            imageQuality: 100)
+        .then((file) async {
+      if (file != null) {
+        //Cropping the image
+        CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: file.path,
+            maxWidth: 1080,
+            maxHeight: 1080,
+            cropStyle: CropStyle.rectangle,
+            aspectRatioPresets: Platform.isAndroid
+                ? [
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio3x2,
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPreset.ratio16x9
+                  ]
+                : [
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio3x2,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPreset.ratio5x3,
+                    CropAspectRatioPreset.ratio5x4,
+                    CropAspectRatioPreset.ratio7x5,
+                    CropAspectRatioPreset.ratio16x9
+                  ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Crop Image',
+                  cropGridColor: primaryColor,
+                  toolbarColor: primaryColor,
+                  statusBarColor: primaryColor,
+                  toolbarWidgetColor: white,
+                  activeControlsWidgetColor: primaryColor,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Crop Image',
+                cancelButtonTitle: 'Cancel',
+                doneButtonTitle: 'Done',
+                aspectRatioLockEnabled: false,
+              ),
+            ],
+            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+        if (croppedFile != null) {
+          imageFile = File(croppedFile.path).obs;
+          imageURl.value = croppedFile.path;
+
+          validateFields(croppedFile.path,
+              model: imageModel,
+              errorText1: "Profile picture is required",
+              iscomman: true,
+              shouldEnableButton: true);
+
+          imageFile.refresh(); // Ensure Obx is notified
+          update();
+        } else {
+          imageFile.value = null;
+          imageURl.value = "";
+          validateFields("",
+              model: imageModel,
+              errorText1: "Profile picture is required",
+              iscomman: true,
+              shouldEnableButton: true);
+          update();
+        }
+      } else {
+        imageFile.value = null;
+        imageURl.value = "";
+        validateFields("",
+            model: imageModel,
+            errorText1: "Profile picture is required",
+            iscomman: true,
+            shouldEnableButton: true);
+        print('No image selected');
+        update();
+      }
+    });
+
+    update();
+  }
+
+  // final ImagePicker _picker = ImagePicker();
+  // Rx<File?> imageFile = null.obs;
+
+  // // String imagePath = "";
+
+  // Future<void> _pickImage({bool iscamera = false}) async {
+  //   try {
+  //     final XFile? image = await _picker.pickImage(
+  //       source: iscamera ? ImageSource.camera : ImageSource.gallery,
+  //     );
+
+  //     if (image != null) {
+  //       print('Picked Image Path: ${image.path}');
+  //       imageFile = File(image.path).obs; // Update the value of the existing Rx
+  //       // final String fileName = path.basename(image.path);
+
+  //     //   visitingcardCtr.text = fileName;
+  //     //   validateFields(fileName,
+  //     //       model: visitingCardModel,
+  //     //       errorText1: "Visiting card is required",
+  //     //       iscomman: true,
+  //     //       shouldEnableButton: true);
+  //     //   update();
+  //     // } else {
+  //     //   imageFile.value =
+  //     //       null; // Explicitly set to null if no image is selected
+  //     //   validateFields("",
+  //     //       model: visitingCardModel,
+  //     //       errorText1: "Visiting card is required",
+  //     //       iscomman: true,
+  //     //       shouldEnableButton: true);
+
+  //       update();
+  //       print('No image selected');
+  //     }
+  //   } catch (e) {
+  //     print('Error picking image: $e');
+  //   }
+  // }
+
+  // void showOptionsCupertinoDialog({required BuildContext context}) {
+  //   showGeneralDialog(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     barrierLabel: "Background",
+  //     barrierColor: black.withOpacity(0.6), // Dark overlay, no blur
+  //     transitionDuration: Duration(milliseconds: 200),
+  //     pageBuilder: (context, animation1, animation2) {
+  //       return Center(
+  //         child: CupertinoAlertDialog(
+  //           title: Text('Choose an Option'),
+  //           content: Text(
+  //             'Select how you want to add the picture.',
+  //             style: TextStyle(fontFamily: dM_sans_medium),
+  //           ),
+  //           actions: [
+  //             CupertinoDialogAction(
+  //               child: Text('Camera', style: TextStyle(color: black)),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _pickImage(iscamera: true);
+  //               },
+  //             ),
+  //             CupertinoDialogAction(
+  //               child: Text('Gallery', style: TextStyle(color: black)),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _pickImage(iscamera: false);
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void getState(context) async {
     commonGetApiCallFormate(

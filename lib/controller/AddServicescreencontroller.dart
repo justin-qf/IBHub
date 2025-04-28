@@ -259,6 +259,8 @@ class AddServicescreencontroller extends GetxController {
       shouldEnableButton: false,
     );
 
+    print('enable btn execute');
+
     // Enable submit button after all validations
     enableSubmitButton();
   }

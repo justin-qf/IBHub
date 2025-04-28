@@ -41,21 +41,31 @@ class _SignupscreenState extends State<Signupscreen> {
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Column(
             children: [
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                      onTap: () {
-                        Get.back(result: true);
-                        ctr.resetForm();
-                        ctr.unfocusAll();
-                      },
-                      child: SvgPicture.asset(Asset.arrowBack,
-
-                          // ignore: deprecated_member_use
-                          color: black,
-                          height: 4.h)),
-                ),
+              // SafeArea(
+              //   child: Align(
+              //     alignment: Alignment.centerLeft,
+              //     child: GestureDetector(
+              //         onTap: () {
+              //           Get.back(result: true);
+              //           ctr.resetForm();
+              //           ctr.unfocusAll();
+              //         },
+              //         child: SvgPicture.asset(Asset.arrowBack,
+              //             // ignore: deprecated_member_use
+              //             color: black,
+              //             height: 4.h)),
+              //   ),
+              // ),
+              Container(
+                margin: EdgeInsets.only(top: 5.h, left: 0.w),
+                child: getleftsidebackbtn(
+                    title: 'Create Your Account',
+                    backFunction: () {
+                      Get.back(result: true);
+                      ctr.resetForm();
+                      ctr.unfocusAll();
+                    },
+                    istitle: false),
               ),
               getDynamicSizedBox(height: 2.h),
               Align(

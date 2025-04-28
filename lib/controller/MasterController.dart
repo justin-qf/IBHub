@@ -40,6 +40,8 @@ void validateField({
   final emailRegex = RegExp(
       r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$');
 
+  final passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]+$');
+
   // Only update model if it's provided
   if (models != null) {
     if (isotp) {
@@ -47,12 +49,20 @@ void validateField({
         models.value = ValidationModel(val, errorText1, isValidate: false);
       } else if (val.length != 4) {
         models.value = ValidationModel(val, errorText2, isValidate: false);
+      } else if (val.startsWith(' ')) {
+        models.value = ValidationModel(
+            val, "Please remove the space at the beginning.",
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }
     } else if (iscomman) {
       if (val.isEmpty) {
         models.value = ValidationModel(val, errorText1, isValidate: false);
+      } else if (val.startsWith(' ')) {
+        models.value = ValidationModel(
+            val, "Please remove the space at the beginning.",
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }
@@ -63,6 +73,10 @@ void validateField({
         models.value = ValidationModel(val, errorText2, isValidate: false);
       } else if (!emailRegex.hasMatch(val)) {
         models.value = ValidationModel(val, errorText3, isValidate: false);
+      } else if (val.startsWith(' ')) {
+        models.value = ValidationModel(
+            val, "Please remove the space at the beginning.",
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }
@@ -71,6 +85,10 @@ void validateField({
         models.value = ValidationModel(val, errorText1, isValidate: false);
       } else if (val.length != 6) {
         models.value = ValidationModel(val, errorText2, isValidate: false);
+      } else if (val.startsWith(' ')) {
+        models.value = ValidationModel(
+            val, "Please remove the space at the beginning.",
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }
@@ -79,6 +97,10 @@ void validateField({
         models.value = ValidationModel(val, errorText1, isValidate: false);
       } else if (val.length != 10) {
         models.value = ValidationModel(val, errorText2, isValidate: false);
+      } else if (val.startsWith(' ')) {
+        models.value = ValidationModel(
+            val, "Please remove the space at the beginning.",
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }
@@ -89,6 +111,9 @@ void validateField({
         models.value = ValidationModel(val, errorText2, isValidate: false);
       } else if (val.length < 8) {
         models.value = ValidationModel(val, errorText3, isValidate: false);
+      } else if (!passwordRegex.hasMatch(val)) {
+        models.value = ValidationModel(val, 'Must include (e.g., abc123@!).',
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }
@@ -99,6 +124,9 @@ void validateField({
         models.value = ValidationModel(val, errorText2, isValidate: false);
       } else if (val != confirmpasswordctr) {
         models.value = ValidationModel(val, errorText3, isValidate: false);
+      } else if (!passwordRegex.hasMatch(val)) {
+        models.value = ValidationModel(val, 'Must include (e.g., abc123@!).',
+            isValidate: false);
       } else {
         models.value = ValidationModel(val, null, isValidate: true);
       }

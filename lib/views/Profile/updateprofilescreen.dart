@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
+import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/updateProfileController.dart';
@@ -53,17 +58,83 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
       },
       body: Column(
         children: [
-          SafeArea(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 5.w),
-              child: getleftsidebackbtn(
-                title: 'Edit Profile',
-                backFunction: () {
-                  Get.back(result: true);
-                },
-              ),
+          getDynamicSizedBox(height: 5.h),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 5.w),
+            child: getleftsidebackbtn(
+              title: 'Edit Profile',
+              backFunction: () {
+                Get.back(result: true);
+              },
             ),
           ),
+          getDynamicSizedBox(height: 4.h),
+
+          // GestureDetector(
+          //   child: Obx(() {
+          //     return ctr.getImage();
+          //   }),
+          //   onTap: () async {
+          //     selectImageFromCameraOrGallery(context, cameraClick: () {
+          //       ctr.actionClickUploadImageFromCamera(context, isCamera: true);
+          //     }, galleryClick: () {
+          //       ctr.actionClickUploadImageFromCamera(context, isCamera: false);
+          //     });
+          //     setState(() {});
+          //   },
+          // ),
+
+          // Stack(
+          //   children: [
+          //     Container(
+          //       decoration: BoxDecoration(
+          //         shape: BoxShape.circle,
+          //         border: Border.all(color: black, width: 2),
+          //       ),
+          //       child: ClipRRect(
+          //           borderRadius: BorderRadius.circular(100),
+          //           child: Obx(() {
+          //             return ctr.imageFile.value != null &&
+          //                     ctr.imageFile.value!.path.isNotEmpty
+          //                 ? Image.file(
+          //                     File(ctr.imageFile.value!.path),
+          //                     height: 9.5.h,
+          //                     width: 20.w,
+          //                     fit: BoxFit.cover,
+          //                   )
+          //                 : ctr.imageURl.value
+          //                         .isNotEmpty // If the URL is not empty
+          //                     ? Image.network(
+          //                         ctr.imageURl.value, // Use the image URL here
+          //                         height: 9.5.h,
+          //                         width: 20.w,
+          //                         fit: BoxFit.cover,
+          //                       )
+          //                     : Icon(
+          //                         Icons.account_circle,
+          //                         size: 35.sp,
+          //                       );
+          //           })),
+          //     ),
+          //     Positioned(
+          //       bottom: 4,
+          //       right: 4,
+          //       child: GestureDetector(
+          //         onTap: () {
+          //           ctr.showOptionsCupertinoDialog(context: context);
+          //           setState(() {});
+          //         },
+          //         child: Container(
+          //           decoration: BoxDecoration(
+          //               color: white, borderRadius: BorderRadius.circular(50)),
+          //           child: SvgPicture.asset(Asset.plus),
+          //         ),
+          //       ),
+          //     )
+          //   ],
+          // ),
+          getDynamicSizedBox(height: 1.h),
+          getLable('Logo', isRequired: true),
           getDynamicSizedBox(height: 2.h),
           Expanded(
             child: Container(
@@ -71,6 +142,22 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    GestureDetector(
+                      child: Obx(() {
+                        return ctr.getImage();
+                      }),
+                      onTap: () async {
+                        selectImageFromCameraOrGallery(context,
+                            cameraClick: () {
+                          ctr.actionClickUploadImageFromCamera(context,
+                              isCamera: true);
+                        }, galleryClick: () {
+                          ctr.actionClickUploadImageFromCamera(context,
+                              isCamera: false);
+                        });
+                        setState(() {});
+                      },
+                    ),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,
@@ -103,26 +190,26 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                             isRequired: true);
                       },
                     ),
-                    Obx(() {
-                      return getTextField(
-                        useOnChanged: false,
-                        label: SignUpConstant.logoLabel,
-                        ctr: ctr.visitingcardCtr,
-                        node: ctr.visitingcardNode,
-                        model: ctr.visitingCardModel.value,
-                        hint: SignUpConstant.pickHint,
-                        isenable: false,
-                        usegesture: true,
-                        isRequired: true,
-                        context: context,
-                        gestureFunction: () {
-                          ctr.unfocusAll();
-                          ctr.showOptionsCupertinoDialog(context: context);
+                    // Obx(() {
+                    //   return getTextField(
+                    //     useOnChanged: false,
+                    //     label: SignUpConstant.logoLabel,
+                    //     ctr: ctr.visitingcardCtr,
+                    //     node: ctr.visitingcardNode,
+                    //     model: ctr.visitingCardModel.value,
+                    //     hint: SignUpConstant.pickHint,
+                    //     isenable: false,
+                    //     usegesture: true,
+                    //     isRequired: true,
+                    //     context: context,
+                    //     gestureFunction: () {
+                    //       ctr.unfocusAll();
+                    //       ctr.showOptionsCupertinoDialog(context: context);
 
-                          // ctr.showSubjectSelectionPopups(context);
-                        },
-                      );
-                    }),
+                    //       // ctr.showSubjectSelectionPopups(context);
+                    //     },
+                    //   );
+                    // }),
                     Obx(() {
                       return getTextField(
                         label: SignUpConstant.email,

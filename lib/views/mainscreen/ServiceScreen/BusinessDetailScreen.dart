@@ -111,6 +111,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
               () => Container(
                 padding: EdgeInsets.only(top: 4.h),
                 width: Device.width,
+                height: 30.h,
                 decoration: BoxDecoration(
                   color: controller.bgColor.value,
                   borderRadius: BorderRadius.only(
@@ -120,29 +121,39 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 ),
                 child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.back(result: true);
-                      },
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          height: 10.h,
-                          width: 10.w,
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                              color: inputBgColor, shape: BoxShape.circle),
-                          margin: EdgeInsets.only(left: 2.w),
-                          child: SvgPicture.asset(
-                            Asset.arrowBack,
-                            colorFilter:
-                                ColorFilter.mode(black, BlendMode.srcIn),
-                            height: 24,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
+                    Container(
+                      margin: EdgeInsets.only(left: 4.w, top: 2.h),
+                      child: getleftsidebackbtn(
+                          istitle: false,
+                          backFunction: () {
+                            Get.back(
+                              result: true,
+                            );
+                          }),
                     ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     Get.back(result: true);
+                    //   },
+                    //   child: Align(
+                    //     alignment: Alignment.centerLeft,
+                    //     child: Container(
+                    //       height: 10.h,
+                    //       width: 10.w,
+                    //       padding: EdgeInsets.all(4),
+                    //       decoration: BoxDecoration(
+                    //           color: inputBgColor, shape: BoxShape.circle),
+                    //       margin: EdgeInsets.only(left: 2.w),
+                    //       child: SvgPicture.asset(
+                    //         Asset.arrowBack,
+                    //         colorFilter:
+                    //             ColorFilter.mode(black, BlendMode.srcIn),
+                    //         height: 24,
+                    //         fit: BoxFit.contain,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Container(
                       padding:
                           EdgeInsets.only(left: 2.w, right: 2.w, bottom: 4.h),
@@ -184,29 +195,50 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   ),
                   // controller.getCategoryLable(widget.item.businessName),
                   getDynamicSizedBox(height: 1.h),
-                  controller.getLableText(
-                      widget.item != null ? widget.item!.email : email,
-                      isMainTitle: false),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.email,
+                        size: 18.sp,
+                      ),
+                      getDynamicSizedBox(width: 1.w),
+                      controller.getLableText(
+                          widget.item != null ? widget.item!.email : email,
+                          isMainTitle: false),
+                    ],
+                  ),
                   getDynamicSizedBox(height: 1.h),
                   GestureDetector(
                     onTap: () {
                       launchPhoneCall(
                           widget.item != null ? widget.item!.phone : phone);
                     },
-                    child: controller.getLableText(
-                        widget.item != null ? widget.item!.phone : phone,
-                        isMainTitle: false),
+                    child: Row(
+                      children: [
+                        Icon(Icons.call, size: 18.sp),
+                        getDynamicSizedBox(width: 1.w),
+                        controller.getLableText(
+                            widget.item != null ? widget.item!.phone : phone,
+                            isMainTitle: false)
+                      ],
+                    ),
                   ),
                   getDynamicSizedBox(height: 1.h),
-                  if (widget.item != null && widget.item!.address.isNotEmpty)
-                    controller.getLableText('Address : ', isMainTitle: false),
+                  // if (widget.item != null && widget.item!.address.isNotEmpty)
+                  //   controller.getLableText('Address : ', isMainTitle: false),
                   getDynamicSizedBox(height: 0.5.h),
                   if (widget.item != null && widget.item!.address.isNotEmpty)
-                    controller.getCommonText(
-                        widget.item != null
-                            ? widget.item!.address.toString()
-                            : address,
-                        isHint: false),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 18.sp),
+                        getDynamicSizedBox(width: 1.w),
+                        controller.getCommonText(
+                            widget.item != null
+                                ? widget.item!.address.toString()
+                                : address,
+                            isHint: false)
+                      ],
+                    ),
                   getDynamicSizedBox(
                       height: Device.screenType == sizer.ScreenType.mobile
                           ? widget.item != null &&

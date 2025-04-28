@@ -646,33 +646,50 @@ getCommonToolbar(String title,
 //   );
 // }
 
-getleftsidebackbtn({required backFunction, required title}) {
+getleftsidebackbtn({required backFunction,  title, istitle = true}) {
   return Row(
     children: [
-       SizedBox(
-            width: 10.w,
-            height: 4.5.h,
-            child: FloatingActionButton(
-              onPressed: backFunction,
-              backgroundColor: inputBgColor,
-              elevation: 0,
-              mini: true,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
-               
+      GestureDetector(
+        onTap: backFunction,
+        child: Container(
+            // width: 8.w,
+            // height: 8.h,
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: primaryColor),
+            child: Padding(
+              padding: EdgeInsets.all(2),
               child: SvgPicture.asset(
                 Asset.arrowBack,
-                colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
-                height: 24,
+                colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
                 fit: BoxFit.contain,
               ),
+            )
+            //  FloatingActionButton(
+
+            //   onPressed: backFunction,
+            //   backgroundColor: primaryColor,
+            //   elevation: 0,
+            //   mini: true,
+            //   shape:
+
+            //    RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(50)),
+
+            //   child: SvgPicture.asset(
+            //     Asset.arrowBack,
+            //     colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
+            //     height: 20,
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
             ),
-          ),
-      getDynamicSizedBox(width: 2.w),
-      Text(
-        title,
-        style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
-      )
+      ),
+      if (istitle == true) getDynamicSizedBox(width: 2.w),
+      if (istitle == true)
+        Text(
+          title,
+          style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
+        )
     ],
   );
 }

@@ -301,7 +301,8 @@ class SearchScreenConstant {
   // Screen-related strings
   static const title = 'Search';
   static const hint = 'Search Here';
-  static const cancel = 'Cancle'; // Note: 'Cancle' is likely a typo, consider 'Cancel'
+  static const cancel =
+      'Cancle'; // Note: 'Cancle' is likely a typo, consider 'Cancel'
 
   // Dialog and bottom sheet strings
   static const loading = 'Loading';
@@ -322,6 +323,7 @@ class SearchScreenConstant {
   // Timer-related strings
   static const timeRemaining = 'Time remaining: %s seconds';
 }
+
 class ServicesScreenConstant {
   static const delete = 'Delete';
   static const update = 'Update';
@@ -358,6 +360,9 @@ class SignUpConstant {
 
   static const emailcontain = 'Email must contain @ symbol';
   static const invalidEmailFormat = 'Invalid email format';
+  static const invalidPasswordFormat =
+      'Must include a letter and a number (e.g., abc123).';
+
   static const mediumHint = 'Select Medium';
   static const addressHint = 'Enter Address';
   static const cityHint = 'Select City';

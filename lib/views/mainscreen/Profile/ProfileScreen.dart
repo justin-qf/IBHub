@@ -69,9 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                           height: 23.h,
                           width: Device.width,
                           padding:
-                              EdgeInsets.only(right: 3.w, left: 3.w, top: 1.h),
-                          decoration: const BoxDecoration(
-                            color: secondaryColor,
+                              EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
+                          decoration: BoxDecoration(
+                            color: secondaryColor.withOpacity(0.6),
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(35),
                               bottomRight: Radius.circular(35),
@@ -82,124 +82,114 @@ class _ProfileScreenState extends State<ProfileScreen>
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               // getDynamicSizedBox(height: 3.h),
-                              Container(
-                                margin: EdgeInsets.only(left: 6.w, top: 2.h),
-                                decoration: const BoxDecoration(
-                                  color: secondaryColor,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(35),
-                                    bottomRight: Radius.circular(35),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(onTap: () {
-                                      if (controller
-                                          .profilePic.value.isNotEmpty) {
-                                        Get.to(FullScreenImage(
-                                          imageUrl: controller.profilePic.value,
-                                          fromProfile: true,
-                                        ))!
-                                            .then((value) => {
-                                                  Statusbar()
-                                                      .trasparentStatusbar()
-                                                });
-                                      }
-                                    }, child: Obx(() {
-                                      return ClipRRect(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(30)),
-                                        child: CachedNetworkImage(
-                                          fit: BoxFit.cover,
-                                          height: 20.h,
-                                          width: 20.w,
-                                          imageUrl: controller.profilePic.value,
-                                          placeholder: (context, url) =>
-                                              const Center(
-                                            child: CircularProgressIndicator(
-                                                color: primaryColor),
-                                          ),
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  CircleAvatar(
-                                            radius: 25.h,
-                                            backgroundImage: imageProvider,
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              CircleAvatar(
-                                                  radius: 25.h,
-                                                  child: Icon(Icons.person)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(onTap: () {
+                                    if (controller
+                                        .profilePic.value.isNotEmpty) {
+                                      Get.to(FullScreenImage(
+                                        imageUrl: controller.profilePic.value,
+                                        fromProfile: true,
+                                      ))!
+                                          .then((value) => {
+                                                Statusbar()
+                                                    .trasparentStatusbar()
+                                              });
+                                    }
+                                  }, child: Obx(() {
+                                    return ClipRRect(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(30)),
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        height: 20.h,
+                                        width: 20.w,
+                                        imageUrl: controller.profilePic.value,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                          child: CircularProgressIndicator(
+                                              color: primaryColor),
                                         ),
-                                      );
-                                    })),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 3.w),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () {
-                                                return Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      controller.userName.value
-                                                              .isNotEmpty
-                                                          ? controller.userName
-                                                              .value.capitalize!
-                                                          : "Your Name",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontSize: 17.sp,
-                                                          color: black,
-                                                          fontWeight:
-                                                              FontWeight.w800),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                            Obx(
-                                              () {
-                                                return Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      controller.bussiness.value
-                                                              .isNotEmpty
-                                                          ? controller.bussiness
-                                                              .value.capitalize!
-                                                          : "Your Bussiness",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          color: black,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ],
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                CircleAvatar(
+                                          radius: 25.h,
+                                          backgroundImage: imageProvider,
                                         ),
+                                        errorWidget: (context, url, error) =>
+                                            CircleAvatar(
+                                                radius: 25.h,
+                                                child: Icon(Icons.person)),
+                                      ),
+                                    );
+                                  })),
+                                  Expanded(
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 3.w),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Obx(
+                                            () {
+                                              return Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    controller.userName.value
+                                                            .isNotEmpty
+                                                        ? controller.userName
+                                                            .value.capitalize!
+                                                        : "Your Name",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontSize: 17.sp,
+                                                        color: black,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                          Obx(
+                                            () {
+                                              return Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    controller.bussiness.value
+                                                            .isNotEmpty
+                                                        ? controller.bussiness
+                                                            .value.capitalize!
+                                                        : "Your Bussiness",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontSize: 16.sp,
+                                                        color: black,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -269,7 +259,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           controller.getProfileData();
                                           // ignore: use_build_context_synchronously
                                           controller.getApiProfile(context);
-                                        
                                         }
                                       });
                                     })),
@@ -284,7 +273,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         item: null,
                                         isFromProfile: true,
                                       ));
-                                    
                                     })),
                             FadeInUp(
                               duration: getAnimationDuration(),
@@ -382,7 +370,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               children: [
                 Icon(Icons.arrow_forward_ios_rounded,
                     // ignore: deprecated_member_use
-                    color: grey.withOpacity(0.7), size: 5.w)
+                    color: grey.withOpacity(0.7),
+                    size: 5.w)
               ],
             )
           ],
@@ -390,5 +379,4 @@ class _ProfileScreenState extends State<ProfileScreen>
       ),
     );
   }
-
 }

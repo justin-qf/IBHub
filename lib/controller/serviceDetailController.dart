@@ -128,12 +128,12 @@ class ServiceDetailScreenController extends GetxController {
       textAlign: TextAlign.justify,
       style: isHint == true
           ? TextStyle(
-              //fontFamily: fontRegular,
+              fontFamily: dM_sans_medium,
               color: grey,
               fontSize: 16.sp,
             )
           : TextStyle(
-              //fontFamily: fontBold,
+              fontFamily: dM_sans_medium,
               color: black,
               fontSize:
                   Device.screenType == sizer.ScreenType.mobile ? 16.sp : 7.sp,
