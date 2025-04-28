@@ -62,17 +62,22 @@ class ServiceDetailScreenController extends GetxController {
   // }
 
 // Function to get the dominant color from an image and set the contrast color
+
+  RxBool isLoadingPalette = false.obs; // Add loading state
+
   Future<void> getImageColor({required String url}) async {
-    final PaletteGenerator paletteGenerator =
-        await PaletteGenerator.fromImageProvider(
-      NetworkImage(url),
-    );
+    try {
+      isLoadingPalette.value = true; // Start loading
+      final PaletteGenerator paletteGenerator =
+          await PaletteGenerator.fromImageProvider(
+        NetworkImage(url),
+      );
 
-    // Set the background color
-    bgColor.value = paletteGenerator.dominantColor?.color ?? Colors.white;
-
-    // Set the background color to the contrast color
-    //  = getContrastColor(dominantColor);
+      // Set the background color
+      bgColor.value = paletteGenerator.dominantColor?.color ?? Colors.white;
+    } finally {
+      isLoadingPalette.value = false; // Stop loading
+    }
   }
 
   Widget getText(title, TextStyle? style) {
@@ -138,6 +143,21 @@ class ServiceDetailScreenController extends GetxController {
               fontSize:
                   Device.screenType == sizer.ScreenType.mobile ? 16.sp : 7.sp,
             ),
+    );
+  }
+
+  Widget getTexts(title) {
+    return Expanded(
+      child: Text(
+        title,
+        textAlign: TextAlign.justify,
+        style: TextStyle(
+          fontFamily: dM_sans_medium,
+          color: black,
+          height: 1.3,
+          fontSize: Device.screenType == sizer.ScreenType.mobile ? 16.sp : 7.sp,
+        ),
+      ),
     );
   }
 

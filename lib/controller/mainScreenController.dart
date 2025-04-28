@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
+import 'package:ibh/views/Profile/updateprofilescreen.dart';
+import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
 
@@ -65,22 +71,22 @@ class MainScreenController extends GetxController {
     state.value = ScreenState.apiSuccess;
   }
 
-  void getTimerPopup(BuildContext context) {
-    Future.delayed(const Duration(seconds: 10), () {
-      if (!context.mounted) return;
-      // Check if ANY of the fields are empty
-      if (address.value.isEmpty ||
-          city.value.isEmpty ||
-          states.value.isEmpty ||
-          pincode.value.isEmpty ||
-          visitingCardUrl.value.isEmpty ||
-          name.value.isEmpty ||
-          bussiness.value.isEmpty ||
-          phone.value.isEmpty) {
-        showBottomSheetPopup(context);
-      }
-    });
-  }
+  // void getTimerPopup(BuildContext context) {
+  //   Future.delayed(const Duration(seconds: 10), () {
+  //     if (!context.mounted) return;
+  //     // Check if ANY of the fields are empty
+  //     if (address.value.isEmpty ||
+  //         city.value.isEmpty ||
+  //         states.value.isEmpty ||
+  //         pincode.value.isEmpty ||
+  //         visitingCardUrl.value.isEmpty ||
+  //         name.value.isEmpty ||
+  //         bussiness.value.isEmpty ||
+  //         phone.value.isEmpty) {
+  //       showBottomSheetPopup(context);
+  //     }
+  //   });
+  // }
 
   void showBottomSheetPopup(BuildContext context) {
     showModalBottomSheet(
@@ -138,7 +144,8 @@ class MainScreenController extends GetxController {
                         Get.to(Updateprofilescreen());
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: green, // your custom green color
+                        backgroundColor:
+                            primaryColor, // your custom green color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

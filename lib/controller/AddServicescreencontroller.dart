@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
@@ -10,6 +12,7 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -20,10 +23,13 @@ import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
+import 'package:sizer/sizer.dart';
+import 'package:sizer/sizer.dart' as sizer;
 
 class AddServicescreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -45,7 +51,8 @@ class AddServicescreencontroller extends GetxController {
   var descriptionModel = ValidationModel(null, null, isValidate: false).obs;
   var keywordsModel = ValidationModel(null, null, isValidate: false).obs;
   var categoryModel = ValidationModel(null, null, isValidate: false).obs;
-  var thumbnailModel = ValidationModel(null, null, isValidate: false).obs;
+  // var thumbnailModel = ValidationModel(null, null, isValidate: false).obs;
+  var imageModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isFormInvalidate = false.obs;
   var isLoading = false.obs;
@@ -64,7 +71,7 @@ class AddServicescreencontroller extends GetxController {
 
   var keywords = <String>[].obs;
 
-  RxBool isFromHomeScreen = false.obs;
+  RxBool isFromUpdate = false.obs;
 
   void addKeyword(String keyword) {
     final trimmedKeyword = keyword.trim(); // Trim only leading/trailing spaces
@@ -84,6 +91,7 @@ class AddServicescreencontroller extends GetxController {
   // Remove keyword from the list
   void removeKeyword(String keyword) {
     keywords.remove(keyword);
+
     update();
   }
 
@@ -122,7 +130,7 @@ class AddServicescreencontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (categoryModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (thumbnailModel.value.isValidate == false) {
+    } else if (imageModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
@@ -152,12 +160,12 @@ class AddServicescreencontroller extends GetxController {
     descriptionModel.value = ValidationModel(null, null, isValidate: false);
     keywordsModel.value = ValidationModel(null, null, isValidate: false);
     categoryModel.value = ValidationModel(null, null, isValidate: false);
-    thumbnailModel.value = ValidationModel(null, null, isValidate: false);
+    imageModel.value = ValidationModel(null, null, isValidate: false);
 
     isFormInvalidate.value = false;
     isLoading.value = false;
-    imageFile.value = null;
-
+    // imageFile.value = null;
+    // imageURl.value = '';
     super.onClose();
   }
 
@@ -174,7 +182,7 @@ class AddServicescreencontroller extends GetxController {
     descriptionModel.value = ValidationModel(null, null, isValidate: false);
     keywordsModel.value = ValidationModel(null, null, isValidate: false);
     categoryModel.value = ValidationModel(null, null, isValidate: false);
-    thumbnailModel.value = ValidationModel(null, null, isValidate: false);
+    imageModel.value = ValidationModel(null, null, isValidate: false);
 
     isFormInvalidate.value = false;
     isloading = false;
@@ -183,15 +191,15 @@ class AddServicescreencontroller extends GetxController {
 
 //for edit screen
   ServiceDataList? editServiceItems;
-  RxString thumbnail = "".obs;
+
+  // RxString thumbnail = "".obs;
   RxString service = "".obs;
   RxString description = "".obs;
   RxString categoryEditid = "".obs;
   RxString keyword = "".obs;
 
   void fillEditData() {
-<<<<<<< HEAD
-    thumbnail.value = editServiceItems!.thumbnail.toString();
+    imageURl.value = editServiceItems!.thumbnail.toString();
     service.value = editServiceItems!.serviceTitle.toString();
     description.value = editServiceItems!.description.toString();
     keyword.value = editServiceItems!.keywords.toString();
@@ -210,41 +218,22 @@ class AddServicescreencontroller extends GetxController {
         if (keywordList is List) {
           keywords
               .addAll(keywordList.map((e) => e['value'].toString()).toList());
-=======
-    if (editServiceItems != null) {
-      thumbnail.value = editServiceItems!.thumbnail.toString();
-      service.value = editServiceItems!.serviceTitle.toString();
-      description.value = editServiceItems!.description.toString();
-      keyword.value = editServiceItems!.keywords.toString();
-      // categoryEditid.value = editServiceItems!.categoryId.toString();
-      categoryId.value = editServiceItems!.categoryId.toString();
-      thumbnailCtr.text = editServiceItems!.thumbnail.toString();
-      serviceTitleCtr.text = editServiceItems!.serviceTitle.toString();
-      descriptionCtr.text = editServiceItems!.description.toString();
-      keywordsCtr.text = '';
-      keywords.clear();
-      if (editServiceItems!.keywords.isNotEmpty) {
-        try {
-          final keywordList = jsonDecode(editServiceItems!.keywords);
-          if (keywordList is List) {
-            keywords
-                .addAll(keywordList.map((e) => e['value'].toString()).toList());
-          }
-        } catch (e) {
-          keywords.addAll(
-              editServiceItems!.keywords.split(',').map((e) => e.trim()));
->>>>>>> 643ec4f104d01bc12902643599e3c6aff27402d5
         }
+      } catch (e) {
+        keywords
+            .addAll(editServiceItems!.keywords.split(',').map((e) => e.trim()));
       }
     }
-// Validate all fields
+
     validateFields(
       thumbnailCtr.text,
-      model: thumbnailModel,
+      model: imageModel,
       errorText1: AddServiceScreenViewConst.visitingCardReq,
       iscomman: true,
       shouldEnableButton: false, // Avoid premature button enabling
     );
+
+// Validate all fields
 
     validateFields(
       serviceTitleCtr.text,
@@ -300,16 +289,16 @@ class AddServicescreencontroller extends GetxController {
       categoryList.addAll(categoryData.data);
       categoryFilterList.addAll(categoryData.data);
 
-      if (isfromHomescreen && categoryId.value.isNotEmpty) {
+      if (isfromHomescreen && categoryEditid.value.isNotEmpty) {
         final selectedCategory = categoryList.firstWhere(
-          (category) => category.id.toString() == categoryId.value,
+          (category) => category.id.toString() == categoryEditid.value,
         );
         // ignore: unnecessary_null_comparison
         if (selectedCategory != null) {
           categoryCtr.text = selectedCategory.name;
-          categoryId.value = selectedCategory.id.toString();
+          categoryEditid.value = selectedCategory.id.toString();
         } else {
-          categoryId.value = '';
+          categoryEditid.value = '';
           categoryCtr.text = '';
         }
       }
@@ -326,6 +315,7 @@ class AddServicescreencontroller extends GetxController {
       }
       return setDropDownContent(
           categoryFilterList,
+          controller: searchCategoryCtr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -340,12 +330,13 @@ class AddServicescreencontroller extends GetxController {
                 minLeadingWidth: 5,
                 onTap: () async {
                   Get.back();
-                  // if (isFromHomeScreen == true) {
-                  //   categoryEditid.value =
-                  //       categoryFilterList[index].id.toString();
-                  // } else {
-                  categoryId.value = categoryFilterList[index].id.toString();
-                  // }
+
+                  if (isFromHomeScreen == true) {
+                    categoryEditid.value =
+                        categoryFilterList[index].id.toString();
+                  } else {
+                    categoryId.value = categoryFilterList[index].id.toString();
+                  }
 
                   categoryCtr.text = categoryFilterList[index].name;
                   if (categoryCtr.text.toString().isNotEmpty) {
@@ -363,7 +354,9 @@ class AddServicescreencontroller extends GetxController {
                 title: showSelectedTextInDialog(
                   name: categoryFilterList[index].name,
                   modelId: categoryFilterList[index].id.toString(),
-                  storeId: categoryId.value,
+                  storeId: isFromHomeScreen
+                      ? categoryEditid.value
+                      : categoryId.value,
                 ),
               );
             },
@@ -426,71 +419,129 @@ class AddServicescreencontroller extends GetxController {
         });
   }
 
-  final ImagePicker _picker = ImagePicker();
-  Rx<File?> imageFile = null.obs;
+  // final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImage({bool iscamera = false}) async {
-    final XFile? image = await _picker.pickImage(
-      source: iscamera ? ImageSource.camera : ImageSource.gallery,
-    );
+  // Future<void> _pickImage({bool iscamera = false}) async {
+  //   final XFile? image = await _picker.pickImage(
+  //     source: iscamera ? ImageSource.camera : ImageSource.gallery,
+  //   );
 
-    if (image != null) {
-      imageFile = File(image.path).obs;
-      final String fileName = path.basename(image.path);
-      thumbnailCtr.text = fileName;
-      validateFields(fileName,
-          model: thumbnailModel,
-          errorText1: AddServiceScreenViewConst.visitingCardReq,
-          iscomman: true,
-          shouldEnableButton: true);
-      update(); // not needed if you're using Obx(), but required for GetBuilder
-    } else {
-      validateFields("",
-          model: thumbnailModel,
-          errorText1: AddServiceScreenViewConst.visitingCardReq,
-          iscomman: true,
-          shouldEnableButton: true);
-    }
-  }
+  //   if (image != null) {
+  //     imageFile = File(image.path).obs;
+  //     final String fileName = path.basename(image.path);
+  //     thumbnailCtr.text = fileName;
+  //     validateFields(fileName,
+  //         model: thumbnailModel,
+  //         errorText1: AddServiceScreenViewConst.visitingCardReq,
+  //         iscomman: true,
+  //         shouldEnableButton: true);
+  //     update(); // not needed if you're using Obx(), but required for GetBuilder
+  //   } else {
+  //     validateFields("",
+  //         model: thumbnailModel,
+  //         errorText1: AddServiceScreenViewConst.visitingCardReq,
+  //         iscomman: true,
+  //         shouldEnableButton: true);
+  //   }
+  // }
 
-  void showOptionsCupertinoDialog({required BuildContext context}) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: AddServiceScreenViewConst.background,
-      barrierColor: black.withOpacity(0.6), // Dark overlay, no blur
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (context, animation1, animation2) {
-        return Center(
-          child: CupertinoAlertDialog(
-            title: const Text(AddServiceScreenViewConst.chooseOpt),
-            content: const Text(AddServiceScreenViewConst.selectPic,
-                style: TextStyle(fontFamily: dM_sans_medium)),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text(AddServiceScreenViewConst.camera,
-                    style: TextStyle(color: black)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickImage(iscamera: true);
-                },
-              ),
-              CupertinoDialogAction(
-                child: const Text(AddServiceScreenViewConst.gallery,
-                    style: TextStyle(color: black)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickImage(iscamera: false);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // void showOptionsCupertinoDialog({required BuildContext context}) {
+  //   showGeneralDialog(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     barrierLabel: AddServiceScreenViewConst.background,
+  //     barrierColor: black.withOpacity(0.6), // Dark overlay, no blur
+  //     transitionDuration: const Duration(milliseconds: 200),
+  //     pageBuilder: (context, animation1, animation2) {
+  //       return Center(
+  //         child: CupertinoAlertDialog(
+  //           title: const Text(AddServiceScreenViewConst.chooseOpt),
+  //           content: const Text(AddServiceScreenViewConst.selectPic,
+  //               style: TextStyle(fontFamily: dM_sans_medium)),
+  //           actions: [
+  //             CupertinoDialogAction(
+  //               child: const Text(AddServiceScreenViewConst.camera,
+  //                   style: TextStyle(color: black)),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _pickImage(iscamera: true);
+  //               },
+  //             ),
+  //             CupertinoDialogAction(
+  //               child: const Text(AddServiceScreenViewConst.gallery,
+  //                   style: TextStyle(color: black)),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 _pickImage(iscamera: false);
+  //               },
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void updateServiceApi(context) async {
+    var loadingIndicator = LoadingProgressDialog();
+
+    // try {
+    if (networkManager.connectionType.value == 0) {
+      loadingIndicator.hide(context);
+      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+          Connection.noConnection, callback: () {
+        Get.back();
+      });
+      return;
+    }
+    loadingIndicator.show(context, '');
+
+    logcat("ServiceParam", {
+      "service_title": serviceTitleCtr.text.toString().trim(),
+      "description": descriptionCtr.text.toString().trim(),
+      "keywords": keywordsCtr.text.toString().trim(),
+      "category_id": categoryId.value.toString().trim(),
+    });
+
+    var response = await Repository.update({
+      "service_title": serviceTitleCtr.text.toString().trim(),
+      "description": descriptionCtr.text.toString().trim(),
+      "keywords":
+          jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
+      "category_id": categoryId.value.toString().trim(),
+    }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
+
+    loadingIndicator.hide(context);
+
+    var json = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      if (json['success'] == true) {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, json['message'],
+            callback: () {
+          Get.back(result: true);
+        });
+      } else {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, json['message'],
+            callback: () {});
+      }
+    } else {
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, json['message'],
+          callback: () {});
+    }
+    // } catch (e) {
+    //   logcat("Service Creation Exception", e.toString());
+    //   showDialogForScreen(
+    //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+    //       callback: () {});
+    //   loadingIndicator.hide(context);
+    // }
+  }
+
+  void addServiceApi(context) async {
     var loadingIndicator = LoadingProgressDialog();
 
     try {
@@ -511,17 +562,29 @@ class AddServicescreencontroller extends GetxController {
         "category_id": categoryId.value.toString().trim(),
       });
 
-      var response = await Repository.update({
+      var response = await Repository.multiPartPost({
         "service_title": serviceTitleCtr.text.toString().trim(),
         "description": descriptionCtr.text.toString().trim(),
         "keywords":
             jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
         "category_id": categoryId.value.toString().trim(),
-      }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
+      }, ApiUrl.addService,
+          multiPart:
+              imageFile.value != null && imageFile.value.toString().isNotEmpty
+                  ? http.MultipartFile(
+                      'thumbnail',
+                      imageFile.value!.readAsBytes().asStream(),
+                      imageFile.value!.lengthSync(),
+                      filename: imageFile.value!.path.split('/').last,
+                    )
+                  : null,
+          allowHeader: true);
 
+      var responseData = await response.stream.toBytes();
       loadingIndicator.hide(context);
 
-      var json = jsonDecode(response.body);
+      var result = String.fromCharCodes(responseData);
+      var json = jsonDecode(result);
 
       if (response.statusCode == 200) {
         if (json['success'] == true) {
@@ -548,6 +611,245 @@ class AddServicescreencontroller extends GetxController {
       loadingIndicator.hide(context);
     }
   }
+
+  Rx<File?> imageFile = null.obs;
+  RxString imageURl = "".obs;
+
+  getImage() {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          child: Container(
+            width: 12.h,
+          ),
+        ),
+        Container(
+          height: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+          margin: const EdgeInsets.only(right: 10),
+          width: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+          decoration: BoxDecoration(
+            border: Border.all(color: white, width: 1.w),
+            borderRadius: BorderRadius.circular(100.w),
+            boxShadow: [
+              BoxShadow(
+                color: black.withOpacity(0.1),
+                blurRadius: 5.0,
+              )
+            ],
+          ),
+          child: CircleAvatar(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(50.0),
+              child: imageFile.value == null && imageURl.value.isNotEmpty
+                  ? CachedNetworkImage(
+                      fit: BoxFit.fitWidth,
+                      imageUrl: imageURl.value,
+                      placeholder: (context, url) => const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor),
+                          ),
+                      imageBuilder: (context, imageProvider) => Image.network(
+                            imageURl.value,
+                            fit: BoxFit.fitWidth,
+                          ),
+                      errorWidget: (context, url, error) => SvgPicture.asset(
+                            Asset.profileimg,
+                            height: 8.0.h,
+                            width: 8.0.h,
+                          ))
+                  : imageFile.value == null
+                      ? SvgPicture.asset(
+                          Asset.profileimg,
+                          height: 8.0.h,
+                          width: 8.0.h,
+                        )
+                      : Image.file(
+                          imageFile.value!,
+                          height: Device.screenType == sizer.ScreenType.mobile
+                              ? 8.0.h
+                              : 8.5.h,
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 8.0.h
+                              : 8.5.h,
+                          errorBuilder: (context, error, stackTrace) {
+                            return SvgPicture.asset(
+                              Asset.profileimg,
+                              height: 8.0.h,
+                              width: 8.0.h,
+                            );
+                          },
+                        ),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 5,
+          bottom: 0.5.h,
+          child: Container(
+            height: 3.3.h,
+            width: 3.3.h,
+            padding: const EdgeInsets.all(5),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              border: Border.all(color: white, width: 0.6.w),
+              borderRadius: BorderRadius.circular(100.w),
+              boxShadow: [
+                BoxShadow(
+                  color: black.withOpacity(0.1),
+                  blurRadius: 5.0,
+                )
+              ],
+            ),
+            child: SvgPicture.asset(
+              Asset.add,
+              height: 12.0.h,
+              width: 15.0.h,
+              fit: BoxFit.cover,
+              // ignore: deprecated_member_use
+              color: white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
+    await ImagePicker()
+        .pickImage(
+            source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+            maxWidth: 1080,
+            maxHeight: 1080,
+            imageQuality: 100)
+        .then((file) async {
+      if (file != null) {
+        //Cropping the image
+        CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath: file.path,
+            maxWidth: 1080,
+            maxHeight: 1080,
+            cropStyle: CropStyle.rectangle,
+            aspectRatioPresets: Platform.isAndroid
+                ? [
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio3x2,
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPreset.ratio16x9
+                  ]
+                : [
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio3x2,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPreset.ratio5x3,
+                    CropAspectRatioPreset.ratio5x4,
+                    CropAspectRatioPreset.ratio7x5,
+                    CropAspectRatioPreset.ratio16x9
+                  ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Crop Image',
+                  cropGridColor: primaryColor,
+                  toolbarColor: primaryColor,
+                  statusBarColor: primaryColor,
+                  toolbarWidgetColor: white,
+                  activeControlsWidgetColor: primaryColor,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Crop Image',
+                cancelButtonTitle: 'Cancel',
+                doneButtonTitle: 'Done',
+                aspectRatioLockEnabled: false,
+              ),
+            ],
+            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+        if (croppedFile != null) {
+          imageFile = File(croppedFile.path).obs;
+          imageURl.value = croppedFile.path;
+          logcat("isUpdated", imageURl.value.toString());
+          validateFields(croppedFile.path,
+              model: imageModel,
+              errorText1: "Profile picture is required",
+              iscomman: true,
+              shouldEnableButton: true);
+          imageFile.refresh(); // Ensure Obx is notified
+          update();
+          update();
+        } else {
+          imageFile.value = null;
+          imageURl.value = "";
+          validateFields("",
+              model: imageModel,
+              errorText1: "Profile picture is required",
+              iscomman: true,
+              shouldEnableButton: true);
+          update();
+        }
+      } else {
+        imageFile.value = null;
+        imageURl.value = "";
+        validateFields("",
+            model: imageModel,
+            errorText1: "Profile picture is required",
+            iscomman: true,
+            shouldEnableButton: true);
+        print('No image selected');
+        update();
+      }
+    });
+    update();
+  }
+
+  // deleteService(context) async {
+  //   var loadingIndicator = LoadingProgressDialog();
+
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+  //           Connection.noConnection, callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
+
+  //     loadingIndicator.show(context, '');
+  //     var response = await Repository.delete(
+  //         '${ApiUrl.deleteService}${editServiceItems!.id}',
+  //         allowHeader: true);
+
+  //     loadingIndicator.hide(context);
+  //     var result = jsonDecode(response.body);
+  //     if (response.statusCode == 200) {
+  //       if (result['success'] == true) {
+  //         showDialogForScreen(
+  //             context, AddServiceScreenViewConst.serviceScr, result['message'],
+  //             callback: () {
+  //           Get.back(result: true); // Go back and pass result true
+  //         });
+  //       } else {
+  //         showDialogForScreen(
+  //             context, AddServiceScreenViewConst.serviceScr, result['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       showDialogForScreen(
+  //           context, AddServiceScreenViewConst.serviceScr, result['message'],
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     loadingIndicator.hide(context);
+  //     logcat("Delete Service Exception", e.toString());
+  //     showDialogForScreen(
+  //         context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+  //         callback: () {});
+  //   }
+  // }
 
   void addUpdateServiceApi(BuildContext context, bool isFromAdd) async {
     var loadingIndicator = LoadingProgressDialog();
@@ -623,82 +925,4 @@ class AddServicescreencontroller extends GetxController {
       loadingIndicator.hide(context);
     }
   }
-
-  // deleteService(context) async {
-  //   var loadingIndicator = LoadingProgressDialog();
-
-  //   try {
-  //     if (networkManager.connectionType.value == 0) {
-  //       loadingIndicator.hide(context);
-  //       showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
-  //           Connection.noConnection, callback: () {
-  //         Get.back();
-  //       });
-  //       return;
-  //     }
-
-  //     loadingIndicator.show(context, '');
-  //     var response = await Repository.delete(
-  //         '${ApiUrl.deleteService}${editServiceItems!.id}',
-  //         allowHeader: true);
-
-<<<<<<< HEAD
-  //     loadingIndicator.hide(context);
-  //     var result = jsonDecode(response.body);
-  //     if (response.statusCode == 200) {
-  //       if (result['success'] == true) {
-  //         showDialogForScreen(
-  //             context, AddServiceScreenViewConst.serviceScr, result['message'],
-  //             callback: () {
-  //           Get.back(result: true); // Go back and pass result true
-  //         });
-  //       } else {
-  //         showDialogForScreen(
-  //             context, AddServiceScreenViewConst.serviceScr, result['message'],
-  //             callback: () {});
-  //       }
-  //     } else {
-  //       showDialogForScreen(
-  //           context, AddServiceScreenViewConst.serviceScr, result['message'],
-  //           callback: () {});
-  //     }
-  //   } catch (e) {
-  //     loadingIndicator.hide(context);
-  //     logcat("Delete Service Exception", e.toString());
-  //     showDialogForScreen(
-  //         context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-  //         callback: () {});
-  //   }
-  // }
-=======
-      loadingIndicator.hide(context);
-      var result = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        if (result['success'] == true) {
-          showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, result['message'],
-              callback: () {
-            Get.back(result: true); // Go back and pass result true
-          });
-        } else {
-          showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, result['message'],
-              callback: () {});
-        }
-      } else {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, result['message'],
-            callback: () {});
-      }
-    } catch (e) {
-      loadingIndicator.hide(context);
-      logcat("Delete Service Exception", e.toString());
-
-      void servicerAPI(BuildContext context, bool bool) {}
-      showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-          callback: () {});
-    }
-  }
->>>>>>> 643ec4f104d01bc12902643599e3c6aff27402d5
 }

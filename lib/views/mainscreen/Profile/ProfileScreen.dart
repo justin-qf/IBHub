@@ -65,178 +65,291 @@ class _ProfileScreenState extends State<ProfileScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // getDynamicSizedBox(height: commonHeight()),
-                    Stack(
-                      children: [
-                        Container(
-                          height: 23.h,
-                          width: Device.width,
-                          padding:
-                              EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
-                          decoration: BoxDecoration(
-                            color: secondaryColor.withOpacity(0.6),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(35),
-                              bottomRight: Radius.circular(35),
-                            ),
-                          ),
-                          child: Column(
+                    // Stack(
+                    //   children: [
+                    //     Container(
+                    //       height: 22.h,
+                    //       width: Device.width,
+                    //       padding:
+                    //           EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
+                    //       decoration: BoxDecoration(
+                    //         color: secondaryColor.withOpacity(0.6),
+                    //         borderRadius: BorderRadius.only(
+                    //           bottomLeft: Radius.circular(35),
+                    //           bottomRight: Radius.circular(35),
+                    //         ),
+                    //       ),
+                    //       child: Column(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           // getDynamicSizedBox(height: 3.h),
+                    //           Row(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             crossAxisAlignment: CrossAxisAlignment.center,
+                    //             children: [
+                    //               GestureDetector(onTap: () {
+                    //                 if (controller
+                    //                     .profilePic.value.isNotEmpty) {
+                    //                   Get.to(FullScreenImage(
+                    //                     imageUrl: controller.profilePic.value,
+                    //                     fromProfile: true,
+                    //                   ))!
+                    //                       .then((value) => {
+                    //                             Statusbar()
+                    //                                 .trasparentStatusbar()
+                    //                           });
+                    //                 }
+                    //               }, child: Obx(() {
+                    //                 return ClipRRect(
+                    //                     borderRadius: const BorderRadius.all(
+                    //                         Radius.circular(30)),
+                    //                     child: CachedNetworkImage(
+                    //                       fit: BoxFit.cover,
+                    //                       height: 20.h,
+                    //                       width: 20.w,
+                    //                       imageUrl: controller.profilePic.value,
+                    //                       placeholder: (context, url) =>
+                    //                           const Center(
+                    //                         child: CircularProgressIndicator(
+                    //                             color: primaryColor),
+                    //                       ),
+                    //                       imageBuilder:
+                    //                           (context, imageProvider) =>
+                    //                               CircleAvatar(
+                    //                         radius: 25.h,
+                    //                         backgroundImage: imageProvider,
+                    //                       ),
+                    //                       errorWidget: (context, url, error) =>
+                    //                           CircleAvatar(
+                    //                               radius: 25.h,
+                    //                               child:
+                    //                                   const Icon(Icons.person)),
+                    //                     ));
+                    //               })),
+                    //               Expanded(
+                    //                 child: Container(
+                    //                   padding:
+                    //                       EdgeInsets.symmetric(horizontal: 3.w),
+                    //                   child: Column(
+                    //                     mainAxisAlignment:
+                    //                         MainAxisAlignment.center,
+                    //                     crossAxisAlignment:
+                    //                         CrossAxisAlignment.center,
+                    //                     children: [
+                    //                       Obx(
+                    //                         () {
+                    //                           return Row(
+                    //                             crossAxisAlignment:
+                    //                                 CrossAxisAlignment.center,
+                    //                             children: [
+                    //                               Text(
+                    //                                 controller.userName.value
+                    //                                         .isNotEmpty
+                    //                                     ? controller.userName
+                    //                                         .value.capitalize!
+                    //                                     : "Your Name",
+                    //                                 overflow:
+                    //                                     TextOverflow.ellipsis,
+                    //                                 maxLines: 1,
+                    //                                 style: TextStyle(
+                    //                                     fontSize: 16.sp,
+                    //                                     color: black,
+                    //                                     fontFamily:
+                    //                                         fontSemiBold,
+                    //                                     fontWeight:
+                    //                                         FontWeight.w800),
+                    //                               ),
+                    //                             ],
+                    //                           );
+                    //                         },
+                    //                       ),
+                    //                       Obx(
+                    //                         () {
+                    //                           return Row(
+                    //                             crossAxisAlignment:
+                    //                                 CrossAxisAlignment.center,
+                    //                             children: [
+                    //                               Text(
+                    //                                 controller.bussiness.value
+                    //                                         .isNotEmpty
+                    //                                     ? controller.bussiness
+                    //                                         .value.capitalize!
+                    //                                     : "Your Bussiness",
+                    //                                 overflow:
+                    //                                     TextOverflow.ellipsis,
+                    //                                 maxLines: 1,
+                    //                                 style: TextStyle(
+                    //                                     fontSize: 16.sp,
+                    //                                     color: black,
+                    //                                     fontFamily:
+                    //                                         fontSemiBold,
+                    //                                     fontWeight:
+                    //                                         FontWeight.w500),
+                    //                               ),
+                    //                             ],
+                    //                           );
+                    //                         },
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    // Positioned(
+                    //   right: 2.w,
+                    //   bottom: 2.w,
+                    //   child: IconButton(
+                    //       onPressed: () async {
+                    //         bool isEmpty = await isAnyFieldEmpty();
+                    //         if (isEmpty) {
+                    //           // ignore: use_build_context_synchronously
+                    //           showBottomSheetPopup(context);
+                    //         } else {
+                    //           pdfPopupDialogs(
+                    //             // ignore: use_build_context_synchronously
+                    //             context,
+                    //             function: (String val) async {
+                    //               logcat("SelectedValue::", val);
+                    //               controller.visitingCardAPI(context,
+                    //                   theme: val);
+                    //             },
+                    //           );
+                    //         }
+                    //       },
+                    //       icon: const Icon(Icons.share)),
+                    //     )
+                    //   ],
+                    // ),
+                    Container(
+                      height: 22.h,
+                      width: Device.width,
+                      padding:
+                          EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
+                      decoration: BoxDecoration(
+                        color: secondaryColor.withOpacity(0.6),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(35),
+                          bottomRight: Radius.circular(35),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // getDynamicSizedBox(height: 3.h),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // getDynamicSizedBox(height: 3.h),
-                              Container(
-                                margin: EdgeInsets.only(left: 6.w, top: 2.h),
-                                decoration: const BoxDecoration(
-                                  color: secondaryColor,
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(35),
-                                      bottomRight: Radius.circular(35)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(onTap: () {
-                                      if (controller
-                                          .profilePic.value.isNotEmpty) {
-                                        Get.to(FullScreenImage(
-                                          imageUrl: controller.profilePic.value,
-                                          fromProfile: true,
-                                        ))!
-                                            .then((value) => {
-                                                  Statusbar()
-                                                      .trasparentStatusbar()
-                                                });
-                                      }
-                                    }, child: Obx(() {
-                                      return ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(30)),
-                                          child: CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            height: 20.h,
-                                            width: 20.w,
-                                            imageUrl:
-                                                controller.profilePic.value,
-                                            placeholder: (context, url) =>
-                                                const Center(
-                                              child: CircularProgressIndicator(
-                                                  color: primaryColor),
-                                            ),
-                                            imageBuilder:
-                                                (context, imageProvider) =>
-                                                    CircleAvatar(
-                                              radius: 25.h,
-                                              backgroundImage: imageProvider,
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    CircleAvatar(
-                                                        radius: 25.h,
-                                                        child: const Icon(
-                                                            Icons.person)),
-                                          ));
-                                    })),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 3.w),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Obx(
-                                              () {
-                                                return Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      controller.userName.value
-                                                              .isNotEmpty
-                                                          ? controller.userName
-                                                              .value.capitalize!
-                                                          : "Your Name",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontSize: 17.sp,
-                                                          color: black,
-                                                          fontFamily:
-                                                              fontSemiBold,
-                                                          fontWeight:
-                                                              FontWeight.w800),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                            Obx(
-                                              () {
-                                                return Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      controller.bussiness.value
-                                                              .isNotEmpty
-                                                          ? controller.bussiness
-                                                              .value.capitalize!
-                                                          : "Your Bussiness",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                          fontSize: 16.sp,
-                                                          color: black,
-                                                          fontFamily:
-                                                              fontSemiBold,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                              GestureDetector(onTap: () {
+                                if (controller.profilePic.value.isNotEmpty) {
+                                  Get.to(FullScreenImage(
+                                    imageUrl: controller.profilePic.value,
+                                    fromProfile: true,
+                                  ))!
+                                      .then((value) =>
+                                          {Statusbar().trasparentStatusbar()});
+                                }
+                              }, child: Obx(() {
+                                return ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                      height: 20.h,
+                                      width: 20.w,
+                                      imageUrl: controller.profilePic.value,
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                        child: CircularProgressIndicator(
+                                            color: primaryColor),
                                       ),
-                                    ),
-                                  ],
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        radius: 25.h,
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          CircleAvatar(
+                                              radius: 25.h,
+                                              child: const Icon(Icons.person)),
+                                    ));
+                              })),
+                              Expanded(
+                                child: Container(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 3.w),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Obx(
+                                        () {
+                                          return Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                controller.userName.value
+                                                        .isNotEmpty
+                                                    ? controller.userName.value
+                                                        .capitalize!
+                                                    : "Your Name",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 16.sp,
+                                                    color: black,
+                                                    fontFamily: fontSemiBold,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                      Obx(
+                                        () {
+                                          return Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                controller.bussiness.value
+                                                        .isNotEmpty
+                                                    ? controller.bussiness.value
+                                                        .capitalize!
+                                                    : "Your Bussiness",
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                style: TextStyle(
+                                                    fontSize: 16.sp,
+                                                    color: black,
+                                                    fontFamily: fontSemiBold,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        Positioned(
-                          top: 10.h,
-                          right: 12.w,
-                          child: IconButton(
-                              onPressed: () async {
-                                bool isEmpty = await isAnyFieldEmpty();
-                                if (isEmpty) {
-                                  // ignore: use_build_context_synchronously
-                                  showBottomSheetPopup(context);
-                                } else {
-                                  pdfPopupDialogs(
-                                    // ignore: use_build_context_synchronously
-                                    context,
-                                    function: (String val) async {
-                                      logcat("SelectedValue::", val);
-                                      controller.visitingCardAPI(context,
-                                          theme: val);
-                                    },
-                                  );
-                                }
-                              },
-                              icon: const Icon(Icons.share)),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
+                    // getDynamicSizedBox(height: commonHeight()),
+
                     getDynamicSizedBox(height: 2.5.h),
                     Expanded(
                       child: SingleChildScrollView(
@@ -288,6 +401,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: ProfileScreenConst.logout,
                                 icon: Asset.logout),
+
+                            getMenuListItem(
+                                callback: () async {
+                                  bool isEmpty = await isAnyFieldEmpty();
+                                  if (isEmpty) {
+                                    // ignore: use_build_context_synchronously
+                                    showBottomSheetPopup(context);
+                                  } else {
+                                    pdfPopupDialogs(
+                                      // ignore: use_build_context_synchronously
+                                      context,
+                                      function: (String val) async {
+                                        logcat("SelectedValue::", val);
+                                        controller.visitingCardAPI(context,
+                                            theme: val);
+                                      },
+                                    );
+                                  }
+                                },
+                                title: 'Share Visiting Card',
+                                icons: Icons.share),
                             // getFormButton(context, () {
                             //   Get.to(AddServicescreen());
                             // }, 'add services', validate: true),
@@ -352,6 +486,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: Text(
                 title,
                 style: TextStyle(
+                    fontFamily: dM_sans_regular,
                     fontSize: Device.screenType == sizer.ScreenType.mobile
                         ? 16.sp
                         : 14.sp,

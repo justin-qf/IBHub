@@ -99,19 +99,17 @@ setSearchBar(context, controller, String tag,
         ),
       ),
       if (isCancle == true)
-        FadeInRight(
-          child: GestureDetector(
-              onTap: () {
-                onCancleClick!();
-              },
-              child: Container(
-                  padding: EdgeInsets.only(right: 5.w),
-                  child: Text(SearchScreenConstant.cancel,
-                      style: TextStyle(
-                          fontFamily: fontRegular,
-                          color: isDarkMode() ? white : black,
-                          fontSize: 12.sp)))),
-        )
+        GestureDetector(
+            onTap: () {
+              onCancleClick!();
+            },
+            child: Container(
+                padding: EdgeInsets.only(right: 5.w),
+                child: Text(SearchScreenConstant.cancel,
+                    style: TextStyle(
+                        fontFamily: fontRegular,
+                        color: isDarkMode() ? white : black,
+                        fontSize: 12.sp))))
     ],
   );
 }
@@ -242,18 +240,17 @@ setSearchBars(context, controller, String tag,
             ])),
       ),
       if (isCancle == true)
-        FadeInRight(
-            child: GestureDetector(
-                onTap: () {
-                  onCancleClick!();
-                },
-                child: Container(
-                    padding: EdgeInsets.only(right: 5.w),
-                    child: Text(SearchScreenConstant.cancel,
-                        style: TextStyle(
-                            fontFamily: fontRegular,
-                            color: isDarkMode() ? white : black,
-                            fontSize: 12.sp)))))
+        GestureDetector(
+            onTap: () {
+              onCancleClick!();
+            },
+            child: Container(
+                padding: EdgeInsets.only(right: 5.w),
+                child: Text(SearchScreenConstant.cancel,
+                    style: TextStyle(
+                        fontFamily: fontRegular,
+                        color: isDarkMode() ? white : black,
+                        fontSize: 12.sp))))
     ],
   );
 }

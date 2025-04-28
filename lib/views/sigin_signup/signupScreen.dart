@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
-import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
@@ -67,7 +65,7 @@ class _SignupscreenState extends State<Signupscreen> {
                     },
                     istitle: false),
               ),
-              getDynamicSizedBox(height: 2.h),
+              getDynamicSizedBox(height: 4.h),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -76,7 +74,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       fontFamily: dM_sans_bold, fontSize: 20.sp, height: 1.1),
                 ),
               ),
-              getDynamicSizedBox(height: 10.h),
+              getDynamicSizedBox(height: 8.h),
               Obx(() {
                 return getTextField(
                   label: SignUpConstant.email,
@@ -110,7 +108,6 @@ class _SignupscreenState extends State<Signupscreen> {
                         errorText2: SignUpConstant.hintSpaceNotAllowed,
                         errorText3: SignUpConstant.validPasswordHint,
                       );
-
 
                       if (ctr.confpassCtr.text.isNotEmpty) {
                         ctr.validateFields(
@@ -159,7 +156,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       ctr.toggleConfPassObscureText();
                     });
               }),
-              getDynamicSizedBox(height: 2.h),
+              getDynamicSizedBox(height: 5.h),
               Obx(() {
                 return ctr.isloading == false
                     ? Container(
@@ -176,6 +173,85 @@ class _SignupscreenState extends State<Signupscreen> {
                       )
                     : const CircularProgressIndicator();
               }),
+
+              getDynamicSizedBox(height: 5.h),
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    const Text(
+                      'By registering you agree to',
+                      style: TextStyle(
+                        color: grey,
+                        fontFamily: dM_sans_regular,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            print('navigate to term screen');
+                          },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              const Text(
+                                'Terms & Conditions',
+                                style: TextStyle(
+                                    color: primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: dM_sans_medium),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  width:
+                                      40.w, // Adjust according to text length
+                                  height: 0.2.h,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Text(' and ',
+                            style: TextStyle(
+                                color: grey, fontFamily: dM_sans_regular)),
+                        GestureDetector(
+                          onTap: () {
+                            // Navigate to Privacy Policy page
+                            print('navigate to policy screen');
+                          },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              const Text(
+                                'Privacy Policy',
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: dM_sans_medium,
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  width:
+                                      30.w, // Adjust according to text length
+                                  height: 0.2.h,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              getDynamicSizedBox(height: 5.h),
               getDynamicSizedBox(height: 2.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

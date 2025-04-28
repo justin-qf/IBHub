@@ -231,55 +231,52 @@ PreferredSizeWidget getTabbar(
 
 Widget getHomeLable(String title, Function onCLick,
     {bool? isShowSeeMore = true, bool? isFromDetailScreen = false}) {
-  return FadeInRight(
-    child: Container(
-      margin: EdgeInsets.only(
-          left: isFromDetailScreen == true ? 0.0 : 5.w,
-          right: isFromDetailScreen == true ? 0.0 : 2.w),
-      width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(title,
-              style: TextStyle(
-                color: isDarkMode() ? white : black,
-                fontFamily: fontBold,
-                fontWeight: FontWeight.w800,
-                fontSize:
-                    Device.screenType == ScreenType.mobile ? 18.sp : 13.sp,
-              )),
-          const Spacer(),
-          isShowSeeMore == true
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        onCLick();
-                      },
-                      child: Text(DashboardText.seeAll,
-                          style: TextStyle(
-                            color: isDarkMode() ? white : primaryColor,
-                            fontFamily: fontRegular,
-                            fontWeight: FontWeight.w500,
-                            fontSize: Device.screenType == ScreenType.mobile
-                                ? 16.sp
-                                : 14.sp,
-                          )),
-                    ),
-                    getDynamicSizedBox(width: 0.3.w),
-                    Icon(
-                      Icons.chevron_right_sharp,
-                      color: isDarkMode() ? white : primaryColor,
-                      size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
-                    )
-                  ],
-                )
-              : Container()
-        ],
-      ),
+  return Container(
+    margin: EdgeInsets.only(
+        left: isFromDetailScreen == true ? 0.0 : 5.w,
+        right: isFromDetailScreen == true ? 0.0 : 2.w),
+    width: double.infinity,
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(title,
+            style: TextStyle(
+              color: isDarkMode() ? white : black,
+              fontFamily: fontBold,
+              fontWeight: FontWeight.w800,
+              fontSize: Device.screenType == ScreenType.mobile ? 18.sp : 13.sp,
+            )),
+        const Spacer(),
+        isShowSeeMore == true
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      onCLick();
+                    },
+                    child: Text(DashboardText.seeAll,
+                        style: TextStyle(
+                          color: isDarkMode() ? white : primaryColor,
+                          fontFamily: fontRegular,
+                          fontWeight: FontWeight.w500,
+                          fontSize: Device.screenType == ScreenType.mobile
+                              ? 16.sp
+                              : 14.sp,
+                        )),
+                  ),
+                  getDynamicSizedBox(width: 0.3.w),
+                  Icon(
+                    Icons.chevron_right_sharp,
+                    color: isDarkMode() ? white : primaryColor,
+                    size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
+                  )
+                ],
+              )
+            : Container()
+      ],
     ),
   );
 }

@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     controller.currentPage = 0;
     controller.getProfileData();
 
-    controller.getTimerPopup(context);
+    // controller.getTimerPopup(context);
     setState(() {
       pageOptions = [
         HomeScreen(callback),

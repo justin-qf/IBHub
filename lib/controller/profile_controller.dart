@@ -72,7 +72,29 @@ class ProfileController extends GetxController {
 
   BuildContext? contexts;
 
-  // Function to download PDF and return the file path
+  // // Function to download PDF and return the file path
+  // Future<String?> downloadPDF(String url, String fileName) async {
+  //   try {
+  //     // Make HTTP request to download the PDF
+  //     final response = await http.get(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       // Get the temporary directory
+  //       final directory = await getTemporaryDirectory();
+  //       final filePath = '${directory.path}/$fileName';
+  //       // Write the PDF to a file
+  //       final file = File(filePath);
+  //       await file.writeAsBytes(response.bodyBytes);
+  //       return filePath;
+  //     } else {
+  //       print('Failed to download PDF: ${response.statusCode}');
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     print('Error downloading PDF: $e');
+  //     return null;
+  //   }
+  // }
+
   Future<String?> downloadPDF(String url, String fileName) async {
     try {
       // Make HTTP request to download the PDF
@@ -80,7 +102,9 @@ class ProfileController extends GetxController {
       if (response.statusCode == 200) {
         // Get the temporary directory
         final directory = await getTemporaryDirectory();
-        final filePath = '${directory.path}/$fileName';
+        // Ensure the fileName has .pdf extension
+        final filePath =
+            '${directory.path}/${fileName.endsWith('.pdf') ? fileName : '$fileName.pdf'}';
         // Write the PDF to a file
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
@@ -95,12 +119,10 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Function to share PDF to WhatsApp
   Future<void> sharePDF(String filePath) async {
     try {
-      // ignore: deprecated_member_use
       await Share.shareXFiles(
-        [XFile(filePath)],
+        [XFile(filePath, mimeType: 'application/pdf')],
         text: 'Check out my profile PDF!',
         subject: 'Profile PDF',
       );
@@ -108,6 +130,20 @@ class ProfileController extends GetxController {
       print('Error sharing PDF: $e');
     }
   }
+
+  // // Function to share PDF to WhatsApp
+  // Future<void> sharePDF(String filePath) async {
+  //   try {
+  //     // ignore: deprecated_member_use
+  //     await Share.shareXFiles(
+  //       [XFile(filePath)],
+  //       text: 'Check out my profile PDF!',
+  //       subject: 'Profile PDF',
+  //     );
+  //   } catch (e) {
+  //     print('Error sharing PDF: $e');
+  //   }
+  // }
 
   RxString pdflink = "".obs;
   RxString pdfname = "".obs;
@@ -193,6 +229,8 @@ class ProfileController extends GetxController {
   }
 
   void visitingCardAPI(context, {theme}) async {
+    pdflink.value = '';
+    pdfname.value = '';
     commonPostApiCallFormate(context,
         title: "Profile",
         body: {"theme": theme},
@@ -200,6 +238,8 @@ class ProfileController extends GetxController {
       var responseDetail = PdfData.fromJson(data);
       pdflink.value = responseDetail.data.url;
       pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+      logcat("url::", pdflink.value.toString());
+      logcat("pdfname::", pdfname.value.toString());
       final filePath = await downloadPDF(pdflink.value, pdfname.value);
       if (filePath != null) {
         sharefPopupDialogs(

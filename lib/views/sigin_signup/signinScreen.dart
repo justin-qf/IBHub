@@ -7,6 +7,7 @@ import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
@@ -51,12 +52,20 @@ class _SigninscreenState extends State<Signinscreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               getDynamicSizedBox(height: 10.h),
+              Container(
+                  // color: Colors.yellow,
+                  height: 10.h,
+                  width: 40.w,
+                  child: Image.asset(
+                    Asset.applogo,
+                  )),
+              getDynamicSizedBox(height: 4.h),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Login To Your Account',
                   style: TextStyle(
-                      fontFamily: dM_sans_bold, fontSize: 24.sp, height: 1.1),
+                      fontFamily: dM_sans_bold, fontSize: 20.sp, height: 1.1),
                 ),
               ),
               getDynamicSizedBox(height: 4.h),
@@ -67,7 +76,7 @@ class _SigninscreenState extends State<Signinscreen> {
                     style:
                         TextStyle(fontFamily: dM_sans_semiBold, color: grey)),
               ),
-              getDynamicSizedBox(height: 10.h),
+              getDynamicSizedBox(height: 4.h),
               Obx(() {
                 return getTextField(
                   label: SignUpConstant.email,
@@ -114,6 +123,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       });
                 },
               ),
+              getDynamicSizedBox(height: 2.h),
               Container(
                 margin: EdgeInsets.only(left: 55.w),
                 child: GestureDetector(
@@ -163,86 +173,87 @@ class _SigninscreenState extends State<Signinscreen> {
                     if (ctr.isFormInvalidate.value == true) {
                       ctr.loginAPI(context);
                     }
-                  }, LoginConst.title, validate: ctr.isFormInvalidate.value,isdelete: false),
+                  }, LoginConst.title,
+                      validate: ctr.isFormInvalidate.value, isdelete: false),
                 );
               }),
-              getDynamicSizedBox(height: 4.h),
-              Align(
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    const Text(
-                      'By registering you agree to',
-                      style: TextStyle(
-                        color: grey,
-                        fontFamily: dM_sans_regular,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            print('navigate to term screen');
-                          },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              const Text(
-                                'Terms & Conditions',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: dM_sans_medium),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      40.w, // Adjust according to text length
-                                  height: 0.2.h,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Text(' and ',
-                            style: TextStyle(
-                                color: grey, fontFamily: dM_sans_regular)),
-                        GestureDetector(
-                          onTap: () {
-                            // Navigate to Privacy Policy page
-                            print('navigate to policy screen');
-                          },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              const Text(
-                                'Privacy Policy',
-                                style: TextStyle(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: dM_sans_medium,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      30.w, // Adjust according to text length
-                                  height: 0.2.h,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              getDynamicSizedBox(height: 5.h),
+              // Align(
+              //   alignment: Alignment.center,
+              //   child: Column(
+              //     children: [
+              //       const Text(
+              //         'By registering you agree to',
+              //         style: TextStyle(
+              //           color: grey,
+              //           fontFamily: dM_sans_regular,
+              //         ),
+              //       ),
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           GestureDetector(
+              //             onTap: () {
+              //               print('navigate to term screen');
+              //             },
+              //             child: Stack(
+              //               alignment: Alignment.center,
+              //               children: [
+              //                 const Text(
+              //                   'Terms & Conditions',
+              //                   style: TextStyle(
+              //                       color: primaryColor,
+              //                       fontWeight: FontWeight.bold,
+              //                       fontFamily: dM_sans_medium),
+              //                 ),
+              //                 Positioned(
+              //                   bottom: 0,
+              //                   child: Container(
+              //                     width:
+              //                         40.w, // Adjust according to text length
+              //                     height: 0.2.h,
+              //                     color: primaryColor,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //           const Text(' and ',
+              //               style: TextStyle(
+              //                   color: grey, fontFamily: dM_sans_regular)),
+              //           GestureDetector(
+              //             onTap: () {
+              //               // Navigate to Privacy Policy page
+              //               print('navigate to policy screen');
+              //             },
+              //             child: Stack(
+              //               alignment: Alignment.center,
+              //               children: [
+              //                 const Text(
+              //                   'Privacy Policy',
+              //                   style: TextStyle(
+              //                     color: primaryColor,
+              //                     fontWeight: FontWeight.bold,
+              //                     fontFamily: dM_sans_medium,
+              //                   ),
+              //                 ),
+              //                 Positioned(
+              //                   bottom: 0,
+              //                   child: Container(
+              //                     width:
+              //                         30.w, // Adjust according to text length
+              //                     height: 0.2.h,
+              //                     color: primaryColor,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
               getDynamicSizedBox(height: 5.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

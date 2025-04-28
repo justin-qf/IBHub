@@ -22,8 +22,8 @@ const String Geologica_Medium = "Geologica-Medium";
 
 const String Cooper_Black_Regular = "Cooper-Black-Regular";
 
-const String fontRegular = "fontRegular";
-const String fontMedium = "fontMedium";
-const String fontBold = "fontBold";
-const String fontExtraBold = "fontExtraBold";
-const String fontSemiBold = "fontSemiBold";
+// const String fontRegular = "fontRegular";
+// const String fontMedium = "fontMedium";
+// const String fontBold = "fontBold";
+// const String fontExtraBold = "fontExtraBold";
+// const String fontSemiBold = "fontSemiBold";

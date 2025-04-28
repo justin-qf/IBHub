@@ -874,36 +874,36 @@ class SearchScreenController extends GetxController {
                                 color: black,
                                 fontWeight: FontWeight.w900)),
                         const Spacer(),
-                        RatingBar.builder(
-                          initialRating: item.businessReviewsAvgRating ?? 0.0,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 1,
-                          itemSize: 3.5.w,
-                          unratedColor: Colors.orange,
-                          itemBuilder: (context, _) => const Icon(
-                            Icons.star,
-                            color: Colors.orange,
-                          ),
-                          onRatingUpdate: (rating) {
-                            logcat("RATING", rating);
-                          },
-                        ),
-                        getText(
-                          item.businessReviewsAvgRating != null
-                              ? (item.businessReviewsAvgRating ?? 0.0)
-                                  .toStringAsFixed(1)
-                              : '0.0',
-                          TextStyle(
-                              fontFamily: fontSemiBold,
-                              color: lableColor,
-                              fontSize:
-                                  Device.screenType == sizer.ScreenType.mobile
-                                      ? 14.sp
-                                      : 7.sp,
-                              height: 1.2),
-                        ),
+                        // RatingBar.builder(
+                        //   initialRating: item.businessReviewsAvgRating ?? 0.0,
+                        //   minRating: 1,
+                        //   direction: Axis.horizontal,
+                        //   allowHalfRating: true,
+                        //   itemCount: 1,
+                        //   itemSize: 3.5.w,
+                        //   unratedColor: Colors.orange,
+                        //   itemBuilder: (context, _) => const Icon(
+                        //     Icons.star,
+                        //     color: Colors.orange,
+                        //   ),
+                        //   onRatingUpdate: (rating) {
+                        //     logcat("RATING", rating);
+                        //   },
+                        // ),
+                        // getText(
+                        //   item.businessReviewsAvgRating != null
+                        //       ? (item.businessReviewsAvgRating ?? 0.0)
+                        //           .toStringAsFixed(1)
+                        //       : '0.0',
+                        //   TextStyle(
+                        //       fontFamily: fontSemiBold,
+                        //       color: lableColor,
+                        //       fontSize:
+                        //           Device.screenType == sizer.ScreenType.mobile
+                        //               ? 14.sp
+                        //               : 7.sp,
+                        //       height: 1.2),
+                        // ),
                       ],
                     ),
                     getDynamicSizedBox(height: 1.h),

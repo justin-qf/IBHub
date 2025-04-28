@@ -263,7 +263,7 @@ class ReviewsScreenController extends GetxController {
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 overflow: TextOverflow.ellipsis,
-                                fontFamily: fontMedium,
+                                fontFamily: dM_sans_medium,
                                 fontWeight: FontWeight.w900,
                                 fontSize: 16.sp,
                               )),
@@ -291,14 +291,14 @@ class ReviewsScreenController extends GetxController {
                             Text(data.rating,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: fontBold,
+                                  fontFamily: dM_sans_bold,
                                   fontSize: 14.sp,
                                 )),
                             const Spacer(),
                             Text(formattedDate,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontFamily: fontBold,
+                                  fontFamily: dM_sans_bold,
                                   fontSize: 14.sp,
                                 )),
                             getDynamicSizedBox(width: 1.w)

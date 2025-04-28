@@ -6,6 +6,7 @@ import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/addservicescreenController.dart';
@@ -28,10 +29,15 @@ class _ServicescreenState extends State<AddServicescreen> {
 
   @override
   void initState() {
-    ctr.isFromHomeScreen.value = widget.isFromHomeScreen;
+    ctr.isFromUpdate.value = widget.isFromHomeScreen;
     ctr.editServiceItems = widget.item;
     if (ctr.editServiceItems != null && widget.isFromHomeScreen) {
       ctr.fillEditData();
+    }
+    if (ctr.isFromUpdate.value == false) {
+      // ctr.imageFile.value == null;
+      ctr.imageURl.value = "";
+      setState(() {});
     }
     futureDelay(() {
       ctr.getCategory(context, '', isfromHomescreen: widget.isFromHomeScreen);
@@ -41,7 +47,10 @@ class _ServicescreenState extends State<AddServicescreen> {
 
   @override
   void dispose() {
+    // ctr.imageFile.value == null;
+    ctr.imageURl.value = "";
     ctr.categoryId.value = "";
+
     super.dispose();
   }
 
@@ -63,13 +72,14 @@ class _ServicescreenState extends State<AddServicescreen> {
           children: [
             getDynamicSizedBox(height: 5.h),
             getleftsidebackbtn(
-                title: ctr.isFromHomeScreen.value
+                title: ctr.isFromUpdate.value
                     ? AddServiceScreenViewConst.editService
                     : AddServiceScreenViewConst.addService,
                 backFunction: () {
                   Get.back(result: true);
                   ctr.resetForm();
                 }),
+            getDynamicSizedBox(height: 2.h),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(bottom: 5.h),
@@ -78,24 +88,42 @@ class _ServicescreenState extends State<AddServicescreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     getDynamicSizedBox(height: 3.h),
-                    Obx(() {
-                      return getTextField(
-                        useOnChanged: false,
-                        label: ServicesScreenConstant.thumbnail,
-                        ctr: ctr.thumbnailCtr,
-                        node: ctr.thumbnailNode,
-                        model: ctr.thumbnailModel.value,
-                        hint: ServicesScreenConstant.uploadThumbnail,
-                        isenable: false,
-                        usegesture: true,
-                        isRequired: true,
-                        context: context,
-                        gestureFunction: () {
-                          ctr.unfocusAll();
-                          ctr.showOptionsCupertinoDialog(context: context);
-                        },
-                      );
-                    }),
+
+                    GestureDetector(
+                      child: Obx(() {
+                        return ctr.getImage();
+                      }),
+                      onTap: () async {
+                        selectImageFromCameraOrGallery(context,
+                            cameraClick: () {
+                          ctr.actionClickUploadImageFromCamera(context,
+                              isCamera: true);
+                        }, galleryClick: () {
+                          ctr.actionClickUploadImageFromCamera(context,
+                              isCamera: false);
+                        });
+                        setState(() {});
+                      },
+                    ),
+
+                    // Obx(() {
+                    //   return getTextField(
+                    //     useOnChanged: false,
+                    //     label: ServicesScreenConstant.thumbnail,
+                    //     ctr: ctr.thumbnailCtr,
+                    //     node: ctr.thumbnailNode,
+                    //     model: ctr.thumbnailModel.value,
+                    //     hint: ServicesScreenConstant.uploadThumbnail,
+                    //     isenable: false,
+                    //     usegesture: true,
+                    //     isRequired: true,
+                    //     context: context,
+                    //     gestureFunction: () {
+                    //       ctr.unfocusAll();
+                    //       ctr.showOptionsCupertinoDialog(context: context);
+                    //     },
+                    //   );
+                    // }),
                     Obx(() {
                       return getTextField(
                           label: ServicesScreenConstant.service,
@@ -189,7 +217,8 @@ class _ServicescreenState extends State<AddServicescreen> {
                           filled: true,
                           fillColor: inputBgColor,
                         ),
-                        style: const TextStyle(color: black),
+                        style: const TextStyle(
+                            color: black, fontFamily: dM_sans_regular),
                         onChanged: (val) {
                           ctr.validateFields(val,
                               iscomman: true,
@@ -222,8 +251,9 @@ class _ServicescreenState extends State<AddServicescreen> {
                                 final chipText = entry.value;
                                 return Chip(
                                   label: Text(chipText,
-                                      style:
-                                          const TextStyle(color: primaryColor)),
+                                      style: const TextStyle(
+                                          color: primaryColor,
+                                          fontFamily: dM_sans_regular)),
                                   backgroundColor: secondaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -246,14 +276,14 @@ class _ServicescreenState extends State<AddServicescreen> {
                               margin: EdgeInsets.symmetric(horizontal: 5.w),
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
-                                  if (ctr.isFromHomeScreen.value == true) {
+                                  if (ctr.isFromUpdate.value == true) {
                                     ctr.addUpdateServiceApi(context, false);
                                   } else {
                                     ctr.addUpdateServiceApi(context, true);
                                   }
                                 }
                               },
-                                  ctr.isFromHomeScreen.value
+                                  ctr.isFromUpdate.value
                                       ? ServicesScreenConstant.update
                                       : ServicesScreenConstant.submit,
                                   validate: ctr.isFormInvalidate.value),
@@ -261,7 +291,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                           : const CircularProgressIndicator();
                     }),
                     getDynamicSizedBox(height: 2.h),
-
                   ],
                 ),
               ),

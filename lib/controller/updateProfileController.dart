@@ -129,68 +129,99 @@ class Updateprofilecontroller extends GetxController {
     pincodeCtr.text = retrievedObject.pincode;
     addressCtr.text = retrievedObject.address;
 
-    // if( nameCtr.text.isNotEmpty &&emailCtr.text.isNotEmpty&&bussinessCtr.text.isNotEmpty&&phoneCtr.text.isNotEmpty && stateCtr.text.isNotEmpty&&cityCtr.text.isNotEmpty&&pincodeCtr. ){}
+    if (imageURl.isNotEmpty) {
+      validateFields(imageURl.value,
+          model: imageModel,
+          errorText1: "Profile picture is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(nameCtr.text,
-        model: nameModel,
-        errorText1: "Name is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    if (nameCtr.text.isNotEmpty) {
+      validateFields(nameCtr.text,
+          model: nameModel,
+          errorText1: "Name is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(retrievedObject.email,
-        model: emailModel,
-        errorText1: "Email is required",
-        errorText2: "Invalid email format",
-        isemail: true,
-        shouldEnableButton: false);
+    if (bussinessCtr.text.isNotEmpty) {
+      validateFields(bussinessCtr.text,
+          model: bussinessModel,
+          errorText1: "Business name is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
+    if (emailCtr.text.isNotEmpty) {
+      validateFields(retrievedObject.email,
+          model: emailModel,
+          errorText1: "Email is required",
+          errorText2: "Invalid email format",
+          isemail: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(phoneCtr.text,
-        model: phoneModel,
-        errorText1: "Phone number is required",
-        isnumber: true,
-        shouldEnableButton: false);
+    if (phoneCtr.text.isNotEmpty) {
+      validateFields(phoneCtr.text,
+          model: phoneModel,
+          errorText1: "Phone number is required",
+          isnumber: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(bussinessCtr.text,
-        model: bussinessModel,
-        errorText1: "Business name is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    if (stateCtr.text.isNotEmpty) {
+      validateFields(stateCtr.text,
+          model: stateModel,
+          errorText1: "State is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(imageURl.value,
-        model: imageModel,
-        errorText1: "Profile picture is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    if (cityCtr.text.isNotEmpty) {
+      validateFields(cityCtr.text,
+          model: cityModel,
+          errorText1: "City is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(stateCtr.text,
-        model: stateModel,
-        errorText1: "State is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    if (pincodeCtr.text.isNotEmpty) {
+      validateFields(pincodeCtr.text,
+          model: pincodeModel,
+          errorText1: "Pincode is required",
+          isPincode: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(cityCtr.text,
-        model: cityModel,
-        errorText1: "City is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    if (addressCtr.text.isNotEmpty) {
+      validateFields(addressCtr.text,
+          model: addressModel,
+          errorText1: "Address is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
 
-    validateFields(pincodeCtr.text,
-        model: pincodeModel,
-        errorText1: "Pincode is required",
-        isPincode: true,
-        shouldEnableButton: false);
+    // if (nameCtr.text.isNotEmpty ||
+    //     emailCtr.text.isNotEmpty ||
+    //     bussinessCtr.text.isNotEmpty ||
+    //     phoneCtr.text.isNotEmpty ||
+    //     stateCtr.text.isNotEmpty ||
+    //     cityCtr.text.isNotEmpty ||
+    //     pincodeCtr.text.isNotEmpty ||
+    //     addressCtr.text.isNotEmpty ||
+    //     imageURl.value.isNotEmpty) {
+    //   // validateFields(visitingcardCtr.text,
+    //   //     model: visitingCardModel,
+    //   //     errorText1: "Visiting card is required",
+    //   //     iscomman: true,
+    //   //     shouldEnableButton: false);
 
-    // validateFields(visitingcardCtr.text,
-    //     model: visitingCardModel,
-    //     errorText1: "Visiting card is required",
-    //     iscomman: true,
-    //     shouldEnableButton: false);
-
-    validateFields(addressCtr.text,
-        model: addressModel,
-        errorText1: "Address is required",
-        iscomman: true,
-        shouldEnableButton: false);
+    //   validateFields(addressCtr.text,
+    //       model: addressModel,
+    //       errorText1: "Address is required",
+    //       iscomman: true,
+    //       shouldEnableButton: false);
+    // }
 
     enableSignUpButton(); // Call explicitly after initial validation
 
@@ -794,6 +825,7 @@ class Updateprofilecontroller extends GetxController {
       }
       return setDropDownContent(
           stateFilterList,
+          controller: searchStatectr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -858,6 +890,7 @@ class Updateprofilecontroller extends GetxController {
       }
       return setDropDownContent(
           cityFilterList,
+          controller: searchCityctr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -946,169 +979,168 @@ class Updateprofilecontroller extends GetxController {
     update();
   }
 
-  getImage() {
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          child: Container(
-            width: 12.h,
-          ),
-        ),
-        Container(
-          height: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
-          margin: const EdgeInsets.only(right: 10),
-          width: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
-          decoration: BoxDecoration(
-            border: Border.all(color: white, width: 1.w),
-            borderRadius: BorderRadius.circular(100.w),
-            boxShadow: [
-              BoxShadow(
-                color: black.withOpacity(0.1),
-                blurRadius: 5.0,
-              )
-            ],
-          ),
-          child: CircleAvatar(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50.0),
-              child: avatarFile.value == null && profilePic.value.isNotEmpty
-                  ? CachedNetworkImage(
-                      fit: BoxFit.fitWidth,
-                      imageUrl: profilePic.value,
-                      placeholder: (context, url) => const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor),
-                          ),
-                      imageBuilder: (context, imageProvider) => Image.network(
-                            profilePic.value,
-                            fit: BoxFit.fitWidth,
-                          ),
-                      errorWidget: (context, url, error) => SvgPicture.asset(
-                            Asset.profileimg,
-                            height: 8.0.h,
-                            width: 8.0.h,
-                          ))
-                  : avatarFile.value == null
-                      ? SvgPicture.asset(
-                          Asset.profileimg,
-                          height: 8.0.h,
-                          width: 8.0.h,
-                        )
-                      : Image.file(
-                          avatarFile.value!,
-                          height: Device.screenType == sizer.ScreenType.mobile
-                              ? 8.0.h
-                              : 8.5.h,
-                          width: Device.screenType == sizer.ScreenType.mobile
-                              ? 8.0.h
-                              : 8.5.h,
-                          errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.asset(
-                              Asset.profileimg,
-                              height: 8.0.h,
-                              width: 8.0.h,
-                            );
-                          },
-                        ),
-            ),
-          ),
-        ),
-        Positioned(
-          right: 5,
-          bottom: 0.5.h,
-          child: Container(
-            height: 3.3.h,
-            width: 3.3.h,
-            padding: const EdgeInsets.all(5),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: primaryColor,
-              border: Border.all(color: white, width: 0.6.w),
-              borderRadius: BorderRadius.circular(100.w),
-              boxShadow: [
-                BoxShadow(
-                  color: black.withOpacity(0.1),
-                  blurRadius: 5.0,
-                )
-              ],
-            ),
-            child: SvgPicture.asset(
-              Asset.add,
-              height: 12.0.h,
-              width: 15.0.h,
-              fit: BoxFit.cover,
-              // ignore: deprecated_member_use
-              color: white,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // getImage() {
+  //   return Stack(
+  //     children: [
+  //       Positioned(
+  //         left: 0,
+  //         right: 0,
+  //         child: Container(
+  //           width: 12.h,
+  //         ),
+  //       ),
+  //       Container(
+  //         height: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+  //         margin: const EdgeInsets.only(right: 10),
+  //         width: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
+  //         decoration: BoxDecoration(
+  //           border: Border.all(color: white, width: 1.w),
+  //           borderRadius: BorderRadius.circular(100.w),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: black.withOpacity(0.1),
+  //               blurRadius: 5.0,
+  //             )
+  //           ],
+  //         ),
+  //         child: CircleAvatar(
+  //           child: ClipRRect(
+  //             borderRadius: BorderRadius.circular(50.0),
+  //             child: imageFile.value == null && imageURl.value.isNotEmpty
+  //                 ? CachedNetworkImage(
+  //                     fit: BoxFit.fitWidth,
+  //                     imageUrl: imageURl.value,
+  //                     placeholder: (context, url) => const Center(
+  //                           child:
+  //                               CircularProgressIndicator(color: primaryColor),
+  //                         ),
+  //                     imageBuilder: (context, imageProvider) => Image.network(
+  //                           imageURl.value,
+  //                           fit: BoxFit.fitWidth,
+  //                         ),
+  //                     errorWidget: (context, url, error) => SvgPicture.asset(
+  //                           Asset.profileimg,
+  //                           height: 8.0.h,
+  //                           width: 8.0.h,
+  //                         ))
+  //                 : imageFile.value == null
+  //                     ? SvgPicture.asset(
+  //                         Asset.profileimg,
+  //                         height: 8.0.h,
+  //                         width: 8.0.h,
+  //                       )
+  //                     : Image.file(
+  //                         imageFile.value!,
+  //                         height: Device.screenType == sizer.ScreenType.mobile
+  //                             ? 8.0.h
+  //                             : 8.5.h,
+  //                         width: Device.screenType == sizer.ScreenType.mobile
+  //                             ? 8.0.h
+  //                             : 8.5.h,
+  //                         errorBuilder: (context, error, stackTrace) {
+  //                           return SvgPicture.asset(
+  //                             Asset.profileimg,
+  //                             height: 8.0.h,
+  //                             width: 8.0.h,
+  //                           );
+  //                         },
+  //                       ),
+  //           ),
+  //         ),
+  //       ),
+  //       Positioned(
+  //         right: 5,
+  //         bottom: 0.5.h,
+  //         child: Container(
+  //           height: 3.3.h,
+  //           width: 3.3.h,
+  //           padding: const EdgeInsets.all(5),
+  //           alignment: Alignment.center,
+  //           decoration: BoxDecoration(
+  //             color: primaryColor,
+  //             border: Border.all(color: white, width: 0.6.w),
+  //             borderRadius: BorderRadius.circular(100.w),
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 color: black.withOpacity(0.1),
+  //                 blurRadius: 5.0,
+  //               )
+  //             ],
+  //           ),
+  //           child: SvgPicture.asset(
+  //             Asset.add,
+  //             height: 12.0.h,
+  //             width: 15.0.h,
+  //             fit: BoxFit.cover,
+  //             // ignore: deprecated_member_use
+  //             color: white,
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
-    await ImagePicker()
-        .pickImage(
-            source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
-            maxWidth: 1080,
-            maxHeight: 1080,
-            imageQuality: 100)
-        .then((file) async {
-      if (file != null) {
-        //Cropping the image
-        CroppedFile? croppedFile = await ImageCropper().cropImage(
-            sourcePath: file.path,
-            maxWidth: 1080,
-            maxHeight: 1080,
-            cropStyle: CropStyle.rectangle,
-            aspectRatioPresets: Platform.isAndroid
-                ? [
-                    CropAspectRatioPreset.square,
-                    CropAspectRatioPreset.ratio3x2,
-                    CropAspectRatioPreset.original,
-                    CropAspectRatioPreset.ratio4x3,
-                    CropAspectRatioPreset.ratio16x9
-                  ]
-                : [
-                    CropAspectRatioPreset.original,
-                    CropAspectRatioPreset.square,
-                    CropAspectRatioPreset.ratio3x2,
-                    CropAspectRatioPreset.ratio4x3,
-                    CropAspectRatioPreset.ratio5x3,
-                    CropAspectRatioPreset.ratio5x4,
-                    CropAspectRatioPreset.ratio7x5,
-                    CropAspectRatioPreset.ratio16x9
-                  ],
-            uiSettings: [
-              AndroidUiSettings(
-                  toolbarTitle: 'Crop Image',
-                  cropGridColor: primaryColor,
-                  toolbarColor: primaryColor,
-                  statusBarColor: primaryColor,
-                  toolbarWidgetColor: white,
-                  activeControlsWidgetColor: primaryColor,
-                  initAspectRatio: CropAspectRatioPreset.original,
-                  lockAspectRatio: false),
-              IOSUiSettings(
-                title: 'Crop Image',
-                cancelButtonTitle: 'Cancel',
-                doneButtonTitle: 'Done',
-                aspectRatioLockEnabled: false,
-              ),
-            ],
-            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
-        if (croppedFile != null) {
-          avatarFile = File(croppedFile.path).obs;
-          profilePic.value = croppedFile.path;
+  // actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
+  //   await ImagePicker()
+  //       .pickImage(
+  //           source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+  //           maxWidth: 1080,
+  //           maxHeight: 1080,
+  //           imageQuality: 100)
+  //       .then((file) async {
+  //     if (file != null) {
+  //       //Cropping the image
+  //       CroppedFile? croppedFile = await ImageCropper().cropImage(
+  //           sourcePath: file.path,
+  //           maxWidth: 1080,
+  //           maxHeight: 1080,
+  //           cropStyle: CropStyle.rectangle,
+  //           aspectRatioPresets: Platform.isAndroid
+  //               ? [
+  //                   CropAspectRatioPreset.square,
+  //                   CropAspectRatioPreset.ratio3x2,
+  //                   CropAspectRatioPreset.original,
+  //                   CropAspectRatioPreset.ratio4x3,
+  //                   CropAspectRatioPreset.ratio16x9
+  //                 ]
+  //               : [
+  //                   CropAspectRatioPreset.original,
+  //                   CropAspectRatioPreset.square,
+  //                   CropAspectRatioPreset.ratio3x2,
+  //                   CropAspectRatioPreset.ratio4x3,
+  //                   CropAspectRatioPreset.ratio5x3,
+  //                   CropAspectRatioPreset.ratio5x4,
+  //                   CropAspectRatioPreset.ratio7x5,
+  //                   CropAspectRatioPreset.ratio16x9
+  //                 ],
+  //           uiSettings: [
+  //             AndroidUiSettings(
+  //                 toolbarTitle: 'Crop Image',
+  //                 cropGridColor: primaryColor,
+  //                 toolbarColor: primaryColor,
+  //                 statusBarColor: primaryColor,
+  //                 toolbarWidgetColor: white,
+  //                 activeControlsWidgetColor: primaryColor,
+  //                 initAspectRatio: CropAspectRatioPreset.original,
+  //                 lockAspectRatio: false),
+  //             IOSUiSettings(
+  //               title: 'Crop Image',
+  //               cancelButtonTitle: 'Cancel',
+  //               doneButtonTitle: 'Done',
+  //               aspectRatioLockEnabled: false,
+  //             ),
+  //           ],
+  //           aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+  //       if (croppedFile != null) {
+  //         imageFile = File(croppedFile.path).obs;
+  //         imageURl.value = croppedFile.path;
 
-          update();
-        }
-      }
-    });
+  //         update();
+  //       }
+  //     }
+  //   });
 
-    update();
-  }
-
+  //   update();
+  // }
 }

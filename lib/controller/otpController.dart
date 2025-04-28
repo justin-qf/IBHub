@@ -191,6 +191,10 @@ class OtpController extends GetxController {
         title: OtpConstant.title,
         body: {"email": email.toString().trim()},
         apiEndPoint: ApiUrl.forgotPass, onResponse: (data) {
+      // otpController.text = '';
+      // FocusScope.of(context).requestFocus(otpNode);
+      countdown = 60.obs;
+      startTimer();
       otpController.text = '';
       FocusScope.of(context).requestFocus(otpNode);
     }, networkManager: networkManager, isModelResponse: false);

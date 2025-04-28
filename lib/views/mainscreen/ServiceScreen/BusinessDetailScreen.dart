@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -89,7 +88,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   Get.to(AddServicescreen())?.then((value) {
                     if (value == true) {
                       controller.getServiceList(context, 1, true,
-                          widget.item != null ? widget.item!.id : businessId);
+                          widget.item != null ? widget.item!.id : businessId,
+                          isFirstTime: true);
                     }
                   });
                 }))
@@ -105,73 +105,76 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Obx(
-              () => Container(
-                padding: EdgeInsets.only(top: 4.h),
-                width: Device.width,
-                height: 30.h,
-                decoration: BoxDecoration(
-                  color: controller.bgColor.value,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 4.w, top: 2.h),
-                      child: getleftsidebackbtn(
-                          istitle: false,
-                          backFunction: () {
-                            Get.back(
-                              result: true,
-                            );
-                          }),
-                    ),
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     Get.back(result: true);
-                    //   },
-                    //   child: Align(
-                    //     alignment: Alignment.centerLeft,
-                    //     child: Container(
-                    //       height: 10.h,
-                    //       width: 10.w,
-                    //       padding: EdgeInsets.all(4),
-                    //       decoration: BoxDecoration(
-                    //           color: inputBgColor, shape: BoxShape.circle),
-                    //       margin: EdgeInsets.only(left: 2.w),
-                    //       child: SvgPicture.asset(
-                    //         Asset.arrowBack,
-                    //         colorFilter:
-                    //             ColorFilter.mode(black, BlendMode.srcIn),
-                    //         height: 24,
-                    //         fit: BoxFit.contain,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                    Container(
-                      padding:
-                          EdgeInsets.only(left: 2.w, right: 2.w, bottom: 4.h),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        height: 14.h,
-                        imageUrl: widget.item != null
-                            ? widget.item!.visitingCardUrl
-                            : thumbnail,
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(color: primaryColor),
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          Asset.placeholder,
-                          height: 9.h,
-                          fit: BoxFit.cover,
-                        ),
+              () => Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 4.h),
+                    width: Device.width,
+                    height: 30.h,
+                    decoration: BoxDecoration(
+                      color: controller.bgColor.value,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 4.w, top: 2.h),
+                          child: getleftsidebackbtn(
+                            istitle: false,
+                            backFunction: () {
+                              Get.back(result: true);
+                            },
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: 2.w, right: 2.w, bottom: 4.h),
+                          child: controller.isLoadingPalette.value
+                              ? SizedBox(
+                                  height: 14.h,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                        color: primaryColor),
+                                  ),
+                                )
+                              : CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  height: 14.h,
+                                  imageUrl: widget.item != null
+                                      ? widget.item!.visitingCardUrl
+                                      : thumbnail,
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(
+                                        color: primaryColor),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Image.asset(
+                                    Asset.placeholder,
+                                    height: 9.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // // Show loader when palette is being generated
+                  // if (controller.isLoadingPalette.value)
+                  //   Container(
+                  //     width: Device.width,
+                  //     height: 30.h,
+                  //     color: Colors.black
+                  //         .withOpacity(0.5), // Semi-transparent background
+                  //     child: const Center(
+                  //       child: CircularProgressIndicator(
+                  //         color: primaryColor,
+                  //       ),
+                  //     ),
+                  //   ),
+                ],
               ),
             ),
             Container(
@@ -226,14 +229,16 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   getDynamicSizedBox(height: 0.5.h),
                   if (widget.item != null && widget.item!.address.isNotEmpty)
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(Icons.location_on, size: 18.sp),
                         getDynamicSizedBox(width: 1.w),
-                        controller.getCommonText(
-                            widget.item != null
-                                ? widget.item!.address.toString()
-                                : address,
-                            isHint: false)
+                        controller.getTexts(
+                          widget.item != null
+                              ? widget.item!.address.toString()
+                              : address,
+                        )
                       ],
                     ),
                   getDynamicSizedBox(

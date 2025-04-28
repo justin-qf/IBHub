@@ -165,7 +165,7 @@ class PracticeScreenTestConst {
 }
 
 class ProfileScreenConst {
-  static const logout = 'LogOut';
+  static const logout = 'Log Out';
   static const update = 'Edit Profile';
   static const profile = 'Profile';
   static const view = ' View';
@@ -263,7 +263,7 @@ class LoginConst {
   static const errorLogin = 'Error: Invalid Mobile Number or Password';
 
 /*not used*/
-  static const emailLable = 'Email Id';
+  static const emailLable = 'Email-ID';
   static const emailHint = 'Enter Email Id';
   static const validEmailHint = 'Enter Valid Email Id';
 /*not used*/
