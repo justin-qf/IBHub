@@ -240,6 +240,7 @@ class AddServicescreencontroller extends GetxController {
         // ignore: unnecessary_null_comparison
         if (selectedCategory != null) {
           categoryCtr.text = selectedCategory.name;
+          categoryEditid.value = selectedCategory.id.toString();
         } else {
           categoryEditid.value = '';
           categoryCtr.text = '';
@@ -403,14 +404,16 @@ class AddServicescreencontroller extends GetxController {
                 style: TextStyle(fontFamily: dM_sans_medium)),
             actions: [
               CupertinoDialogAction(
-                child: const Text(AddServiceScreenViewConst.camera, style: TextStyle(color: black)),
+                child: const Text(AddServiceScreenViewConst.camera,
+                    style: TextStyle(color: black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _pickImage(iscamera: true);
                 },
               ),
               CupertinoDialogAction(
-                child: const Text(AddServiceScreenViewConst.gallery, style: TextStyle(color: black)),
+                child: const Text(AddServiceScreenViewConst.gallery,
+                    style: TextStyle(color: black)),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _pickImage(iscamera: false);
@@ -426,56 +429,60 @@ class AddServicescreencontroller extends GetxController {
   void updateServiceApi(context) async {
     var loadingIndicator = LoadingProgressDialog();
 
-    try {
-      if (networkManager.connectionType.value == 0) {
-        loadingIndicator.hide(context);
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.noConnection,
-            callback: () {
-          Get.back();
-        });
-        return;
-      }
-      loadingIndicator.show(context, '');
-
-      logcat("ServiceParam", {
-        "service_title": serviceTitleCtr.text.toString().trim(),
-        "description": descriptionCtr.text.toString().trim(),
-        "keywords": keywordsCtr.text.toString().trim(),
-        "category_id": categoryId.value.toString().trim(),
-      });
-
-      var response = await Repository.update({
-        "service_title": serviceTitleCtr.text.toString().trim(),
-        "description": descriptionCtr.text.toString().trim(),
-        "keywords":
-            jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
-        "category_id": categoryId.value.toString().trim(),
-      }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
-
+    // try {
+    if (networkManager.connectionType.value == 0) {
       loadingIndicator.hide(context);
+      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+          Connection.noConnection, callback: () {
+        Get.back();
+      });
+      return;
+    }
+    loadingIndicator.show(context, '');
 
-      var json = jsonDecode(response.body);
+    logcat("ServiceParam", {
+      "service_title": serviceTitleCtr.text.toString().trim(),
+      "description": descriptionCtr.text.toString().trim(),
+      "keywords": keywordsCtr.text.toString().trim(),
+      "category_id": categoryId.value.toString().trim(),
+    });
 
-      if (response.statusCode == 200) {
-        if (json['success'] == true) {
-          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
-              callback: () {
-            Get.back(result: true);
-          });
-        } else {
-          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
-              callback: () {});
-        }
+    var response = await Repository.update({
+      "service_title": serviceTitleCtr.text.toString().trim(),
+      "description": descriptionCtr.text.toString().trim(),
+      "keywords":
+          jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
+      "category_id": categoryId.value.toString().trim(),
+    }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
+
+    loadingIndicator.hide(context);
+
+    var json = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      if (json['success'] == true) {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, json['message'],
+            callback: () {
+          Get.back(result: true);
+        });
       } else {
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, json['message'],
             callback: () {});
       }
-    } catch (e) {
-      logcat("Service Creation Exception", e.toString());
-      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+    } else {
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, json['message'],
           callback: () {});
-      loadingIndicator.hide(context);
     }
+    // } catch (e) {
+    //   logcat("Service Creation Exception", e.toString());
+    //   showDialogForScreen(
+    //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+    //       callback: () {});
+    //   loadingIndicator.hide(context);
+    // }
   }
 
   void addServiceApi(context) async {
@@ -484,8 +491,8 @@ class AddServicescreencontroller extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.noConnection,
-            callback: () {
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+            Connection.noConnection, callback: () {
           Get.back();
         });
         return;
@@ -525,21 +532,25 @@ class AddServicescreencontroller extends GetxController {
 
       if (response.statusCode == 200) {
         if (json['success'] == true) {
-          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, json['message'],
               callback: () {
             Get.back(result: true);
           });
         } else {
-          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, json['message'],
               callback: () {});
         }
       } else {
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, json['message'],
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, json['message'],
             callback: () {});
       }
     } catch (e) {
       logcat("Service Creation Exception", e.toString());
-      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
           callback: () {});
       loadingIndicator.hide(context);
     }
@@ -551,8 +562,8 @@ class AddServicescreencontroller extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.noConnection,
-            callback: () {
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+            Connection.noConnection, callback: () {
           Get.back();
         });
         return;
@@ -567,22 +578,26 @@ class AddServicescreencontroller extends GetxController {
       var result = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (result['success'] == true) {
-          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, result['message'],
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, result['message'],
               callback: () {
             Get.back(result: true); // Go back and pass result true
           });
         } else {
-          showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, result['message'],
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, result['message'],
               callback: () {});
         }
       } else {
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, result['message'],
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, result['message'],
             callback: () {});
       }
     } catch (e) {
       loadingIndicator.hide(context);
       logcat("Delete Service Exception", e.toString());
-      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
           callback: () {});
     }
   }

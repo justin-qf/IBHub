@@ -106,7 +106,7 @@ setSearchBar(context, controller, String tag,
                 },
                 child: Container(
                     padding: EdgeInsets.only(right: 5.w),
-                    child: Text(SearchScreenConstant.cancle,
+                    child: Text(SearchScreenConstant.cancel,
                         style: TextStyle(
                             fontFamily: fontRegular,
                             color: isDarkMode() ? white : black,
@@ -238,7 +238,7 @@ setSearchBars(context, controller, String tag,
                   },
                   child: Container(
                       padding: EdgeInsets.only(right: 5.w),
-                      child: Text(SearchScreenConstant.cancle,
+                      child: Text(SearchScreenConstant.cancel,
                           style: TextStyle(
                               fontFamily: fontRegular,
                               color: isDarkMode() ? white : black,

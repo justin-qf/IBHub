@@ -90,7 +90,8 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             Column(children: [
               getDynamicSizedBox(height: 4.h),
-              getCommonToolbar("Search", showBackButton: false),
+              getCommonToolbar(SearchScreenConstant.title,
+                  showBackButton: false),
               Obx(() {
                 return setSearchBars(
                     context, controller.searchCtr, SearchScreenConstant.title,
@@ -140,26 +141,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                 }),
                               );
                             case ScreenState.apiSuccess:
-                              return apiSuccess(controller.state.value);
+                              apiSuccess(controller.state.value);
+                              break;
                             default:
-                              Container();
+                             Container();
+                              break;
+                             
                           }
                           return Container();
                         }),
                       ]))),
             ]),
-            // Visibility(
-            //   visible: false,
-            //   child: Positioned(
-            //       left: 0,
-            //       bottom: 13.h,
-            //       child: SizedBox(
-            //         width: Device.width,
-            //         child: Center(
-            //           child: controller.getFilterUi(),
-            //         ),
-            //       )),
-            // ),
           ],
         ),
       ),
@@ -193,31 +185,6 @@ class _SearchScreenState extends State<SearchScreen> {
           }
         },
       );
-      // return MasonryGridView.count(
-      //   controller: controller.scrollController,
-      //   physics: const BouncingScrollPhysics(),
-      //   padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
-      //   crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
-      //   mainAxisSpacing: 10,
-      //   crossAxisSpacing: 4,
-      //   itemCount: controller.businessList.length +
-      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-      //   itemBuilder: (context, index) {
-      //     if (index < controller.businessList.length) {
-      //       BusinessData data = controller.businessList[index];
-      //       return controller.getBusinessListItem(context, data);
-      //     } else if (controller.isFetchingMore) {
-      //       return Center(
-      //         child: Padding(
-      //           padding: EdgeInsets.symmetric(vertical: 2.h),
-      //           child: const CircularProgressIndicator(color: primaryColor),
-      //         ),
-      //       );
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      // );
     } else {
       return noDataFoundWidget();
     }

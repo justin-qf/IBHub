@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
@@ -229,49 +228,4 @@ class ProfileController extends GetxController {
           callback: () {});
     }
   }
-
-  // deleteAccount(
-  //   context,
-  // ) async {
-  //   var loadingIndicator = LoadingProgressDialog();
-  //   loadingIndicator.show(context, '');
-
-  //   try {
-  //     if (networkManager.connectionType == 0) {
-  //       loadingIndicator.hide(context);
-  //       showDialogForScreen(context, Connection.noConnection, callback: () {
-  //         Get.back();
-  //       });
-  //       return;
-  //     }
-  //     UserModelList? retrievedObject = await UserPreferences().getSignInInfo();
-  //     var response = await Repository.delete(
-  //         {}, '${ApiUrl.deleteAccount}/${retrievedObject!.customerId}',
-  //         allowHeader: true);
-  //     loadingIndicator.hide(context);
-  //     var responseData = jsonDecode(response.body);
-  //     if (response.statusCode == 200) {
-  //       var data = DeleteModel.fromJson(responseData);
-  //       if (data.status == true) {
-  //         Navigator.pop(context);
-  //         UserPreferences().logout();
-  //         showDialogForScreen(context, responseData['message'], callback: () {
-  //           Get.offAll(SignInScreen(isFromLogout: true));
-  //         });
-  //       } else {
-  //         Navigator.pop(context);
-  //         showDialogForScreen(context, responseData['message'],
-  //             callback: () {});
-  //         loadingIndicator.hide(context);
-  //       }
-  //     } else {
-  //       loadingIndicator.hide(context);
-  //       showDialogForScreen(context, responseData['message'] ?? "Server Error",
-  //           callback: () {});
-  //     }
-  //   } catch (e) {
-  //     loadingIndicator.hide(context);
-  //     logcat('Exception', e);
-  //   }
-  // }
 }

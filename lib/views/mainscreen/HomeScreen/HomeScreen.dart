@@ -100,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           case ScreenState.apiSuccess:
                             return apiSuccess(controller.state.value);
+                          // ignore: unreachable_switch_default
                           default:
                             Container();
                         }

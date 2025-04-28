@@ -69,6 +69,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                 }),
             Expanded(
               child: SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: 5.h),
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -143,7 +144,8 @@ class _ServicescreenState extends State<AddServicescreen> {
                           ctr.searchCategoryCtr.text = "";
                           showDropdownMessage(
                               context,
-                              ctr.setCategoryListDialog(),
+                              ctr.setCategoryListDialog(
+                                  isFromHomeScreen: widget.isFromHomeScreen),
                               ServicesScreenConstant.categoryListLable,
                               isShowLoading: ctr.categoryFilterList,
                               onClick: () {
@@ -245,8 +247,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
                                   if (ctr.isFromHomeScreen.value == true) {
-                                  
-
                                     ctr.updateServiceApi(context);
                                   } else {
                                     ctr.addServiceApi(context);
@@ -266,7 +266,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                         margin: EdgeInsets.symmetric(horizontal: 5.w),
                         child: getFormButton(isdelete: true, context, () async {
                           //delete api call put here
-
                           ctr.deleteService(context);
                         }, ServicesScreenConstant.delete, validate: true),
                       )

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/componant/button/form_button.dart';
-import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -15,7 +12,6 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signupScreenController.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class Signupscreen extends StatefulWidget {

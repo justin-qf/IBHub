@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
-import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -19,6 +18,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
+// ignore: must_be_immutable
 class ReviewsScreen extends StatefulWidget {
   ReviewsScreen({required this.businessId, super.key});
   String businessId;
@@ -78,8 +78,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             Column(
               children: [
                 getDynamicSizedBox(height: 5.h),
-                getCommonToolbar("Review Screen", showBackButton: true,
-                    onClick: () {
+                getCommonToolbar(ReviewsScreenConstant.review,
+                    showBackButton: true, onClick: () {
                   Get.back();
                 }),
                 getDynamicSizedBox(height: 1.h),
@@ -160,44 +160,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     ],
                   ),
                 ),
-                // Expanded(
-                //   child: Container(
-                //       margin: EdgeInsets.only(left: 2.w, right: 2.w),
-                //       child: ListView.builder(
-                //           shrinkWrap: true,
-                //           physics: const BouncingScrollPhysics(),
-                //           padding: EdgeInsets.only(bottom: 13.h),
-                //           scrollDirection: Axis.vertical,
-                //           clipBehavior: Clip.antiAlias,
-                //           itemBuilder: (context, index) {
-                //             ReviewsList data = controller.reviewList[index];
-                //             return controller.getListItem(data);
-                //           },
-                //           itemCount: controller.reviewList.length)),
-                // ),
               ],
             ),
-            // Visibility(
-            //   visible: controller.isReviewvisible == false ? true : false,
-            //   child: Positioned(
-            //     bottom: 2.h,
-            //     left: 0,
-            //     right: 0,
-            //     child: Container(
-            //       margin: EdgeInsets.only(
-            //         left: 20.w,
-            //         right: 20.w,
-            //       ),
-            //       child: FadeInUp(
-            //           from: 50,
-            //           child: getSecondaryFormButton(() {
-            //             //controller.getFilterUi();
-            //             controller.isReviewvisible = true;
-            //             setState(() {});
-            //           }, ReviewsScreenConstant.btnTitle, isvalidate: true)),
-            //     ),
-            //   ),
-            // ),
             Visibility(
               visible: controller.isReviewvisible,
               child: Positioned(
@@ -212,6 +176,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       color: white,
                       boxShadow: [
                         BoxShadow(
+                          // ignore: deprecated_member_use
                           color: grey.withOpacity(0.5), // Shadow color
                           spreadRadius: 5, // Spread radius
                           blurRadius: 7, // Blur radius
@@ -266,27 +231,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                                   ),
                                 ),
                               ),
-                              // GestureDetector(
-                              //     onTap: () {
-                              //       controller.isReviewvisible = false;
-                              //       controller.isFormInvalidate.value = false;
-                              //       controller.commentctr.text = "";
-                              //       setState(() {});
-                              //     },
-                              //     child: Stack(
-                              //       children: [
-                              //         Align(
-                              //             alignment: Alignment.topRight,
-                              //             child: Padding(
-                              //               padding: const EdgeInsets.all(6),
-                              //               child: Icon(
-                              //                 Icons.cancel,
-                              //                 color: primaryColor,
-                              //                 size: 22.sp,
-                              //               ),
-                              //             )),
-                              //       ],
-                              //     ))
                             ],
                           ),
                           getDivider(),
@@ -393,29 +337,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             } else {
               return Container();
             }
-            // ReviewData model = controller.reviewList[index];
-            // return Column(
-            //   children: [
-            //     controller.getListItem(context, model, index),
-            //     index == controller.reviewList.length - 1 &&
-            //             controller.nextPageURL.value.isNotEmpty
-            //         ? Container(
-            //             margin: EdgeInsets.only(
-            //                 top: 2.h, left: 25.w, right: 25.w, bottom: 0.8.h),
-            //             child: getMiniButton(
-            //               () {
-            //                 controller.isLoading.value = true;
-            //                 controller.currentPage++;
-            //                 controller.getReviewList(
-            //                     context, controller.currentPage, false);
-            //                 setState(() {});
-            //               },
-            //               Common.viewMore,
-            //             ),
-            //           )
-            //         : Container()
-            //   ],
-            // );
           },
         ),
       );

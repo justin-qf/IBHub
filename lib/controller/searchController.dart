@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -112,345 +111,6 @@ class SearchScreenController extends GetxController {
   }
 
   RxList searchList = [].obs;
-  // void getSearchList(context, String searchText) async {
-  //   state.value = ScreenState.apiLoading;
-  //   try {
-  //     if (networkManager.connectionType == 0) {
-  //       showDialogForScreen(
-  //           context, SearchScreenConstant.title, Connection.noConnection,
-  //           callback: () {
-  //         Get.back();
-  //       });
-  //       return;
-  //     }
-  //     var response = await Repository.get(
-  //         {}, "${ApiUrl.getSearch}?search_product=$searchText",
-  //         allowHeader: true);
-  //     logcat("SEARCH_RESPONSE::", response.body);
-  //     if (response.statusCode == 200) {
-  //       var responseData = jsonDecode(response.body);
-  //       if (responseData['status'] == 1) {
-  //         state.value = ScreenState.apiSuccess;
-  //         message.value = '';
-  //         var searchData = SearchModel.fromJson(responseData);
-  //         searchList.clear();
-  //         if (searchData.data.isNotEmpty) {
-  //           searchList.addAll(searchData.data);
-  //           update();
-  //         } else {
-  //           //state.value = ScreenState.noDataFound;
-  //         }
-
-  //         List<CommonProductList> cartItems =
-  //             await UserPreferences().loadCartItems();
-
-  //         for (CommonProductList item in searchData.data) {
-  //           int existingIndex =
-  //               cartItems.indexWhere((cartItem) => cartItem.id == item.id);
-  //           if (existingIndex != -1) {
-  //             item.isInCart!.value = true;
-  //             item.quantity!.value = cartItems[existingIndex].quantity!.value;
-  //           } else {
-  //             item.isInCart!.value = false;
-  //             item.quantity!.value = 0;
-  //           }
-  //         }
-  //       } else {
-  //         message.value = responseData['message'];
-  //         showDialogForScreen(
-  //             context, SearchScreenConstant.title, responseData['message'],
-  //             callback: () {});
-  //       }
-  //     } else {
-  //       state.value = ScreenState.apiError;
-  //       message.value = APIResponseHandleText.serverError;
-  //       showDialogForScreen(
-  //           context, SearchScreenConstant.title, ServerError.servererror,
-  //           callback: () {});
-  //     }
-  //   } catch (e) {
-  //     logcat("Ecxeption", e);
-  //     state.value = ScreenState.apiError;
-  //     message.value = ServerError.servererror;
-  //     showDialogForScreen(
-  //         context, SearchScreenConstant.title, ServerError.servererror,
-  //         callback: () {});
-  //   }
-  // }
-
-  // getItemListItem(
-  //     BuildContext context, CommonProductList data, bool? isGuestUser) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       Get.to(
-  //         ProductDetailScreen(
-  //           SearchScreenConstant.title,
-  //           data: data,
-  //         ),
-  //         transition: Transition.fadeIn,
-  //         curve: Curves.easeInOut,
-  //       );
-  //     },
-  //     child: FadeInUp(
-  //       child: Wrap(
-  //         children: [
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.circular(
-  //                 SizerUtil.deviceType == DeviceType.mobile ? 4.w : 2.2.w),
-  //             child: Container(
-  //               width: double.infinity,
-  //               margin: EdgeInsets.only(bottom: 0.5.h, left: 1.w, right: 2.w),
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(
-  //                   color: grey, // Border color
-  //                   width: isDarkMode() ? 1 : 0.2, // Border width
-  //                 ),
-  //                 color: isDarkMode() ? tileColour : white,
-  //                 borderRadius: BorderRadius.circular(
-  //                     SizerUtil.deviceType == DeviceType.mobile ? 4.w : 2.2.w),
-  //               ),
-  //               child: Column(
-  //                 mainAxisAlignment: MainAxisAlignment.start,
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Stack(
-  //                     children: [
-  //                       Container(
-  //                         width: double.infinity,
-  //                         decoration: BoxDecoration(
-  //                             borderRadius: BorderRadius.circular(
-  //                                 SizerUtil.deviceType == DeviceType.mobile
-  //                                     ? 3.5.w
-  //                                     : 2.5.w),
-  //                             border: Border.all(
-  //                                 color: grey, // Set the border color here
-  //                                 width: isDarkMode()
-  //                                     ? 1
-  //                                     : 0.2 // Set the border width
-  //                                 )),
-  //                         child: ClipRRect(
-  //                           borderRadius: BorderRadius.circular(
-  //                               SizerUtil.deviceType == DeviceType.mobile
-  //                                   ? 3.5.w
-  //                                   : 2.5.w),
-  //                           child: CachedNetworkImage(
-  //                             fit: BoxFit.cover,
-  //                             height: 12.h,
-  //                             imageUrl: ApiUrl.imageUrl + data.images[0],
-  //                             placeholder: (context, url) => const Center(
-  //                               child: CircularProgressIndicator(
-  //                                   color: primaryColor),
-  //                             ),
-  //                             errorWidget: (context, url, error) => Image.asset(
-  //                               Asset.productPlaceholder,
-  //                               height: 12.h,
-  //                               fit: BoxFit.contain,
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   SizedBox(
-  //                     height: 1.h,
-  //                   ),
-  //                   Container(
-  //                     margin: EdgeInsets.only(left: 1.w, right: 1.w),
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         getText(
-  //                           data.name,
-  //                           TextStyle(
-  //                               fontFamily: fontSemiBold,
-  //                               overflow: TextOverflow.ellipsis,
-  //                               fontWeight: FontWeight.w500,
-  //                               color: isDarkMode() ? black : black,
-  //                               fontSize:
-  //                                   SizerUtil.deviceType == DeviceType.mobile
-  //                                       ? 10.sp
-  //                                       : 7.sp,
-  //                               height: 1.2),
-  //                         ),
-  //                         getDynamicSizedBox(
-  //                           height: 0.5.h,
-  //                         ),
-  //                         Row(
-  //                           children: [
-  //                             getText(
-  //                               '${IndiaRupeeConstant.inrCode}${data.price}',
-  //                               TextStyle(
-  //                                   fontFamily: fontBold,
-  //                                   color: primaryColor,
-  //                                   fontSize: SizerUtil.deviceType ==
-  //                                           DeviceType.mobile
-  //                                       ? 12.sp
-  //                                       : 7.sp,
-  //                                   height: 1.2),
-  //                             ),
-  //                             const Spacer(),
-  //                             RatingBar.builder(
-  //                               initialRating: data.averageRating ?? 0.0,
-  //                               minRating: 1,
-  //                               direction: Axis.horizontal,
-  //                               allowHalfRating: true,
-  //                               itemCount: 1,
-  //                               itemSize: 3.5.w,
-  //                               unratedColor: Colors.orange,
-  //                               itemBuilder: (context, _) => const Icon(
-  //                                 Icons.star,
-  //                                 color: Colors.orange,
-  //                               ),
-  //                               onRatingUpdate: (rating) {
-  //                                 logcat("RATING", rating);
-  //                               },
-  //                             ),
-  //                             getText(
-  //                               data.averageRating != null
-  //                                   ? data.averageRating.toString()
-  //                                   : '0.0',
-  //                               TextStyle(
-  //                                   fontFamily: fontSemiBold,
-  //                                   color: lableColor,
-  //                                   fontWeight:
-  //                                       isDarkMode() ? FontWeight.w600 : null,
-  //                                   fontSize: SizerUtil.deviceType ==
-  //                                           DeviceType.mobile
-  //                                       ? 9.sp
-  //                                       : 7.sp,
-  //                                   height: 1.2),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                         getDynamicSizedBox(
-  //                           height: 0.5.h,
-  //                         ),
-  //                         // Row(
-  //                         //   crossAxisAlignment: CrossAxisAlignment.center,
-  //                         //   mainAxisAlignment: MainAxisAlignment.center,
-  //                         //   children: [
-  //                         //     RatingBar.builder(
-  //                         //       initialRating: 3.5,
-  //                         //       minRating: 1,
-  //                         //       direction: Axis.horizontal,
-  //                         //       allowHalfRating: true,
-  //                         //       itemCount: 1,
-  //                         //       itemSize: 3.5.w,
-  //                         //       // itemPadding:
-  //                         //       //     const EdgeInsets.symmetric(horizontal: 5.0),
-  //                         //       itemBuilder: (context, _) => const Icon(
-  //                         //         Icons.star,
-  //                         //         color: Colors.orange,
-  //                         //       ),
-  //                         //       onRatingUpdate: (rating) {
-  //                         //         logcat("RATING", rating);
-  //                         //       },
-  //                         //     ),
-  //                         //     getText(
-  //                         //       "3.2",
-  //                         //       TextStyle(
-  //                         //           fontFamily: fontSemiBold,
-  //                         //           color: lableColor,
-  //                         //           fontWeight:
-  //                         //               isDarkMode() ? FontWeight.w900 : null,
-  //                         //           fontSize:
-  //                         //               SizerUtil.deviceType == DeviceType.mobile
-  //                         //                   ? 8.sp
-  //                         //                   : 7.sp,
-  //                         //           height: 1.2),
-  //                         //     ),
-  //                         //     const Spacer(),
-  //                         //     Obx(
-  //                         //       () {
-  //                         //         return getAddToCartBtn(
-  //                         //             'Add to Cart', Icons.shopping_cart,
-  //                         //             addCartClick: () {
-  //                         //           if (isGuest!.value == true) {
-  //                         //             getGuestUserAlertDialog(
-  //                         //                 context, SearchScreenConstant.title);
-  //                         //           } else {
-  //                         //             Get.to(const CartScreen())!.then((value) {
-  //                         //               Statusbar()
-  //                         //                   .trasparentStatusbarProfile(true);
-  //                         //             });
-  //                         //           }
-  //                         //         }, isEnable: isGuest!.value);
-  //                         //       },
-  //                         //     )
-  //                         //   ],
-  //                         // ),
-  //                         Obx(
-  //                           () {
-  //                             return data.isInCart!.value == false
-  //                                 ? getAddToCartBtn(
-  //                                     'Add to Cart', Icons.shopping_cart,
-  //                                     addCartClick: () async {
-  //                                     if (isGuest!.value == true) {
-  //                                       getGuestUserAlertDialog(context,
-  //                                           SearchScreenConstant.title);
-  //                                     } else {
-  //                                       data.isInCart!.value = true;
-  //                                       incrementDecrementCartItem(
-  //                                           isFromIcr: true,
-  //                                           data: data,
-  //                                           //itemList: popularItemList,
-  //                                           quantity: data.quantity!.value);
-  //                                     }
-  //                                     update();
-  //                                   }, isAddToCartClicked: data.isInCart!)
-  //                                 : homeCartIncDecUi(
-  //                                     qty: data.quantity.toString(),
-  //                                     increment: () async {
-  //                                       incrementDecrementCartItemInList(
-  //                                           isFromIcr: true,
-  //                                           data: data,
-  //                                           // itemList: popularItemList,
-  //                                           quantity: data.quantity!.value);
-
-  //                                       update();
-  //                                     },
-  //                                     isFromPopular: false,
-  //                                     decrement: () async {
-  //                                       incrementDecrementCartItemInList(
-  //                                           isFromIcr: false,
-  //                                           data: data,
-  //                                           // itemList: popularItemList,
-  //                                           quantity: data.quantity!.value);
-  //                                       update();
-  //                                     });
-  //                           },
-  //                         ),
-  //                         // Obx(
-  //                         //   () {
-  //                         //     return getAddToCartBtn(
-  //                         //         'Add to Cart', Icons.shopping_cart,
-  //                         //         addCartClick: () {
-  //                         //       if (isGuest!.value == true) {
-  //                         //         getGuestUserAlertDialog(
-  //                         //             context, SearchScreenConstant.title);
-  //                         //       } else {
-  //                         //         Get.to(const CartScreen())!.then((value) {
-  //                         //           Statusbar().trasparentStatusbarProfile(true);
-  //                         //         });
-  //                         //       }
-  //                         //     }, isEnable: isGuest!.value);
-  //                         //   },
-  //                         // ),
-  //                         getDynamicSizedBox(
-  //                           height: 1.h,
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget getText(title, TextStyle? style) {
     return Padding(
@@ -493,7 +153,7 @@ class SearchScreenController extends GetxController {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getFilterHeader(context, true),
-                    getLable("State", isFromRetailer: true),
+                    getLable(SearchScreenConstant.stateLabel, isFromRetailer: true),
                     Container(
                       margin: EdgeInsets.only(left: 9.w, right: 9.w),
                       child: AnimatedSize(
@@ -502,7 +162,7 @@ class SearchScreenController extends GetxController {
                           return getReactiveFormField(
                               node: stateNode,
                               controller: statectr,
-                              hintLabel: "Select State",
+                              hintLabel: SearchScreenConstant.selectStateHint,
                               onChanged: (val) {
                                 isFilterApplied.value =
                                     statectr.text.isNotEmpty ||
@@ -515,7 +175,7 @@ class SearchScreenController extends GetxController {
                                     context,
                                     setStateListDialog(),
                                     isShowLoading: stateFilterList,
-                                    "State List", onClick: () {
+                                    SearchScreenConstant.stateList, onClick: () {
                                   applyFilter('');
                                 }, refreshClick: () {
                                   futureDelay(() {
@@ -532,7 +192,7 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
-                    getLable("City", isFromRetailer: true),
+                    getLable(SearchScreenConstant.cityLabel, isFromRetailer: true),
                     Container(
                       margin: EdgeInsets.only(left: 9.w, right: 9.w),
                       child: AnimatedSize(
@@ -541,17 +201,17 @@ class SearchScreenController extends GetxController {
                           return getReactiveFormField(
                               node: cityNode,
                               controller: cityctr,
-                              hintLabel: "Select City",
+                              hintLabel: SearchScreenConstant.selectCityHint,
                               onChanged: (val) {},
                               onTap: () {
                                 searchCityctr.text = "";
                                 if (statectr.text.toString().isEmpty) {
                                   showDialogForScreen(
-                                      context, "State", "Please Select State",
+                                      context, SearchScreenConstant.stateLabel, SearchScreenConstant.pleaseSelectState,
                                       callback: () {});
                                 } else {
                                   showDropdownMessage(
-                                      context, setCityListDialog(), "City List",
+                                      context, setCityListDialog(), SearchScreenConstant.cityList,
                                       isShowLoading: cityFilterList,
                                       onClick: () {
                                     applyFilterforCity('');
@@ -572,7 +232,7 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
-                    getLable("Category", isFromRetailer: true),
+                    getLable(SearchScreenConstant.categoryLabel, isFromRetailer: true),
                     Container(
                       margin: EdgeInsets.only(left: 9.w, right: 9.w),
                       child: AnimatedSize(
@@ -581,12 +241,12 @@ class SearchScreenController extends GetxController {
                           return getReactiveFormField(
                               node: categoryNode,
                               controller: categoryCtr,
-                              hintLabel: "Select Category",
+                              hintLabel: SearchScreenConstant.selectCityHint,
                               onChanged: (val) {},
                               onTap: () {
                                 searchCategoryctr.text = "";
                                 showDropdownMessage(context,
-                                    setCategoryListDialog(), "Category List",
+                                    setCategoryListDialog(), SearchScreenConstant.categoryList,
                                     isShowLoading: categoryFilterList,
                                     onClick: () {
                                   applyCategoryFilter('');
@@ -669,7 +329,7 @@ class SearchScreenController extends GetxController {
   Widget setStateListDialog() {
     return Obx(() {
       if (isStateApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text("Loading"),
+        return setDropDownContent([].obs, const Text(SearchScreenConstant.loading),
             isApiIsLoading: isStateApiCallLoading.value);
       }
       return setDropDownContent(
@@ -717,7 +377,7 @@ class SearchScreenController extends GetxController {
           searchcontent: getReactiveFormField(
               node: searchNode,
               controller: searchctr,
-              hintLabel: "Search Here",
+              hintLabel: SearchScreenConstant.hint,
               onChanged: (val) {
                 applyFilter(val.toString());
                 update();
@@ -764,7 +424,7 @@ class SearchScreenController extends GetxController {
   Widget setCityListDialog() {
     return Obx(() {
       if (isCityApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text("Loading"),
+        return setDropDownContent([].obs, const Text(SearchScreenConstant.loading),
             isApiIsLoading: isCityApiCallLoading.value);
       }
       return setDropDownContent(
@@ -799,22 +459,13 @@ class SearchScreenController extends GetxController {
                     name: cityFilterList[index].city,
                     modelId: cityFilterList[index].id.toString(),
                     storeId: cityId.value),
-                //      Text(
-                //   cityFilterList[index].name,
-                //   style: TextStyle(
-                //       fontFamily: fontRegular,
-                //       fontSize: SizerUtil.deviceType == DeviceType.mobile
-                //           ? 13.5.sp
-                //           : 9.sp,
-                //       color: black),
-                // ),
               );
             },
           ),
           searchcontent: getReactiveFormField(
               node: searchCityNode,
               controller: searchCityctr,
-              hintLabel: "Search Here",
+              hintLabel: SearchScreenConstant.hint,
               onChanged: (val) {
                 applyFilterforCity(val.toString());
                 update();
@@ -828,7 +479,7 @@ class SearchScreenController extends GetxController {
   Widget setCategoryListDialog() {
     return Obx(() {
       if (isCategoryApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text("Loading"),
+        return setDropDownContent([].obs, const Text(SearchScreenConstant.loading),
             isApiIsLoading: isCategoryApiCallLoading.value);
       }
       return setDropDownContent(
@@ -868,7 +519,7 @@ class SearchScreenController extends GetxController {
           searchcontent: getReactiveFormField(
               node: searchNode,
               controller: searchctr,
-              hintLabel: "Search Here",
+              hintLabel: SearchScreenConstant.hint,
               onChanged: (val) {
                 applyCategoryFilter(val.toString());
                 update();
@@ -913,7 +564,7 @@ class SearchScreenController extends GetxController {
   void validateCity(String? val) {
     cityModel.update((model) {
       if (val != null && val.isEmpty) {
-        model!.error = "Select City";
+        model!.error = SearchScreenConstant.selectCityHint;
         model.isValidate = false;
       } else {
         model!.error = null;
@@ -926,7 +577,7 @@ class SearchScreenController extends GetxController {
   void validateCategory(String? val) {
     categoryModel.update((model) {
       if (val != null && val.isEmpty) {
-        model!.error = "Select Category";
+        model!.error = SearchScreenConstant.selectCategoryHint;
         model.isValidate = false;
       } else {
         model!.error = null;
@@ -948,7 +599,7 @@ class SearchScreenController extends GetxController {
   void getCityApi(context, cityID, bool isLoading) async {
     var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: "City List",
+        title: SearchScreenConstant.cityList,
         // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
         apiEndPoint: "${ApiUrl.getCity}/$cityID",
         allowHeader: true, apisLoading: (isTrue) {
@@ -977,7 +628,7 @@ class SearchScreenController extends GetxController {
     logcat("getStateApi", stateID.toString());
     // var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: "State List",
+        title: SearchScreenConstant.stateList,
         apiEndPoint: ApiUrl.getState,
         allowHeader: true, apisLoading: (isTrue) {
       // if (isTrue) {
@@ -1002,7 +653,7 @@ class SearchScreenController extends GetxController {
   void getCategoryApi(context) async {
     // var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: "Category List",
+        title: SearchScreenConstant.categoryLabel,
         apiEndPoint: ApiUrl.getCategories,
         allowHeader: true, apisLoading: (isTrue) {
       // if (isTrue) {
@@ -1030,14 +681,7 @@ class SearchScreenController extends GetxController {
       String? categoryId,
       String? keyword,
       bool? isFirstTime = false}) async {
-    // var loadingIndicator = LoadingProgressDialog();
 
-    // if (hideloading == true) {
-    //   state.value = ScreenState.apiLoading;
-    // } else {
-    //   loadingIndicator.show(context, '');
-    //   update();
-    // }
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -1071,9 +715,6 @@ class SearchScreenController extends GetxController {
       logcat("BusinessListParam::", requestBody.toString());
       var response =
           await Repository.post(requestBody, pageURL, allowHeader: true);
-      // if (hideloading != true) {
-      //   loadingIndicator.hide(context);
-      // }
       logcat("RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -1130,7 +771,10 @@ class SearchScreenController extends GetxController {
   getBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () {
-        Get.to(BusinessDetailScreen(item: item,isFromProfile: false,));
+        Get.to(BusinessDetailScreen(
+          item: item,
+          isFromProfile: false,
+        ));
         // Get.to(ServiceScreen(data: item));
       },
       child: Container(
@@ -1139,6 +783,7 @@ class SearchScreenController extends GetxController {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
+                // ignore: deprecated_member_use
                 color: black.withOpacity(0.2),
                 spreadRadius: 0.1,
                 blurRadius: 5,
@@ -1201,13 +846,6 @@ class SearchScreenController extends GetxController {
                                 color: black,
                                 fontWeight: FontWeight.w900)),
                         const Spacer(),
-                        // if (item.businessReviewsAvgRating != null)
-                        // Text(item.businessReviewsAvgRating.toString(),
-                        //     style: TextStyle(
-                        //         fontFamily: fontMedium,
-                        //         fontSize: 14.sp,
-                        //         color: grey,
-                        //         fontWeight: FontWeight.w900))
                         RatingBar.builder(
                           initialRating: item.businessReviewsAvgRating ?? 0.0,
                           minRating: 1,
@@ -1260,49 +898,6 @@ class SearchScreenController extends GetxController {
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
-                    // getText(
-                    //   item.address,
-                    //   TextStyle(
-                    //       fontFamily: fontSemiBold,
-                    //       color: lableColor,
-                    //       fontSize: Device.screenType == sizer.ScreenType.mobile
-                    //           ? 14.sp
-                    //           : 7.sp,
-                    //       height: 1.2),
-                    // ),
-                    // AbsorbPointer(
-                    //     absorbing: true,
-                    //     child: ReadMoreText(item.address,
-                    //         textAlign: TextAlign.start,
-                    //         trimLines: 2, callback: (val) {
-                    //       logcat("ONTAP", val.toString());
-                    //     },
-                    //         colorClickableText: primaryColor,
-                    //         trimMode: TrimMode.Line,
-                    //         trimCollapsedText: '...Show more',
-                    //         trimExpandedText: '',
-                    //         delimiter: ' ',
-                    //         style: TextStyle(
-                    //             overflow: TextOverflow.ellipsis,
-                    //             fontSize:
-                    //                 Device.screenType == sizer.ScreenType.mobile
-                    //                     ? 14.sp
-                    //                     : 10.sp,
-                    //             fontFamily: fontBold,
-                    //             color: grey),
-                    //         lessStyle: TextStyle(
-                    //             fontFamily: fontMedium,
-                    //             fontSize:
-                    //                 Device.screenType == sizer.ScreenType.mobile
-                    //                     ? 14.sp
-                    //                     : 12.sp),
-                    //         moreStyle: TextStyle(
-                    //             fontFamily: fontMedium,
-                    //             fontSize:
-                    //                 Device.screenType == sizer.ScreenType.mobile
-                    //                     ? 14.sp
-                    //                     : 12.sp,
-                    //             color: primaryColor))),
                   ],
                 ),
               ),

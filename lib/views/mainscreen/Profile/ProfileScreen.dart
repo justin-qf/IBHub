@@ -10,6 +10,7 @@ import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/profile_controller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
@@ -55,10 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               case ScreenState.apiLoading:
               case ScreenState.noDataFound:
               case ScreenState.apiError:
-              // return SizedBox(
-              //   height: Device.height / 1.5,
-              //   child: apiOtherStates(controller.states.value),
-              // );
               case ScreenState.apiSuccess:
               case ScreenState.noNetwork:
                 return Column(
@@ -228,19 +225,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                     );
 
-                                    // const pdfUrl =
-                                    //     'https://pdfobject.com/pdf/sample.pdf';
-                                    // const fileName = 'profile.pdf';
-
                                     final filePath =
                                         await controller.downloadPDF(
                                             controller.pdflink.value,
                                             controller.pdfname.value);
-
-                                    // final filePath =
-                                    //     await controller.downloadPDF(
-                                    //         pdfUrl,
-                                    //         fileName);
 
                                     Get.back();
 
@@ -272,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             FadeInUp(
                                 duration: getAnimationDuration(),
                                 child: getMenuListItem(
-                                    title: "Update Profile",
+                                    title: ProfileScreenConst.updateProfile,
                                     icon: Asset.profile,
                                     callback: () async {
                                       Get.to(const Updateprofilescreen())
@@ -281,14 +269,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           controller.getProfileData();
                                           // ignore: use_build_context_synchronously
                                           controller.getApiProfile(context);
-                                          // controller.getProfile(context);
+                                        
                                         }
                                       });
                                     })),
                             FadeInUp(
                                 duration: getAnimationDuration(),
                                 child: getMenuListItem(
-                                    title: "My Bussiness",
+                                    title: ProfileScreenConst.mybusiness,
                                     // icon: Asset.add,
                                     icons: Icons.business,
                                     callback: () async {
@@ -296,12 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         item: null,
                                         isFromProfile: true,
                                       ));
-                                      // Get.to(AddServicescreen())?.then((value) {
-                                      //   if (value == true) {
-                                      //     controller.getProfileData();
-                                      //     // controller.getProfile(context);
-                                      //   }
-                                      // });
+                                    
                                     })),
                             FadeInUp(
                               duration: getAnimationDuration(),
@@ -312,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       fromProfile: true,
                                     ));
                                   },
-                                  title: "Change Password",
+                                  title: ProfileScreenConst.changepassword,
                                   icon: Asset.resetpass),
                             ),
                             FadeInUp(
@@ -321,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     callback: () {
                                       logoutPopupDialogs(context);
                                     },
-                                    title: "Logout",
+                                    title: ProfileScreenConst.logout,
                                     icon: Asset.logout)),
                             // getFormButton(context, () {
                             //   Get.to(AddServicescreen());
@@ -332,6 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     )
                   ],
                 );
+              // ignore: unreachable_switch_default
               default:
                 const Center(child: Text("Not Found"));
             }
@@ -362,6 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Device.screenType == sizer.ScreenType.mobile ? 2.h : 1.5.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.8.h),
+          // ignore: deprecated_member_use
           color: primaryColor.withOpacity(0.07),
         ),
         child: Row(
@@ -396,6 +381,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             Row(
               children: [
                 Icon(Icons.arrow_forward_ios_rounded,
+                    // ignore: deprecated_member_use
                     color: grey.withOpacity(0.7), size: 5.w)
               ],
             )
@@ -405,27 +391,4 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  // Widget apiOtherStates(state) {
-  //   if (state == ScreenState.apiLoading) {
-  //     return Center(
-  //       child: ClipRRect(
-  //         borderRadius: BorderRadius.circular(100),
-  //         child: SizedBox(
-  //           height: 30,
-  //           width: 30,
-  //           child: Image.asset(
-  //             "assets/gif/ZKZg.gif",
-  //             width: 40,
-  //             height: 40,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return Image.asset(
-  //     "assets/gif/ZKZg.gif",
-  //     width: 50,
-  //     height: 50,
-  //   );
-  // }
 }

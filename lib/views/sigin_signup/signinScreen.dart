@@ -163,7 +163,7 @@ class _SigninscreenState extends State<Signinscreen> {
                     if (ctr.isFormInvalidate.value == true) {
                       ctr.loginAPI(context);
                     }
-                  }, LoginConst.title, validate: ctr.isFormInvalidate.value),
+                  }, LoginConst.title, validate: ctr.isFormInvalidate.value,isdelete: false),
                 );
               }),
               getDynamicSizedBox(height: 4.h),
@@ -243,19 +243,6 @@ class _SigninscreenState extends State<Signinscreen> {
                   ],
                 ),
               ),
-              // const Align(
-              //   alignment: Alignment.center,
-              //   child: Column(
-              //     children: [
-              //       Text('By registering you agree to',
-              //           style: TextStyle(
-              //               color: grey, fontFamily: dM_sans_regular)),
-              //       Text('Terms & Conditions and Privacy Policy',
-              //           style: TextStyle(
-              //               color: grey, fontFamily: dM_sans_regular)),
-              //     ],
-              //   ),
-              // ),
               getDynamicSizedBox(height: 5.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

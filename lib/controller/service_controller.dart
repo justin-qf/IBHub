@@ -35,12 +35,6 @@ class ServiceController extends GetxController {
       {bool? isFirstTime = false}) async {
     var loadingIndicator = LoadingProgressDialog();
 
-    // if (hideloading == true) {
-    //   state.value = ScreenState.apiLoading;
-    // } else {
-    //   loadingIndicator.show(context, '');
-    //   update();
-    // }
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -56,20 +50,16 @@ class ServiceController extends GetxController {
 
       var pageURL = '${ApiUrl.getServiceList}/${businessId}?page=$currentPage';
       var response = await Repository.get({}, pageURL, allowHeader: true);
-      // if (hideloading != true) {
-      //   loadingIndicator.hide(context);
-      // }
+
       logcat("RESPONSE::", response.body);
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
-          serviceList.clear();
+          // serviceList.clear();
           var serviceListData = ServiceListModel.fromJson(responseData);
-          if (isFirstTime == true && serviceList.isNotEmpty) {
-            serviceList.clear();
-          }
+      
           if (serviceListData.data.data.isNotEmpty) {
             serviceList.addAll(serviceListData.data.data);
             serviceList.refresh();

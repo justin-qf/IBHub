@@ -165,12 +165,15 @@ class PracticeScreenTestConst {
 }
 
 class ProfileScreenConst {
-  static const logout = 'Log Out';
+  static const logout = 'LogOut';
   static const update = 'Edit Profile';
   static const profile = 'Profile';
   static const view = ' View';
   static const save = 'Update';
   static const edit = 'Edit ';
+  static const updateProfile = 'Update Profile';
+  static const mybusiness = 'My Bussiness';
+  static const changepassword = 'Change Password';
 
   static const editdesc =
       'Edit your profile to keep your info accurate and up to date !';
@@ -239,6 +242,7 @@ class SubjectScreenConst {
 }
 
 class ReviewsScreenConstant {
+  static const review = "Reviews Screen";
   static const title = "Reviews";
   static const editPic = "Edit Photo";
   static const update = "Update";
@@ -294,11 +298,30 @@ class DashboardText {
 }
 
 class SearchScreenConstant {
+  // Screen-related strings
   static const title = 'Search';
-  static const hint = 'Search Here....';
-  static const cancle = 'Cancle';
-}
+  static const hint = 'Search Here';
+  static const cancel = 'Cancle'; // Note: 'Cancle' is likely a typo, consider 'Cancel'
 
+  // Dialog and bottom sheet strings
+  static const loading = 'Loading';
+  static const stateList = 'State List';
+  static const cityList = 'City List';
+  static const categoryList = 'Category List';
+  static const stateLabel = 'State';
+  static const cityLabel = 'City';
+  static const categoryLabel = 'Category';
+  static const selectStateHint = 'Select State';
+  static const selectCityHint = 'Select City';
+  static const selectCategoryHint = 'Select Category';
+  static const dropdownSearchHint = 'Search Here';
+  static const pleaseSelectState = 'Please Select State';
+  static const selectCityError = 'Select City';
+  static const selectCategoryError = 'Select Category';
+
+  // Timer-related strings
+  static const timeRemaining = 'Time remaining: %s seconds';
+}
 class ServicesScreenConstant {
   static const delete = 'Delete';
   static const update = 'Update';

@@ -139,7 +139,8 @@ class ServiceDetailScreenController extends GetxController {
   RxList serviceList = [].obs;
   RxString nextPageURL = "".obs;
   var isServiceLoading = false.obs;
-  getServiceList(context, currentPage, bool hideloading, businessId) async {
+  getServiceList(context, currentPage, bool hideloading, businessId,
+      {bool? isFirstTime = false}) async {
     var loadingIndicator = LoadingProgressDialog();
     // if (hideloading == true) {
     //   state.value = ScreenState.apiLoading;
@@ -175,6 +176,9 @@ class ServiceDetailScreenController extends GetxController {
           state.value = ScreenState.apiSuccess;
           message.value = '';
           var serviceListData = ServiceListModel.fromJson(responseData);
+          if (isFirstTime == true && serviceList.isNotEmpty) {
+            serviceList.clear();
+          }
           if (serviceListData.data.data.isNotEmpty) {
             serviceList.addAll(serviceListData.data.data);
             serviceList.refresh();
@@ -354,7 +358,8 @@ class ServiceDetailScreenController extends GetxController {
                     ))?.then((value) {
                       if (value == true) {
                         if (!context.mounted) return;
-                        getServiceList(context, 1, true, bussinessID.value);
+                        getServiceList(context, 1, true, bussinessID.value,
+                            isFirstTime: true);
                       }
                     });
                   },

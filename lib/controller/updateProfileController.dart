@@ -15,14 +15,16 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/models/cityModel.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
-import 'package:ibh/models/stateandcity_models.dart';
+import 'package:ibh/models/stateModel.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:image_picker/image_picker.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
@@ -165,11 +167,6 @@ class Updateprofilecontroller extends GetxController {
 
     enableSignUpButton();
 
-    // visitingcardCtr.text=retrievedObject.
-
-    // gender.value = retrievedObject.city;
-    // referCode!.value = retrievedObject.state;
-
     state.value = ScreenState.apiSuccess;
     update();
   }
@@ -248,29 +245,7 @@ class Updateprofilecontroller extends GetxController {
 
   @override
   void onClose() {
-    // // Dispose focus nodes
-    // nameNode.dispose();
-    // emailNode.dispose();
-    // phoneNode.dispose();
-    // bussinessNode.dispose();
-    // stateNode.dispose();
-    // cityNode.dispose();
-    // pincodeNode.dispose();
-    // visitingcardNode.dispose();
-    // passNode.dispose();
-    // confpassNode.dispose();
 
-    // // Dispose and clear text controllers
-    // nameCtr.dispose();
-    // emailCtr.dispose();
-    // phoneCtr.dispose();
-    // bussinessCtr.dispose();
-    // stateCtr.dispose();
-    // cityCtr.dispose();
-    // pincodeCtr.dispose();
-    // visitingcardCtr.dispose();
-    // passCtr.dispose();
-    // confpassCtr.dispose();
 
     nameCtr.clear();
     emailCtr.clear();
@@ -395,18 +370,6 @@ class Updateprofilecontroller extends GetxController {
     }
     loadingIndicator.show(context, '');
 
-    // logcat("PartyParam", {
-    //   "name": nameCtr.text.toString(),
-    //   "email": emailCtr.text.toString().trim(),
-    //   "phone": phoneCtr.text.toString(),
-    //   "password": passCtr.text.toString().trim(),
-    //   "business_name": bussinessCtr.text.toString(),
-    //   "city": cityId.toString(),
-    //   "state": stateId.toString(),
-    //   "pincode": pincodeCtr.text.toString(),
-    //   // "visiting_card": visitingcardCtr.text.toString(),
-    //   "password_confirmation": confpassCtr.text.toString()
-    // });
 
     var response = await Repository.multiPartPost({
       "name": nameCtr.text.toString(),
@@ -461,34 +424,7 @@ class Updateprofilecontroller extends GetxController {
         // Get.back();
       });
     }
-    // }
-    // catch (e) {
-    //   logcat("Exception", e);
-    //   showDialogForScreen(context, "Signup Screen", Connection.servererror,
-    //       callback: () {});
-    //   loadingIndicator.hide(context);
-    // }
-
-    //   commonPostApiCallFormate(context,
-    //     title: LoginConst.title,
-    //     body: {
-    //       "name": nameCtr.text.toString(),
-    //       "email": emailCtr.text.toString().trim(),
-    //       "phone": phoneCtr.text.toString(),
-    //       "password": passCtr.text.toString().trim(),
-    //       "business_name": bussinessCtr.text.toString(),
-    //       "city": "",
-    //       "state": "",
-    //       "pincode": "",
-    //       "visiting_card": "",
-    //       "password_confirmation": confpassCtr.text.toString()
-    //     },
-    //     apiEndPoint: ApiUrl.register, onResponse: (data) {
-    //   var responseDetail = LoginModel.fromJson(data);
-    //   UserPreferences().saveSignInInfo(responseDetail.data.user);
-    //   UserPreferences().setToken(responseDetail.data.user.token.toString());
-    //   // Get.offAll(const MainScreen());
-    // }, networkManager: networkManager, isModelResponse: true);
+    
   }
 
   final ImagePicker _picker = ImagePicker();
@@ -591,7 +527,7 @@ class Updateprofilecontroller extends GetxController {
       title: 'City',
       context,
       onResponse: (data) {
-        var responsDetails = CityData.fromJson(data);
+        var responsDetails = CityModel.fromJson(data);
         cityList.addAll(responsDetails.data);
         cityFilterList.clear();
         cityFilterList.addAll(cityList);
@@ -743,7 +679,7 @@ class Updateprofilecontroller extends GetxController {
   void applyFilter(String keyword, {isState = false}) {
     if (isState == true) {
       stateFilterList.clear();
-      for (Statedata stateList in stateList) {
+      for (StateListData stateList in stateList) {
         if (stateList.name
             .toString()
             .toLowerCase()
@@ -757,7 +693,7 @@ class Updateprofilecontroller extends GetxController {
     } else {
       cityFilterList.clear();
 
-      for (Citydata citylist in cityList) {
+      for (CityListData citylist in cityList) {
         if (citylist.city
             .toString()
             .toLowerCase()

@@ -111,7 +111,7 @@ class ServiceDataList {
         serviceTitle: json["service_title"] ?? '',
         description: json["description"] ?? '',
         keywords: json["keywords"] ?? '',
-        categoryId: json["category_id"].toString() ?? '',
+        categoryId: json["category_id"].toString(),
         thumbnail: json["thumbnail"] ?? '',
         // isActive: json["is_active"],
         categoryName: json["category_name"] ?? '',

@@ -41,7 +41,7 @@ Widget getMaterialButton({
 }
 
 getFormButton(BuildContext context, Function fun, str,
-    {required bool validate, isdelete}) {
+    {required bool validate, isdelete = false}) {
   return InkWell(
     borderRadius: BorderRadius.circular(
         Device.screenType == ScreenType.mobile ? 5.h : 1.4.h),

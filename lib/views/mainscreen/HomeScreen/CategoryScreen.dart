@@ -97,6 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     });
                   case ScreenState.apiSuccess:
                     return apiSuccess(controller.state.value);
+                  // ignore: unreachable_switch_default
                   default:
                     Container();
                 }
