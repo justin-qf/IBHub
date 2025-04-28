@@ -201,6 +201,7 @@ class AddServicescreencontroller extends GetxController {
     thumbnailCtr.text = editServiceItems!.thumbnail.toString();
     serviceTitleCtr.text = editServiceItems!.serviceTitle.toString();
     descriptionCtr.text = editServiceItems!.description.toString();
+    categoryCtr.text = editServiceItems!.categoryName.toString();
     keywordsCtr.text = '';
 
     keywords.clear();
@@ -216,6 +217,50 @@ class AddServicescreencontroller extends GetxController {
             .addAll(editServiceItems!.keywords.split(',').map((e) => e.trim()));
       }
     }
+// Validate all fields
+    validateFields(
+      thumbnailCtr.text,
+      model: thumbnailModel,
+      errorText1: AddServiceScreenViewConst.visitingCardReq,
+      iscomman: true,
+      shouldEnableButton: false, // Avoid premature button enabling
+    );
+
+    validateFields(
+      serviceTitleCtr.text,
+      iscomman: true,
+      model: serviceTitleModel,
+      errorText1: ServicesScreenConstant.servicetitle,
+      shouldEnableButton: false,
+    );
+
+    validateFields(
+      descriptionCtr.text,
+      iscomman: true,
+      model: descriptionModel,
+      errorText1: ServicesScreenConstant.enterDescription,
+      shouldEnableButton: false,
+    );
+
+    validateFields(
+      categoryCtr.text,
+      model: categoryModel,
+      errorText1: AddServiceScreenViewConst.categoryReq,
+      iscomman: true,
+      shouldEnableButton: false,
+    );
+
+    // Validate keywords
+    validateFields(
+      keywords.isNotEmpty ? keywords.join(',') : '',
+      model: keywordsModel,
+      errorText1: ServicesScreenConstant.enterKeyword,
+      iscomman: true,
+      shouldEnableButton: false,
+    );
+
+    // Enable submit button after all validations
+    enableSubmitButton();
   }
 
   void getCategory(context, stateID, {isfromHomescreen}) async {
@@ -556,49 +601,49 @@ class AddServicescreencontroller extends GetxController {
     }
   }
 
-  deleteService(context) async {
-    var loadingIndicator = LoadingProgressDialog();
+  // deleteService(context) async {
+  //   var loadingIndicator = LoadingProgressDialog();
 
-    try {
-      if (networkManager.connectionType.value == 0) {
-        loadingIndicator.hide(context);
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
-            Connection.noConnection, callback: () {
-          Get.back();
-        });
-        return;
-      }
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+  //           Connection.noConnection, callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
 
-      loadingIndicator.show(context, '');
-      var response = await Repository.delete(
-          '${ApiUrl.deleteService}${editServiceItems!.id}',
-          allowHeader: true);
+  //     loadingIndicator.show(context, '');
+  //     var response = await Repository.delete(
+  //         '${ApiUrl.deleteService}${editServiceItems!.id}',
+  //         allowHeader: true);
 
-      loadingIndicator.hide(context);
-      var result = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        if (result['success'] == true) {
-          showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, result['message'],
-              callback: () {
-            Get.back(result: true); // Go back and pass result true
-          });
-        } else {
-          showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, result['message'],
-              callback: () {});
-        }
-      } else {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, result['message'],
-            callback: () {});
-      }
-    } catch (e) {
-      loadingIndicator.hide(context);
-      logcat("Delete Service Exception", e.toString());
-      showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-          callback: () {});
-    }
-  }
+  //     loadingIndicator.hide(context);
+  //     var result = jsonDecode(response.body);
+  //     if (response.statusCode == 200) {
+  //       if (result['success'] == true) {
+  //         showDialogForScreen(
+  //             context, AddServiceScreenViewConst.serviceScr, result['message'],
+  //             callback: () {
+  //           Get.back(result: true); // Go back and pass result true
+  //         });
+  //       } else {
+  //         showDialogForScreen(
+  //             context, AddServiceScreenViewConst.serviceScr, result['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       showDialogForScreen(
+  //           context, AddServiceScreenViewConst.serviceScr, result['message'],
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     loadingIndicator.hide(context);
+  //     logcat("Delete Service Exception", e.toString());
+  //     showDialogForScreen(
+  //         context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+  //         callback: () {});
+  //   }
+  // }
 }

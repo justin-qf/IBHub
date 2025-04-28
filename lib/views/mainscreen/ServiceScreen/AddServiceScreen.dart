@@ -261,14 +261,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                           : const CircularProgressIndicator();
                     }),
                     getDynamicSizedBox(height: 2.h),
-                    if (ctr.isFromHomeScreen.value == true)
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: getFormButton(isdelete: true, context, () async {
-                          //delete api call put here
-                          ctr.deleteService(context);
-                        }, ServicesScreenConstant.delete, validate: true),
-                      )
+
                   ],
                 ),
               ),

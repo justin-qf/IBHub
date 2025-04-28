@@ -283,6 +283,84 @@ Future<Object?> popupDialogs(
       });
 }
 
+Future<bool?> deleteDialogs(BuildContext context,
+    {required Function() function}) {
+  return showGeneralDialog(
+    barrierColor: black.withOpacity(0.6),
+    transitionBuilder: (context, a1, a2, widget) {
+      return Transform.scale(
+        scale: a1.value,
+        child: Opacity(
+          opacity: a1.value,
+          child: CupertinoAlertDialog(
+            title: const Text(
+              "Delete Service",
+              style: TextStyle(
+                fontSize: 18,
+                color: black,
+                fontFamily: fontBold,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: const Text(
+              "Are you sure?",
+              style: TextStyle(
+                fontSize: 13,
+                color: black,
+                fontFamily: fontMedium,
+              ),
+            ),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                isDefaultAction: true,
+                isDestructiveAction: false,
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              CupertinoDialogAction(
+                onPressed: () async {
+                  await function(); // false = Light Mode
+                  if (context.mounted) {
+                    Navigator.pop(context, true); // Then close dialog
+                  }
+                },
+                isDefaultAction: true,
+                isDestructiveAction: false,
+                child: const Text(
+                  "Confirm",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 200),
+    barrierDismissible: true,
+    barrierLabel: '',
+    context: context,
+    pageBuilder: (context, animation1, animation2) {
+      return Container();
+    },
+  );
+}
+
 Future<Object?> pdfPopupDialogs(BuildContext context,
     {required Function(String isDarkMode) function}) {
   return showGeneralDialog(

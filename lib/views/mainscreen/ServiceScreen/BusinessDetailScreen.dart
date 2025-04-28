@@ -14,6 +14,7 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
@@ -82,6 +83,20 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   Widget build(BuildContext context) {
     Statusbar().trasparentStatusbar();
     return CustomParentScaffold(
+        bottomNavigationBar: widget.isFromProfile!
+            ? Container(
+                width: 7.h,
+                height: 7.h,
+                margin: EdgeInsets.only(bottom: 2.h, right: 1.0.w),
+                child: getFloatingActionButton(onClick: () {
+                  Get.to(AddServicescreen())?.then((value) {
+                    if (value == true) {
+                      controller.getServiceList(context, 1, true,
+                          widget.item != null ? widget.item!.id : businessId);
+                    }
+                  });
+                }))
+            : null,
         isExtendBodyScreen: true,
         onWillPop: () async {
           return true;
@@ -105,29 +120,25 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 ),
                 child: Column(
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 2.w),
+                    GestureDetector(
+                      onTap: () {
+                        Get.back(result: true);
+                      },
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: SizedBox(
-                          width: 15.w,
-                          height: 7.h,
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              Get.back(result: true);
-                            },
-                            backgroundColor: inputBgColor,
-                            elevation: 0,
-                            mini: true,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            child: SvgPicture.asset(
-                              Asset.arrowBack,
-                              colorFilter:
-                                  ColorFilter.mode(black, BlendMode.srcIn),
-                              height: 24,
-                              fit: BoxFit.contain,
-                            ),
+                        child: Container(
+                          height: 10.h,
+                          width: 10.w,
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              color: inputBgColor, shape: BoxShape.circle),
+                          margin: EdgeInsets.only(left: 2.w),
+                          child: SvgPicture.asset(
+                            Asset.arrowBack,
+                            colorFilter:
+                                ColorFilter.mode(black, BlendMode.srcIn),
+                            height: 24,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),

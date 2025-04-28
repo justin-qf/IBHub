@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
+import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -51,13 +52,27 @@ class ServiceDetailScreenController extends GetxController {
     }
   }
 
-  Rx<Color> bgColor = Rx<Color>(Colors.white); // Default background color
-  Future<void> getImageColor({url}) async {
+  Rx<Color> bgColor = Rx<Color>(Colors.white); // Background color
+
+// Function to calculate the contrast color (black or white)
+  // Color getContrastColor(Color color) {
+  //   double brightness =
+  //       (color.red * 299 + color.green * 587 + color.blue * 114) / 1000;
+  //   return brightness > 128 ? Colors.black : Colors.white;
+  // }
+
+// Function to get the dominant color from an image and set the contrast color
+  Future<void> getImageColor({required String url}) async {
     final PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(
-      NetworkImage(url), // Network Image (or use AssetImage for local images)
+      NetworkImage(url),
     );
-    bgColor.value = paletteGenerator.dominantColor?.color ?? white;
+
+    // Set the background color
+    bgColor.value = paletteGenerator.dominantColor?.color ?? Colors.white;
+
+    // Set the background color to the contrast color
+    //  = getContrastColor(dominantColor);
   }
 
   Widget getText(title, TextStyle? style) {
@@ -349,24 +364,48 @@ class ServiceDetailScreenController extends GetxController {
             ? Positioned(
                 top: 1.h,
                 right: 7.w,
-                child: GestureDetector(
-                  onTap: () {
-                    print('goto add service screen');
-                    Get.to(AddServicescreen(
-                      item: item,
-                      isFromHomeScreen: true,
-                    ))?.then((value) {
-                      if (value == true) {
-                        if (!context.mounted) return;
-                        getServiceList(context, 1, true, bussinessID.value,
-                            isFirstTime: true);
-                      }
-                    });
-                  },
-                  child: Icon(
-                    Icons.edit,
-                    size: 20.sp,
-                  ),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        print('goto add service screen');
+                        Get.to(AddServicescreen(
+                          item: item,
+                          isFromHomeScreen: true,
+                        ))?.then((value) {
+                          if (value == true) {
+                            if (!context.mounted) return;
+                            getServiceList(context, 1, true, bussinessID.value,
+                                isFirstTime: true);
+                          }
+                        });
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        size: 20.sp,
+                      ),
+                    ),
+                    getDynamicSizedBox(height: 5.h),
+                    GestureDetector(
+                      onTap: () async {
+                        final isDeleted = await deleteDialogs(
+                          context,
+                          function: () {
+                            deleteService(context);
+                          },
+                        );
+                        // if (isDeleted == true) {
+                        //   if (!context.mounted) return;
+
+                        // }
+                      },
+                      child: Icon(
+                        Icons.delete,
+                        size: 20.sp,
+                        color: red,
+                      ),
+                    ),
+                  ],
                 ),
 
                 // Text(
@@ -405,6 +444,55 @@ class ServiceDetailScreenController extends GetxController {
           getPartyDetailRow('Description:', data.description, isAddress: true),
       ]),
     );
+  }
+
+  deleteService(context) async {
+    var loadingIndicator = LoadingProgressDialogs();
+    loadingIndicator.show(context, '');
+// try {
+    if (networkManager.connectionType.value == 0) {
+      loadingIndicator.hide(context);
+      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+          Connection.noConnection, callback: () {
+        Get.back();
+      });
+      return;
+    }
+    print('my bussines id + ${bussinessID}');
+    var response = await Repository.delete(
+        '${ApiUrl.deleteService}$bussinessID',
+        allowHeader: true);
+
+    loadingIndicator.hide(context);
+    var result = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (result['success'] == true) {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, result['message'],
+            callback: () {
+          getServiceList(context, 1, true, bussinessID.value,
+              isFirstTime: true);
+          // Get.back(result: true); // Go back and pass result true
+        });
+      } else {
+        showDialogForScreen(
+            context, AddServiceScreenViewConst.serviceScr, result['message'],
+            callback: () {});
+      }
+    } else {
+      showDialogForScreen(
+          context, AddServiceScreenViewConst.serviceScr, result['message'],
+          callback: () {});
+    }
+    // }
+
+    // catch (e) {
+    //   loadingIndicator.hide(context);
+    //   logcat("Delete Service Exception", e.toString());
+    //   showDialogForScreen(
+    //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+    //       callback: () {});
+    // }
   }
 
   getListItem(BuildContext context, ServiceDataList item) {
