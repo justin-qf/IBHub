@@ -17,15 +17,13 @@ getToolbar(
         Positioned(left: 0, top: 0, child: backPress(onClick)),
       if (title != null)
         Center(
-            child: FadeInDown(
-          child: Text(title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: fontBold,
-                  color: isDarkMode() ? white : black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.sp)),
-        )),
+            child: Text(title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: fontBold,
+                    color: isDarkMode() ? white : black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.sp))),
       TextButton(
           onPressed: () {},
           child: Text(currentPage < 2 ? Button.skip : Button.getStarted,
@@ -368,54 +366,49 @@ getFilterToolbar(title,
               getx.Get.back();
             })),
       Center(
-        child: FadeInDown(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: fontBold,
-                color: isDarkMode() ? white : headingTextColor,
-                fontWeight: FontWeight.bold,
-                fontSize:
-                    Device.screenType == ScreenType.mobile ? 18.sp : 16.sp),
-          ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: fontBold,
+              color: isDarkMode() ? white : headingTextColor,
+              fontWeight: FontWeight.bold,
+              fontSize: Device.screenType == ScreenType.mobile ? 18.sp : 16.sp),
         ),
       ),
       Positioned(
           top: 0,
           right: 0,
           bottom: 0,
-          child: FadeInDown(
-            child: Row(
-              children: [
-                isFilter == false
-                    ? GestureDetector(
-                        onTap: () {
-                          searchClick!();
-                        },
-                        child: Container(
+          child: Row(
+            children: [
+              isFilter == false
+                  ? GestureDetector(
+                      onTap: () {
+                        searchClick!();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(right: 5.w),
+                        child: Icon(
+                          Icons.search,
+                          size: 3.5.h,
+                          color: isDarkMode() ? white : primaryColor,
+                        ),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        filterCallback!();
+                      },
+                      child: Container(
                           margin: EdgeInsets.only(right: 5.w),
                           child: Icon(
-                            Icons.search,
-                            size: 3.5.h,
-                            color: isDarkMode() ? white : primaryColor,
-                          ),
-                        ),
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          filterCallback!();
-                        },
-                        child: Container(
-                            margin: EdgeInsets.only(right: 5.w),
-                            child: Icon(
-                                isFromDialog == true
-                                    ? Icons.cancel
-                                    : Icons.tune_rounded,
-                                size: 3.2.h,
-                                color: isDarkMode() ? white : primaryColor)))
-              ],
-            ),
+                              isFromDialog == true
+                                  ? Icons.cancel
+                                  : Icons.tune_rounded,
+                              size: 3.2.h,
+                              color: isDarkMode() ? white : primaryColor)))
+            ],
           )),
     ],
   );
@@ -503,42 +496,38 @@ Widget backPress(callback) {
 }
 
 Widget iosBackPress(callback) {
-  return FadeInDown(
-    child: Container(
-      margin: EdgeInsets.only(
-          left: Device.screenType == ScreenType.mobile ? 3.w : 5.w),
-      child: GestureDetector(
-          onTap: () {
-            callback();
-          },
-          child: Container(
-              padding: const EdgeInsets.all(10),
-              child: SvgPicture.asset(Asset.arrowBack,
-                  height: Device.screenType == ScreenType.mobile ? 4.h : 5.h))),
-    ),
+  return Container(
+    margin: EdgeInsets.only(
+        left: Device.screenType == ScreenType.mobile ? 3.w : 5.w),
+    child: GestureDetector(
+        onTap: () {
+          callback();
+        },
+        child: Container(
+            padding: const EdgeInsets.all(10),
+            child: SvgPicture.asset(Asset.arrowBack,
+                height: Device.screenType == ScreenType.mobile ? 4.h : 5.h))),
   );
 }
 
 Widget backButtonWidget(callback, {isWhiteText}) {
-  return FadeInDown(
-      child: Container(
-          margin: EdgeInsets.only(
-              left: Device.screenType == ScreenType.mobile ? 5.w : 2.w),
-          child: GestureDetector(
-              onTap: () {
-                callback();
-              },
-              child: SvgPicture.asset(Asset.arrowBack,
-                  // ignore: deprecated_member_use
-                  color: isDarkMode()
-                      ? isWhiteText == true
-                          ? black
-                          : white
-                      : isWhiteText == true
-                          ? white
-                          : black,
-                  height:
-                      Device.screenType == ScreenType.mobile ? 4.h : 5.h))));
+  return Container(
+      margin: EdgeInsets.only(
+          left: Device.screenType == ScreenType.mobile ? 5.w : 2.w),
+      child: GestureDetector(
+          onTap: () {
+            callback();
+          },
+          child: SvgPicture.asset(Asset.arrowBack,
+              // ignore: deprecated_member_use
+              color: isDarkMode()
+                  ? isWhiteText == true
+                      ? black
+                      : white
+                  : isWhiteText == true
+                      ? white
+                      : black,
+              height: Device.screenType == ScreenType.mobile ? 4.h : 5.h)));
 }
 
 Widget getLogoWithTitle() {
@@ -551,17 +540,15 @@ Widget getLogoWithTitle() {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
           ),
-          child: FadeInLeft(
-            child: Image.asset(
-              Asset.logo,
-              height: 5.h,
-            ),
+          child: Image.asset(
+            Asset.logo,
+            height: 5.h,
           )),
       Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
           ),
-          child: FadeInLeft(child: Image.asset(Asset.applogo, height: 4.h)))
+          child: Image.asset(Asset.applogo, height: 4.h))
     ],
   );
 }
@@ -583,21 +570,19 @@ getCommonToolbar(String title,
               ? backButtonWidget(onClick, isWhiteText: isWhiteText)
               : Container()),
       Center(
-        child: FadeInDown(
-          child: Text(title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: fontBold,
-                  color: isDarkMode()
-                      ? isWhiteText == true
-                          ? black
-                          : white
-                      : isWhiteText == true
-                          ? white
-                          : black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.sp)),
-        ),
+        child: Text(title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: fontBold,
+                color: isDarkMode()
+                    ? isWhiteText == true
+                        ? black
+                        : white
+                    : isWhiteText == true
+                        ? white
+                        : black,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.sp)),
       ),
       if (isFilter == true)
         Positioned(
@@ -649,25 +634,24 @@ getCommonToolbar(String title,
 getleftsidebackbtn({required backFunction, required title}) {
   return Row(
     children: [
-       SizedBox(
-            width: 10.w,
-            height: 4.5.h,
-            child: FloatingActionButton(
-              onPressed: backFunction,
-              backgroundColor: inputBgColor,
-              elevation: 0,
-              mini: true,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
-               
-              child: SvgPicture.asset(
-                Asset.arrowBack,
-                colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
-                height: 24,
-                fit: BoxFit.contain,
-              ),
-            ),
+      SizedBox(
+        width: 10.w,
+        height: 4.5.h,
+        child: FloatingActionButton(
+          onPressed: backFunction,
+          backgroundColor: inputBgColor,
+          elevation: 0,
+          mini: true,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+          child: SvgPicture.asset(
+            Asset.arrowBack,
+            colorFilter: ColorFilter.mode(black, BlendMode.srcIn),
+            height: 24,
+            fit: BoxFit.contain,
           ),
+        ),
+      ),
       getDynamicSizedBox(width: 2.w),
       Text(
         title,

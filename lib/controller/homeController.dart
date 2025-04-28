@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
@@ -16,6 +15,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
@@ -356,17 +356,21 @@ class HomeScreenController extends GetxController {
           responseData['message'] ?? ServerError.servererror,
           callback: () {});
     }
-
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
-      onTap: () {
-        Get.to(BusinessDetailScreen(
-          item: item,
-          isFromProfile: false,
-        ));
-        // Get.to(ServiceScreen(data: item));
+      onTap: () async {
+        bool isEmpty = await isAnyFieldEmpty();
+        if (isEmpty) {
+          // ignore: use_build_context_synchronously
+          showBottomSheetPopup(context);
+        } else {
+          Get.to(BusinessDetailScreen(
+            item: item,
+            isFromProfile: false,
+          ));
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -425,50 +429,57 @@ class HomeScreenController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(item.businessName,
-                            style: TextStyle(
-                                fontFamily: dM_sans_semiBold,
-                                fontSize: 15.sp,
-                                color: black,
-                                fontWeight: FontWeight.w900)),
-                        const Spacer(),
-                  
-                        RatingBar.builder(
-                          initialRating: item.businessReviewsAvgRating ?? 0.0,
-                          minRating: 1,
-                          direction: Axis.horizontal,
-                          allowHalfRating: true,
-                          itemCount: 1,
-                          itemSize: 3.5.w,
-                          unratedColor: Colors.orange,
-                          itemBuilder: (context, _) => const Icon(
-                            Icons.star,
-                            color: Colors.orange,
-                          ),
-                          onRatingUpdate: (rating) {
-                            logcat("RATING", rating);
-                          },
-                        ),
-                        getText(
-                          item.businessReviewsAvgRating != null
-                              ? (item.businessReviewsAvgRating ?? 0.0)
-                                  .toStringAsFixed(1)
-                              : '0.0',
-                          TextStyle(
-                              fontFamily: fontSemiBold,
-                              color: lableColor,
-                              fontSize:
-                                  Device.screenType == sizer.ScreenType.mobile
-                                      ? 14.sp
-                                      : 7.sp,
-                              height: 1.2),
-                        ),
-                      ],
-                    ),
+                    Text(item.businessName,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontFamily: dM_sans_semiBold,
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 15.sp,
+                            color: black,
+                            fontWeight: FontWeight.w900)),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Text(item.businessName,
+                    //         style: TextStyle(
+                    //             fontFamily: dM_sans_semiBold,
+                    //             fontSize: 15.sp,
+                    //             color: black,
+                    //             fontWeight: FontWeight.w900)),
+                    //     const Spacer(),
+                    //     RatingBar.builder(
+                    //       initialRating: item.businessReviewsAvgRating ?? 0.0,
+                    //       minRating: 1,
+                    //       direction: Axis.horizontal,
+                    //       allowHalfRating: true,
+                    //       itemCount: 1,
+                    //       itemSize: 3.5.w,
+                    //       unratedColor: Colors.orange,
+                    //       itemBuilder: (context, _) => const Icon(
+                    //         Icons.star,
+                    //         color: Colors.orange,
+                    //       ),
+                    //       onRatingUpdate: (rating) {
+                    //         logcat("RATING", rating);
+                    //       },
+                    //     ),
+                    //     getText(
+                    //       item.businessReviewsAvgRating != null
+                    //           ? (item.businessReviewsAvgRating ?? 0.0)
+                    //               .toStringAsFixed(1)
+                    //           : '0.0',
+                    //       TextStyle(
+                    //           fontFamily: fontSemiBold,
+                    //           color: lableColor,
+                    //           fontSize:
+                    //               Device.screenType == sizer.ScreenType.mobile
+                    //                   ? 14.sp
+                    //                   : 7.sp,
+                    //           height: 1.2),
+                    //     ),
+                    //   ],
+                    // ),
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
@@ -489,7 +500,6 @@ class HomeScreenController extends GetxController {
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
-                   
                   ],
                 ),
               ),
@@ -499,5 +509,4 @@ class HomeScreenController extends GetxController {
       ),
     );
   }
-
 }

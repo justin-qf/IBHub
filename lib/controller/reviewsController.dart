@@ -185,7 +185,6 @@ class ReviewsScreenController extends GetxController {
     );
   }
 
-
   Widget getText(title, TextStyle? style) {
     return Padding(
       padding: EdgeInsets.only(left: 0.5.w, right: 0.5.w),
@@ -347,144 +346,139 @@ class ReviewsScreenController extends GetxController {
 
   getListItems(BuildContext context, ReviewData data, int index) {
     var name = '';
-    return FadeInUp(
-      child: Wrap(
-        children: [
-          Stack(
-            children: [
-              Container(
-                  width: Device.width,
-                  margin: EdgeInsets.only(
-                      top: 3.h, left: 3.w, right: 3.w, bottom: 2.0.h),
-                  padding: EdgeInsets.all(2.w),
-                  decoration: BoxDecoration(
-                    //color: grey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(1.7.h),
-                    border: Border.all(
-                      color: grey, // Border color
-                      width: 0.5, // Border width
-                    ),
+    return Wrap(
+      children: [
+        Stack(
+          children: [
+            Container(
+                width: Device.width,
+                margin: EdgeInsets.only(
+                    top: 3.h, left: 3.w, right: 3.w, bottom: 2.0.h),
+                padding: EdgeInsets.all(2.w),
+                decoration: BoxDecoration(
+                  //color: grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(1.7.h),
+                  border: Border.all(
+                    color: grey, // Border color
+                    width: 0.5, // Border width
                   ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          Device.screenType == sizer.ScreenType.mobile
-                              ? 4.w
-                              : 2.2.w),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 1.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                getDynamicSizedBox(width: 20.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(name,
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontFamily: fontMedium,
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 15.sp,
-                                              )),
-                                          const Spacer(),
-                                          Text(data.review,
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontFamily: fontBold,
-                                                fontSize: 12.sp,
-                                              )),
-                                          getDynamicSizedBox(width: 0.6.w),
-                                        ],
-                                      ),
-                                      getDynamicSizedBox(height: 0.6.h),
-                                      //getDynamicSizedBox(height: 1.0.h),
-                                      // getDivider()
-                                    ],
-                                  ),
-                                )
-                              ],
+                ),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 4.w
+                            : 2.2.w),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 1.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              getDynamicSizedBox(width: 20.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(name,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontFamily: fontMedium,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize: 15.sp,
+                                            )),
+                                        const Spacer(),
+                                        Text(data.review,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontFamily: fontBold,
+                                              fontSize: 12.sp,
+                                            )),
+                                        getDynamicSizedBox(width: 0.6.w),
+                                      ],
+                                    ),
+                                    getDynamicSizedBox(height: 0.6.h),
+                                    //getDynamicSizedBox(height: 1.0.h),
+                                    // getDivider()
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          RatingBar.builder(
+                            initialRating: double.parse(data.rating),
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 3.5.w,
+                            // itemPadding:
+                            //     const EdgeInsets.symmetric(horizontal: 5.0),
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.orange,
                             ),
-                            RatingBar.builder(
-                              initialRating: double.parse(data.rating),
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: true,
-                              itemCount: 5,
-                              itemSize: 3.5.w,
-                              // itemPadding:
-                              //     const EdgeInsets.symmetric(horizontal: 5.0),
-                              itemBuilder: (context, _) => const Icon(
-                                Icons.star,
-                                color: Colors.orange,
-                              ),
-                              onRatingUpdate: (rating) {
-                                logcat("RATING", rating);
-                              },
-                            ),
-                            getDynamicSizedBox(height: 0.6.h),
-                            SizedBox(
-                              width: 53.w,
-                              child: Text(data.review.toString(),
-                                  maxLines: 3,
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    overflow: TextOverflow.ellipsis,
-                                    color: lableColor,
-                                    fontFamily: fontBold,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12.sp,
-                                  )),
-                            ),
-                            getDynamicSizedBox(height: 0.6.h),
-                          ],
-                        ),
-                      ))),
-              Positioned(
-                left: 9.w,
-                child: FadeInDown(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 7.h,
-                      imageUrl: ApiUrl.imageUrl,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(color: primaryColor),
+                            onRatingUpdate: (rating) {
+                              logcat("RATING", rating);
+                            },
+                          ),
+                          getDynamicSizedBox(height: 0.6.h),
+                          SizedBox(
+                            width: 53.w,
+                            child: Text(data.review.toString(),
+                                maxLines: 3,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  color: lableColor,
+                                  fontFamily: fontBold,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12.sp,
+                                )),
+                          ),
+                          getDynamicSizedBox(height: 0.6.h),
+                        ],
                       ),
-                      errorWidget: (context, url, error) => Image.asset(
-                        Asset.productPlaceholder,
-                        height: 7.h,
-                        width: 7.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    ))),
+            Positioned(
+              left: 9.w,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(50)),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  height: 7.h,
+                  imageUrl: ApiUrl.imageUrl,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  ),
+                  errorWidget: (context, url, error) => Image.asset(
+                    Asset.productPlaceholder,
+                    height: 7.h,
+                    width: 7.h,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   getReviewList(context, currentPage, bool hideloading,
       {bool? isRefress}) async {
-
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -502,7 +496,7 @@ class ReviewsScreenController extends GetxController {
       var pageURL = '${ApiUrl.reviewList}?page=$currentPage';
       logcat("URL", pageURL.toString());
       var response = await Repository.get({}, pageURL, allowHeader: true);
- 
+
       Statusbar().transparentStatusbarIsNormalScreen();
       // loadingIndicator.hide(context);
       var data = jsonDecode(response.body);

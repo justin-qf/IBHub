@@ -51,7 +51,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         ctr.unfocusAll();
                       },
                       child: SvgPicture.asset(Asset.arrowBack,
-        
+
                           // ignore: deprecated_member_use
                           color: black,
                           height: 4.h)),
@@ -59,7 +59,6 @@ class _SignupscreenState extends State<Signupscreen> {
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.start,
                 //   children: [
-        
                 //     Text(
                 //       'Create Your Account',
                 //       style: TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
@@ -76,7 +75,6 @@ class _SignupscreenState extends State<Signupscreen> {
                       fontFamily: dM_sans_bold, fontSize: 20.sp, height: 1.1),
                 ),
               ),
-        
               // Align(
               //   alignment: Alignment.centerLeft,
               //   child: Text(
@@ -157,7 +155,6 @@ class _SignupscreenState extends State<Signupscreen> {
                       isRequired: true);
                 },
               ),
-             
               Obx(() {
                 return getTextField(
                     label: SignUpConstant.passwordLable,
@@ -173,7 +170,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         errorText2: SignUpConstant.hintSpaceNotAllowed,
                         errorText3: SignUpConstant.validPasswordHint,
                       );
-        
+
                       if (ctr.confpassCtr.text.isNotEmpty) {
                         ctr.validateFields(
                           val,
@@ -236,14 +233,14 @@ class _SignupscreenState extends State<Signupscreen> {
                         }, SignUpConstant.signup,
                             validate: ctr.isFormInvalidate.value),
                       )
-                    : CircularProgressIndicator();
+                    : const CircularProgressIndicator();
               }),
               getDynamicSizedBox(height: 2.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     SignUpConstant.alreadyhaveaccount,
                     style: TextStyle(color: grey, fontFamily: dM_sans_medium),
                   ),
@@ -257,9 +254,9 @@ class _SignupscreenState extends State<Signupscreen> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          Text(
+                          const Text(
                             SignUpConstant.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: dM_sans_medium,
                               color: primaryColor,
                               fontWeight: FontWeight.bold,

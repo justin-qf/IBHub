@@ -153,7 +153,8 @@ class SearchScreenController extends GetxController {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getFilterHeader(context, true),
-                    getLable(SearchScreenConstant.stateLabel, isFromRetailer: true),
+                    getLable(SearchScreenConstant.stateLabel,
+                        isFromRetailer: true),
                     Container(
                       margin: EdgeInsets.only(left: 9.w, right: 9.w),
                       child: AnimatedSize(
@@ -175,9 +176,11 @@ class SearchScreenController extends GetxController {
                                     context,
                                     setStateListDialog(),
                                     isShowLoading: stateFilterList,
-                                    SearchScreenConstant.stateList, onClick: () {
+                                    SearchScreenConstant.stateList,
+                                    onClick: () {
                                   applyFilter('');
                                 }, refreshClick: () {
+                                  searchctr.text = "";
                                   futureDelay(() {
                                     getStateApi(context, "");
                                   }, isOneSecond: false);
@@ -192,7 +195,8 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
-                    getLable(SearchScreenConstant.cityLabel, isFromRetailer: true),
+                    getLable(SearchScreenConstant.cityLabel,
+                        isFromRetailer: true),
                     Container(
                       margin: EdgeInsets.only(left: 9.w, right: 9.w),
                       child: AnimatedSize(
@@ -207,15 +211,20 @@ class SearchScreenController extends GetxController {
                                 searchCityctr.text = "";
                                 if (statectr.text.toString().isEmpty) {
                                   showDialogForScreen(
-                                      context, SearchScreenConstant.stateLabel, SearchScreenConstant.pleaseSelectState,
+                                      context,
+                                      SearchScreenConstant.stateLabel,
+                                      SearchScreenConstant.pleaseSelectState,
                                       callback: () {});
                                 } else {
                                   showDropdownMessage(
-                                      context, setCityListDialog(), SearchScreenConstant.cityList,
+                                      context,
+                                      setCityListDialog(),
+                                      SearchScreenConstant.cityList,
                                       isShowLoading: cityFilterList,
                                       onClick: () {
                                     applyFilterforCity('');
                                   }, refreshClick: () {
+                                    searchCityctr.text = "";
                                     futureDelay(() {
                                       getCityApi(context,
                                           stateId.value.toString(), false);
@@ -232,7 +241,8 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
-                    getLable(SearchScreenConstant.categoryLabel, isFromRetailer: true),
+                    getLable(SearchScreenConstant.categoryLabel,
+                        isFromRetailer: true),
                     Container(
                       margin: EdgeInsets.only(left: 9.w, right: 9.w),
                       child: AnimatedSize(
@@ -241,16 +251,20 @@ class SearchScreenController extends GetxController {
                           return getReactiveFormField(
                               node: categoryNode,
                               controller: categoryCtr,
-                              hintLabel: SearchScreenConstant.selectCityHint,
+                              hintLabel:
+                                  SearchScreenConstant.selectCategoryHint,
                               onChanged: (val) {},
                               onTap: () {
                                 searchCategoryctr.text = "";
-                                showDropdownMessage(context,
-                                    setCategoryListDialog(), SearchScreenConstant.categoryList,
+                                showDropdownMessage(
+                                    context,
+                                    setCategoryListDialog(),
+                                    SearchScreenConstant.categoryList,
                                     isShowLoading: categoryFilterList,
                                     onClick: () {
                                   applyCategoryFilter('');
                                 }, refreshClick: () {
+                                  searchCategoryctr.text = "";
                                   futureDelay(() {
                                     getCategoryApi(context);
                                   }, isOneSecond: false);
@@ -329,11 +343,13 @@ class SearchScreenController extends GetxController {
   Widget setStateListDialog() {
     return Obx(() {
       if (isStateApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text(SearchScreenConstant.loading),
+        return setDropDownContent(
+            [].obs, const Text(SearchScreenConstant.loading),
             isApiIsLoading: isStateApiCallLoading.value);
       }
       return setDropDownContent(
           stateFilterList,
+          controller: searchctr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -424,11 +440,13 @@ class SearchScreenController extends GetxController {
   Widget setCityListDialog() {
     return Obx(() {
       if (isCityApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text(SearchScreenConstant.loading),
+        return setDropDownContent(
+            [].obs, const Text(SearchScreenConstant.loading),
             isApiIsLoading: isCityApiCallLoading.value);
       }
       return setDropDownContent(
           cityFilterList,
+          controller: searchCityctr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -479,11 +497,13 @@ class SearchScreenController extends GetxController {
   Widget setCategoryListDialog() {
     return Obx(() {
       if (isCategoryApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text(SearchScreenConstant.loading),
+        return setDropDownContent(
+            [].obs, const Text(SearchScreenConstant.loading),
             isApiIsLoading: isCategoryApiCallLoading.value);
       }
       return setDropDownContent(
           categoryFilterList,
+          controller: searchCategoryctr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
@@ -517,8 +537,8 @@ class SearchScreenController extends GetxController {
             },
           ),
           searchcontent: getReactiveFormField(
-              node: searchNode,
-              controller: searchctr,
+              node: searchCategoryNode,
+              controller: searchCategoryctr,
               hintLabel: SearchScreenConstant.hint,
               onChanged: (val) {
                 applyCategoryFilter(val.toString());
@@ -526,7 +546,7 @@ class SearchScreenController extends GetxController {
               },
               isSearch: true,
               inputType: TextInputType.text,
-              errorText: searchModel.value.error));
+              errorText: searchCategoryModel.value.error));
     });
   }
 
@@ -681,7 +701,6 @@ class SearchScreenController extends GetxController {
       String? categoryId,
       String? keyword,
       bool? isFirstTime = false}) async {
-
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -770,12 +789,21 @@ class SearchScreenController extends GetxController {
 
   getBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
-      onTap: () {
-        Get.to(BusinessDetailScreen(
-          item: item,
-          isFromProfile: false,
-        ));
-        // Get.to(ServiceScreen(data: item));
+      onTap: () async {
+        bool isEmpty = await isAnyFieldEmpty();
+        if (isEmpty) {
+          // ignore: use_build_context_synchronously
+          showBottomSheetPopup(context);
+        } else {
+          Get.to(BusinessDetailScreen(
+            item: item,
+            isFromProfile: false,
+          ));
+        }
+        // Get.to(BusinessDetailScreen(
+        //   item: item,
+        //   isFromProfile: false,
+        // ));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -790,7 +818,7 @@ class SearchScreenController extends GetxController {
                 offset: const Offset(0.5, 0.5)),
           ],
         ),
-        margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
+        margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 2.h),
         child: Padding(
           padding:
               EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),

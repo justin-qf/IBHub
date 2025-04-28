@@ -50,7 +50,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
   getUserData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
-
     businessName = retrievedObject!.businessName;
     thumbnail = retrievedObject.visitingCardUrl;
     email = retrievedObject.email;
@@ -58,17 +57,15 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     businessId = retrievedObject.id.toString();
     phone = retrievedObject.phone.toString();
     businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
-
     final idUsedinCtr =
         widget.item != null ? widget.item!.id : retrievedObject.id;
     controller.bussinessID(idUsedinCtr);
+    controller.getImageColor(
+        url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
 
     futureDelay(() {
       controller.getServiceList(context, 1, true, idUsedinCtr);
-      controller.getImageColor(
-          url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
-    }, isOneSecond: true);
-
+    }, isOneSecond: false);
     setState(() {});
   }
 

@@ -74,45 +74,42 @@ class _HomeScreenState extends State<HomeScreen> {
         SystemNavigator.pop();
         return false;
       },
-      body: Container(
-        color: white,
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  getCommonToolbar(HomeScreenconst.dashboard,
-                      showBackButton: false),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      // padding: EdgeInsets.only(bottom: 1.h),
-                      physics: const BouncingScrollPhysics(),
-                      child: Obx(() {
-                        switch (controller.state.value) {
-                          case ScreenState.apiLoading:
-                          case ScreenState.noNetwork:
-                          case ScreenState.noDataFound:
-                          case ScreenState.apiError:
-                            return SizedBox(
-                              height: Device.height / 1.3,
-                              child: apiOtherStates(controller.state.value,
-                                  controller, controller.categoryList, () {}),
-                            );
-                          case ScreenState.apiSuccess:
-                            return apiSuccess(controller.state.value);
-                          // ignore: unreachable_switch_default
-                          default:
-                            Container();
-                        }
-                        return Container();
-                      }),
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                getCommonToolbar(HomeScreenconst.dashboard,
+                    showBackButton: false),
+                Expanded(
+                  child: SingleChildScrollView(
+                    // padding: EdgeInsets.only(bottom: 1.h),
+                    physics: const BouncingScrollPhysics(),
+                    child: Obx(() {
+                      switch (controller.state.value) {
+                        case ScreenState.apiLoading:
+                        case ScreenState.noNetwork:
+                        case ScreenState.noDataFound:
+                        case ScreenState.apiError:
+                          return SizedBox(
+                            height: Device.height / 1.3,
+                            child: apiOtherStates(controller.state.value,
+                                controller, controller.categoryList, () {}),
+                          );
+                        case ScreenState.apiSuccess:
+                          return apiSuccess(controller.state.value);
+                        // ignore: unreachable_switch_default
+                        default:
+                          Container();
+                      }
+                      return Container();
+                    }),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -124,19 +121,19 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getDynamicSizedBox(height: 1.h),
-            Padding(
-              padding: EdgeInsets.only(left: 5.w),
-              child: Text("Welcome...👋",
-                  style: TextStyle(
-                    color: black,
-                    fontFamily: fontBold,
-                    fontWeight: FontWeight.w800,
-                    fontSize: Device.screenType == sizer.ScreenType.mobile
-                        ? 20.sp
-                        : 14.sp,
-                  )),
-            ),
-            getDynamicSizedBox(height: 1.h),
+            // Padding(
+            //   padding: EdgeInsets.only(left: 5.w),
+            //   child: Text("Welcome...👋",
+            //       style: TextStyle(
+            //         color: black,
+            //         fontFamily: fontBold,
+            //         fontWeight: FontWeight.w800,
+            //         fontSize: Device.screenType == sizer.ScreenType.mobile
+            //             ? 20.sp
+            //             : 14.sp,
+            //       )),
+            // ),
+            // getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {});
             }),

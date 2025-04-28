@@ -71,6 +71,22 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    GestureDetector(
+                      child: Obx(() {
+                        return ctr.getImage();
+                      }),
+                      onTap: () async {
+                        selectImageFromCameraOrGallery(context,
+                            cameraClick: () {
+                          ctr.actionClickUploadImageFromCamera(context,
+                              isCamera: true);
+                        }, galleryClick: () {
+                          ctr.actionClickUploadImageFromCamera(context,
+                              isCamera: false);
+                        });
+                        setState(() {});
+                      },
+                    ),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,

@@ -54,9 +54,7 @@ class ServiceDetailScreenController extends GetxController {
   Rx<Color> bgColor = Rx<Color>(Colors.white); // Default background color
   Future<void> getImageColor({url}) async {
     final PaletteGenerator paletteGenerator =
-        await PaletteGenerator.fromImageProvider(
-      NetworkImage(url), // Network Image (or use AssetImage for local images)
-    );
+        await PaletteGenerator.fromImageProvider(NetworkImage(url));
     bgColor.value = paletteGenerator.dominantColor?.color ?? white;
   }
 

@@ -301,7 +301,8 @@ class SearchScreenConstant {
   // Screen-related strings
   static const title = 'Search';
   static const hint = 'Search Here';
-  static const cancel = 'Cancle'; // Note: 'Cancle' is likely a typo, consider 'Cancel'
+  static const cancel =
+      'Cancle'; // Note: 'Cancle' is likely a typo, consider 'Cancel'
 
   // Dialog and bottom sheet strings
   static const loading = 'Loading';
@@ -322,6 +323,7 @@ class SearchScreenConstant {
   // Timer-related strings
   static const timeRemaining = 'Time remaining: %s seconds';
 }
+
 class ServicesScreenConstant {
   static const delete = 'Delete';
   static const update = 'Update';
@@ -631,6 +633,7 @@ class MainScreenConstant {
 class ProfileScreenConstant {
   static const salesPersonCode = 'Employee Id';
   static const role = 'Role';
+  static const logo = 'Logo';
 }
 
 class BottomConstant {
@@ -729,6 +732,7 @@ class AlertDialogList {
   static const city = 'City List';
   static const state = 'State List';
   static const emptylist = 'List is Empty';
+  static const searchlist = 'Searched data not found';
   static const photo = 'Photo';
   static const selectPhotoFrom = 'Select Photo From';
   static const camera = 'Camera';
