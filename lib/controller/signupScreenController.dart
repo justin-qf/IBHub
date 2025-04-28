@@ -17,24 +17,11 @@ class Signupscreencontroller extends GetxController {
 
   Rx<ScreenState> state = ScreenState.apiLoading.obs;
 
-  late FocusNode nameNode,
-      emailNode,
-      phoneNode,
-      bussinessNode,
-      passNode,
-      confpassNode;
-  late TextEditingController nameCtr,
-      emailCtr,
-      phoneCtr,
-      bussinessCtr,
-      passCtr,
-      confpassCtr;
+  late FocusNode emailNode, passNode, confpassNode;
+  late TextEditingController emailCtr, passCtr, confpassCtr;
 
-  var nameModel = ValidationModel(null, null, isValidate: false).obs;
   var emailModel = ValidationModel(null, null, isValidate: false).obs;
   var phoneModel = ValidationModel(null, null, isValidate: false).obs;
-  var bussinessModel = ValidationModel(null, null, isValidate: false).obs;
-
   var passModel = ValidationModel(null, null, isValidate: false).obs;
   var confpassModel = ValidationModel(null, null, isValidate: false).obs;
 
@@ -62,17 +49,11 @@ class Signupscreencontroller extends GetxController {
   RxList stateList = [].obs;
 
   void inti() {
-    nameNode = FocusNode();
     emailNode = FocusNode();
-    phoneNode = FocusNode();
-    bussinessNode = FocusNode();
     passNode = FocusNode();
     confpassNode = FocusNode();
     searchStateNode = FocusNode();
-    nameCtr = TextEditingController();
     emailCtr = TextEditingController();
-    phoneCtr = TextEditingController();
-    bussinessCtr = TextEditingController();
     passCtr = TextEditingController();
     confpassCtr = TextEditingController();
     searchStatectr = TextEditingController();
@@ -100,13 +81,9 @@ class Signupscreencontroller extends GetxController {
   }
 
   void enableSignUpButton() {
-    if (nameModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (emailModel.value.isValidate == false) {
+    if (emailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (phoneModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (bussinessModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (passModel.value.isValidate == false) {
       isFormInvalidate.value = false;
@@ -121,18 +98,12 @@ class Signupscreencontroller extends GetxController {
 
   @override
   void onClose() {
-    nameCtr.clear();
     emailCtr.clear();
-    phoneCtr.clear();
-    bussinessCtr.clear();
+  
     passCtr.clear();
     confpassCtr.clear();
-
-    // Reset all validation models
-    nameModel.value = ValidationModel(null, null, isValidate: false);
     emailModel.value = ValidationModel(null, null, isValidate: false);
     phoneModel.value = ValidationModel(null, null, isValidate: false);
-    bussinessModel.value = ValidationModel(null, null, isValidate: false);
     passModel.value = ValidationModel(null, null, isValidate: false);
     confpassModel.value = ValidationModel(null, null, isValidate: false);
 
@@ -147,27 +118,18 @@ class Signupscreencontroller extends GetxController {
 
   void resetForm() {
     // Clear text fields
-    nameCtr.clear();
     emailCtr.clear();
-    phoneCtr.clear();
-    bussinessCtr.clear();
     passCtr.clear();
     confpassCtr.clear();
     searchStatectr.clear();
-
-    nameNode.unfocus();
     emailNode.unfocus();
-    phoneNode.unfocus();
-    bussinessNode.unfocus();
     passNode.unfocus();
     confpassNode.unfocus();
     searchStateNode.unfocus();
 
     // Reset validation models
-    nameModel.value = ValidationModel(null, null, isValidate: false);
     emailModel.value = ValidationModel(null, null, isValidate: false);
     phoneModel.value = ValidationModel(null, null, isValidate: false);
-    bussinessModel.value = ValidationModel(null, null, isValidate: false);
     passModel.value = ValidationModel(null, null, isValidate: false);
     confpassModel.value = ValidationModel(null, null, isValidate: false);
     isFormInvalidate.value = false;
@@ -219,11 +181,8 @@ class Signupscreencontroller extends GetxController {
     commonPostApiCallFormate(context,
         title: LoginConst.title,
         body: {
-          "name": nameCtr.text.toString(),
           "email": emailCtr.text.toString().trim(),
-          "phone": phoneCtr.text.toString(),
           "password": passCtr.text.toString().trim(),
-          "business_name": bussinessCtr.text.toString(),
           "password_confirmation": confpassCtr.text.toString()
         },
         apiEndPoint: ApiUrl.register, onResponse: (data) {
@@ -233,5 +192,4 @@ class Signupscreencontroller extends GetxController {
       Get.offAll(const MainScreen());
     }, networkManager: networkManager, isModelResponse: true);
   }
-
 }

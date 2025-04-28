@@ -51,21 +51,11 @@ class _SignupscreenState extends State<Signupscreen> {
                         ctr.unfocusAll();
                       },
                       child: SvgPicture.asset(Asset.arrowBack,
-        
+
                           // ignore: deprecated_member_use
                           color: black,
                           height: 4.h)),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-        
-                //     Text(
-                //       'Create Your Account',
-                //       style: TextStyle(fontFamily: dM_sans_bold, fontSize: 20.sp),
-                //     ),
-                //   ],
-                // ),
               ),
               getDynamicSizedBox(height: 2.h),
               Align(
@@ -76,31 +66,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       fontFamily: dM_sans_bold, fontSize: 20.sp, height: 1.1),
                 ),
               ),
-        
-              // Align(
-              //   alignment: Alignment.centerLeft,
-              //   child: Text(
-              //     'Discover opportunities, build your brand\nSign up and showcase your skills to the world.',
-              //     style: TextStyle(
-              //         fontFamily: dM_sans_semiBold, color: grey),
-              //   ),
-              // ),
-              getDynamicSizedBox(height: 2.h),
-              Obx(() {
-                return getTextField(
-                    label: SignUpConstant.nameLabel,
-                    ctr: ctr.nameCtr,
-                    node: ctr.nameNode,
-                    model: ctr.nameModel.value,
-                    function: (val) {
-                      ctr.validateFields(val,
-                          iscomman: true,
-                          model: ctr.nameModel,
-                          errorText1: SignUpConstant.namehint);
-                    },
-                    hint: SignUpConstant.namehint,
-                    isRequired: true);
-              }),
+              getDynamicSizedBox(height: 10.h),
               Obx(() {
                 return getTextField(
                   label: SignUpConstant.email,
@@ -119,45 +85,6 @@ class _SignupscreenState extends State<Signupscreen> {
                   isRequired: true,
                 );
               }),
-              Obx(
-                () {
-                  return getTextField(
-                      label: SignUpConstant.contactLabel,
-                      ctr: ctr.phoneCtr,
-                      node: ctr.phoneNode,
-                      model: ctr.phoneModel.value,
-                      function: (val) {
-                        ctr.validateFields(
-                          val,
-                          isnumber: true,
-                          model: ctr.phoneModel,
-                          errorText1: SignUpConstant.contactNumHint,
-                          errorText2: SignUpConstant.contactNumLengthHint,
-                        );
-                      },
-                      hint: SignUpConstant.contactNumHint,
-                      isNumeric: true,
-                      isRequired: true);
-                },
-              ),
-              Obx(
-                () {
-                  return getTextField(
-                      label: SignUpConstant.bussinessLabel,
-                      ctr: ctr.bussinessCtr,
-                      node: ctr.bussinessNode,
-                      model: ctr.bussinessModel.value,
-                      function: (val) {
-                        ctr.validateFields(val,
-                            iscomman: true,
-                            model: ctr.bussinessModel,
-                            errorText1: SignUpConstant.namehint);
-                      },
-                      hint: SignUpConstant.namehint,
-                      isRequired: true);
-                },
-              ),
-             
               Obx(() {
                 return getTextField(
                     label: SignUpConstant.passwordLable,
@@ -173,7 +100,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         errorText2: SignUpConstant.hintSpaceNotAllowed,
                         errorText3: SignUpConstant.validPasswordHint,
                       );
-        
+
                       if (ctr.confpassCtr.text.isNotEmpty) {
                         ctr.validateFields(
                           val,
