@@ -47,6 +47,9 @@ class MainScreenController extends GetxController {
     }
   }
 
+  RxString name = "".obs;
+  RxString bussiness = "".obs;
+  RxString phone = "".obs;
   RxString address = "".obs;
   RxString city = "".obs;
   RxString states = "".obs;
@@ -56,7 +59,10 @@ class MainScreenController extends GetxController {
   getProfileData() async {
     state.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
-    address.value = retrievedObject!.address;
+    name.value = retrievedObject!.name;
+    bussiness.value = retrievedObject.businessName;
+    phone.value = retrievedObject.phone;
+    address.value = retrievedObject.address;
     city.value = retrievedObject.city.toString();
     states.value = retrievedObject.state.toString();
     pincode.value = retrievedObject.pincode.toString();
@@ -64,7 +70,6 @@ class MainScreenController extends GetxController {
     update();
     state.value = ScreenState.apiSuccess;
   }
-
 
   void getTimerPopup(BuildContext context) {
     Future.delayed(Duration(seconds: 10), () {
@@ -74,12 +79,14 @@ class MainScreenController extends GetxController {
           city.value.isEmpty ||
           states.value.isEmpty ||
           pincode.value.isEmpty ||
-          visitingCardUrl.value.isEmpty) {
+          visitingCardUrl.value.isEmpty ||
+          name.value.isEmpty ||
+          bussiness.value.isEmpty ||
+          phone.value.isEmpty) {
         showBottomSheetPopup(context);
       }
     });
   }
-
 
   void showBottomSheetPopup(BuildContext context) {
     showModalBottomSheet(
