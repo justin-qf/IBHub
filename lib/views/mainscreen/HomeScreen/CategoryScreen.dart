@@ -170,14 +170,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
         padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
         crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
         mainAxisSpacing: 10,
-        crossAxisSpacing: 4,
+        crossAxisSpacing: 8,
         shrinkWrap: true,
         itemCount: controller.categoryList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
         itemBuilder: (context, index) {
           if (index < controller.categoryList.length) {
             CategoryListData data = controller.categoryList[index];
-            return controller.getOldListItem(data);
+            return controller.getOldListItem(context, data: data);
           } else if (controller.isFetchingMore) {
             return Center(
               child: Padding(

@@ -455,6 +455,7 @@ class ServiceDetailScreenController extends GetxController {
       context,
       "Service Details",
       isDescription: false,
+      isfromService: true,
       contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (data.thumbnail.isNotEmpty)
           getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty

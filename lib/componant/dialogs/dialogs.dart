@@ -325,53 +325,53 @@ void showMessage(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
-          title: Text(
-            title!,
-            style: TextStyle(
-              fontFamily: fontBold,
-              fontSize:
-                  Device.screenType == ScreenType.mobile ? 18.sp : 12.sp,
-            ),
-          ),
-          content: Text(
-            message!,
-            style: const TextStyle(fontFamily: fontRegular),
-          ),
-          actions: [
-            if (negativeButton != null && negativeButton.isNotEmpty)
-              CupertinoDialogAction(
-                  child: Text(
-                    negativeButton,
-                    style: TextStyle(
-                        fontSize: Device.screenType == ScreenType.mobile
-                            ? 17.sp
-                            : 16.sp,
-                        fontFamily: fontMedium,
-                        color: isDarkMode() ? white : black),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            if (positiveButton != null && positiveButton.isNotEmpty)
-              CupertinoDialogAction(
-                  child: Text(
-                    positiveButton,
-                    style: TextStyle(
-                        fontSize: Device.screenType == ScreenType.mobile
-                            ? 17.sp
-                            : 16.sp,
-                        fontFamily: fontMedium,
-                        color: isDarkMode()
-                            ? isFromLogin == true
-                                ? white
-                                : white
-                            : black),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    callback!();
-                  })
-          ]));
+              title: Text(
+                title!,
+                style: TextStyle(
+                  fontFamily: fontBold,
+                  fontSize:
+                      Device.screenType == ScreenType.mobile ? 18.sp : 12.sp,
+                ),
+              ),
+              content: Text(
+                message!,
+                style: const TextStyle(fontFamily: fontRegular),
+              ),
+              actions: [
+                if (negativeButton != null && negativeButton.isNotEmpty)
+                  CupertinoDialogAction(
+                      child: Text(
+                        negativeButton,
+                        style: TextStyle(
+                            fontSize: Device.screenType == ScreenType.mobile
+                                ? 17.sp
+                                : 16.sp,
+                            fontFamily: fontMedium,
+                            color: isDarkMode() ? white : black),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                if (positiveButton != null && positiveButton.isNotEmpty)
+                  CupertinoDialogAction(
+                      child: Text(
+                        positiveButton,
+                        style: TextStyle(
+                            fontSize: Device.screenType == ScreenType.mobile
+                                ? 17.sp
+                                : 16.sp,
+                            fontFamily: fontMedium,
+                            color: isDarkMode()
+                                ? isFromLogin == true
+                                    ? white
+                                    : white
+                                : black),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        callback!();
+                      })
+              ]));
 }
 
 showDialogForScreen(context, String title, String message,
@@ -397,40 +397,40 @@ void showShareMessage(
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontFamily: fontMedium,
-          ),
-        ),
-        content: const Text(
-          "Do you want to share?",
-          style: TextStyle(
-            fontFamily: fontRegular,
-          ),
-        ),
-        actions: [
-          CupertinoDialogAction(
-              child: const Text(
-                "Cancel",
-                style: TextStyle(
-                    fontFamily: fontRegular, color: Colors.grey),
+            title: Text(
+              title,
+              style: const TextStyle(
+                fontFamily: fontMedium,
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-          CupertinoDialogAction(
-              child: const Text(
-                "Share",
-                style: TextStyle(
-                    fontFamily: fontMedium, color: primaryColor),
+            ),
+            content: const Text(
+              "Do you want to share?",
+              style: TextStyle(
+                fontFamily: fontRegular,
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                shareCallback();
-              })
-        ],
-      ));
+            ),
+            actions: [
+              CupertinoDialogAction(
+                  child: const Text(
+                    "Cancel",
+                    style:
+                        TextStyle(fontFamily: fontRegular, color: Colors.grey),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+              CupertinoDialogAction(
+                  child: const Text(
+                    "Share",
+                    style:
+                        TextStyle(fontFamily: fontMedium, color: primaryColor),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    shareCallback();
+                  })
+            ],
+          ));
 }
 
 void showDropdownMessages(double insetPaddingVertical, BuildContext context,
@@ -784,7 +784,7 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
 }
 
 Future commonDetailsDialog(BuildContext context, String title,
-    {Widget? contain, bool? isDescription}) {
+    {Widget? contain, bool? isDescription, isfromService = false}) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -796,7 +796,9 @@ Future commonDetailsDialog(BuildContext context, String title,
                       ? 15.h
                       : 12.h
                   : Device.screenType == ScreenType.mobile
-                      ? 20.h
+                      ? isfromService
+                          ? 20.h
+                          : 22.h
                       : 20.h,
               horizontal: Device.screenType == ScreenType.mobile ? 4.h : 6.h),
           shape: RoundedRectangleBorder(

@@ -972,7 +972,7 @@ getImageView(String url) {
 
 getPartyDetailRow(String title, String data, {bool? isAddress}) {
   return Padding(
-    padding: EdgeInsets.only(bottom: 1.h),
+    padding: EdgeInsets.only(bottom: 0.h),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -989,7 +989,7 @@ getPartyDetailRow(String title, String data, {bool? isAddress}) {
         isAddress == true
             ? SizedBox(
                 width: double.infinity,
-                height: Device.screenType == ScreenType.mobile ? 14.5.h : 5.h,
+                height: Device.screenType == ScreenType.mobile ? 16.h : 5.h,
                 child: Scrollbar(
                   thumbVisibility: true,
                   thickness: 1.5,

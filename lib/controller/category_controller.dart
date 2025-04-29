@@ -7,6 +7,7 @@ import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
@@ -33,6 +34,7 @@ class CategoryController extends GetxController {
       RefreshController(initialRefresh: false);
 
   RxList categoryList = [].obs;
+
   getCategoryList(context, currentPage, bool hideloading,
       {bool? isFirstTime = false}) async {
     var loadingIndicator = LoadingProgressDialog();
@@ -200,69 +202,89 @@ class CategoryController extends GetxController {
     );
   }
 
-  getOldListItem(CategoryListData data) {
+  getOldListItem(BuildContext context, {required CategoryListData data}) {
     return GestureDetector(
-      onTap: () {},
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(
-            Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
-        child: Stack(
+      onTap: () {
+        getServiceDetails(context, data);
+      },
+      child: Container(
+        height: 15.h,
+        width: 3.w,
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2), // Shadow color
+              spreadRadius: 1, // Spread radius
+              blurRadius: 5, // Blur radius
+              offset: Offset(0, 3), // Position of shadow
+            ),
+          ],
+        ),
+        child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(
-                  left: 1.2.w, right: 1.2.w, top: 0.8.h, bottom: 0.8.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 10.h,
-                    width: 10.h,
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: grey, // Border color
-                        width: 0.5, // Border width
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          Device.screenType == sizer.ScreenType.mobile
-                              ? 20.w
-                              : 15.w),
-                    ),
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: data.thumbnail,
-                        placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator(color: primaryColor),
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          Asset.placeholder,
-                          height: 9.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              height: 10.h,
+              width: Device.width,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: data.thumbnail,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
                   ),
-                  getDynamicSizedBox(height: 1.0.h),
-                  Center(
-                    child: Text(data.name,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            fontWeight: FontWeight.w500,
-                            color: black,
-                            fontSize:
-                                Device.screenType == sizer.ScreenType.mobile
-                                    ? 14.sp
-                                    : 12.sp,
-                            height: 1.2)),
+                  errorWidget: (context, url, error) => Image.asset(
+                    Asset.placeholder,
+                    height: 9.h,
+                    fit: BoxFit.cover,
                   ),
-                ],
+                ),
               ),
+            ),
+            getDynamicSizedBox(height: 1.3.h),
+            Center(
+              child: Text(data.name,
+                  style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontFamily: dM_sans_semiBold,
+                      fontWeight: FontWeight.w500,
+                      color: black,
+                      fontSize: Device.screenType == sizer.ScreenType.mobile
+                          ? 14.sp
+                          : 12.sp,
+                      height: 1.2)),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  getServiceDetails(BuildContext context, CategoryListData data) {
+    return commonDetailsDialog(
+      context,
+      "Category Details",
+      isDescription: false,
+      
+      contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        if (data.thumbnail.isNotEmpty)
+          getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
+              ? data.thumbnail
+              : ""),
+        getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
+        getPartyDetailRow('Category:', data.name.capitalize.toString()),
+        getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
+        getPartyDetailRow(
+            'Description:', data.description.capitalize.toString(),
+            isAddress: true),
+      ]),
     );
   }
 }
