@@ -71,7 +71,6 @@ class EmailController extends GetxController {
   }
 
   void getForgotOtp(context) async {
-    logcat("EMAIL", "DONE");
     commonPostApiCallFormate(
       context,
       title: EmailScreenConstant.title,

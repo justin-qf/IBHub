@@ -9,6 +9,7 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
 import '../../configs/colors_constant.dart';
 import '../../configs/font_constant.dart';
@@ -729,6 +730,37 @@ getBgDividerWeb(Color? selectedColor, {size}) {
 
 Widget getFooterLogoWeb() {
   return SvgPicture.asset(Asset.logo, width: 120);
+}
+
+getEmptyUi() {
+  return SizedBox(
+    height: Device.height / 1.4,
+    child: Center(
+      child: Text(
+        Common.datanotfound,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontFamily: fontMedium, fontSize: 12.sp),
+      ),
+    ),
+  );
+}
+
+showLoader() {
+  return SizedBox(
+      height: Device.height / 1.5,
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: SizedBox(
+            height: 30,
+            width: 30,
+            child: LoadingAnimationWidget.discreteCircle(
+              color: primaryColor,
+              size: 35,
+            ),
+          ),
+        ),
+      ));
 }
 
 getFloatingActionButton({Function? onClick}) {

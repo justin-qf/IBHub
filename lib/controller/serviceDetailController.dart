@@ -29,7 +29,7 @@ class ServiceDetailScreenController extends GetxController {
   RxString message = "".obs;
   final InternetController networkManager = Get.find<InternetController>();
   var pageController = PageController();
-  var currentPage = 0;
+  var currentPage = 1;
   var quantity = 0;
   late Timer? timer =
       Timer.periodic(const Duration(seconds: 3), (Timer timer) {});
@@ -37,7 +37,7 @@ class ServiceDetailScreenController extends GetxController {
   late TabController tabController;
   int selectedTabIndex = 0;
   final ScrollController scrollController = ScrollController();
-  bool isFetchingMore = false;
+  RxBool isFetchingMore = false.obs;
 
   disposePageController() {
     if (timer != null) {
@@ -177,7 +177,7 @@ class ServiceDetailScreenController extends GetxController {
   RxString nextPageURL = "".obs;
   var isServiceLoading = false.obs;
   getServiceList(context, currentPage, bool hideloading, businessId,
-      {bool? isFirstTime = false}) async {
+      {bool? isFirstTime = false, bool? isFromLoadMore = false}) async {
     var loadingIndicator = LoadingProgressDialog();
     // if (hideloading == true) {
     //   state.value = ScreenState.apiLoading;
@@ -185,10 +185,14 @@ class ServiceDetailScreenController extends GetxController {
     //   loadingIndicator.show(context, '');
     //   update();
     // }
+    logcat("getServiceList::", hideloading.toString());
+
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
-    isServiceLoading(true);
+    if (isFromLoadMore == false) {
+      isServiceLoading(true);
+    }
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
@@ -206,7 +210,9 @@ class ServiceDetailScreenController extends GetxController {
       //   loadingIndicator.hide(context);
       // }
       logcat("RESPONSE::", response.body);
-      isServiceLoading(false);
+      if (isFromLoadMore == false) {
+        isServiceLoading(false);
+      }
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {

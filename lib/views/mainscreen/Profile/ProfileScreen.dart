@@ -27,7 +27,7 @@ import 'package:sizer/sizer.dart' as sizer;
 class ProfileScreen extends StatefulWidget {
   ProfileScreen(this.callBack, {super.key});
   Function callBack;
-  int currentPage = 0;
+  int currentPage = 1;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }

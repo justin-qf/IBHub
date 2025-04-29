@@ -16,6 +16,7 @@ import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -28,6 +29,8 @@ class CategoryController extends GetxController {
   RxString nextPageURL = "".obs;
   final ScrollController scrollController = ScrollController();
   bool isFetchingMore = false;
+  final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   RxList categoryList = [].obs;
   getCategoryList(context, currentPage, bool hideloading,
@@ -122,9 +125,7 @@ class CategoryController extends GetxController {
                 ),
                 color: white,
                 borderRadius: BorderRadius.circular(
-                    Device.screenType == sizer.ScreenType.mobile
-                        ? 4.w
-                        : 2.2.w),
+                    Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
               ),
               child: Stack(children: [
                 // Background Image
@@ -183,10 +184,9 @@ class CategoryController extends GetxController {
                           fontFamily: dM_sans_semiBold,
                           fontWeight: FontWeight.w500,
                           color: white,
-                          fontSize:
-                              Device.screenType == sizer.ScreenType.mobile
-                                  ? 12.sp
-                                  : 7.sp,
+                          fontSize: Device.screenType == sizer.ScreenType.mobile
+                              ? 12.sp
+                              : 7.sp,
                           height: 1.2),
                       textAlign: TextAlign.center,
                     ),

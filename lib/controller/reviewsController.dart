@@ -29,7 +29,7 @@ class ReviewsScreenController extends GetxController {
   Rx<ScreenState> state = ScreenState.apiLoading.obs;
   RxString message = "".obs;
   final InternetController networkManager = Get.find<InternetController>();
-  var currentPage = 0;
+  var currentPage = 1;
   bool isReviewvisible = true;
   late TextEditingController commentctr;
   double userRating = 3.5;

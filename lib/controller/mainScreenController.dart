@@ -12,7 +12,7 @@ import '../utils/enum.dart';
 import 'internet_controller.dart';
 
 class MainScreenController extends GetxController {
-  var currentPage = 0;
+  var currentPage = 1;
 
   RxInt currentTreeView = 2.obs;
 

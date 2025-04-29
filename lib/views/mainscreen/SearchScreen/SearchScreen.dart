@@ -26,8 +26,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   var controller = Get.put(SearchScreenController());
+  bool showText = false;
   @override
   void initState() {
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() => showText = true);
+    });
     controller.isSearch = false;
     futureDelay(() {
       controller.currentPage = 1;
@@ -36,6 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
       controller.getBusinessList(context, 1, false, isFirstTime: true);
     }, isOneSecond: false);
     controller.scrollController.addListener(scrollListener);
+
     super.initState();
   }
 
@@ -207,7 +212,7 @@ class _SearchScreenState extends State<SearchScreen> {
       //   },
       // );
     } else {
-      return noDataFoundWidget();
+      return showText ? getEmptyUi() : showLoader();
     }
   }
 }

@@ -199,4 +199,47 @@ class OtpController extends GetxController {
       FocusScope.of(context).requestFocus(otpNode);
     }, networkManager: networkManager, isModelResponse: false);
   }
+
+  //  void getForgotOtp(context, String mobile) async {
+  //   var loadingIndicator = LoadingProgressDialog();
+  //   try {
+  //     if (networkManager.connectionType == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, LocalizationKeys.noConnection.tr,
+  //           callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
+  //     loadingIndicator.show(context, '');
+
+  //     var response = await Repository.post({
+  //       "MobileNumber": mobile.toString().trim(),
+  //     }, ApiUrl.getForgototp);
+  //     loadingIndicator.hide(context);
+  //     var data = jsonDecode(response.body);
+  //     countdown = 60.obs;
+  //     startTimer();
+  //     if (response.statusCode == 200) {
+  //       if (data['status'] == true) {
+  //         otpController.text = "";
+  //       } else {
+  //         showDialogForScreen(context, data['message'], callback: () {});
+  //       }
+  //     } else {
+  //       logcat("isnotDone", data['message']);
+  //       states.value = ScreenState.apiError;
+  //       showDialogForScreen(context, data['message'], callback: () {
+  //         otpController.text = "";
+  //         startTimer();
+  //       });
+  //     }
+  //   } catch (e) {
+  //     logcat("Exception", e);
+  //     showDialogForScreen(context, LocalizationKeys.serverError.tr,
+  //         callback: () {
+  //       Get.back();
+  //     });
+  //   }
+  // }
 }
