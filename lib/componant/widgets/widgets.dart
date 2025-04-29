@@ -938,61 +938,118 @@ getImageView(String url) {
       ));
 }
 
-getPartyDetailRow(title, data, {bool? isAddress}) {
-  return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+getPartyDetailRow(String title, String data, {bool? isAddress}) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 1.h),
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: TextStyle(
-                fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 6.sp,
-                fontWeight: FontWeight.w800,
-                fontFamily: fontExtraBold,
-                color: isDarkMode() ? white : black)),
-        getDynamicSizedBox(width: 1.w),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 6.sp,
+            fontWeight: FontWeight.w800,
+            fontFamily: fontExtraBold,
+            color: isDarkMode() ? white : black,
+          ),
+        ),
+        // getDynamicSizedBox(height: 0.5.h),
         isAddress == true
-            ? Expanded(
-                child: SizedBox(
-                  width: Device.screenType == ScreenType.mobile ? 25.w : 10.w,
-                  height: Device.screenType == ScreenType.mobile ? 18.h : 10.h,
-                  child: Scrollbar(
-                    thumbVisibility: true,
-                    thickness: 1.5,
-                    radius: const Radius.circular(50),
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      child: Text(
-                        data,
-                        textAlign: TextAlign.start,
-                        // maxLines: 2,
-                        style: TextStyle(
-                            fontSize: Device.screenType == ScreenType.mobile
-                                ? 16.sp
-                                : 10.sp,
-                            color: isDarkMode() ? white : black,
-                            fontFamily: fontRegular),
+            ? SizedBox(
+                width: double.infinity,
+                height: Device.screenType == ScreenType.mobile ? 14.5.h : 5.h,
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  thickness: 1.5,
+                  radius: const Radius.circular(50),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Text(
+                      data,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: Device.screenType == ScreenType.mobile
+                            ? 16.sp
+                            : 10.sp,
+                        color: isDarkMode() ? white : black,
+                        fontFamily: fontRegular,
                       ),
                     ),
                   ),
                 ),
               )
-            : Expanded(
-                child: Text(
-                  data,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: Device.screenType == ScreenType.mobile
-                          ? 16.sp
-                          : 12.sp,
-                      color: isDarkMode() ? white : black,
-                      fontFamily: fontRegular),
+            : Text(
+                data,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize:
+                      Device.screenType == ScreenType.mobile ? 16.sp : 12.sp,
+                  color: isDarkMode() ? white : black,
+                  fontFamily: fontRegular,
                 ),
               ),
-      ]);
+      ],
+    ),
+  );
 }
+
+// getPartyDetailRow(title, data, {bool? isAddress}) {
+//   return Row(
+//       mainAxisAlignment: MainAxisAlignment.start,
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(title,
+//             style: TextStyle(
+//                 fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 6.sp,
+//                 fontWeight: FontWeight.w800,
+//                 fontFamily: fontExtraBold,
+//                 color: isDarkMode() ? white : black)),
+//         getDynamicSizedBox(width: 1.w),
+//         isAddress == true
+//             ? Expanded(
+//                 child: SizedBox(
+//                   width: Device.screenType == ScreenType.mobile ? 25.w : 10.w,
+//                   height: Device.screenType == ScreenType.mobile ? 18.h : 10.h,
+//                   child: Scrollbar(
+//                     thumbVisibility: true,
+//                     thickness: 1.5,
+//                     radius: const Radius.circular(50),
+//                     child: SingleChildScrollView(
+//                       physics: const BouncingScrollPhysics(),
+//                       scrollDirection: Axis.vertical,
+//                       child: Text(
+//                         data,
+//                         textAlign: TextAlign.start,
+//                         // maxLines: 2,
+//                         style: TextStyle(
+//                             fontSize: Device.screenType == ScreenType.mobile
+//                                 ? 16.sp
+//                                 : 10.sp,
+//                             color: isDarkMode() ? white : black,
+//                             fontFamily: fontRegular),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               )
+//             : Expanded(
+//                 child: Text(
+//                   data,
+//                   maxLines: 3,
+//                   overflow: TextOverflow.ellipsis,
+//                   textAlign: TextAlign.start,
+//                   style: TextStyle(
+//                       fontSize: Device.screenType == ScreenType.mobile
+//                           ? 16.sp
+//                           : 12.sp,
+//                       color: isDarkMode() ? white : black,
+//                       fontFamily: fontRegular),
+//                 ),
+//               ),
+//       ]);
+// }
 
 getItemImageView(String url, isFromProductScreen) {
   return Container(

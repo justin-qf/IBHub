@@ -96,7 +96,7 @@ class OtpScreenState extends State<OtpScreen> {
                       fontSize: Device.screenType == sizer.ScreenType.mobile
                           ? 16.sp
                           : 14.sp,
-                      fontFamily: fontMedium,
+                      fontFamily: dM_sans_medium,
                       fontWeight: FontWeight.w700),
                 ),
                 getDynamicSizedBox(height: 3.h),
@@ -175,7 +175,7 @@ class OtpScreenState extends State<OtpScreen> {
                                                 sizer.ScreenType.mobile
                                             ? 16.sp
                                             : 12.sp,
-                                        fontFamily: fontMedium,
+                                        fontFamily: dM_sans_medium,
                                         fontWeight: FontWeight.w700),
                                   ),
                                   getDynamicSizedBox(height: 1.5.h),
@@ -194,7 +194,7 @@ class OtpScreenState extends State<OtpScreen> {
                                                     sizer.ScreenType.mobile
                                                 ? 15.sp
                                                 : 10.sp,
-                                            fontFamily: fontExtraBold,
+                                            fontFamily: dM_sans_extraBold,
                                             fontWeight: FontWeight.w700)),
                                   ),
                                 ],
@@ -207,7 +207,7 @@ class OtpScreenState extends State<OtpScreen> {
                                         ? 15.sp
                                         : 14.sp,
                                     fontWeight: FontWeight.w100,
-                                    fontFamily: fontRegular,
+                                    fontFamily: dM_sans_regular,
                                     color:
                                         isDarkMode() ? white : labelTextColor),
                               ),

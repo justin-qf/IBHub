@@ -163,7 +163,7 @@ class CustomLoginAlertRoundedDialog extends StatelessWidget {
                     textAlign: TextAlign.center,
                     LoginConst.subText,
                     style: TextStyle(
-                        color: black, fontFamily: fontBold, fontSize: 11.5.sp)),
+                        color: black, fontFamily: dM_sans_bold, fontSize: 11.5.sp)),
                 getDynamicSizedBox(height: 4.h),
                 Container(
                     margin: EdgeInsets.only(left: 5.w, right: 5.w),
@@ -230,13 +230,13 @@ Future<Object?> popupDialogs(
                         style: TextStyle(
                             fontSize: 13.sp,
                             color: isDarkMode() ? white : black,
-                            fontFamily: fontMedium,
+                            fontFamily: dM_sans_medium,
                             fontWeight: FontWeight.bold)),
                     content: Text(subString,
                         style: TextStyle(
                             fontSize: 12.sp,
                             color: isDarkMode() ? white : black,
-                            fontFamily: fontBold)),
+                            fontFamily: dM_sans_bold)),
                     actions: [
                       CupertinoDialogAction(
                           onPressed: () {

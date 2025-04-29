@@ -180,7 +180,7 @@ class CategoryController extends GetxController {
                     child: Text(
                       data.name,
                       style: TextStyle(
-                          fontFamily: fontSemiBold,
+                          fontFamily: dM_sans_semiBold,
                           fontWeight: FontWeight.w500,
                           color: white,
                           fontSize:
@@ -248,7 +248,7 @@ class CategoryController extends GetxController {
                   Center(
                     child: Text(data.name,
                         style: TextStyle(
-                            fontFamily: fontSemiBold,
+                            fontFamily: dM_sans_semiBold,
                             fontWeight: FontWeight.w500,
                             color: black,
                             fontSize:

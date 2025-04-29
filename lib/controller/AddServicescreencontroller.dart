@@ -195,7 +195,7 @@ class AddServicescreencontroller extends GetxController {
   // RxString thumbnail = "".obs;
   RxString service = "".obs;
   RxString description = "".obs;
-  RxString categoryEditid = "".obs;
+  // RxString categoryEditid = "".obs;
   RxString keyword = "".obs;
 
   void fillEditData() {
@@ -203,7 +203,9 @@ class AddServicescreencontroller extends GetxController {
     service.value = editServiceItems!.serviceTitle.toString();
     description.value = editServiceItems!.description.toString();
     keyword.value = editServiceItems!.keywords.toString();
-    categoryEditid.value = editServiceItems!.categoryId.toString();
+
+    categoryId.value = editServiceItems!.categoryId.toString();
+    print('category id:$categoryId');
 
     thumbnailCtr.text = editServiceItems!.thumbnail.toString();
     serviceTitleCtr.text = editServiceItems!.serviceTitle.toString();
@@ -289,16 +291,16 @@ class AddServicescreencontroller extends GetxController {
       categoryList.addAll(categoryData.data);
       categoryFilterList.addAll(categoryData.data);
 
-      if (isfromHomescreen && categoryEditid.value.isNotEmpty) {
+      if (isfromHomescreen && categoryId.value.isNotEmpty) {
         final selectedCategory = categoryList.firstWhere(
-          (category) => category.id.toString() == categoryEditid.value,
+          (category) => category.id.toString() == categoryId.value,
         );
         // ignore: unnecessary_null_comparison
         if (selectedCategory != null) {
           categoryCtr.text = selectedCategory.name;
-          categoryEditid.value = selectedCategory.id.toString();
+          categoryId.value = selectedCategory.id.toString();
         } else {
-          categoryEditid.value = '';
+          categoryId.value = '';
           categoryCtr.text = '';
         }
       }
@@ -331,12 +333,11 @@ class AddServicescreencontroller extends GetxController {
                 onTap: () async {
                   Get.back();
 
-                  if (isFromHomeScreen == true) {
-                    categoryEditid.value =
-                        categoryFilterList[index].id.toString();
-                  } else {
-                    categoryId.value = categoryFilterList[index].id.toString();
-                  }
+                  // if (isFromHomeScreen == true) {
+                  //   categoryEditid.value =
+                  //       categoryFilterList[index].id.toString();
+                  // } else {}
+                  categoryId.value = categoryFilterList[index].id.toString();
 
                   categoryCtr.text = categoryFilterList[index].name;
                   if (categoryCtr.text.toString().isNotEmpty) {
@@ -354,9 +355,7 @@ class AddServicescreencontroller extends GetxController {
                 title: showSelectedTextInDialog(
                   name: categoryFilterList[index].name,
                   modelId: categoryFilterList[index].id.toString(),
-                  storeId: isFromHomeScreen
-                      ? categoryEditid.value
-                      : categoryId.value,
+                  storeId: categoryId.value,
                 ),
               );
             },
@@ -482,135 +481,135 @@ class AddServicescreencontroller extends GetxController {
   //   );
   // }
 
-  void updateServiceApi(context) async {
-    var loadingIndicator = LoadingProgressDialog();
+  // void updateServiceApi(context) async {
+  //   var loadingIndicator = LoadingProgressDialog();
 
-    // try {
-    if (networkManager.connectionType.value == 0) {
-      loadingIndicator.hide(context);
-      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
-          Connection.noConnection, callback: () {
-        Get.back();
-      });
-      return;
-    }
-    loadingIndicator.show(context, '');
+  //   // try {
+  //   if (networkManager.connectionType.value == 0) {
+  //     loadingIndicator.hide(context);
+  //     showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+  //         Connection.noConnection, callback: () {
+  //       Get.back();
+  //     });
+  //     return;
+  //   }
+  //   loadingIndicator.show(context, '');
 
-    logcat("ServiceParam", {
-      "service_title": serviceTitleCtr.text.toString().trim(),
-      "description": descriptionCtr.text.toString().trim(),
-      "keywords": keywordsCtr.text.toString().trim(),
-      "category_id": categoryId.value.toString().trim(),
-    });
+  //   logcat("ServiceParam", {
+  //     "service_title": serviceTitleCtr.text.toString().trim(),
+  //     "description": descriptionCtr.text.toString().trim(),
+  //     "keywords": keywordsCtr.text.toString().trim(),
+  //     "category_id": categoryId.value.toString().trim(),
+  //   });
 
-    var response = await Repository.update({
-      "service_title": serviceTitleCtr.text.toString().trim(),
-      "description": descriptionCtr.text.toString().trim(),
-      "keywords":
-          jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
-      "category_id": categoryId.value.toString().trim(),
-    }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
+  //   var response = await Repository.update({
+  //     "service_title": serviceTitleCtr.text.toString().trim(),
+  //     "description": descriptionCtr.text.toString().trim(),
+  //     "keywords":
+  //         jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
+  //     "category_id": categoryId.value.toString().trim(),
+  //   }, '${ApiUrl.updateService}${editServiceItems!.id}', allowHeader: true);
 
-    loadingIndicator.hide(context);
+  //   loadingIndicator.hide(context);
 
-    var json = jsonDecode(response.body);
+  //   var json = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      if (json['success'] == true) {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, json['message'],
-            callback: () {
-          Get.back(result: true);
-        });
-      } else {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, json['message'],
-            callback: () {});
-      }
-    } else {
-      showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, json['message'],
-          callback: () {});
-    }
-    // } catch (e) {
-    //   logcat("Service Creation Exception", e.toString());
-    //   showDialogForScreen(
-    //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-    //       callback: () {});
-    //   loadingIndicator.hide(context);
-    // }
-  }
+  //   if (response.statusCode == 200) {
+  //     if (json['success'] == true) {
+  //       showDialogForScreen(
+  //           context, AddServiceScreenViewConst.serviceScr, json['message'],
+  //           callback: () {
+  //         Get.back(result: true);
+  //       });
+  //     } else {
+  //       showDialogForScreen(
+  //           context, AddServiceScreenViewConst.serviceScr, json['message'],
+  //           callback: () {});
+  //     }
+  //   } else {
+  //     showDialogForScreen(
+  //         context, AddServiceScreenViewConst.serviceScr, json['message'],
+  //         callback: () {});
+  //   }
+  //   // } catch (e) {
+  //   //   logcat("Service Creation Exception", e.toString());
+  //   //   showDialogForScreen(
+  //   //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+  //   //       callback: () {});
+  //   //   loadingIndicator.hide(context);
+  //   // }
+  // }
 
-  void addServiceApi(context) async {
-    var loadingIndicator = LoadingProgressDialog();
+  // void addServiceApi(context) async {
+  //   var loadingIndicator = LoadingProgressDialog();
 
-    try {
-      if (networkManager.connectionType.value == 0) {
-        loadingIndicator.hide(context);
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
-            Connection.noConnection, callback: () {
-          Get.back();
-        });
-        return;
-      }
-      loadingIndicator.show(context, '');
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+  //           Connection.noConnection, callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
+  //     loadingIndicator.show(context, '');
 
-      logcat("ServiceParam", {
-        "service_title": serviceTitleCtr.text.toString().trim(),
-        "description": descriptionCtr.text.toString().trim(),
-        "keywords": keywordsCtr.text.toString().trim(),
-        "category_id": categoryId.value.toString().trim(),
-      });
+  //     logcat("ServiceParam", {
+  //       "service_title": serviceTitleCtr.text.toString().trim(),
+  //       "description": descriptionCtr.text.toString().trim(),
+  //       "keywords": keywordsCtr.text.toString().trim(),
+  //       "category_id": categoryId.value.toString().trim(),
+  //     });
 
-      var response = await Repository.multiPartPost({
-        "service_title": serviceTitleCtr.text.toString().trim(),
-        "description": descriptionCtr.text.toString().trim(),
-        "keywords":
-            jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
-        "category_id": categoryId.value.toString().trim(),
-      }, ApiUrl.addService,
-          multiPart:
-              imageFile.value != null && imageFile.value.toString().isNotEmpty
-                  ? http.MultipartFile(
-                      'thumbnail',
-                      imageFile.value!.readAsBytes().asStream(),
-                      imageFile.value!.lengthSync(),
-                      filename: imageFile.value!.path.split('/').last,
-                    )
-                  : null,
-          allowHeader: true);
+  //     var response = await Repository.multiPartPost({
+  //       "service_title": serviceTitleCtr.text.toString().trim(),
+  //       "description": descriptionCtr.text.toString().trim(),
+  //       "keywords":
+  //           jsonEncode(keywords.map((keyword) => {"value": keyword}).toList()),
+  //       "category_id": categoryId.value.toString().trim(),
+  //     }, ApiUrl.addService,
+  //         multiPart:
+  //             imageFile.value != null && imageFile.value.toString().isNotEmpty
+  //                 ? http.MultipartFile(
+  //                     'thumbnail',
+  //                     imageFile.value!.readAsBytes().asStream(),
+  //                     imageFile.value!.lengthSync(),
+  //                     filename: imageFile.value!.path.split('/').last,
+  //                   )
+  //                 : null,
+  //         allowHeader: true);
 
-      var responseData = await response.stream.toBytes();
-      loadingIndicator.hide(context);
+  //     var responseData = await response.stream.toBytes();
+  //     loadingIndicator.hide(context);
 
-      var result = String.fromCharCodes(responseData);
-      var json = jsonDecode(result);
+  //     var result = String.fromCharCodes(responseData);
+  //     var json = jsonDecode(result);
 
-      if (response.statusCode == 200) {
-        if (json['success'] == true) {
-          showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, json['message'],
-              callback: () {
-            Get.back(result: true);
-          });
-        } else {
-          showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, json['message'],
-              callback: () {});
-        }
-      } else {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, json['message'],
-            callback: () {});
-      }
-    } catch (e) {
-      logcat("Service Creation Exception", e.toString());
-      showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-          callback: () {});
-      loadingIndicator.hide(context);
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       if (json['success'] == true) {
+  //         showDialogForScreen(
+  //             context, AddServiceScreenViewConst.serviceScr, json['message'],
+  //             callback: () {
+  //           Get.back(result: true);
+  //         });
+  //       } else {
+  //         showDialogForScreen(
+  //             context, AddServiceScreenViewConst.serviceScr, json['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       showDialogForScreen(
+  //           context, AddServiceScreenViewConst.serviceScr, json['message'],
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     logcat("Service Creation Exception", e.toString());
+  //     showDialogForScreen(
+  //         context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+  //         callback: () {});
+  //     loadingIndicator.hide(context);
+  //   }
+  // }
 
   Rx<File?> imageFile = null.obs;
   RxString imageURl = "".obs;
@@ -903,24 +902,39 @@ class AddServicescreencontroller extends GetxController {
       if (response.statusCode == 200) {
         if (json['success'] == true) {
           showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, json['message'],
-              callback: () {
+              context,
+              isFromUpdate.value
+                  ? AddServiceScreenViewConst.editService
+                  : AddServiceScreenViewConst.addService,
+              json['message'], callback: () {
             Get.back(result: true);
           });
         } else {
           showDialogForScreen(
-              context, AddServiceScreenViewConst.serviceScr, json['message'],
+              context,
+              isFromUpdate.value
+                  ? AddServiceScreenViewConst.editService
+                  : AddServiceScreenViewConst.addService,
+              json['message'],
               callback: () {});
         }
       } else {
         showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, json['message'],
+            context,
+            isFromUpdate.value
+                ? AddServiceScreenViewConst.editService
+                : AddServiceScreenViewConst.addService,
+            json['message'],
             callback: () {});
       }
     } catch (e) {
       logcat("Service Creation Exception", e.toString());
       showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
+          context,
+          isFromUpdate.value
+              ? AddServiceScreenViewConst.editService
+              : AddServiceScreenViewConst.addService,
+          Connection.servererror,
           callback: () {});
       loadingIndicator.hide(context);
     }

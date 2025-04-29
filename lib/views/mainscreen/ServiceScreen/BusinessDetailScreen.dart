@@ -33,7 +33,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   var controller = Get.put(ServiceDetailScreenController());
   bool showTitle = false;
   double? percentage;
-  final ScrollController scrollController = ScrollController();
 
   String businessName = '';
   String businessId = '';
@@ -42,10 +41,37 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String phone = '';
   String address = '';
   double? businessReviewsAvgRating = 0.0;
+
   @override
   void initState() {
     getUserData();
+    controller.scrollController.addListener(scrollListener);
+    setState(() {});
     super.initState();
+  }
+
+  void scrollListener() {
+    if (controller.scrollController.position.pixels ==
+            controller.scrollController.position.maxScrollExtent &&
+        controller.nextPageURL.value.isNotEmpty &&
+        !controller.isFetchingMore) {
+      if (!mounted) return;
+      setState(() => controller.isFetchingMore = true);
+      controller.currentPage++;
+      Future.delayed(
+        Duration.zero,
+        () {
+          controller
+              .getServiceList(context, 1, true, controller.bussinessID.value,
+                  isFirstTime: false)
+              .whenComplete(() {
+            if (mounted) {
+              setState(() => controller.isFetchingMore = false);
+            }
+          });
+        },
+      );
+    }
   }
 
   getUserData() async {
@@ -195,17 +221,23 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   ),
                   // controller.getCategoryLable(widget.item.businessName),
                   getDynamicSizedBox(height: 1.h),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.email,
-                        size: 18.sp,
-                      ),
-                      getDynamicSizedBox(width: 1.w),
-                      controller.getLableText(
-                          widget.item != null ? widget.item!.email : email,
-                          isMainTitle: false),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      lanchEmail(
+                          widget.item != null ? widget.item!.email : email);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.email,
+                          size: 18.sp,
+                        ),
+                        getDynamicSizedBox(width: 1.w),
+                        controller.getLableText(
+                            widget.item != null ? widget.item!.email : email,
+                            isMainTitle: false),
+                      ],
+                    ),
                   ),
                   getDynamicSizedBox(height: 1.h),
                   GestureDetector(
@@ -264,7 +296,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                             id: businessId,
                           ))!
                               .then((value) {});
-                        }, isFromDetailScreen: true)
+                        }, isFromDetailScreen: true, isShowSeeMore: false)
                       : SizedBox.shrink()),
                   // getHomeLable('Services List', () {
                   //   Get.to(ServiceScreen(
@@ -290,7 +322,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                           )
                         : controller.serviceList.isNotEmpty
                             ? ListView.builder(
-                                padding: EdgeInsets.only(top: 1.h),
+                                controller: controller.scrollController,
+                                padding:
+                                    EdgeInsets.only(top: 1.h, bottom: 10.h),
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,

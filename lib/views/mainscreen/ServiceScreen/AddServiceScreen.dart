@@ -254,7 +254,8 @@ class _ServicescreenState extends State<AddServicescreen> {
                                       style: const TextStyle(
                                           color: primaryColor,
                                           fontFamily: dM_sans_regular)),
-                                  backgroundColor: secondaryColor,
+                                  backgroundColor:
+                                      secondaryColor.withOpacity(0.6),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),

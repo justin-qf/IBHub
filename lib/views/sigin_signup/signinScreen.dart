@@ -52,7 +52,7 @@ class _SigninscreenState extends State<Signinscreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               getDynamicSizedBox(height: 10.h),
-              Container(
+              SizedBox(
                   // color: Colors.yellow,
                   height: 10.h,
                   width: 40.w,
@@ -69,12 +69,14 @@ class _SigninscreenState extends State<Signinscreen> {
                 ),
               ),
               getDynamicSizedBox(height: 4.h),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                     'Empowering creators and clients alike \nJoin the platform where work meets talent.',
-                    style:
-                        TextStyle(fontFamily: dM_sans_semiBold, color: grey)),
+                    style: TextStyle(
+                        fontFamily: dM_sans_semiBold,
+                        fontSize: 16.sp,
+                        color: grey)),
               ),
               getDynamicSizedBox(height: 4.h),
               Obx(() {
@@ -141,8 +143,7 @@ class _SigninscreenState extends State<Signinscreen> {
                     }
                   },
                   child: Container(
-                    padding:
-                        const EdgeInsets.only(top: 10, bottom: 10, left: 6),
+                    padding: EdgeInsets.only(top: 2.h, bottom: 2.h, left: 2.w),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -278,7 +279,7 @@ class _SigninscreenState extends State<Signinscreen> {
                     },
                     child: Container(
                       padding: EdgeInsets.only(
-                          left: 1.w, top: 10, bottom: 10, right: 5),
+                          left: 1.w, top: 2.h, bottom: 2.h, right: 3.w),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [

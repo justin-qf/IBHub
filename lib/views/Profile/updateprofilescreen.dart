@@ -129,8 +129,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
           //   ],
           // ),
           getDynamicSizedBox(height: 1.h),
-          getLable('Logo', isRequired: true),
-          getDynamicSizedBox(height: 2.h),
+
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -153,6 +152,9 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         setState(() {});
                       },
                     ),
+                    getDynamicSizedBox(height: 2.h),
+                    getLable('Logo', isRequired: true),
+                    getDynamicSizedBox(height: 2.h),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,

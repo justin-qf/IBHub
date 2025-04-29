@@ -43,7 +43,7 @@ class EmailScreenState extends State<EmailScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 5.w),
                 child: getleftsidebackbtn(
-                  title: EmailScreenConstant.title,
+                  title: EmailScreenConstant.forgotpassword,
                   backFunction: () {
                     Get.back(result: true);
                   },
@@ -80,6 +80,7 @@ class EmailScreenState extends State<EmailScreen> {
                           return getFormButton(context, () {
                             if (ctr.isFormInvalidate.value == true) {
                               ctr.getForgotOtp(context);
+                              ctr.resetfilled();
                             }
                           }, Button.continues,
                               validate: ctr.isFormInvalidate.value);

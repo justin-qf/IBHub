@@ -16,7 +16,7 @@ class AppTheme {
       displayLarge:
           TextStyle(fontWeight: FontWeight.bold, fontSize: 25.sp, color: black),
       displayMedium:
-          TextStyle(fontSize: 10.sp, color: black, fontFamily: fontRegular),
+          TextStyle(fontSize: 10.sp, color: black, fontFamily: dM_sans_regular),
       bodyMedium: const TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
     ),
   );
@@ -27,7 +27,7 @@ class AppTheme {
     primaryColor: lightPrimaryColor,
     textTheme: TextTheme(
         displayMedium:
-            TextStyle(fontSize: 10.sp, color: white, fontFamily: fontRegular),
+            TextStyle(fontSize: 10.sp, color: white, fontFamily: dM_sans_regular),
         displayLarge: TextStyle(
             fontWeight: FontWeight.bold, fontSize: 25.sp, color: white)),
   );

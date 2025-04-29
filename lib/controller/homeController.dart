@@ -98,9 +98,14 @@ class HomeScreenController extends GetxController {
                           height: 7.h,
                           width: 7.h,
                           imageUrl: item.thumbnail,
-                          placeholder: (context, url) => const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor),
+                          placeholder: (context, url) => Center(
+                            child: Image.asset(
+                              Asset.placeholder,
+                              height: 7.h,
+                              fit: BoxFit.cover,
+                            ),
+
+                            // CircularProgressIndicator(color: primaryColor),
                           ),
                           errorWidget: (context, url, error) => Image.asset(
                             Asset.placeholder,
@@ -122,7 +127,7 @@ class HomeScreenController extends GetxController {
                       ? Expanded(
                           child: Marquee(
                               style: TextStyle(
-                                fontFamily: fontRegular,
+                                fontFamily: dM_sans_regular,
                                 color: black,
                                 fontSize:
                                     Device.screenType == sizer.ScreenType.mobile
@@ -152,7 +157,7 @@ class HomeScreenController extends GetxController {
                           item.name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontFamily: fontRegular,
+                              fontFamily: dM_sans_regular,
                               color: black,
                               fontSize:
                                   Device.screenType == sizer.ScreenType.mobile
@@ -483,7 +488,7 @@ class HomeScreenController extends GetxController {
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
-                            fontFamily: fontRegular,
+                            fontFamily: dM_sans_regular,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
@@ -496,7 +501,7 @@ class HomeScreenController extends GetxController {
                                 : item.phone,
                         maxLines: 2,
                         style: TextStyle(
-                            fontFamily: fontRegular,
+                            fontFamily: dM_sans_regular,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),

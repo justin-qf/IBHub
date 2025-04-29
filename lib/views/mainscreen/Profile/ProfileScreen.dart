@@ -306,7 +306,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 style: TextStyle(
                                                     fontSize: 16.sp,
                                                     color: black,
-                                                    fontFamily: fontSemiBold,
+                                                    fontFamily:
+                                                        dM_sans_semiBold,
                                                     fontWeight:
                                                         FontWeight.w800),
                                               ),
@@ -331,7 +332,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 style: TextStyle(
                                                     fontSize: 16.sp,
                                                     color: black,
-                                                    fontFamily: fontSemiBold,
+                                                    fontFamily:
+                                                        dM_sans_semiBold,
                                                     fontWeight:
                                                         FontWeight.w500),
                                               ),
@@ -396,13 +398,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 title: ProfileScreenConst.changepassword,
                                 icon: Asset.resetpass),
                             getMenuListItem(
-                                callback: () {
-                                  logoutPopupDialogs(context);
-                                },
-                                title: ProfileScreenConst.logout,
-                                icon: Asset.logout),
-
-                            getMenuListItem(
                                 callback: () async {
                                   bool isEmpty = await isAnyFieldEmpty();
                                   if (isEmpty) {
@@ -422,6 +417,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: 'Share Visiting Card',
                                 icons: Icons.share),
+                            getMenuListItem(
+                                callback: () {
+                                  logoutPopupDialogs(context);
+                                },
+                                title: ProfileScreenConst.logout,
+                                icon: Asset.logout),
+
                             // getFormButton(context, () {
                             //   Get.to(AddServicescreen());
                             // }, 'add services', validate: true),

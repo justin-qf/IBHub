@@ -264,6 +264,7 @@ class LoginConst {
 
 /*not used*/
   static const emailLable = 'Email-ID';
+
   static const emailHint = 'Enter Email Id';
   static const validEmailHint = 'Enter Valid Email Id';
 /*not used*/
@@ -624,6 +625,7 @@ class Button {
 
 class EmailScreenConstant {
   static const title = 'Email';
+  static const forgotpassword = 'Forgot Password';
 }
 
 class MainScreenConstant {

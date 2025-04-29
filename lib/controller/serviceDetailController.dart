@@ -36,6 +36,8 @@ class ServiceDetailScreenController extends GetxController {
   RxBool? isFromFavApiCallSuccess = false.obs;
   late TabController tabController;
   int selectedTabIndex = 0;
+  final ScrollController scrollController = ScrollController();
+  bool isFetchingMore = false;
 
   disposePageController() {
     if (timer != null) {
@@ -97,7 +99,7 @@ class ServiceDetailScreenController extends GetxController {
         //textAlign: TextAlign.center,
         style: TextStyle(
           color: black,
-          fontFamily: isMainTitle == true ? fontBold : null,
+          fontFamily: isMainTitle == true ? dM_sans_bold : null,
           fontWeight: isMainTitle == true ? FontWeight.w900 : FontWeight.w500,
           fontSize: isMainTitle == true
               ? Device.screenType == sizer.ScreenType.mobile
@@ -219,8 +221,8 @@ class ServiceDetailScreenController extends GetxController {
             serviceList.refresh();
             update();
           }
-          if (serviceListData.data.nextPageUrl != 'null' ||
-              serviceListData.data.nextPageUrl != null) {
+          // serviceListData.data.nextPageUrl != 'null' ||
+          if (serviceListData.data.nextPageUrl != null) {
             nextPageURL.value = serviceListData.data.nextPageUrl.toString();
             logcat("nextPageURL-1", nextPageURL.value.toString());
             update();
@@ -335,7 +337,7 @@ class ServiceDetailScreenController extends GetxController {
                       getDynamicSizedBox(height: 1.h),
                       Text(item.categoryName,
                           style: TextStyle(
-                              fontFamily: fontRegular,
+                              fontFamily: dM_sans_regular,
                               fontSize: 15.sp,
                               color: black,
                               fontWeight: FontWeight.w500)),
@@ -344,7 +346,7 @@ class ServiceDetailScreenController extends GetxController {
                           absorbing: true,
                           child: ReadMoreText(item.description,
                               textAlign: TextAlign.start,
-                              trimLines: 2, callback: (val) {
+                              trimLines: 1, callback: (val) {
                             logcat("ONTAP", val.toString());
                           },
                               colorClickableText: primaryColor,
@@ -358,16 +360,16 @@ class ServiceDetailScreenController extends GetxController {
                                           sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp,
-                                  fontFamily: fontBold,
+                                  fontFamily: dM_sans_bold,
                                   color: grey),
                               lessStyle: TextStyle(
-                                  fontFamily: fontMedium,
+                                  fontFamily: dM_sans_medium,
                                   fontSize: Device.screenType ==
                                           sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp),
                               moreStyle: TextStyle(
-                                  fontFamily: fontMedium,
+                                  fontFamily: dM_sans_medium,
                                   fontSize: Device.screenType ==
                                           sizer.ScreenType.mobile
                                       ? 15.sp
@@ -405,7 +407,7 @@ class ServiceDetailScreenController extends GetxController {
                         size: 20.sp,
                       ),
                     ),
-                    getDynamicSizedBox(height: 5.h),
+                    getDynamicSizedBox(height: 1.5.h),
                     GestureDetector(
                       onTap: () async {
                         final isDeleted = await deleteDialogs(
@@ -447,19 +449,20 @@ class ServiceDetailScreenController extends GetxController {
       context,
       "Service Details",
       isDescription: false,
-      contain: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (data.thumbnail.isNotEmpty)
           getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
               ? data.thumbnail
               : ""),
+
         getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
         getPartyDetailRow('Category:', data.categoryName.capitalize.toString()),
-        getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
+        // getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
         getPartyDetailRow('Service:', data.serviceTitle.capitalize.toString()),
         // getDynamicSizedBox(height: data.keywords.isNotEmpty ? 1.h : 0.0),
         // getPartyDetailRow('Keyword:', data.keywords.capitalize.toString()),
-        getDynamicSizedBox(
-            height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
+        // getDynamicSizedBox(
+        //     height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
         if (data.description.toString().isNotEmpty)
           getPartyDetailRow('Description:', data.description, isAddress: true),
       ]),

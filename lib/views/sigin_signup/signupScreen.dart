@@ -4,6 +4,7 @@ import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
@@ -65,6 +66,15 @@ class _SignupscreenState extends State<Signupscreen> {
                     },
                     istitle: false),
               ),
+              getDynamicSizedBox(height: 1.4.h),
+              SizedBox(
+                  // color: Colors.yellow,
+                  height: 10.h,
+                  width: 40.w,
+                  child: Image.asset(
+                    Asset.applogo,
+                  )),
+
               getDynamicSizedBox(height: 4.h),
               Align(
                 alignment: Alignment.centerLeft,
@@ -74,7 +84,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       fontFamily: dM_sans_bold, fontSize: 20.sp, height: 1.1),
                 ),
               ),
-              getDynamicSizedBox(height: 8.h),
+              getDynamicSizedBox(height: 5.h),
               Obx(() {
                 return getTextField(
                   label: SignUpConstant.email,
@@ -251,8 +261,8 @@ class _SignupscreenState extends State<Signupscreen> {
                   ],
                 ),
               ),
-              getDynamicSizedBox(height: 5.h),
-              getDynamicSizedBox(height: 2.h),
+              // getDynamicSizedBox(height: 5.h),
+              getDynamicSizedBox(height: 6.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

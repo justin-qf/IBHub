@@ -174,7 +174,7 @@ class ServiceController extends GetxController {
                     getDynamicSizedBox(height: 1.h),
                     Text(item.categoryName,
                         style: TextStyle(
-                            fontFamily: fontRegular,
+                            fontFamily: dM_sans_regular,
                             fontSize: 15.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
@@ -197,16 +197,16 @@ class ServiceController extends GetxController {
                                     Device.screenType == sizer.ScreenType.mobile
                                         ? 15.sp
                                         : 12.sp,
-                                fontFamily: fontBold,
+                                fontFamily: dM_sans_bold,
                                 color: grey),
                             lessStyle: TextStyle(
-                                fontFamily: fontMedium,
+                                fontFamily: dM_sans_medium,
                                 fontSize:
                                     Device.screenType == sizer.ScreenType.mobile
                                         ? 15.sp
                                         : 12.sp),
                             moreStyle: TextStyle(
-                                fontFamily: fontMedium,
+                                fontFamily: dM_sans_medium,
                                 fontSize:
                                     Device.screenType == sizer.ScreenType.mobile
                                         ? 15.sp

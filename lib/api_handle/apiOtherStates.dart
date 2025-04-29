@@ -54,7 +54,7 @@ Widget apiOtherStates(
                 controller.message.value,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: fontMedium, fontSize: 16.sp, color: black),
+                    fontFamily: dM_sans_medium, fontSize: 16.sp, color: black),
               )
             : button),
   );

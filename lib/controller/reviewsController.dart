@@ -330,7 +330,7 @@ class ReviewsScreenController extends GetxController {
                             style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               color: black,
-                              fontFamily: fontBold,
+                              fontFamily: dM_sans_bold,
                               fontWeight: FontWeight.w500,
                               fontSize: 15.sp,
                             )),
@@ -394,7 +394,7 @@ class ReviewsScreenController extends GetxController {
                                         Text(name,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                              fontFamily: fontMedium,
+                                              fontFamily: dM_sans_medium,
                                               fontWeight: FontWeight.w900,
                                               fontSize: 15.sp,
                                             )),
@@ -402,7 +402,7 @@ class ReviewsScreenController extends GetxController {
                                         Text(data.review,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
-                                              fontFamily: fontBold,
+                                              fontFamily: dM_sans_bold,
                                               fontSize: 12.sp,
                                             )),
                                         getDynamicSizedBox(width: 0.6.w),
@@ -442,7 +442,7 @@ class ReviewsScreenController extends GetxController {
                                 style: TextStyle(
                                   overflow: TextOverflow.ellipsis,
                                   color: lableColor,
-                                  fontFamily: fontBold,
+                                  fontFamily: dM_sans_bold,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.sp,
                                 )),

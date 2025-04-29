@@ -36,6 +36,11 @@ class EmailController extends GetxController {
     super.onClose();
   }
 
+  resetfilled() {
+    emailctr.clear();
+    emailNode.unfocus();
+  }
+
   void validateEmail(String? val) {
     emailModel.update((model) {
       String trimmedValue = val?.trim() ?? '';

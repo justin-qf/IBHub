@@ -909,7 +909,7 @@ class SearchScreenController extends GetxController {
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
-                            fontFamily: fontRegular,
+                            fontFamily: dM_sans_regular,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
@@ -922,7 +922,7 @@ class SearchScreenController extends GetxController {
                                 : item.phone,
                         maxLines: 2,
                         style: TextStyle(
-                            fontFamily: fontRegular,
+                            fontFamily: dM_sans_regular,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
