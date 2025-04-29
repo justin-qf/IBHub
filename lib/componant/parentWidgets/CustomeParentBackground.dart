@@ -68,13 +68,14 @@ class CustomParentScaffold extends StatelessWidget {
                           alignment: Alignment.topLeft,
                           child: SizedBox(height: 80.h, child: drower))
                       : null,
-                      floatingActionButton: bottomNavigationBar,
+                  floatingActionButton: bottomNavigationBar,
                   drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
                   // bottomNavigationBar: bottomNavigationBar,
                   backgroundColor: bgColor,
                   extendBodyBehindAppBar: extendedbodybehindappbar,
                   // resizeToAvoidBottomInset: isSmallDevice(context),
                   resizeToAvoidBottomInset: true,
+
                   body: body,
                 )
               : SafeArea(

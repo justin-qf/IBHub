@@ -45,20 +45,23 @@ class _SigninscreenState extends State<Signinscreen> {
         hideKeyboard(context);
       },
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               getDynamicSizedBox(height: 10.h),
-              SizedBox(
-                  // color: Colors.yellow,
-                  height: 10.h,
-                  width: 40.w,
-                  child: Image.asset(
-                    Asset.applogo,
-                  )),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                    // color: Colors.yellow,
+                    height: 8.h,
+                    width: 30.w,
+                    child: Image.asset(
+                      Asset.applogo,
+                    )),
+              ),
               getDynamicSizedBox(height: 4.h),
               Align(
                 alignment: Alignment.centerLeft,
@@ -255,7 +258,7 @@ class _SigninscreenState extends State<Signinscreen> {
               //     ],
               //   ),
               // ),
-              getDynamicSizedBox(height: 5.h),
+              getDynamicSizedBox(height: 2.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

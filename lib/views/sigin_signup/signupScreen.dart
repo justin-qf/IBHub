@@ -36,6 +36,7 @@ class _SignupscreenState extends State<Signupscreen> {
         hideKeyboard(context);
       },
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Column(
@@ -67,13 +68,16 @@ class _SignupscreenState extends State<Signupscreen> {
                     istitle: false),
               ),
               getDynamicSizedBox(height: 1.4.h),
-              SizedBox(
-                  // color: Colors.yellow,
-                  height: 10.h,
-                  width: 40.w,
-                  child: Image.asset(
-                    Asset.applogo,
-                  )),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                    // color: Colors.yellow,
+                    height: 8.h,
+                    width: 30.w,
+                    child: Image.asset(
+                      Asset.applogo,
+                    )),
+              ),
 
               getDynamicSizedBox(height: 4.h),
               Align(
@@ -184,7 +188,7 @@ class _SignupscreenState extends State<Signupscreen> {
                     : const CircularProgressIndicator();
               }),
 
-              getDynamicSizedBox(height: 5.h),
+              getDynamicSizedBox(height: 4.h),
               Align(
                 alignment: Alignment.center,
                 child: Column(
