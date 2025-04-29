@@ -207,6 +207,11 @@ class _ServicescreenState extends State<AddServicescreen> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                                color: Colors.red), // or your preferred color
+                          ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,

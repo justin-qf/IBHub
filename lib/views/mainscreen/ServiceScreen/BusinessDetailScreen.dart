@@ -54,19 +54,21 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     if (controller.scrollController.position.pixels ==
             controller.scrollController.position.maxScrollExtent &&
         controller.nextPageURL.value.isNotEmpty &&
-        !controller.isFetchingMore) {
+        !controller.isFetchingMore.value) {
       if (!mounted) return;
-      setState(() => controller.isFetchingMore = true);
+      setState(() => controller.isFetchingMore.value = true);
       controller.currentPage++;
       Future.delayed(
         Duration.zero,
         () {
           controller
-              .getServiceList(context, 1, true, controller.bussinessID.value,
-                  isFirstTime: false)
+              .getServiceList(context, controller.currentPage, true,
+                  controller.bussinessID.value,
+                  isFromLoadMore: true)
               .whenComplete(() {
             if (mounted) {
-              setState(() => controller.isFetchingMore = false);
+              // controller.isFetchingMore.value = false;
+              setState(() => controller.isFetchingMore.value = false);
             }
           });
         },
@@ -90,7 +92,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
 
     futureDelay(() {
-      controller.getServiceList(context, 1, true, idUsedinCtr);
+      controller.getServiceList(context, 1, true, idUsedinCtr,
+          isFirstTime: true);
     }, isOneSecond: false);
     setState(() {});
   }
@@ -98,6 +101,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   @override
   void dispose() {
     businessId = "";
+    controller.serviceList.clear();
     super.dispose();
   }
 
@@ -310,7 +314,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                controller: controller.scrollController,
+                padding: EdgeInsets.only(bottom: 5.h),
+                physics: const BouncingScrollPhysics(),
                 child: Obx(
                   () {
                     return controller.isServiceLoading.value
@@ -322,23 +328,55 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                           )
                         : controller.serviceList.isNotEmpty
                             ? ListView.builder(
-                                controller: controller.scrollController,
-                                padding:
-                                    EdgeInsets.only(top: 1.h, bottom: 10.h),
+                                padding: EdgeInsets.only(top: 1.h),
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 clipBehavior: Clip.antiAlias,
+                                itemCount: controller.serviceList.length +
+                                    (controller.nextPageURL.value.isNotEmpty
+                                        ? 1
+                                        : 0),
                                 itemBuilder: (context, index) {
-                                  ServiceDataList data =
-                                      controller.serviceList[index];
-                                  return controller.getServiceListItem(
-                                      isFromProfile: widget.isFromProfile,
-                                      context,
-                                      data);
+                                  if (index < controller.serviceList.length) {
+                                    ServiceDataList data =
+                                        controller.serviceList[index];
+                                    return controller.getServiceListItem(
+                                        isFromProfile: widget.isFromProfile,
+                                        context,
+                                        data);
+                                  } else if (controller.isFetchingMore.value) {
+                                    return Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.h),
+                                      child: const Center(
+                                        child: SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                              color: primaryColor),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
                                 },
-                                itemCount: controller.serviceList.length)
-                            : Container();
+                              )
+                            : controller.isFetchingMore.value
+                                ? Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.h),
+                                    child: const Center(
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: CircularProgressIndicator(
+                                            color: primaryColor),
+                                      ),
+                                    ),
+                                  )
+                                : Container();
                   },
                 ),
               ),

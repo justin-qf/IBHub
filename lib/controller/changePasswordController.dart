@@ -139,8 +139,8 @@ class ChangePasswordController extends GetxController {
         title: ChangPasswordScreenConstant.title,
         body: {
           "current_password": currentCtr.text.toString().trim(),
-          "password": newpassCtr.text.toString().trim(),
-          "confirm_password": confirmCtr.text.toString().trim(),
+          "new_password": newpassCtr.text.toString().trim(),
+          "new_password_confirmation": confirmCtr.text.toString().trim(),
         },
         apiEndPoint: ApiUrl.changePassword,
         allowHeader: true, onResponse: (data) {

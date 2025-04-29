@@ -336,7 +336,7 @@ class ServicesScreenConstant {
   static const String enterDescription = 'Enter Description';
 
   static const String keyword = 'Keyword';
-  static const String enterKeyword = 'Enter Keyword(s)';
+  static const String enterKeyword = 'Enter Keywords';
 
   static const String category = 'Category';
   static const String selectCategory = 'Select Category';
