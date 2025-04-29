@@ -30,7 +30,7 @@ class HomeScreenController extends GetxController {
   RxString message = "".obs;
   InternetController networkManager = Get.find<InternetController>();
   var pageController = PageController();
-  var currentPage = 0;
+  var currentPage = 1;
   late Timer? timer =
       Timer.periodic(const Duration(seconds: 10), (Timer timer) {});
   late TextEditingController searchCtr;

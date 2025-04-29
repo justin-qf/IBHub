@@ -33,7 +33,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   var controller = Get.put(ServiceDetailScreenController());
   bool showTitle = false;
   double? percentage;
-  final ScrollController scrollController = ScrollController();
 
   String businessName = '';
   String businessId = '';
@@ -42,9 +41,11 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String phone = '';
   String address = '';
   double? businessReviewsAvgRating = 0.0;
+
   @override
   void initState() {
     getUserData();
+    controller.scrollController.addListener(scrollListener);
     super.initState();
   }
 
@@ -64,9 +65,37 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
 
     futureDelay(() {
-      controller.getServiceList(context, 1, true, idUsedinCtr);
+      controller.getServiceList(context, 1, true, idUsedinCtr,
+          isFirstTime: true);
     }, isOneSecond: false);
+
     setState(() {});
+  }
+
+  void scrollListener() {
+    if (controller.scrollController.position.pixels ==
+            controller.scrollController.position.maxScrollExtent &&
+        controller.nextPageURL.value.isNotEmpty &&
+        !controller.isFetchingMore.value) {
+      if (!mounted) return;
+      setState(() => controller.isFetchingMore.value = true);
+      controller.currentPage++;
+      Future.delayed(
+        Duration.zero,
+        () {
+          controller
+              .getServiceList(context, controller.currentPage, true,
+                  controller.bussinessID.value,
+                  isFromLoadMore: true)
+              .whenComplete(() {
+            if (mounted) {
+              // controller.isFetchingMore.value = false;
+              setState(() => controller.isFetchingMore.value = false);
+            }
+          });
+        },
+      );
+    }
   }
 
   @override
@@ -95,7 +124,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 width: Device.width,
                 decoration: BoxDecoration(
                   color: controller.bgColor.value,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25),
                   ),
@@ -120,8 +149,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                 borderRadius: BorderRadius.circular(50)),
                             child: SvgPicture.asset(
                               Asset.arrowBack,
-                              colorFilter:
-                                  ColorFilter.mode(black, BlendMode.srcIn),
+                              colorFilter: const ColorFilter.mode(
+                                  black, BlendMode.srcIn),
                               height: 24,
                               fit: BoxFit.contain,
                             ),
@@ -217,7 +246,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                           ))!
                               .then((value) {});
                         }, isFromDetailScreen: true)
-                      : SizedBox.shrink()),
+                      : const SizedBox.shrink()),
                   // getHomeLable('Services List', () {
                   //   Get.to(ServiceScreen(
                   //     data: widget.isFromProfile == true ? null : widget.item,
@@ -230,7 +259,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                controller: controller.scrollController,
+                padding: EdgeInsets.only(bottom: 5.h),
+                physics: const BouncingScrollPhysics(),
                 child: Obx(
                   () {
                     return controller.isServiceLoading.value
@@ -247,16 +278,50 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
                                 clipBehavior: Clip.antiAlias,
+                                itemCount: controller.serviceList.length +
+                                    (controller.nextPageURL.value.isNotEmpty
+                                        ? 1
+                                        : 0),
                                 itemBuilder: (context, index) {
-                                  ServiceDataList data =
-                                      controller.serviceList[index];
-                                  return controller.getServiceListItem(
-                                      isFromProfile: widget.isFromProfile,
-                                      context,
-                                      data);
+                                  if (index < controller.serviceList.length) {
+                                    ServiceDataList data =
+                                        controller.serviceList[index];
+                                    return controller.getServiceListItem(
+                                        isFromProfile: widget.isFromProfile,
+                                        context,
+                                        data);
+                                  } else if (controller.isFetchingMore.value) {
+                                    return Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.h),
+                                      child: const Center(
+                                        child: SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                              color: primaryColor),
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
                                 },
-                                itemCount: controller.serviceList.length)
-                            : Container();
+                              )
+                            : controller.isFetchingMore.value
+                                ? Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.h),
+                                    child: const Center(
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: CircularProgressIndicator(
+                                            color: primaryColor),
+                                      ),
+                                    ),
+                                  )
+                                : Container();
                   },
                 ),
               ),

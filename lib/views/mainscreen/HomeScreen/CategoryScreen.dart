@@ -12,6 +12,7 @@ import 'package:ibh/controller/category_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -50,6 +51,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
+              controller.refreshController.refreshCompleted();
             }
           });
         },
@@ -80,30 +82,75 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           children: [
             getDynamicSizedBox(height: 5.h),
-            getCommonToolbar(CategoryScreenViewConst.category, showBackButton: true, onClick: () {
+            getCommonToolbar(CategoryScreenViewConst.category,
+                showBackButton: true, onClick: () {
               Get.back();
             }),
             Expanded(
-              child: Obx(() {
-                switch (controller.state.value) {
-                  case ScreenState.apiLoading:
-                  case ScreenState.noNetwork:
-                  case ScreenState.noDataFound:
-                  case ScreenState.apiError:
-                    return apiOtherStates(controller.state.value, controller,
-                        controller.categoryList, () {
-                      controller.getCategoryList(
-                          context, controller.currentPage, true);
-                    });
-                  case ScreenState.apiSuccess:
-                    return apiSuccess(controller.state.value);
-                  // ignore: unreachable_switch_default
-                  default:
-                    Container();
-                }
-                return Container();
-              }),
-            )
+              child: SmartRefresher(
+                controller: controller.refreshController,
+                enablePullDown: true,
+                enablePullUp: false,
+                header: const WaterDropMaterialHeader(
+                    backgroundColor: primaryColor, color: white),
+                onRefresh: () async {
+                  futureDelay(() {
+                    controller.getCategoryList(
+                        context, controller.currentPage, false,
+                        isFirstTime: true);
+                  }, isOneSecond: false);
+                  controller.refreshController.refreshCompleted();
+                },
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Obx(() {
+                        switch (controller.state.value) {
+                          case ScreenState.apiLoading:
+                          case ScreenState.noNetwork:
+                          case ScreenState.noDataFound:
+                          case ScreenState.apiError:
+                            return SizedBox(
+                                height: Device.height / 1.5,
+                                child: apiOtherStates(controller.state.value,
+                                    controller, controller.categoryList, () {
+                                  controller.getCategoryList(
+                                      context, controller.currentPage, true);
+                                }));
+                          case ScreenState.apiSuccess:
+                            return apiSuccess(controller.state.value);
+                          default:
+                            Container();
+                        }
+                        return Container();
+                      }),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            // Expanded(
+            //   child: Obx(() {
+            //     switch (controller.state.value) {
+            //       case ScreenState.apiLoading:
+            //       case ScreenState.noNetwork:
+            //       case ScreenState.noDataFound:
+            //       case ScreenState.apiError:
+            //         return apiOtherStates(controller.state.value, controller,
+            //             controller.categoryList, () {
+            //           controller.getCategoryList(
+            //               context, controller.currentPage, true);
+            //         });
+            //       case ScreenState.apiSuccess:
+            //         return apiSuccess(controller.state.value);
+            //       // ignore: unreachable_switch_default
+            //       default:
+            //         Container();
+            //     }
+            //     return Container();
+            //   }),
+            // )
           ],
         ),
       ),
@@ -120,6 +167,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
         mainAxisSpacing: 10,
         crossAxisSpacing: 4,
+        shrinkWrap: true,
         itemCount: controller.categoryList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
         itemBuilder: (context, index) {
