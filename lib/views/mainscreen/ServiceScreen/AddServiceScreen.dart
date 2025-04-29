@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
+import 'package:ibh/componant/input/style.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -209,15 +210,22 @@ class _ServicescreenState extends State<AddServicescreen> {
                           ),
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.red), // or your preferred color
+                            borderSide:
+                                const BorderSide(color: Colors.redAccent),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                            borderSide: BorderSide(color: primaryColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                const BorderSide(color: Colors.redAccent),
                           ),
                           hintText: 'Enter keyword',
-                          hintStyle: const TextStyle(color: grey),
+                          hintStyle: const TextStyle(
+                              color: const Color.fromARGB(255, 145, 145, 145)),
+                          errorStyle: styleTextForErrorFieldHint(),
                           errorText: ctr.keywordsModel.value.error,
                           filled: true,
                           fillColor: inputBgColor,
@@ -240,6 +248,14 @@ class _ServicescreenState extends State<AddServicescreen> {
                         },
                       ),
                     ),
+                    // if (ctr.keywordsCtr.text == '')
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Note:Press Enter to add the keyword',
+                          style: TextStyle(
+                              fontFamily: dM_sans_regular, color: grey),
+                        )),
                     getDynamicSizedBox(height: 2.h),
                     Obx(() => ctr.keywords.isNotEmpty
                         ? Container(
@@ -259,8 +275,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                                       style: const TextStyle(
                                           color: primaryColor,
                                           fontFamily: dM_sans_regular)),
-                                  backgroundColor:
-                                      secondaryColor.withOpacity(0.6),
+                                  backgroundColor: white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
