@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home: const Splashscreen(),
+        home: const SplashScreen(),
         defaultTransition: Transition.fadeIn,
       );
     });
