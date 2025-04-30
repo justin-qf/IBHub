@@ -158,7 +158,8 @@ setSearchBars(context, controller, String tag,
                         futureDelay(() {
                           Get.find<SearchScreenController>().getBusinessList(
                               context, 1, false,
-                              keyword: controller.text.toString());
+                              keyword: controller.text.toString(),
+                              isFirstTime: true);
                         }, isOneSecond: false);
                         Get.find<SearchScreenController>()
                             .hideKeyboard(context);

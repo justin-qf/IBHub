@@ -40,6 +40,7 @@ class LoginData {
 class User {
   int id;
   String name;
+  String appUrl;
   String email;
   String phone;
   String businessName;
@@ -55,6 +56,7 @@ class User {
   User({
     required this.id,
     required this.name,
+    required this.appUrl,
     required this.email,
     required this.phone,
     required this.businessName,
@@ -71,6 +73,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         name: json["name"] ?? '',
+        appUrl: json["app_url"] ?? '',
         email: json["email"] ?? '',
         phone: json["phone"] ?? '',
         businessName: json["business_name"] ?? '',
@@ -89,6 +92,7 @@ class User {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "app_url": appUrl,
         "email": email,
         "phone": phone,
         "business_name": businessName,

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:ibh/api_handle/CommonApiStructure.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -771,7 +773,7 @@ class FavouriteController extends GetxController {
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
+      // message.value = ServerError.servererror;
       // showDialogForScreen(
       //     context, CategoryScreenConstant.title, ServerError.servererror,
       //     callback: () {});
@@ -798,7 +800,6 @@ class FavouriteController extends GetxController {
               .then((value) {
             currentPage = 1;
             futureDelay(() {
-              logcat("isREfressh", "DONE");
               getFavouriteList(context, currentPage, true, isFirstTime: true);
             }, isOneSecond: false);
           });
@@ -814,7 +815,7 @@ class FavouriteController extends GetxController {
                 color: black.withOpacity(0.2),
                 spreadRadius: 0.1,
                 blurRadius: 5,
-                offset: const Offset(0.5, 0.5)),
+                offset: const Offset(0.5, 0.5))
           ],
         ),
         margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 2.h),
@@ -873,22 +874,43 @@ class FavouriteController extends GetxController {
                                 color: black,
                                 fontWeight: FontWeight.w900)),
                         const Spacer(),
-                        // RatingBar.builder(
-                        //   initialRating: item.businessReviewsAvgRating ?? 0.0,
-                        //   minRating: 1,
-                        //   direction: Axis.horizontal,
-                        //   allowHalfRating: true,
-                        //   itemCount: 1,
-                        //   itemSize: 3.5.w,
-                        //   unratedColor: Colors.orange,
-                        //   itemBuilder: (context, _) => const Icon(
-                        //     Icons.star,
-                        //     color: Colors.orange,
-                        //   ),
-                        //   onRatingUpdate: (rating) {
-                        //     logcat("RATING", rating);
-                        //   },
-                        // ),
+                        GestureDetector(
+                            onTap: () {
+                              item.isFavorite == true
+                                  ? removeFavouriteAPI(
+                                      context,
+                                      networkManager,
+                                      item.businessId.toString(),
+                                      "Favourite", onClick: () {
+                                      futureDelay(() {
+                                        currentPage = 1;
+                                        getFavouriteList(context, 1, false,
+                                            isFirstTime: true);
+                                      }, isOneSecond: false);
+                                    })
+                                  : addFavouriteAPI(
+                                      context,
+                                      networkManager,
+                                      item.businessId.toString(),
+                                      "Favourite", onClick: () {
+                                      futureDelay(() {
+                                        currentPage = 1;
+                                        getFavouriteList(context, 1, false,
+                                            isFirstTime: true);
+                                      }, isOneSecond: false);
+                                    });
+                              // controller.getIsProductAddToFav(
+                              //     controller.isFavourite.value);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              child: item.isFavorite == true
+                                  ? SvgPicture.asset(
+                                      Asset.heart2,
+                                      height: 2.5.h,
+                                    )
+                                  : SvgPicture.asset(Asset.heart),
+                            ))
                         // getText(
                         //   item.businessReviewsAvgRating != null
                         //       ? (item.businessReviewsAvgRating ?? 0.0)

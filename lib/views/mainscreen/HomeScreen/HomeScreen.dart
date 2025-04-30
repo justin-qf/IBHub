@@ -6,7 +6,7 @@ import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
-import 'package:ibh/configs/assets_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
@@ -16,6 +16,7 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import '../../../../configs/colors_constant.dart';
@@ -46,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    //scrollController.dispose();
     controller.currentPage = 1;
     controller.businessList.clear();
     super.dispose();
@@ -92,29 +92,64 @@ class _HomeScreenState extends State<HomeScreen> {
                 // getCommonToolbar(HomeScreenconst.dashboard,
                 //     showBackButton: false),
                 Expanded(
-                  child: SingleChildScrollView(
-                    // padding: EdgeInsets.only(bottom: 1.h),
-                    physics: const NeverScrollableScrollPhysics(),
-                    child: Obx(() {
-                      switch (controller.state.value) {
-                        case ScreenState.apiLoading:
-                        case ScreenState.noNetwork:
-                        case ScreenState.noDataFound:
-                        case ScreenState.apiError:
-                          return SizedBox(
-                            height: Device.height / 1.3,
-                            child: apiOtherStates(controller.state.value,
-                                controller, controller.categoryList, () {}),
-                          );
-                        case ScreenState.apiSuccess:
-                          return apiSuccess(controller.state.value);
-                        // ignore: unreachable_switch_default
-                        default:
-                          Container();
-                      }
-                      return Container();
-                    }),
+                  child: SmartRefresher(
+                    physics: const BouncingScrollPhysics(),
+                    controller: controller.refreshController,
+                    enablePullDown: true,
+                    enablePullUp: false,
+                    header: const WaterDropMaterialHeader(
+                        backgroundColor: primaryColor, color: white),
+                    onRefresh: () async {
+                      controller.currentPage = 1;
+                      futureDelay(() {
+                        controller.getCategoryList(context);
+                        controller.getBusinessList(context, 1, false,
+                            isFirstTime: true);
+                      }, isOneSecond: false);
+                      controller.refreshController.refreshCompleted();
+                    },
+                    child: CustomScrollView(
+                      controller: controller.scrollController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Obx(() {
+                            switch (controller.state.value) {
+                              case ScreenState.apiLoading:
+                              case ScreenState.noNetwork:
+                              case ScreenState.noDataFound:
+                              case ScreenState.apiError:
+                                return SizedBox(
+                                  height: Device.height / 1.3,
+                                  child: apiOtherStates(controller.state.value,
+                                      controller, controller.categoryList, () {
+                                    controller.currentPage = 1;
+                                    futureDelay(() {
+                                      controller.getCategoryList(context);
+                                      controller.getBusinessList(
+                                          context, 1, false,
+                                          isFirstTime: true);
+                                    }, isOneSecond: false);
+                                    controller.refreshController
+                                        .refreshCompleted();
+                                  }),
+                                );
+                              case ScreenState.apiSuccess:
+                                return apiSuccess(controller.state.value);
+                              default:
+                                Container();
+                            }
+                            return Container();
+                          }),
+                        )
+                      ],
+                    ),
                   ),
+
+                  //  SingleChildScrollView(
+                  //   physics: const NeverScrollableScrollPhysics(),
+                  //   child:
+                  // ),
                 ),
               ],
             ),
@@ -180,58 +215,142 @@ class _HomeScreenState extends State<HomeScreen> {
             Obx(
               () {
                 return controller.businessList.isNotEmpty
-                    ? SizedBox(
-                        height: Device.height,
-                        child: SingleChildScrollView(
-                          controller: controller.scrollController,
-                          physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.only(bottom: 48.h),
-                          child: ListView.builder(
-                            // controller: controller.scrollController,
-                            padding: EdgeInsets.only(
-                                left: 1.w, right: 1.w, top: 2.h),
-                            physics: const NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            clipBehavior: Clip.antiAlias,
-                            itemCount: controller.businessList.length +
-                                (controller.nextPageURL.value.isNotEmpty
-                                    ? 1
-                                    : 0),
-                            itemBuilder: (context, index) {
-                              if (index < controller.businessList.length) {
-                                BusinessData data =
-                                    controller.businessList[index];
-                                return controller.getBusinessListItem(
-                                    context, data);
-                              } else if (controller.isFetchingMore) {
-                                return Center(
-                                    child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 2.h),
-                                        child: const CircularProgressIndicator(
-                                            color: primaryColor)));
-                              } else {
-                                return controller.isFetchingMore
-                                    ? Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 2.h),
-                                        child: const Center(
-                                          child: SizedBox(
-                                            height: 30,
-                                            width: 30,
-                                            child: CircularProgressIndicator(
-                                                color: primaryColor),
-                                          ),
+                    ? SingleChildScrollView(
+                        // controller: controller.scrollController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.only(bottom: 5.h),
+                        child: ListView.builder(
+                          padding:
+                              EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          clipBehavior: Clip.antiAlias,
+                          itemCount: controller.businessList.length +
+                              (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index < controller.businessList.length) {
+                              BusinessData data =
+                                  controller.businessList[index];
+                              return controller.getBusinessListItem(
+                                  context, data);
+                            } else if (controller.isFetchingMore) {
+                              return Center(
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.h),
+                                      child: const CircularProgressIndicator(
+                                          color: primaryColor)));
+                            } else {
+                              return controller.isFetchingMore
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.h),
+                                      child: const Center(
+                                        child: SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                              color: primaryColor),
                                         ),
-                                      )
-                                    : Container();
-                              }
-                            },
-                          ),
+                                      ),
+                                    )
+                                  : Container();
+                            }
+                          },
                         ),
                       )
-                    : Container();
+
+                    // SizedBox(
+                    //     height: Device.height,
+                    //     child: SmartRefresher(
+                    //       physics: const BouncingScrollPhysics(),
+                    //       controller: controller.refreshController,
+                    //       enablePullDown: true,
+                    //       enablePullUp: false,
+                    //       header: const WaterDropMaterialHeader(
+                    //           backgroundColor: primaryColor, color: white),
+                    //       onRefresh: () async {
+                    //         futureDelay(() {
+                    //           controller.currentPage = 1;
+                    //           controller.getBusinessList(context, 1, false,
+                    //               isFirstTime: true);
+                    //         }, isOneSecond: false);
+                    //         controller.refreshController.refreshCompleted();
+                    //       },
+                    //       child: SingleChildScrollView(
+                    //         controller: controller.scrollController,
+                    //         physics: const BouncingScrollPhysics(),
+                    //         padding: EdgeInsets.only(bottom: 48.h),
+                    //         child: ListView.builder(
+                    //           padding: EdgeInsets.only(
+                    //               left: 1.w, right: 1.w, top: 2.h),
+                    //           physics: const NeverScrollableScrollPhysics(),
+                    //           scrollDirection: Axis.vertical,
+                    //           shrinkWrap: true,
+                    //           clipBehavior: Clip.antiAlias,
+                    //           itemCount: controller.businessList.length +
+                    //               (controller.nextPageURL.value.isNotEmpty
+                    //                   ? 1
+                    //                   : 0),
+                    //           itemBuilder: (context, index) {
+                    //             if (index < controller.businessList.length) {
+                    //               BusinessData data =
+                    //                   controller.businessList[index];
+                    //               return controller.getBusinessListItem(
+                    //                   context, data);
+                    //             } else if (controller.isFetchingMore) {
+                    //               return Center(
+                    //                   child: Padding(
+                    //                       padding: EdgeInsets.symmetric(
+                    //                           vertical: 2.h),
+                    //                       child:
+                    //                           const CircularProgressIndicator(
+                    //                               color: primaryColor)));
+                    //             } else {
+                    //               return controller.isFetchingMore
+                    //                   ? Padding(
+                    //                       padding: EdgeInsets.symmetric(
+                    //                           vertical: 2.h),
+                    //                       child: const Center(
+                    //                         child: SizedBox(
+                    //                           height: 30,
+                    //                           width: 30,
+                    //                           child: CircularProgressIndicator(
+                    //                               color: primaryColor),
+                    //                         ),
+                    //                       ),
+                    //                     )
+                    //                   : Container();
+                    //             }
+                    //           },
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   )
+                    // controller.businessList.isEmpty
+                    //     ? Center(
+                    //         child: Padding(
+                    //             padding: EdgeInsets.symmetric(vertical: 2.h),
+                    //             child: const CircularProgressIndicator(
+                    //                 color: primaryColor)))
+                    : controller.businessList.isEmpty
+                        ? SizedBox(
+                            height: 22.h,
+                            child: Center(
+                                child: SizedBox(
+                              child: Center(
+                                child: Text(
+                                  Common.businessdatanotfound,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: dM_sans_medium,
+                                      fontSize: 16.sp),
+                                ),
+                              ),
+                            )),
+                          )
+                        : Container();
               },
             )
           ]);

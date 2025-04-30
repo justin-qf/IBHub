@@ -434,6 +434,17 @@ String getEndDateOfCurrentMonth() {
   return formattedEndDate;
 }
 
+void shareOnWhatsApp(String message, String url) async {
+  final whatsappUrl =
+      Uri.parse("https://wa.me/?text=${Uri.encodeComponent('$message $url')}");
+
+  if (await canLaunchUrl(whatsappUrl)) {
+    await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not launch WhatsApp';
+  }
+}
+
 // Function to load the PNG image from the assets folder
 Future<Uint8List> loadImageFromAssets(String assetName) async {
   final ByteData data = await rootBundle.load('assets/pngs/$assetName');

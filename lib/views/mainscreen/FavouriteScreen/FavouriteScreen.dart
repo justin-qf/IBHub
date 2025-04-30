@@ -34,12 +34,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     controller.isSearch = false;
     futureDelay(() {
       controller.currentPage = 1;
-      controller.getFavouriteList(
-        context,
-        1,
-        false,
-        isFirstTime: true,
-      );
+      controller.getFavouriteList(context, 1, false, isFirstTime: true);
     }, isOneSecond: false);
     controller.scrollController.addListener(scrollListener);
     super.initState();

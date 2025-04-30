@@ -591,7 +591,8 @@ class ServerError {
 
 class PrivacyPolicyScreenText {
   static const privacyPolicy = 'Privacy Policy';
-  static const url = 'https://swoooshindia.com/privacy_policy.php';
+  static const termAndCOndition = 'terms & Conditions';
+  static const url = 'http://www.indianbusinesshub.in/privacy_policy.html';
   static const googleUrl = 'https://www.google.com/';
 }
 
@@ -719,6 +720,7 @@ class Logout {
 class Common {
   static const error = 'Error';
   static const datanotfound = "Data Not Found";
+  static const businessdatanotfound = "Business Data Not Found";
   static const viewMore = "View More";
   static const viewAll = "View All";
   static const alert = "Alert";

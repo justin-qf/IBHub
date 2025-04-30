@@ -31,9 +31,10 @@ Widget apiOtherStates(
     Container();
   }
   if (state == ScreenState.noDataFound) {
-    // button = getMiniButton(() {
-    //   Get.back();
-    // }, BottomConstant.back);
+    button = getMiniButton(() {
+      // Get.back();
+      onClick();
+    }, BottomConstant.tryAgain);
   }
   if (state == ScreenState.noNetwork) {
     button = getMiniButton(() {
@@ -43,8 +44,9 @@ Widget apiOtherStates(
 
   if (state == ScreenState.apiError) {
     button = getMiniButton(() {
-      Get.back();
-    }, BottomConstant.back);
+      // Get.back();
+      onClick();
+    }, BottomConstant.tryAgain);
   }
   return Center(
     child: Container(

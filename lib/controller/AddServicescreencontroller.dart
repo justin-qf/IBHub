@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
+import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
@@ -128,12 +129,12 @@ class AddServicescreencontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (categoryModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (imageModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
     }
-
+    // else if (imageModel.value.isValidate == false) {
+    //   isFormInvalidate.value = false;
+    // }
     update();
   }
 
@@ -849,6 +850,10 @@ class AddServicescreencontroller extends GetxController {
   // }
 
   void addUpdateServiceApi(BuildContext context, bool isFromAdd) async {
+    if (imageURl.value.isEmpty) {
+      imageValidationPopupDialogs(context);
+      return;
+    }
     var loadingIndicator = LoadingProgressDialog();
     loadingIndicator.show(context, '');
 

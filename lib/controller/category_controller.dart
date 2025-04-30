@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
-import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
@@ -94,9 +92,10 @@ class CategoryController extends GetxController {
             callback: () {});
       }
     } catch (e) {
+      currentPage = 1;
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
+      // message.value = ServerError.servererror;
       // showDialogForScreen(
       //     context, CategoryScreenConstant.title, ServerError.servererror,
       //     callback: () {});
@@ -202,7 +201,6 @@ class CategoryController extends GetxController {
   getOldListItem(BuildContext context, {required CategoryListData data}) {
     return GestureDetector(
       onTap: () {
-        // getServiceDetails(context, data);
         Get.to(CategoryBusinessScreen(data))!.then((value) {});
       },
       child: Container(
@@ -239,9 +237,9 @@ class CategoryController extends GetxController {
                     child: CircularProgressIndicator(color: primaryColor),
                   ),
                   errorWidget: (context, url, error) => Image.asset(
-                    Asset.placeholder,
+                    Asset.bussinessPlaceholder,
                     height: 9.h,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
@@ -8,7 +9,6 @@ import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/full_image_viewer.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
@@ -20,6 +20,8 @@ import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
+import 'package:ibh/views/privacypolicy/PrivacyPolicyScreen.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -72,10 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                           EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
                       decoration: BoxDecoration(
                         color: secondaryColor.withOpacity(0.6),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(35),
-                          bottomRight: Radius.circular(35),
-                        ),
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(35),
+                            bottomRight: Radius.circular(35)),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -112,11 +113,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       imageBuilder: (context, imageProvider) =>
                                           CircleAvatar(
                                         radius: 25.h,
+                                        backgroundColor: white,
                                         backgroundImage: imageProvider,
                                       ),
                                       errorWidget: (context, url, error) =>
                                           CircleAvatar(
                                               radius: 25.h,
+                                              backgroundColor: white,
                                               child: const Icon(Icons.person)),
                                     ));
                               })),
@@ -126,59 +129,42 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 3.w),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Obx(
                                         () {
-                                          return Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                controller.userName.value
-                                                        .isNotEmpty
-                                                    ? controller.userName.value
-                                                        .capitalize!
-                                                    : "Your Name",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: black,
-                                                    fontFamily:
-                                                        dM_sans_semiBold,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                            ],
+                                          return Text(
+                                            controller.userName.value.isNotEmpty
+                                                ? controller
+                                                    .userName.value.capitalize!
+                                                : "Your Name",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: black,
+                                                fontFamily: dM_sans_semiBold,
+                                                fontWeight: FontWeight.w800),
                                           );
                                         },
                                       ),
                                       Obx(
                                         () {
-                                          return Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                controller.bussiness.value
-                                                        .isNotEmpty
-                                                    ? controller.bussiness.value
-                                                        .capitalize!
-                                                    : "Your Bussiness",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    fontSize: 16.sp,
-                                                    color: black,
-                                                    fontFamily:
-                                                        dM_sans_semiBold,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
+                                          return Text(
+                                            controller
+                                                    .bussiness.value.isNotEmpty
+                                                ? controller
+                                                    .bussiness.value.capitalize!
+                                                : "Your Bussiness",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: black,
+                                                fontFamily: dM_sans_semiBold,
+                                                fontWeight: FontWeight.w500),
                                           );
                                         },
                                       ),
@@ -262,11 +248,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                             //     icons: Icons.share),
                             getMenuListItem(
                                 callback: () async {
-                                  //share APP
+                                  logcat("APKURL::",
+                                      controller.apkUrl.value.toString());
+                                  Share.share(
+                                      controller.apkUrl.value.toString());
                                 },
                                 title: 'Share App',
                                 icons: Icons.share),
-
                             // getMenuListItem(
                             //   title: 'Terms and Conditions',
                             //   icons: Icons.description,
@@ -280,36 +268,40 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
-
-                            getDynamicSizedBox(height: 13.h),
-
-                            Container(
-                              // color: Colors.yellow,
-                              padding: EdgeInsets.all(5),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // Icon(Icons.description),
-                                      const Text(
-                                        'Terms & Conditions',
-                                        style: TextStyle(
-                                          color: primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: dM_sans_regular,
+                            getDynamicSizedBox(height: 10.h),
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(const PrivacyPolicyScreen());
+                              },
+                              child: Container(
+                                // color: Colors.yellow,
+                                padding: EdgeInsets.only(
+                                    top: 3.h, bottom: 3.h, left: 2.w),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Terms & Conditions',
+                                          style: TextStyle(
+                                            color: primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: dM_sans_regular,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Positioned(
-                                      bottom: 1,
-                                      child: Container(
-                                          width: 37.w,
-                                          height: 0.2.h,
-                                          color: primaryColor)),
-                                ],
+                                      ],
+                                    ),
+                                    Positioned(
+                                        bottom: 1,
+                                        child: Container(
+                                            width: 37.w,
+                                            height: 0.2.h,
+                                            color: primaryColor)),
+                                  ],
+                                ),
                               ),
                             ),
                             getDynamicSizedBox(height: 2.h),

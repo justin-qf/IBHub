@@ -97,10 +97,13 @@ void removeFavouriteAPI(context, InternetController networkManager,
     logcat("tag", data);
     logcat("statusCode::", response.statusCode.toString());
     if (response.statusCode == 200) {
-      // onClick!(true);
       if (data['success'] == true) {
         showCustomToast(context, data['message'].toString());
-        Get.find<ServiceDetailScreenController>().getIsProductAddToFav(false);
+        if (onClick != null) {
+          onClick();
+        } else {
+          Get.find<ServiceDetailScreenController>().getIsProductAddToFav(false);
+        }
       } else {
         showCustomToast(context, data['message'].toString());
       }

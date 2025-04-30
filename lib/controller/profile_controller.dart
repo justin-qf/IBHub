@@ -32,6 +32,9 @@ class ProfileController extends GetxController {
   RxString number = "".obs;
   RxString email = "".obs;
   RxString profilePic = "".obs;
+  RxString apkUrl =
+      "https://play.google.com/store/apps/details?id=com.app.indianbussinesshub"
+          .obs;
   RxString gender = "".obs;
   AnimationController? controllers;
   RxString? referCode = "".obs;
@@ -51,6 +54,7 @@ class ProfileController extends GetxController {
       number.value = retrievedObject.phone;
       bussiness.value = retrievedObject.businessName;
       profilePic.value = retrievedObject.visitingCardUrl;
+      apkUrl.value = "";
     }
     update();
     states.value = ScreenState.apiSuccess;
@@ -66,6 +70,7 @@ class ProfileController extends GetxController {
     }, onResponse: (response) {
       var profileData = LoginModel.fromJson(response);
       profilePic.value = profileData.data.user.visitingCardUrl;
+      apkUrl.value = profileData.data.user.appUrl;
       update();
     }, networkManager: networkManager);
   }

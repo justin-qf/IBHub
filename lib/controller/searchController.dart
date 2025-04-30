@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
@@ -781,13 +783,13 @@ class SearchScreenController extends GetxController {
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
+      // message.value = ServerError.servererror;
       // if (hideloading != true) {
       //   loadingIndicator.hide(context);
       // }
-      showDialogForScreen(
-          context, SearchScreenConstant.titleScreen, ServerError.servererror,
-          callback: () {});
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
@@ -870,12 +872,19 @@ class SearchScreenController extends GetxController {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(item.businessName,
-                            style: TextStyle(
-                                fontFamily: dM_sans_semiBold,
-                                fontSize: 15.sp,
-                                color: black,
-                                fontWeight: FontWeight.w900)),
+                        SizedBox(
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 64.w
+                              : 70.w,
+                          child: Text(item.businessName,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 15.sp,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: black,
+                                  fontWeight: FontWeight.w900)),
+                        ),
                         const Spacer(),
                         // RatingBar.builder(
                         //   initialRating: item.businessReviewsAvgRating ?? 0.0,
@@ -910,12 +919,18 @@ class SearchScreenController extends GetxController {
                       ],
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Text(item.name,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            fontSize: 14.sp,
-                            color: black,
-                            fontWeight: FontWeight.w500)),
+                    SizedBox(
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 64.w
+                          : 70.w,
+                      child: Text(item.name,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontFamily: dM_sans_regular,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
                     getDynamicSizedBox(height: 1.h),
                     Text(
                         item.address.isNotEmpty

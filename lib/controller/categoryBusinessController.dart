@@ -773,13 +773,13 @@ class CategoryBusinessController extends GetxController {
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
+      // message.value = ServerError.servererror;
       // if (hideloading != true) {
       //   loadingIndicator.hide(context);
       // }
-      showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
-          callback: () {});
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
