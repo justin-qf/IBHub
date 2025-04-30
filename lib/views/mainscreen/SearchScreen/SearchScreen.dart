@@ -177,10 +177,11 @@ class _SearchScreenState extends State<SearchScreen> {
             return controller.getBusinessListItem(context, data);
           } else if (controller.isFetchingMore) {
             return Center(
-                child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 2.h),
-                    child:
-                        const CircularProgressIndicator(color: primaryColor)));
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                child: const CircularProgressIndicator(color: primaryColor),
+              ),
+            );
           } else {
             return Container();
           }
@@ -201,7 +202,7 @@ class _SearchScreenState extends State<SearchScreen> {
       //       return controller.getBusinessListItem(context, data);
       //     } else if (controller.isFetchingMore) {
       //       return Center(
-      //         child: Padding(
+      //         child: Padding(a
       //           padding: EdgeInsets.symmetric(vertical: 2.h),
       //           child: const CircularProgressIndicator(color: primaryColor),
       //         ),

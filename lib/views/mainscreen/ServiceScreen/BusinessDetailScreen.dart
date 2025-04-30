@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -153,6 +155,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         Container(
                           margin: EdgeInsets.only(left: 4.w, top: 2.h),
                           child: getleftsidebackbtn(
+                            isbussinessScreen: true,
                             istitle: false,
                             backFunction: () {
                               Get.back(result: true);
@@ -191,126 +194,154 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       ],
                     ),
                   ),
-                  // // Show loader when palette is being generated
-                  // if (controller.isLoadingPalette.value)
-                  //   Container(
-                  //     width: Device.width,
-                  //     height: 30.h,
-                  //     color: Colors.black
-                  //         .withOpacity(0.5), // Semi-transparent background
-                  //     child: const Center(
-                  //       child: CircularProgressIndicator(
-                  //         color: primaryColor,
-                  //       ),
-                  //     ),
-                  //   ),
+                  Positioned(
+                      top: 7.h,
+                      right: 6.w,
+                      child: Obx(() {
+                        return GestureDetector(
+                            onTap: () {
+                              controller.toggleFavourite();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              child: controller.isFavourite.value
+                                  ? SvgPicture.asset(Asset.heart2)
+                                  : SvgPicture.asset(Asset.heart),
+                            ));
+                      }))
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  getDynamicSizedBox(height: 1.h),
-                  Row(
+            Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      getDynamicSizedBox(height: 1.h),
                       controller.getLableText(
                           widget.item != null
                               ? widget.item!.businessName
                               : businessName,
                           isMainTitle: true),
-                      const Spacer(),
+                      // controller.getCategoryLable(widget.item.businessName),
+                      getDynamicSizedBox(height: 1.h),
+                      GestureDetector(
+                        onTap: () {
+                          lanchEmail(
+                              widget.item != null ? widget.item!.email : email);
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.email,
+                              size: 18.sp,
+                            ),
+                            getDynamicSizedBox(width: 1.w),
+                            controller.getLableText(
+                                widget.item != null
+                                    ? widget.item!.email
+                                    : email,
+                                isMainTitle: false),
+                          ],
+                        ),
+                      ),
+                      getDynamicSizedBox(height: 1.h),
+                      GestureDetector(
+                        onTap: () {
+                          showShareSheetPopup(context, rightbtn: () {
+                            launchWhatsApp(
+                                context,
+                                widget.item != null
+                                    ? widget.item!.phone
+                                    : phone);
+                          }, leftbtn: () {
+                            launchPhoneCall(widget.item != null
+                                ? widget.item!.phone
+                                : phone);
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.call, size: 18.sp),
+                            getDynamicSizedBox(width: 1.w),
+                            controller.getLableText(
+                                widget.item != null
+                                    ? widget.item!.phone
+                                    : phone,
+                                isMainTitle: false)
+                          ],
+                        ),
+                      ),
+                      getDynamicSizedBox(height: 1.h),
+                      // if (widget.item != null && widget.item!.address.isNotEmpty)
+                      //   controller.getLableText('Address : ', isMainTitle: false),
+                      getDynamicSizedBox(height: 0.5.h),
+                      if (widget.item != null &&
+                          widget.item!.address.isNotEmpty)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(Icons.location_on, size: 18.sp),
+                            getDynamicSizedBox(width: 1.w),
+                            controller.getTexts(
+                              widget.item != null
+                                  ? widget.item!.address.toString()
+                                  : address,
+                            )
+                          ],
+                        ),
+                      getDynamicSizedBox(
+                          height: Device.screenType == sizer.ScreenType.mobile
+                              ? widget.item != null &&
+                                      widget.item!.address.isNotEmpty
+                                  ? 1.h
+                                  : 0.0
+                              : 0.8.h),
+                      getDynamicSizedBox(
+                          height: Device.screenType == sizer.ScreenType.mobile
+                              ? 1.h
+                              : 0.8.h),
+                      // controller.getLableText('Services List',
+                      //     isMainTitle: false),
+
+                      Obx(() => controller.serviceList.isNotEmpty
+                          ? getHomeLable('Services List', () {
+                              Get.to(ServiceScreen(
+                                data: widget.isFromProfile == true
+                                    ? null
+                                    : widget.item,
+                                id: businessId,
+                              ))!
+                                  .then((value) {});
+                            }, isFromDetailScreen: true, isShowSeeMore: false)
+                          : SizedBox.shrink()),
+                      // getHomeLable('Services List', () {
+                      //   Get.to(ServiceScreen(
+                      //     data: widget.isFromProfile == true ? null : widget.item,
+                      //     id: businessId,
+                      //   ))!
+                      //       .then((value) {});
+                      // }, isFromDetailScreen: true),
                     ],
                   ),
-                  // controller.getCategoryLable(widget.item.businessName),
-                  getDynamicSizedBox(height: 1.h),
-                  GestureDetector(
+                ),
+                Positioned(
+                  right: 8.w,
+                  top: 4.5.h,
+                  child: GestureDetector(
                     onTap: () {
-                      lanchEmail(
-                          widget.item != null ? widget.item!.email : email);
+                      print('Share pdf');
                     },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.email,
-                          size: 18.sp,
-                        ),
-                        getDynamicSizedBox(width: 1.w),
-                        controller.getLableText(
-                            widget.item != null ? widget.item!.email : email,
-                            isMainTitle: false),
-                      ],
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(Icons.share),
                     ),
                   ),
-                  getDynamicSizedBox(height: 1.h),
-                  GestureDetector(
-                    onTap: () {
-                      launchPhoneCall(
-                          widget.item != null ? widget.item!.phone : phone);
-                    },
-                    child: Row(
-                      children: [
-                        Icon(Icons.call, size: 18.sp),
-                        getDynamicSizedBox(width: 1.w),
-                        controller.getLableText(
-                            widget.item != null ? widget.item!.phone : phone,
-                            isMainTitle: false)
-                      ],
-                    ),
-                  ),
-                  getDynamicSizedBox(height: 1.h),
-                  // if (widget.item != null && widget.item!.address.isNotEmpty)
-                  //   controller.getLableText('Address : ', isMainTitle: false),
-                  getDynamicSizedBox(height: 0.5.h),
-                  if (widget.item != null && widget.item!.address.isNotEmpty)
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.location_on, size: 18.sp),
-                        getDynamicSizedBox(width: 1.w),
-                        controller.getTexts(
-                          widget.item != null
-                              ? widget.item!.address.toString()
-                              : address,
-                        )
-                      ],
-                    ),
-                  getDynamicSizedBox(
-                      height: Device.screenType == sizer.ScreenType.mobile
-                          ? widget.item != null &&
-                                  widget.item!.address.isNotEmpty
-                              ? 1.h
-                              : 0.0
-                          : 0.8.h),
-                  getDynamicSizedBox(
-                      height: Device.screenType == sizer.ScreenType.mobile
-                          ? 1.h
-                          : 0.8.h),
-                  // controller.getLableText('Services List',
-                  //     isMainTitle: false),
-
-                  Obx(() => controller.serviceList.isNotEmpty
-                      ? getHomeLable('Services List', () {
-                          Get.to(ServiceScreen(
-                            data: widget.isFromProfile == true
-                                ? null
-                                : widget.item,
-                            id: businessId,
-                          ))!
-                              .then((value) {});
-                        }, isFromDetailScreen: true, isShowSeeMore: false)
-                      : SizedBox.shrink()),
-                  // getHomeLable('Services List', () {
-                  //   Get.to(ServiceScreen(
-                  //     data: widget.isFromProfile == true ? null : widget.item,
-                  //     id: businessId,
-                  //   ))!
-                  //       .then((value) {});
-                  // }, isFromDetailScreen: true),
-                ],
-              ),
+                )
+              ],
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -328,7 +359,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                           )
                         : controller.serviceList.isNotEmpty
                             ? ListView.builder(
-                                padding: EdgeInsets.only(top: 1.h),
+                                padding: EdgeInsets.only(top: 1.h, bottom: 5.h),
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
@@ -363,20 +394,26 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   }
                                 },
                               )
-                            : controller.isFetchingMore.value
-                                ? Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 2.h),
-                                    child: const Center(
-                                      child: SizedBox(
-                                        height: 30,
-                                        width: 30,
-                                        child: CircularProgressIndicator(
-                                            color: primaryColor),
-                                      ),
-                                    ),
+                            : controller.serviceList.isEmpty
+                                ? SizedBox(
+                                    height: 22.h,
+                                    child: Center(
+                                        child: getEmptyUi(isservice: true)),
                                   )
-                                : Container();
+                                : controller.isFetchingMore.value
+                                    ? Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 2.h),
+                                        child: const Center(
+                                          child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: CircularProgressIndicator(
+                                                color: primaryColor),
+                                          ),
+                                        ),
+                                      )
+                                    : Container();
                   },
                 ),
               ),

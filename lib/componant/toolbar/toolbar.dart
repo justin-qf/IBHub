@@ -631,14 +631,18 @@ getCommonToolbar(String title,
 //   );
 // }
 
-getleftsidebackbtn({required backFunction,  title, istitle = true}) {
+getleftsidebackbtn(
+    {required backFunction, title, istitle = true, isbussinessScreen = false}) {
   return Row(
     children: [
       GestureDetector(
         onTap: backFunction,
         child: Container(
-            // width: 8.w,
-            // height: 8.h,
+            margin: isbussinessScreen
+                ? EdgeInsets.only(top: 1.h, right: 5.w, bottom: 1.h)
+                : EdgeInsets.only(top: 2.h, bottom: 2.h),
+            // color: Colors.yellow,
+            // padding: EdgeInsets.all(5),
             decoration:
                 BoxDecoration(shape: BoxShape.circle, color: primaryColor),
             child: Padding(
@@ -648,26 +652,7 @@ getleftsidebackbtn({required backFunction,  title, istitle = true}) {
                 colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
                 fit: BoxFit.contain,
               ),
-            )
-            //  FloatingActionButton(
-
-            //   onPressed: backFunction,
-            //   backgroundColor: primaryColor,
-            //   elevation: 0,
-            //   mini: true,
-            //   shape:
-
-            //    RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(50)),
-
-            //   child: SvgPicture.asset(
-            //     Asset.arrowBack,
-            //     colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
-            //     height: 20,
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
-            ),
+            )),
       ),
       if (istitle == true) getDynamicSizedBox(width: 2.w),
       if (istitle == true)

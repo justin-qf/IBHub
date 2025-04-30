@@ -80,7 +80,7 @@ class EmailScreenState extends State<EmailScreen> {
                           return getFormButton(context, () {
                             if (ctr.isFormInvalidate.value == true) {
                               ctr.getForgotOtp(context);
-                              ctr.resetfilled();
+                              // ctr.resetfilled();
                             }
                           }, Button.continues,
                               validate: ctr.isFormInvalidate.value);

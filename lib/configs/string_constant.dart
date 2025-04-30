@@ -644,6 +644,7 @@ class ProfileScreenConstant {
 class BottomConstant {
   static const home = 'Home';
   static const search = 'Search';
+  static const favourite = 'Favourite';
   static const party = 'Retailer';
   static const orderHistory = 'Order History';
   static const profile = 'Profile';
@@ -667,6 +668,12 @@ class ResetPasstext {
   static const buttonLabel = 'Change Password';
   static const passwordLable = 'Password';
   static const confirmPasswordLable = 'Confrim Password';
+}
+
+class BussinessDetail {
+  static const howContact = 'How would you like to contact us?';
+  static const call = "Dial";
+  static const wht = "WhatsApp";
 }
 
 class ProductScreenConstant {

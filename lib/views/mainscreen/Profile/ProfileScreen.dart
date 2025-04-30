@@ -65,166 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Stack(
-                    //   children: [
-                    //     Container(
-                    //       height: 22.h,
-                    //       width: Device.width,
-                    //       padding:
-                    //           EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
-                    //       decoration: BoxDecoration(
-                    //         color: secondaryColor.withOpacity(0.6),
-                    //         borderRadius: BorderRadius.only(
-                    //           bottomLeft: Radius.circular(35),
-                    //           bottomRight: Radius.circular(35),
-                    //         ),
-                    //       ),
-                    //       child: Column(
-                    //         mainAxisAlignment: MainAxisAlignment.center,
-                    //         crossAxisAlignment: CrossAxisAlignment.center,
-                    //         children: [
-                    //           // getDynamicSizedBox(height: 3.h),
-                    //           Row(
-                    //             mainAxisAlignment: MainAxisAlignment.center,
-                    //             crossAxisAlignment: CrossAxisAlignment.center,
-                    //             children: [
-                    //               GestureDetector(onTap: () {
-                    //                 if (controller
-                    //                     .profilePic.value.isNotEmpty) {
-                    //                   Get.to(FullScreenImage(
-                    //                     imageUrl: controller.profilePic.value,
-                    //                     fromProfile: true,
-                    //                   ))!
-                    //                       .then((value) => {
-                    //                             Statusbar()
-                    //                                 .trasparentStatusbar()
-                    //                           });
-                    //                 }
-                    //               }, child: Obx(() {
-                    //                 return ClipRRect(
-                    //                     borderRadius: const BorderRadius.all(
-                    //                         Radius.circular(30)),
-                    //                     child: CachedNetworkImage(
-                    //                       fit: BoxFit.cover,
-                    //                       height: 20.h,
-                    //                       width: 20.w,
-                    //                       imageUrl: controller.profilePic.value,
-                    //                       placeholder: (context, url) =>
-                    //                           const Center(
-                    //                         child: CircularProgressIndicator(
-                    //                             color: primaryColor),
-                    //                       ),
-                    //                       imageBuilder:
-                    //                           (context, imageProvider) =>
-                    //                               CircleAvatar(
-                    //                         radius: 25.h,
-                    //                         backgroundImage: imageProvider,
-                    //                       ),
-                    //                       errorWidget: (context, url, error) =>
-                    //                           CircleAvatar(
-                    //                               radius: 25.h,
-                    //                               child:
-                    //                                   const Icon(Icons.person)),
-                    //                     ));
-                    //               })),
-                    //               Expanded(
-                    //                 child: Container(
-                    //                   padding:
-                    //                       EdgeInsets.symmetric(horizontal: 3.w),
-                    //                   child: Column(
-                    //                     mainAxisAlignment:
-                    //                         MainAxisAlignment.center,
-                    //                     crossAxisAlignment:
-                    //                         CrossAxisAlignment.center,
-                    //                     children: [
-                    //                       Obx(
-                    //                         () {
-                    //                           return Row(
-                    //                             crossAxisAlignment:
-                    //                                 CrossAxisAlignment.center,
-                    //                             children: [
-                    //                               Text(
-                    //                                 controller.userName.value
-                    //                                         .isNotEmpty
-                    //                                     ? controller.userName
-                    //                                         .value.capitalize!
-                    //                                     : "Your Name",
-                    //                                 overflow:
-                    //                                     TextOverflow.ellipsis,
-                    //                                 maxLines: 1,
-                    //                                 style: TextStyle(
-                    //                                     fontSize: 16.sp,
-                    //                                     color: black,
-                    //                                     fontFamily:
-                    //                                         fontSemiBold,
-                    //                                     fontWeight:
-                    //                                         FontWeight.w800),
-                    //                               ),
-                    //                             ],
-                    //                           );
-                    //                         },
-                    //                       ),
-                    //                       Obx(
-                    //                         () {
-                    //                           return Row(
-                    //                             crossAxisAlignment:
-                    //                                 CrossAxisAlignment.center,
-                    //                             children: [
-                    //                               Text(
-                    //                                 controller.bussiness.value
-                    //                                         .isNotEmpty
-                    //                                     ? controller.bussiness
-                    //                                         .value.capitalize!
-                    //                                     : "Your Bussiness",
-                    //                                 overflow:
-                    //                                     TextOverflow.ellipsis,
-                    //                                 maxLines: 1,
-                    //                                 style: TextStyle(
-                    //                                     fontSize: 16.sp,
-                    //                                     color: black,
-                    //                                     fontFamily:
-                    //                                         fontSemiBold,
-                    //                                     fontWeight:
-                    //                                         FontWeight.w500),
-                    //                               ),
-                    //                             ],
-                    //                           );
-                    //                         },
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    // Positioned(
-                    //   right: 2.w,
-                    //   bottom: 2.w,
-                    //   child: IconButton(
-                    //       onPressed: () async {
-                    //         bool isEmpty = await isAnyFieldEmpty();
-                    //         if (isEmpty) {
-                    //           // ignore: use_build_context_synchronously
-                    //           showBottomSheetPopup(context);
-                    //         } else {
-                    //           pdfPopupDialogs(
-                    //             // ignore: use_build_context_synchronously
-                    //             context,
-                    //             function: (String val) async {
-                    //               logcat("SelectedValue::", val);
-                    //               controller.visitingCardAPI(context,
-                    //                   theme: val);
-                    //             },
-                    //           );
-                    //         }
-                    //       },
-                    //       icon: const Icon(Icons.share)),
-                    //     )
-                    //   ],
-                    // ),
                     Container(
                       height: 22.h,
                       width: Device.width,
@@ -361,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           children: [
                             getMenuListItem(
                                 title: ProfileScreenConst.updateProfile,
-                                icon: Asset.profile,
+                                icons: Icons.person,
                                 callback: () async {
                                   Get.to(const Updateprofilescreen())
                                       ?.then((value) {
@@ -375,17 +215,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                             getMenuListItem(
                                 title: ProfileScreenConst.mybusiness,
                                 // icon: Asset.add,
-                                icons: Icons.business,
+                                icons: Icons.work,
                                 callback: () async {
                                   bool isEmpty = await isAnyFieldEmpty();
                                   if (isEmpty) {
                                     // ignore: use_build_context_synchronously
                                     showBottomSheetPopup(context);
                                   } else {
-                                    Get.to(BusinessDetailScreen(
-                                      item: null,
-                                      isFromProfile: true,
-                                    ));
+                                    Get.to(
+                                      BusinessDetailScreen(
+                                        item: null,
+                                        isFromProfile: true,
+                                      ),
+                                    );
                                   }
                                 }),
                             getMenuListItem(
@@ -396,34 +238,88 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ));
                                 },
                                 title: ProfileScreenConst.changepassword,
-                                icon: Asset.resetpass),
+                                icons: Icons.lock),
+                            // getMenuListItem(
+                            //     callback: () async {
+                            //       bool isEmpty = await isAnyFieldEmpty();
+                            //       if (isEmpty) {
+                            //         // ignore: use_build_context_synchronously
+                            //         showBottomSheetPopup(context);
+                            //       } else {
+                            //         pdfPopupDialogs(
+                            //           // ignore: use_build_context_synchronously
+                            //           context,
+                            //           function: (String val) async {
+                            //             logcat("SelectedValue::", val);
+                            //             controller.getpdfFromApi(context,
+                            //                 theme: val);
+                            //           },
+                            //         );
+                            //       }
+                            //     },
+                            //     title: 'Share Visiting Card',
+                            //     icons: Icons.share),
                             getMenuListItem(
                                 callback: () async {
-                                  bool isEmpty = await isAnyFieldEmpty();
-                                  if (isEmpty) {
-                                    // ignore: use_build_context_synchronously
-                                    showBottomSheetPopup(context);
-                                  } else {
-                                    pdfPopupDialogs(
-                                      // ignore: use_build_context_synchronously
-                                      context,
-                                      function: (String val) async {
-                                        logcat("SelectedValue::", val);
-                                        controller.visitingCardAPI(context,
-                                            theme: val);
-                                      },
-                                    );
-                                  }
+                                  //share APP
                                 },
-                                title: 'Share Visiting Card',
+                                title: 'Share App',
                                 icons: Icons.share),
+
+                            // getMenuListItem(
+                            //   title: 'Terms and Conditions',
+                            //   icons: Icons.description,
+                            //   callback: () {
+                            //     // Navigate to Terms and Conditions screen or show dialog
+                            //   },
+                            // ),
                             getMenuListItem(
                                 callback: () {
                                   logoutPopupDialogs(context);
                                 },
                                 title: ProfileScreenConst.logout,
-                                icon: Asset.logout),
+                                icons: Icons.logout),
 
+                            getDynamicSizedBox(height: 10.h),
+
+                            Container(
+                              // color: Colors.yellow,
+                              padding: EdgeInsets.only(
+                                  top: 3.h, bottom: 3.h, left: 2.w),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Icon(Icons.description),
+                                      const Text(
+                                        'Terms & Conditions',
+                                        style: TextStyle(
+                                          color: primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: dM_sans_regular,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Positioned(
+                                      bottom: 1,
+                                      child: Container(
+                                          width: 37.w,
+                                          height: 0.2.h,
+                                          color: primaryColor)),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Powered by IBH',
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                color: Colors.grey,
+                                fontFamily: dM_sans_medium,
+                              ),
+                            ),
                             // getFormButton(context, () {
                             //   Get.to(AddServicescreen());
                             // }, 'add services', validate: true),
@@ -473,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             icon.isEmpty
                 ? Icon(icons,
-                    color: fromVaccination == true ? null : primaryColor,
+                    color: fromVaccination == true ? null : secondaryColor,
                     size: 3.h)
                 : SvgPicture.asset(
                     // ignore: deprecated_member_use
@@ -488,7 +384,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: Text(
                 title,
                 style: TextStyle(
-                    fontFamily: dM_sans_regular,
+                    fontFamily: dM_sans_bold,
                     fontSize: Device.screenType == sizer.ScreenType.mobile
                         ? 16.sp
                         : 14.sp,
@@ -501,10 +397,10 @@ class _ProfileScreenState extends State<ProfileScreen>
               children: [
                 Icon(Icons.arrow_forward_ios_rounded,
                     // ignore: deprecated_member_use
-                    color: grey.withOpacity(0.7),
+                    color: primaryColor,
                     size: 5.w)
               ],
-            )
+            ),
           ],
         ),
       ),

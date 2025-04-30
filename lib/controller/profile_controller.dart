@@ -145,6 +145,8 @@ class ProfileController extends GetxController {
   //   }
   // }
 
+
+
   RxString pdflink = "".obs;
   RxString pdfname = "".obs;
   void getpdfFromApi(BuildContext context, {theme}) async {
@@ -174,35 +176,19 @@ class ProfileController extends GetxController {
         var responseDetail = PdfData.fromJson(data);
         logcat("responseData::", jsonEncode(responseDetail));
         if (responseDetail.success == true) {
-          pdflink.value = responseDetail.data.url;
-          pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
-          final filePath = await downloadPDF(pdflink.value, pdfname.value);
-          if (filePath != null) {
-            sharefPopupDialogs(
-              // ignore: use_build_context_synchronously
-              context,
-              function: () {
-                sharePDF(filePath);
-              },
-            );
-          }
-          // // ignore: use_build_context_synchronously
-          // showDialogForScreen(context, "Profile", data['message'],
-          //     callback: () async {
-          //   // Get.back();
-          //   final filePath = await downloadPDF(pdflink.value, pdfname.value);
-          //   // Get.back();
-          //   if (filePath != null) {
-          //     sharefPopupDialogs(
-          //       context,
-          //       function: () {
-          //         sharePDF(filePath);
-          //       },
-          //     );
-          //   }
-          // });
-          // states.value = ScreenState.apiSuccess;
-          // message.value = "";
+      pdflink.value = responseDetail.data.url;
+      pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+      logcat("url::", pdflink.value.toString());
+      logcat("pdfname::", pdfname.value.toString());
+      final filePath = await downloadPDF(pdflink.value, pdfname.value);
+      if (filePath != null) {
+        sharefPopupDialogs(
+          context,
+          function: () {
+            sharePDF(filePath);
+          },
+        );
+      }
           update();
         } else {
           logcat("SUccess-2", "NOT DONE");
@@ -228,32 +214,32 @@ class ProfileController extends GetxController {
     }
   }
 
-  void visitingCardAPI(context, {theme}) async {
-    pdflink.value = '';
-    pdfname.value = '';
-    commonPostApiCallFormate(context,
-        title: "Profile",
-        body: {"theme": theme},
-        apiEndPoint: ApiUrl.pdfDownload, onResponse: (data) async {
-      var responseDetail = PdfData.fromJson(data);
-      pdflink.value = responseDetail.data.url;
-      pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
-      logcat("url::", pdflink.value.toString());
-      logcat("pdfname::", pdfname.value.toString());
-      final filePath = await downloadPDF(pdflink.value, pdfname.value);
-      if (filePath != null) {
-        sharefPopupDialogs(
-          context,
-          function: () {
-            sharePDF(filePath);
-          },
-        );
-      }
-    },
-        networkManager: networkManager,
-        isModelResponse: true,
-        allowHeader: true);
-  }
+  // void visitingCardAPI(context, {theme}) async {
+  //   pdflink.value = '';
+  //   pdfname.value = '';
+  //   commonPostApiCallFormate(context,
+  //       title: "Profile",
+  //       body: {"theme": theme},
+  //       apiEndPoint: ApiUrl.pdfDownload, onResponse: (data) async {
+  //     var responseDetail = PdfData.fromJson(data);
+  //     pdflink.value = responseDetail.data.url;
+  //     pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+  //     logcat("url::", pdflink.value.toString());
+  //     logcat("pdfname::", pdfname.value.toString());
+  //     final filePath = await downloadPDF(pdflink.value, pdfname.value);
+  //     if (filePath != null) {
+  //       sharefPopupDialogs(
+  //         context,
+  //         function: () {
+  //           sharePDF(filePath);
+  //         },
+  //       );
+  //     }
+  //   },
+  //       networkManager: networkManager,
+  //       isModelResponse: true,
+  //       allowHeader: true);
+  // }
 
   String extractPdfNameFromUrl(String url) {
     // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf

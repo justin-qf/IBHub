@@ -60,8 +60,8 @@ class LoadingProgressDialogs {
             logcat("BEEEEPPP", 'DONEEEE');
             // Hide the dialog when the user tries to navigate back
             hide(context);
-            Navigator.pop(context);
-            return true; // Allow navigation back
+            // Navigator.pop(context);
+            return false; // Allow navigation back
           },
           child: Container(
             height: Device.height,

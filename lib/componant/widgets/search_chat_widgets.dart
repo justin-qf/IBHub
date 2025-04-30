@@ -33,12 +33,10 @@ setSearchBar(context, controller, String tag,
                 Device.screenType == sizer.ScreenType.mobile ? 0.w : 1.2.w,
           ),
           margin: EdgeInsets.symmetric(
-              horizontal: Device.screenType == sizer.ScreenType.mobile
-                  ? 3.8.w
-                  : 4.0.w,
-              vertical: Device.screenType == sizer.ScreenType.mobile
-                  ? 0.8.h
-                  : 1.5.h),
+              horizontal:
+                  Device.screenType == sizer.ScreenType.mobile ? 3.8.w : 4.0.w,
+              vertical:
+                  Device.screenType == sizer.ScreenType.mobile ? 0.8.h : 1.5.h),
           child: TextFormField(
             controller: controller,
             cursorColor: primaryColor,
@@ -77,9 +75,8 @@ setSearchBar(context, controller, String tag,
                   child: Icon(
                     Icons.cancel,
                     color: isDarkMode() ? black : black,
-                    size: Device.screenType == sizer.ScreenType.mobile
-                        ? 20
-                        : 25,
+                    size:
+                        Device.screenType == sizer.ScreenType.mobile ? 20 : 25,
                   ),
                 ),
               ),
@@ -201,10 +198,9 @@ setSearchBars(context, controller, String tag,
                             top: Device.screenType == sizer.ScreenType.mobile
                                 ? 0.7.h
                                 : 0.8.h,
-                            bottom:
-                                Device.screenType == sizer.ScreenType.mobile
-                                    ? 0.7.h
-                                    : 1.6.h),
+                            bottom: Device.screenType == sizer.ScreenType.mobile
+                                ? 0.7.h
+                                : 1.6.h),
                         hintText: SearchScreenConstant.hint,
                         hintStyle: styleTextForFieldHint(),
                         border: InputBorder.none,
@@ -229,7 +225,7 @@ setSearchBars(context, controller, String tag,
                     },
                     child: Icon(Icons.filter_list,
                         color: isFilterApplied == true
-                            ? primaryColor
+                            ? secondaryColor
                             : isDarkMode()
                                 ? black
                                 : black,

@@ -316,8 +316,11 @@ Widget seeMoreText({
       ));
 }
 
-void unfocusAll(context) {
-  FocusScope.of(context).unfocus();
+// void unfocusAll(context) {
+//   FocusScope.of(context).unfocus();
+// }
+void unfocusAll() {
+  FocusManager.instance.primaryFocus?.unfocus();
 }
 
 Widget getTextField(
@@ -732,14 +735,14 @@ Widget getFooterLogoWeb() {
   return SvgPicture.asset(Asset.logo, width: 120);
 }
 
-getEmptyUi() {
+getEmptyUi({isservice = false}) {
   return SizedBox(
     height: Device.height / 1.4,
     child: Center(
       child: Text(
-        Common.datanotfound,
+        isservice ? 'Service Not Found' : Common.datanotfound,
         textAlign: TextAlign.center,
-        style: TextStyle(fontFamily: fontMedium, fontSize: 12.sp),
+        style: TextStyle(fontFamily: dM_sans_medium, fontSize: 16.sp),
       ),
     ),
   );
@@ -765,7 +768,7 @@ showLoader() {
 
 getFloatingActionButton({Function? onClick}) {
   return FloatingActionButton(
-      backgroundColor: isDarkMode() ? white : primaryColor,
+      backgroundColor: isDarkMode() ? white : secondaryColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       onPressed: () {
         onClick!();

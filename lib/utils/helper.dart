@@ -246,6 +246,70 @@ void lanchEmail(String email) async {
   }
 }
 
+Future<void> launchWhatsApp(BuildContext context, String phoneNumber) async {
+  // Sanitize phone number: remove spaces, dashes, parentheses, and '+' symbol
+  String sanitizedNumber = phoneNumber.replaceAll(RegExp(r'[\s-+()]+'), '');
+
+  // Ensure the number is in international format with India's country code (+91)
+  if (!sanitizedNumber.startsWith('91')) {
+    // If the number doesn't start with '91', assume it's a local Indian number and add '+91'
+    sanitizedNumber = '91$sanitizedNumber';
+  }
+
+  // Validate phone number length (India mobile numbers are typically 10 digits + country code)
+  if (sanitizedNumber.length != 12) {
+    // 2 for '91' + 10 digits
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid Number'),
+          content: const Text(
+              'Please provide a valid 10-digit Indian mobile number.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return;
+  }
+
+  final Uri whatsappUrl = Uri.parse('https://wa.me/+$sanitizedNumber');
+
+  try {
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(
+        whatsappUrl,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      throw 'WhatsApp is not installed.';
+    }
+  } catch (e) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text(
+            'WhatsApp is not installed. Please install it to continue.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+}
+
 String getStartDateOfCurrentMonth() {
   DateTime now = DateTime.now();
 

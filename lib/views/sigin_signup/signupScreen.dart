@@ -207,26 +207,30 @@ class _SignupscreenState extends State<Signupscreen> {
                           onTap: () {
                             print('navigate to term screen');
                           },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              const Text(
-                                'Terms & Conditions',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: dM_sans_medium),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      40.w, // Adjust according to text length
-                                  height: 0.2.h,
-                                  color: primaryColor,
+                          child: Container(
+                            // color: Colors.yellow,
+                            padding: EdgeInsets.all(5),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                const Text(
+                                  'Terms & Conditions',
+                                  style: TextStyle(
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: dM_sans_medium),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: 0,
+                                  child: Container(
+                                    width:
+                                        40.w, // Adjust according to text length
+                                    height: 0.2.h,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         const Text(' and ',
@@ -237,27 +241,30 @@ class _SignupscreenState extends State<Signupscreen> {
                             // Navigate to Privacy Policy page
                             print('navigate to policy screen');
                           },
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              const Text(
-                                'Privacy Policy',
-                                style: TextStyle(
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: dM_sans_medium,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                const Text(
+                                  'Privacy Policy',
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: dM_sans_medium,
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      30.w, // Adjust according to text length
-                                  height: 0.2.h,
-                                  color: primaryColor,
+                                Positioned(
+                                  bottom: 0,
+                                  child: Container(
+                                    width:
+                                        30.w, // Adjust according to text length
+                                    height: 0.2.h,
+                                    color: primaryColor,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -265,8 +272,7 @@ class _SignupscreenState extends State<Signupscreen> {
                   ],
                 ),
               ),
-              // getDynamicSizedBox(height: 5.h),
-              getDynamicSizedBox(height: 6.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -281,7 +287,8 @@ class _SignupscreenState extends State<Signupscreen> {
                       Get.back(result: true);
                     },
                     child: Container(
-                      padding: EdgeInsets.only(left: 1.w),
+                      padding:
+                          EdgeInsets.only(left: 1.w, top: 3.h, bottom: 3.h),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [

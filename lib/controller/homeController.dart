@@ -98,15 +98,24 @@ class HomeScreenController extends GetxController {
                           height: 7.h,
                           width: 7.h,
                           imageUrl: item.thumbnail,
-                          placeholder: (context, url) => Center(
-                            child: Image.asset(
-                              Asset.placeholder,
-                              height: 7.h,
-                              fit: BoxFit.cover,
-                            ),
-
-                            // CircularProgressIndicator(color: primaryColor),
+                          placeholder: (context, url) => Container(
+                            padding: EdgeInsets.all(4),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset(
+                                  Asset.bussinessPlaceholder,
+                                  // width: 3.w,
+                                )),
                           ),
+                          //  Center(
+                          //   child: Image.asset(
+                          //     Asset.placeholder,
+                          //     height: 7.h,
+                          //     fit: BoxFit.cover,
+                          //   ),
+
+                          // CircularProgressIndicator(color: primaryColor),
+
                           errorWidget: (context, url, error) => Image.asset(
                             Asset.placeholder,
                             height: 7.h,
@@ -419,8 +428,13 @@ class HomeScreenController extends GetxController {
                     fit: BoxFit.cover,
                     height: 18.h,
                     imageUrl: item.visitingCardUrl,
-                    placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(color: primaryColor)),
+                    placeholder: (context, url) => Image.asset(
+                      Asset.bussinessPlaceholder,
+                      // width: 3.w,
+                    ),
+                    // const Center(
+                    //     child: CircularProgressIndicator(color: primaryColor)),
+
                     errorWidget: (context, url, error) => Image.asset(
                         Asset.placeholder,
                         height: 10.h,

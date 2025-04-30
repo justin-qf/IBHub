@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,11 +19,14 @@ import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
+import 'package:http/http.dart' as http;
 
 class ServiceDetailScreenController extends GetxController {
   Rx<ScreenState> state = ScreenState.apiLoading.obs;
@@ -52,6 +56,12 @@ class ServiceDetailScreenController extends GetxController {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+  }
+
+  RxBool isFavourite = false.obs;
+
+  toggleFavourite() {
+    isFavourite.value = !isFavourite.value;
   }
 
   Rx<Color> bgColor = Rx<Color>(Colors.white); // Background color
@@ -93,6 +103,128 @@ class ServiceDetailScreenController extends GetxController {
       ),
     );
   }
+
+  // RxString pdflink = "".obs;
+  // RxString pdfname = "".obs;
+  // void getpdfFromApi(BuildContext context, {theme}) async {
+  //   var loadingIndicator = LoadingProgressDialogs();
+  //   loadingIndicator.show(context, '');
+  //   pdflink.value = '';
+  //   pdfname.value = '';
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, "Profile", Connection.noConnection,
+  //           callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
+
+  //     var response = await Repository.post(
+  //       {"theme": theme},
+  //       ApiUrl.pdfDownload,
+  //       allowHeader: true,
+  //     );
+  //     // ignore: use_build_context_synchronously
+  //     loadingIndicator.hide(context);
+  //     var data = jsonDecode(response.body);
+  //     if (response.statusCode == 200) {
+  //       var responseDetail = PdfData.fromJson(data);
+  //       logcat("responseData::", jsonEncode(responseDetail));
+  //       if (responseDetail.success == true) {
+  //         pdflink.value = responseDetail.data.url;
+  //         pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+  //         logcat("url::", pdflink.value.toString());
+  //         logcat("pdfname::", pdfname.value.toString());
+  //         final filePath = await downloadPDF(pdflink.value, pdfname.value);
+  //         if (filePath != null) {
+  //           sharefPopupDialogs(
+  //             context,
+  //             function: () {
+  //               sharePDF(filePath);
+  //             },
+  //           );
+  //         }
+  //         update();
+  //       } else {
+  //         logcat("SUccess-2", "NOT DONE");
+  //         state.value = ScreenState.apiError;
+  //         // ignore: use_build_context_synchronously
+  //         showDialogForScreen(context, "Profile", data['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       state.value = ScreenState.apiError;
+  //       showDialogForScreen(
+  //           // ignore: use_build_context_synchronously
+  //           context,
+  //           "Profile",
+  //           data['message'] ?? "Server Error",
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     state.value = ScreenState.apiError;
+  //     // ignore: use_build_context_synchronously
+  //     loadingIndicator.hide(context);
+  //     logcat("Error::", e.toString());
+  //   }
+  // }
+
+  // String extractPdfNameFromUrl(String url) {
+  //   // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
+  //   Uri uri = Uri.parse(url);
+  //   String path = uri.path;
+
+  //   // Split the path into segments
+  //   List<String> pathSegments = path.split('/');
+
+  //   // The PDF name should be the last segment (the filename)
+  //   String pdfFileName = pathSegments.last;
+
+  //   // Remove the file extension (.pdf)
+  //   String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
+
+  //   // Return the extracted PDF name
+  //   return pdfNameWithoutExtension;
+  // }
+
+  // Future<String?> downloadPDF(String url, String fileName) async {
+  //   try {
+  //     // Make HTTP request to download the PDF
+  //     final response = await http.get(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       // Get the temporary directory
+  //       final directory = await getTemporaryDirectory();
+  //       // Ensure the fileName has .pdf extension
+  //       final filePath =
+  //           '${directory.path}/${fileName.endsWith('.pdf') ? fileName : '$fileName.pdf'}';
+  //       // Write the PDF to a file
+  //       final file = File(filePath);
+  //       await file.writeAsBytes(response.bodyBytes);
+  //       return filePath;
+  //     } else {
+  //       print('Failed to download PDF: ${response.statusCode}');
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     print('Error downloading PDF: $e');
+  //     return null;
+  //   }
+  // }
+
+  // Future<void> sharePDF(String filePath) async {
+  //   try {
+  //     // ignore: deprecated_member_use
+  //     await Share.shareXFiles(
+  //       [XFile(filePath, mimeType: 'application/pdf')],
+  //       text: 'Check out my profile PDF!',
+  //       subject: 'Profile PDF',
+  //     );
+  //   } catch (e) {
+  //     print('Error sharing PDF: $e');
+  //   }
+  // }
 
   Widget getLableText(text, {isMainTitle}) {
     return Text(text,
@@ -226,6 +358,8 @@ class ServiceDetailScreenController extends GetxController {
             serviceList.addAll(serviceListData.data.data);
             serviceList.refresh();
             update();
+          } else {
+            serviceList.clear();
           }
           // serviceListData.data.nextPageUrl != 'null' ||
           if (serviceListData.data.nextPageUrl != null) {
@@ -259,9 +393,9 @@ class ServiceDetailScreenController extends GetxController {
       if (hideloading != true) {
         loadingIndicator.hide(context);
       }
-      showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
-          callback: () {});
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
@@ -296,7 +430,7 @@ class ServiceDetailScreenController extends GetxController {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(1),
                   margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                   width: 25.w,
                   height: 12.h,
@@ -318,14 +452,35 @@ class ServiceDetailScreenController extends GetxController {
                       fit: BoxFit.cover,
                       height: 18.h,
                       imageUrl: item.thumbnail,
-                      placeholder: (context, url) => const Center(
-                          child:
-                              CircularProgressIndicator(color: primaryColor)),
+                      placeholder: (context, url) =>
+                          Image.asset(Asset.bussinessPlaceholder),
+
+                      // Center(child: Icon(Icons.business_outlined)
+
+                      // CircularProgressIndicator(color: primaryColor),
                       errorWidget: (context, url, error) => Image.asset(
                           Asset.placeholder,
                           height: 10.h,
                           fit: BoxFit.cover),
                     ),
+
+                    //  Icon(Icons.business_outlined)
+
+                    //  CachedNetworkImage(
+                    //   fit: BoxFit.cover,
+                    //   height: 18.h,
+                    //   imageUrl: item.thumbnail,
+                    //   placeholder: (context, url) =>
+                    //       const Center(child: Icon(Icons.business_outlined)
+
+                    //           // CircularProgressIndicator(color: primaryColor),
+
+                    //           ),
+                    //   errorWidget: (context, url, error) => Image.asset(
+                    //       Asset.placeholder,
+                    //       height: 10.h,
+                    //       fit: BoxFit.cover),
+                    // ),
                   ),
                 ),
                 getDynamicSizedBox(width: 2.w),
@@ -366,16 +521,16 @@ class ServiceDetailScreenController extends GetxController {
                                           sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp,
-                                  fontFamily: dM_sans_bold,
+                                  fontFamily: dM_sans_regular,
                                   color: grey),
                               lessStyle: TextStyle(
-                                  fontFamily: dM_sans_medium,
+                                  fontFamily: dM_sans_regular,
                                   fontSize: Device.screenType ==
                                           sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp),
                               moreStyle: TextStyle(
-                                  fontFamily: dM_sans_medium,
+                                  fontFamily: dM_sans_regular,
                                   fontSize: Device.screenType ==
                                           sizer.ScreenType.mobile
                                       ? 15.sp
@@ -408,9 +563,12 @@ class ServiceDetailScreenController extends GetxController {
                           }
                         });
                       },
-                      child: Icon(
-                        Icons.edit,
-                        size: 20.sp,
+                      child: Container(
+                        margin: EdgeInsets.all(3),
+                        child: Icon(
+                          Icons.edit,
+                          size: 20.sp,
+                        ),
                       ),
                     ),
                     getDynamicSizedBox(height: 1.5.h),
@@ -427,10 +585,13 @@ class ServiceDetailScreenController extends GetxController {
 
                         // }
                       },
-                      child: Icon(
-                        Icons.delete,
-                        size: 20.sp,
-                        color: red,
+                      child: Container(
+                        margin: EdgeInsets.all(3),
+                        child: Icon(
+                          Icons.delete,
+                          size: 20.sp,
+                          color: red,
+                        ),
                       ),
                     ),
                   ],
@@ -479,50 +640,48 @@ class ServiceDetailScreenController extends GetxController {
   deleteService(context) async {
     var loadingIndicator = LoadingProgressDialogs();
     loadingIndicator.show(context, '');
-// try {
-    if (networkManager.connectionType.value == 0) {
-      loadingIndicator.hide(context);
-      showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
-          Connection.noConnection, callback: () {
-        Get.back();
-      });
-      return;
-    }
-    print('my bussines id + ${bussinessID}');
-    var response = await Repository.delete(
-        '${ApiUrl.deleteService}$bussinessID',
-        allowHeader: true);
-
-    loadingIndicator.hide(context);
-    var result = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      if (result['success'] == true) {
-        showDialogForScreen(
-            context, AddServiceScreenViewConst.serviceScr, result['message'],
-            callback: () {
-          getServiceList(context, 1, true, bussinessID.value,
-              isFirstTime: true);
-          // Get.back(result: true); // Go back and pass result true
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+            Connection.noConnection, callback: () {
+          Get.back();
         });
+        return;
+      }
+      print('my bussines id + ${bussinessID}');
+      var response = await Repository.delete(
+          '${ApiUrl.deleteService}$bussinessID',
+          allowHeader: true);
+
+      loadingIndicator.hide(context);
+      var result = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        if (result['success'] == true) {
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, result['message'],
+              callback: () {
+            getServiceList(context, 1, true, bussinessID.value,
+                isFirstTime: true);
+            // Get.back(result: true); // Go back and pass result true
+          });
+        } else {
+          showDialogForScreen(
+              context, AddServiceScreenViewConst.serviceScr, result['message'],
+              callback: () {});
+        }
       } else {
         showDialogForScreen(
             context, AddServiceScreenViewConst.serviceScr, result['message'],
             callback: () {});
       }
-    } else {
+    } catch (e) {
+      loadingIndicator.hide(context);
+      logcat("Delete Service Exception", e.toString());
       showDialogForScreen(
-          context, AddServiceScreenViewConst.serviceScr, result['message'],
+          context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
           callback: () {});
     }
-    // }
-
-    // catch (e) {
-    //   loadingIndicator.hide(context);
-    //   logcat("Delete Service Exception", e.toString());
-    //   showDialogForScreen(
-    //       context, AddServiceScreenViewConst.serviceScr, Connection.servererror,
-    //       callback: () {});
-    // }
   }
 
   getListItem(BuildContext context, ServiceDataList item) {

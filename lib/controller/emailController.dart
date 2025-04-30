@@ -36,10 +36,16 @@ class EmailController extends GetxController {
     super.onClose();
   }
 
-  resetfilled() {
-    emailctr.clear();
-    emailNode.unfocus();
+  void unfocusAll() {
+    FocusManager.instance.primaryFocus?.unfocus();
   }
+
+  // resetfilled() {
+  //   isFormInvalidate.value = false;
+  //   unfocusAll();
+  //   // emailctr.clear();
+  //   // emailNode.unfocus();
+  // }
 
   void validateEmail(String? val) {
     emailModel.update((model) {
@@ -70,7 +76,7 @@ class EmailController extends GetxController {
     }
   }
 
-  void getForgotOtp(context) async {
+   getForgotOtp(context) async {
     commonPostApiCallFormate(
       context,
       title: EmailScreenConstant.title,
@@ -80,7 +86,9 @@ class EmailController extends GetxController {
         Get.to(() => OtpScreen(
               email: emailctr.text.toString(),
               otp: "1235",
-            ));
+            ))?.then((value) {
+          validateEmail(emailctr.text);
+        });
       },
       networkManager: networkManager,
     );

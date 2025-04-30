@@ -6,6 +6,8 @@ class Asset {
 
   //SVGS//
   static const otp = '$assets${svgFolder}otp.svg';
+  static const heart = '$assets${svgFolder}heart.svg';
+  static const heart2 = '$assets${svgFolder}heart2.svg';
   static const edit = '$assets${svgFolder}edit.svg';
   static const mail = '$assets${svgFolder}mail.svg';
   static const report = '$assets${svgFolder}report.svg';
@@ -110,6 +112,8 @@ class Asset {
 
   //PNGS//
 
+  static const bussinessPlaceholder =
+      '$assets${pngFolder}bussinessPlaceholder.png';
   static const appBarBg = '$assets${pngFolder}home_appbar_bg.png';
   static const loginBg = '$assets${pngFolder}bg_one.png';
   static const appBgTwo = '$assets${pngFolder}bg_second.png';

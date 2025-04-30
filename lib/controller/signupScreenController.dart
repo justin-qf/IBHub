@@ -174,7 +174,7 @@ class Signupscreencontroller extends GetxController {
     // var loadingIndicator = LoadingProgressDialog();
 
     commonPostApiCallFormate(context,
-        title: LoginConst.title,
+        title: LoginConst.signup,
         body: {
           "email": emailCtr.text.toString().trim(),
           "password": passCtr.text.toString().trim(),

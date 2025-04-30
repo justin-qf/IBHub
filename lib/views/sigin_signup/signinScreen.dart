@@ -145,8 +145,10 @@ class _SigninscreenState extends State<Signinscreen> {
                       ctr.resetForm();
                     }
                   },
-                  child: Container(
-                    padding: EdgeInsets.only(top: 2.h, bottom: 2.h, left: 2.w),
+                  child: 
+                  Container(
+                    // color: Colors.yellow,
+                    padding: EdgeInsets.only(top: 3.h, bottom: 3.h, left: 2.w),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -281,8 +283,9 @@ class _SigninscreenState extends State<Signinscreen> {
                       }
                     },
                     child: Container(
+                      // color: Colors.yellow,
                       padding: EdgeInsets.only(
-                          left: 1.w, top: 2.h, bottom: 2.h, right: 3.w),
+                          left: 1.w, top: 3.h, bottom: 4.h, right: 4.w),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [

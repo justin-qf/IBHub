@@ -556,6 +556,79 @@ void showBottomSheetPopup(BuildContext context) {
   );
 }
 
+void showShareSheetPopup(BuildContext context, {rightbtn, leftbtn}) {
+  showModalBottomSheet(
+    context: context,
+    isDismissible: false,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      return Container(
+        width: Device.width,
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            getDynamicSizedBox(height: 2.h),
+            Text(
+              BussinessDetail.howContact,
+              style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: dM_sans_semiBold),
+            ),
+            getDynamicSizedBox(height: 2.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Get.back();
+                      leftbtn();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.black),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      BussinessDetail.call,
+                      style: TextStyle(
+                          fontFamily: dM_sans_medium, color: Colors.black),
+                    ),
+                  ),
+                ),
+                getDynamicSizedBox(width: 2.h),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                      rightbtn();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor, // your custom green color
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Text(
+                      BussinessDetail.wht,
+                      style: TextStyle(
+                          fontFamily: dM_sans_medium, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 Future showDropDownDialog(BuildContext context, Widget content, String title) {
   return showDialog(
       context: context,
@@ -826,18 +899,25 @@ Future commonDetailsDialog(BuildContext context, String title,
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Icon(
-                          Icons.cancel,
-                          size: Device.screenType == ScreenType.mobile
-                              ? 24.0
-                              : 28.0,
-                          color: isDarkMode() ? white : black,
+                        child: Container(
+                          // color: Colors.yellow,
+                          padding: EdgeInsets.only(
+                              left: 1.w, right: 1.w, top: 0.3.h),
+                          // margin: EdgeInsets.only(
+                          //     top: 0.5.h, left: 1.w, right: 1.w, bottom: 1.h),
+                          child: Icon(
+                            Icons.cancel,
+                            size: Device.screenType == ScreenType.mobile
+                                ? 24.0
+                                : 28.0,
+                            color: isDarkMode() ? white : black,
+                          ),
                         ),
                       ),
                     ),
                   ]),
             ),
-            getDynamicSizedBox(height: 0.5.h),
+            getDynamicSizedBox(height: 1.h),
             getDivider(),
             getDynamicSizedBox(height: 1.h),
             contain ?? Container()

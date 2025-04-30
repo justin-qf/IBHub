@@ -6,6 +6,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
 import 'package:ibh/controller/mainScreenController.dart';
+import 'package:ibh/views/mainscreen/FavouriteScreen/FavouriteScreen.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/HomeScreen.dart';
 import 'package:ibh/views/mainscreen/Profile/ProfileScreen.dart';
 import 'package:ibh/views/mainscreen/SearchScreen/SearchScreen.dart';
@@ -34,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
       pageOptions = [
         HomeScreen(callback),
         SearchScreen(callback),
+        Favouritescreen(),
         ProfileScreen(callback)
       ];
     });
@@ -101,6 +103,10 @@ class _MainScreenState extends State<MainScreen> {
                         GButton(
                             icon: Icons.search_rounded,
                             text: BottomConstant.search),
+                        GButton(
+                          icon: Icons.star,
+                          text: BottomConstant.favourite,
+                        ),
                         GButton(
                             icon: Icons.person_rounded,
                             text: BottomConstant.profile)
