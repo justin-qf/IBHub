@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
       pageOptions = [
         HomeScreen(callback),
         SearchScreen(callback),
-        Favouritescreen(),
+        FavouriteScreen(callback),
         ProfileScreen(callback)
       ];
     });
@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
       home: Scaffold(
           body: Center(child: pageOptions.elementAt(controller.currentPage)),
           resizeToAvoidBottomInset: false,
-          extendBody: true,
+          extendBody: false,
           bottomNavigationBar: Obx(
             () {
               return Visibility(

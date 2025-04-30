@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:ibh/models/categoryListModel.dart';
+
 CategoryModel categoryModelFromJson(String str) =>
     CategoryModel.fromJson(json.decode(str));
 
@@ -8,7 +10,7 @@ String categoryModelToJson(CategoryModel data) => json.encode(data.toJson());
 class CategoryModel {
   bool success;
   String message;
-  List<CategoryData> data;
+  List<CategoryListData> data;
 
   CategoryModel({
     required this.success,
@@ -19,8 +21,8 @@ class CategoryModel {
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
         success: json["success"],
         message: json["message"],
-        data: List<CategoryData>.from(
-            json["data"].map((x) => CategoryData.fromJson(x))),
+        data: List<CategoryListData>.from(
+            json["data"].map((x) => CategoryListData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

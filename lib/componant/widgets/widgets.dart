@@ -533,7 +533,7 @@ void showCustomToast(BuildContext context, String message) {
             style: TextStyle(
                 color: isDarkMode() ? white : white,
                 fontSize:
-                    Device.screenType == ScreenType.mobile ? 12.sp : 10.sp),
+                    Device.screenType == ScreenType.mobile ? 16.sp : 14.sp),
           ),
         ),
       ),

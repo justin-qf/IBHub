@@ -84,6 +84,7 @@ class Data {
 
 class BusinessData {
   int id;
+  String businessId;
   String name;
   String email;
   String phone;
@@ -94,9 +95,11 @@ class BusinessData {
   String pincode;
   String visitingCardUrl;
   double? businessReviewsAvgRating;
+  bool isFavorite;
 
   BusinessData({
     required this.id,
+    required this.businessId,
     required this.name,
     required this.email,
     required this.phone,
@@ -107,10 +110,12 @@ class BusinessData {
     required this.pincode,
     required this.visitingCardUrl,
     required this.businessReviewsAvgRating,
+    required this.isFavorite,
   });
 
   factory BusinessData.fromJson(Map<String, dynamic> json) => BusinessData(
         id: json["id"],
+        businessId: json["business_id"].toString() ?? '',
         name: json["name"] ?? '',
         email: json["email"] ?? '',
         phone: json["phone"] ?? '',
@@ -125,10 +130,12 @@ class BusinessData {
         businessReviewsAvgRating: json["business_reviews_avg_rating"] != null
             ? json["business_reviews_avg_rating"]?.toDouble()
             : 0.0,
+        isFavorite: json["is_favorite"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "business_id": businessId ?? '',
         "name": name,
         "email": email,
         "phone": phone,
@@ -139,6 +146,7 @@ class BusinessData {
         "pincode": pincode,
         "visiting_card_url": visitingCardUrl,
         "business_reviews_avg_rating": businessReviewsAvgRating,
+        "is_favorite": isFavorite,
       };
 }
 

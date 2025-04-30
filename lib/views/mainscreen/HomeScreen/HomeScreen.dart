@@ -9,7 +9,7 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
 import 'package:ibh/models/businessListModel.dart';
-import 'package:ibh/models/categotyModel.dart';
+import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
@@ -38,8 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.scrollController.addListener(scrollListener);
     futureDelay(() {
       controller.getCategoryList(context);
-      controller.getBusinessList(context, 0, true);
+      controller.getBusinessList(context, 1, false, isFirstTime: true);
     }, isOneSecond: false);
+  }
+
+  @override
+  void dispose() {
+    //scrollController.dispose();
+    controller.currentPage = 1;
+    controller.businessList.clear();
+    super.dispose();
   }
 
   void scrollListener() {
@@ -54,7 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
         Duration.zero,
         () {
           controller
-              .getBusinessList(context, controller.currentPage, true)
+              .getBusinessList(context, controller.currentPage, true,
+                  isFirstTime: false)
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
@@ -83,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     // padding: EdgeInsets.only(bottom: 1.h),
-                    physics: const BouncingScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     child: Obx(() {
                       switch (controller.state.value) {
                         case ScreenState.apiLoading:
@@ -134,7 +143,13 @@ class _HomeScreenState extends State<HomeScreen> {
             // ),
             // getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.categoryTitle, () {
-              Get.to(const CategoryScreen())!.then((value) {});
+              Get.to(const CategoryScreen())!.then((value) {
+                futureDelay(() {
+                  controller.currentPage = 1;
+                  controller.getBusinessList(context, 1, false,
+                      isFirstTime: true);
+                }, isOneSecond: false);
+              });
             }),
             getDynamicSizedBox(height: 1.h),
             SizedBox(
@@ -150,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           scrollDirection: Axis.horizontal,
                           clipBehavior: Clip.antiAlias,
                           itemBuilder: (context, index) {
-                            CategoryData data = controller.categoryList[index];
+                            CategoryListData data =
+                                controller.categoryList[index];
                             return controller.getCategoryListItem(
                                 context, data);
                           },
@@ -164,32 +180,56 @@ class _HomeScreenState extends State<HomeScreen> {
             Obx(
               () {
                 return controller.businessList.isNotEmpty
-                    ? ListView.builder(
-                        controller: controller.scrollController,
-                        padding:
-                            EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
-                        physics: const NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        clipBehavior: Clip.antiAlias,
-                        itemCount: controller.businessList.length +
-                            (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index < controller.businessList.length) {
-                            BusinessData data = controller.businessList[index];
-                            return controller.getBusinessListItem(
-                                context, data);
-                          } else if (controller.isFetchingMore) {
-                            return Center(
-                                child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 2.h),
-                                    child: const CircularProgressIndicator(
-                                        color: primaryColor)));
-                          } else {
-                            return Container();
-                          }
-                        },
+                    ? SizedBox(
+                        height: Device.height,
+                        child: SingleChildScrollView(
+                          controller: controller.scrollController,
+                          physics: const BouncingScrollPhysics(),
+                          padding: EdgeInsets.only(bottom: 48.h),
+                          child: ListView.builder(
+                            // controller: controller.scrollController,
+                            padding: EdgeInsets.only(
+                                left: 1.w, right: 1.w, top: 2.h),
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            clipBehavior: Clip.antiAlias,
+                            itemCount: controller.businessList.length +
+                                (controller.nextPageURL.value.isNotEmpty
+                                    ? 1
+                                    : 0),
+                            itemBuilder: (context, index) {
+                              if (index < controller.businessList.length) {
+                                BusinessData data =
+                                    controller.businessList[index];
+                                return controller.getBusinessListItem(
+                                    context, data);
+                              } else if (controller.isFetchingMore) {
+                                return Center(
+                                    child: Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 2.h),
+                                        child: const CircularProgressIndicator(
+                                            color: primaryColor)));
+                              } else {
+                                return controller.isFetchingMore
+                                    ? Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 2.h),
+                                        child: const Center(
+                                          child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: CircularProgressIndicator(
+                                                color: primaryColor),
+                                          ),
+                                        ),
+                                      )
+                                    : Container();
+                              }
+                            },
+                          ),
+                        ),
                       )
                     : Container();
               },
