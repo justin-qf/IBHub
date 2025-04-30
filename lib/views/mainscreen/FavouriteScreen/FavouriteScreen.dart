@@ -6,7 +6,7 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/controller/categoryBusinessController.dart';
+import 'package:ibh/controller/favouriteController.dart';
 import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
@@ -24,7 +24,7 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
-  var controller = Get.put(CategoryBusinessController());
+  var controller = Get.put(FavouriteController());
   bool showText = false;
   @override
   void initState() {

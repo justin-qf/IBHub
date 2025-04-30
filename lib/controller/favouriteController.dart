@@ -30,7 +30,7 @@ import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
 
-class CategoryBusinessController extends GetxController {
+class FavouriteController extends GetxController {
   RxInt currentTreeView = 2.obs;
   // Rx<ScreenState> state = ScreenState.apiLoading.obs;
   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
@@ -298,7 +298,8 @@ class CategoryBusinessController extends GetxController {
                                   Navigator.pop(context);
                                   currentPage = 1;
                                   futureDelay(() {
-                                    getBusinessList(context, currentPage, false,
+                                    getFavouriteList(
+                                        context, currentPage, false,
                                         categoryId: categoryId,
                                         cityId: cityId.value,
                                         stateId: stateId.value,
@@ -325,7 +326,7 @@ class CategoryBusinessController extends GetxController {
                                 // categoryId.value = "";
                                 isFilterApplied.value = false;
                                 futureDelay(() {
-                                  getBusinessList(
+                                  getFavouriteList(
                                     context,
                                     currentPage,
                                     false,
@@ -691,7 +692,7 @@ class CategoryBusinessController extends GetxController {
   }
 
   RxList businessList = [].obs;
-  getBusinessList(context, currentPage, bool hideloading,
+  getFavouriteList(context, currentPage, bool hideloading,
       {String? stateId,
       String? cityId,
       String? categoryId,
@@ -710,26 +711,25 @@ class CategoryBusinessController extends GetxController {
         return;
       }
 
-      var pageURL = '${ApiUrl.businessesList}?page=$currentPage';
+      var pageURL = '${ApiUrl.favList}?page=$currentPage';
 
       Map<String, dynamic> requestBody = {};
 
-      if (stateId != null && stateId.isNotEmpty) {
-        requestBody['state'] = int.parse(stateId);
-      }
-      if (cityId != null && cityId.isNotEmpty) {
-        requestBody['city'] = int.parse(cityId);
-      }
-      if (categoryId != null && categoryId.isNotEmpty) {
-        requestBody['category'] = int.parse(categoryId);
-      }
-      if (keyword != null && keyword.isNotEmpty) {
-        requestBody['keyword'] = [keyword]; // list
-      }
+      // if (stateId != null && stateId.isNotEmpty) {
+      //   requestBody['state'] = int.parse(stateId);
+      // }
+      // if (cityId != null && cityId.isNotEmpty) {
+      //   requestBody['city'] = int.parse(cityId);
+      // }
+      // if (categoryId != null && categoryId.isNotEmpty) {
+      //   requestBody['category'] = int.parse(categoryId);
+      // }
+      // if (keyword != null && keyword.isNotEmpty) {
+      //   requestBody['keyword'] = [keyword]; // list
+      // }
 
       logcat("BusinessListParam::", requestBody.toString());
-      var response =
-          await Repository.post(requestBody, pageURL, allowHeader: true);
+      var response = await Repository.get({}, pageURL, allowHeader: true);
       logcat("RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -749,18 +749,16 @@ class CategoryBusinessController extends GetxController {
           }
           if (businessListData.data.nextPageUrl != null) {
             nextPageURL.value = businessListData.data.nextPageUrl.toString();
-            logcat("nextPageURL-1", nextPageURL.value.toString());
             update();
           } else {
             nextPageURL.value = "";
-            logcat("nextPageURL-2", nextPageURL.value.toString());
             update();
           }
           logcat("nextPageURL", nextPageURL.value.toString());
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(
-              context, CategoryScreenConstant.title, responseData['message'],
+          showDialogForScreen(context, CategoryScreenConstant.title,
+              responseData['message'] ?? ServerError.servererror,
               callback: () {});
         }
       } else {
@@ -774,17 +772,13 @@ class CategoryBusinessController extends GetxController {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
       message.value = ServerError.servererror;
-      // if (hideloading != true) {
-      //   loadingIndicator.hide(context);
-      // }
-      showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
-          callback: () {});
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
-  getFavouriteListItem(
-      BuildContext context, BusinessData item, String categoryId) {
+  getFavouriteListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();
@@ -805,8 +799,7 @@ class CategoryBusinessController extends GetxController {
             currentPage = 1;
             futureDelay(() {
               logcat("isREfressh", "DONE");
-              getBusinessList(context, currentPage, true,
-                  isFirstTime: true, categoryId: categoryId);
+              getFavouriteList(context, currentPage, true, isFirstTime: true);
             }, isOneSecond: false);
           });
         }

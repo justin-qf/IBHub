@@ -19,7 +19,6 @@ import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
-import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:marquee/marquee.dart';
 import 'package:sizer/sizer.dart';
