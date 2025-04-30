@@ -458,7 +458,7 @@ class OtpConstants {
 
 /*not used*/
 class OtpConstant {
-  static const title = 'OTP';
+  static const title = 'Verification';
   static const cancle = 'Cancle';
   static const desc = 'Please enter the code we just sent to email';
   static const String verification = 'Verification';

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
@@ -87,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Column(
               children: [
-                getCommonToolbar(HomeScreenconst.dashboard,
-                    showBackButton: false),
+                // getCommonToolbar(HomeScreenconst.dashboard,
+                //     showBackButton: false),
                 Expanded(
                   child: SingleChildScrollView(
                     // padding: EdgeInsets.only(bottom: 1.h),
@@ -129,7 +131,17 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getDynamicSizedBox(height: 1.h),
-            
+            Container(
+              margin: EdgeInsets.only(left: 5.w),
+              child: SizedBox(
+                  // color: Colors.yellow,
+                  height: 5.h,
+                  width: 20.w,
+                  child: Image.asset(
+                    Asset.applogo,
+                  )),
+            ),
+            getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {
                 futureDelay(() {

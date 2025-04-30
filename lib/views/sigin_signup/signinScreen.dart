@@ -184,32 +184,30 @@ class _SigninscreenState extends State<Signinscreen> {
               getDynamicSizedBox(height: isSmallDevice(context) ? 3.h : 6.h),
 
               // getDynamicSizedBox(height: 2.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(LoginConst.dontHaveAccount,
-                      style:
-                          TextStyle(color: grey, fontFamily: dM_sans_medium)),
-                  GestureDetector(
-                    onTap: () async {
-                      //  Get.to(ChangePasswordScreen(
-                      //       email: '',
-                      //       fromProfile: false,
-                      //     ));
-                      final result = await Get.to(() => const Signupscreen());
+              GestureDetector(
+                onTap: () async {
+                  //  Get.to(ChangePasswordScreen(
+                  //       email: '',
+                  //       fromProfile: false,
+                  //     ));
+                  final result = await Get.to(() => const Signupscreen());
 
-                      if (result == true) {
-                        // ctr.init();
-                        ctr.resetForm();
-                        ctr.unfocusAll();
-                      }
-                    },
-                    child: Container(
-                      // color: Colors.yellow,
-                      padding: EdgeInsets.only(
-                          left: 1.w, top: 3.h, bottom: 4.h, right: 4.w),
-                      child: Stack(
+                  if (result == true) {
+                    // ctr.init();
+                    ctr.resetForm();
+                    ctr.unfocusAll();
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(LoginConst.dontHaveAccount,
+                          style: TextStyle(
+                              color: grey, fontFamily: dM_sans_medium)),
+                      Stack(
                         alignment: Alignment.center,
                         children: [
                           const Text(LoginConst.signup,
@@ -226,9 +224,9 @@ class _SigninscreenState extends State<Signinscreen> {
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               )
             ],
           ),

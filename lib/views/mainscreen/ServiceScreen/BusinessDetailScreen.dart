@@ -51,6 +51,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String email = '';
   String phone = '';
   String address = '';
+  String city = '';
+  String state = '';
+  String pincode = '';
   double? businessReviewsAvgRating = 0.0;
 
   @override
@@ -88,17 +91,22 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   }
 
   int idUsedinCtr = 0;
+
   getUserData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
     businessName = retrievedObject!.businessName;
     thumbnail = retrievedObject.visitingCardUrl;
     email = retrievedObject.email;
     address = retrievedObject.address;
+    city = retrievedObject.city!.city.toString();
+    state = retrievedObject.state!.name.toString();
     businessId = retrievedObject.id.toString();
     phone = retrievedObject.phone.toString();
+    pincode = retrievedObject.pincode.toString();
     businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
     // final idUsedinCtr =
     //     widget.item != null ? widget.item!.id : retrievedObject.id;
+
     idUsedinCtr = widget.item != null
         ? widget.isFromFav == true
             ? int.parse(widget.item!.businessId)
@@ -271,11 +279,14 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       getDynamicSizedBox(height: 1.h),
-                      controller.getLableText(
-                          widget.item != null
-                              ? widget.item!.businessName
-                              : businessName,
-                          isMainTitle: true),
+                      SizedBox(
+                        width: 70.w,
+                        child: controller.getLableText(
+                            widget.item != null
+                                ? widget.item!.businessName
+                                : businessName,
+                            isMainTitle: true),
+                      ),
                       // controller.getCategoryLable(widget.item.businessName),
                       getDynamicSizedBox(height: 1.h),
                       GestureDetector(
@@ -349,9 +360,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       getDynamicSizedBox(height: 1.h),
                       // if (widget.item != null && widget.item!.address.isNotEmpty)
                       //   controller.getLableText('Address : ', isMainTitle: false),
-
-                      if (widget.item != null &&
-                          widget.item!.address.isNotEmpty)
+                      if ((widget.item != null &&
+                              widget.item!.address.isNotEmpty) ||
+                          (widget.item == null && address.isNotEmpty))
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -372,8 +383,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                             getDynamicSizedBox(width: 1.w),
                             controller.getTexts(
                               widget.item != null
-                                  ? widget.item!.address.toString()
-                                  : address,
+                                  ? '${widget.item!.address}, ${widget.item!.state!.name}, ${widget.item!.city!.city}, ${widget.item!.pincode.toString()}'
+                                  : '$address, $state, $city, $pincode ',
                             )
                           ],
                         ),
@@ -413,38 +424,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   ),
                 ),
                 Positioned(
-                  right: 8.w,
-                  top: 5.h,
-                  child: Column(
+                  right: 6.w,
+                  top: 1.5.h,
+                  child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          print('Share pdf');
-
-                          pdfPopupDialogs(
-                            // ignore: use_build_context_synchronously
-                            context,
-                            function: (String val) async {
-                              logcat("SelectedValue::", val);
-                              controller.getpdfFromApi(context,
-                                  theme: val, id: idUsedinCtr);
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: 4.h,
-                          width: 10.w,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: primaryColor),
-                          padding: EdgeInsets.all(1),
-                          child: Icon(
-                            Icons.share,
-                            color: white,
-                            size: 17.sp,
-                          ),
-                        ),
-                      ),
-                      getDynamicSizedBox(height: 1.h),
                       GestureDetector(
                         onTap: () {
                           shareBusinessDetailsOnWhatsApp(
@@ -472,13 +455,35 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                 height: 2.h,
                                 width: 2.w,
                                 colorFilter:
-                                    ColorFilter.mode(white, BlendMode.srcIn))
+                                    ColorFilter.mode(white, BlendMode.srcIn))),
+                      ),
+                      getDynamicSizedBox(width: 1.h),
+                      GestureDetector(
+                        onTap: () {
+                          print('Share pdf');
 
-                            // Icon(
-                            //   Icons.call_outlined,
-                            //   color: white,
-                            // ),
-                            ),
+                          pdfPopupDialogs(
+                            // ignore: use_build_context_synchronously
+                            context,
+                            function: (String val) async {
+                              logcat("SelectedValue::", val);
+                              controller.getpdfFromApi(context,
+                                  theme: val, id: idUsedinCtr);
+                            },
+                          );
+                        },
+                        child: Container(
+                          height: 4.h,
+                          width: 10.w,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: primaryColor),
+                          padding: EdgeInsets.all(1),
+                          child: Icon(
+                            Icons.share,
+                            color: white,
+                            size: 17.sp,
+                          ),
+                        ),
                       ),
                     ],
                   ),

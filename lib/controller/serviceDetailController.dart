@@ -505,7 +505,7 @@ class ServiceDetailScreenController extends GetxController {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.categoryName,
+                      Text(item.serviceTitle,
                           style: TextStyle(
                               fontFamily: dM_sans_semiBold,
                               fontSize: 15.8.sp,
@@ -523,7 +523,7 @@ class ServiceDetailScreenController extends GetxController {
                           absorbing: true,
                           child: ReadMoreText(item.description,
                               textAlign: TextAlign.start,
-                              trimLines: 1, callback: (val) {
+                              trimLines: 2, callback: (val) {
                             logcat("ONTAP", val.toString());
                           },
                               colorClickableText: primaryColor,

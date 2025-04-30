@@ -799,7 +799,7 @@ class CategoryBusinessController extends GetxController {
           Get.to(BusinessDetailScreen(
             item: item,
             isFromProfile: false,
-            isFromFav: true,
+            isFromFav: false,
           ))!
               .then((value) {
             currentPage = 1;

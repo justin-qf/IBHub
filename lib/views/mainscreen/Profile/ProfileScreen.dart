@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(30)),
                                     child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.contain,
                                       height: 20.h,
                                       width: 20.w,
                                       imageUrl: controller.profilePic.value,
@@ -122,6 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               })),
                               Expanded(
                                 child: Container(
+                                  width: 20.w,
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 3.w),
                                   child: Column(

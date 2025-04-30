@@ -255,24 +255,24 @@ class _SignupscreenState extends State<Signupscreen> {
                   ],
                 ),
               ),
-              getDynamicSizedBox(height: isSmallDevice(context) ? null : 2.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    SignUpConstant.alreadyhaveaccount,
-                    style: TextStyle(color: grey, fontFamily: dM_sans_medium),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      ctr.resetForm();
-                      Get.back(result: true);
-                    },
-                    child: Container(
-                      padding:
-                          EdgeInsets.only(left: 1.w, top: 3.h, bottom: 3.h),
-                      child: Stack(
+              getDynamicSizedBox(height: isSmallDevice(context) ? null : 3.h),
+              GestureDetector(
+                onTap: () {
+                  ctr.resetForm();
+                  Get.back(result: true);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        SignUpConstant.alreadyhaveaccount,
+                        style:
+                            TextStyle(color: grey, fontFamily: dM_sans_medium),
+                      ),
+                      Stack(
                         alignment: Alignment.center,
                         children: [
                           const Text(
@@ -294,9 +294,9 @@ class _SignupscreenState extends State<Signupscreen> {
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
               // getDynamicSizedBox(height: 3.h)
             ],
