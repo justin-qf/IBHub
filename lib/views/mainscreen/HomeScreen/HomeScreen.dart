@@ -120,19 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getDynamicSizedBox(height: 1.h),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 5.w),
-            //   child: Text("Welcome...👋",
-            //       style: TextStyle(
-            //         color: black,
-            //         fontFamily: fontBold,
-            //         fontWeight: FontWeight.w800,
-            //         fontSize: Device.screenType == sizer.ScreenType.mobile
-            //             ? 20.sp
-            //             : 14.sp,
-            //       )),
-            // ),
-            // getDynamicSizedBox(height: 1.h),
+            
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {});
             }),

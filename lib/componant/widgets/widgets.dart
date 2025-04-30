@@ -250,31 +250,40 @@ Widget getHomeLable(String title, Function onCLick,
             )),
         const Spacer(),
         isShowSeeMore == true
-            ? Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      onCLick();
-                    },
-                    child: Text(DashboardText.seeAll,
+            ? GestureDetector(
+                onTap: () {
+                  onCLick();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(DashboardText.seeAll,
                         style: TextStyle(
                           color: isDarkMode() ? white : primaryColor,
-                          fontFamily: fontRegular,
+                          fontFamily: dM_sans_regular,
                           fontWeight: FontWeight.w500,
                           fontSize: Device.screenType == ScreenType.mobile
                               ? 16.sp
                               : 14.sp,
                         )),
-                  ),
-                  getDynamicSizedBox(width: 0.3.w),
-                  Icon(
-                    Icons.chevron_right_sharp,
-                    color: isDarkMode() ? white : primaryColor,
-                    size: Device.screenType == ScreenType.mobile ? 6.w : 5.w,
-                  )
-                ],
+                    getDynamicSizedBox(width: 1.w),
+                    Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: primaryColor),
+                        child: Padding(
+                            padding: EdgeInsets.all(2),
+                            child: Icon(Icons.arrow_forward,
+                                color: white, size: 2.h)
+
+                            // SvgPicture.asset(
+                            //   Asset.arrowBack,
+                            //   colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
+                            //   fit: BoxFit.contain,
+                            // ),
+                            )),
+                  ],
+                ),
               )
             : Container()
       ],
@@ -623,11 +632,14 @@ Widget getRichText(title, desc) {
 }
 
 getLable(String title,
-    {bool? isFromVisitReport, bool? isFromRetailer, bool isRequired = false}) {
+    {bool? isFromVisitReport,
+    bool? isFromRetailer = false,
+    bool isRequired = false}) {
   return Container(
+    // height: 2.h,
     margin: isFromRetailer != null && isFromRetailer == true
         ? EdgeInsets.only(left: 9.w, right: 9.w)
-        : null,
+        : EdgeInsets.only(top: 2.h),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -973,7 +985,7 @@ getImageView(String url) {
       ));
 }
 
-getPartyDetailRow(String title, String data, {bool? isAddress}) {
+getPartyDetailRow(context, String title, String data, {bool? isAddress}) {
   return Padding(
     padding: EdgeInsets.only(bottom: 0.h),
     child: Column(
@@ -992,7 +1004,11 @@ getPartyDetailRow(String title, String data, {bool? isAddress}) {
         isAddress == true
             ? SizedBox(
                 width: double.infinity,
-                height: Device.screenType == ScreenType.mobile ? 16.h : 5.h,
+                height: Device.screenType == ScreenType.mobile
+                    ? isSmallDevice(context)
+                        ? 10.h
+                        : 16.h
+                    : 5.h,
                 child: Scrollbar(
                   thumbVisibility: true,
                   thickness: 1.5,

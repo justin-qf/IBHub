@@ -901,8 +901,11 @@ Future commonDetailsDialog(BuildContext context, String title,
                         },
                         child: Container(
                           // color: Colors.yellow,
-                          padding: EdgeInsets.only(
-                              left: 1.w, right: 1.w, top: 0.3.h),
+                          padding: isSmallDevice(context)
+                              ? EdgeInsets.only(
+                                  left: 0.1.w, right: 0.1.w, top: 0.2.h)
+                              : EdgeInsets.only(
+                                  left: 1.w, right: 1.w, top: 0.3.h),
                           // margin: EdgeInsets.only(
                           //     top: 0.5.h, left: 1.w, right: 1.w, bottom: 1.h),
                           child: Icon(

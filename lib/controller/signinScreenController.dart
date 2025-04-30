@@ -26,14 +26,6 @@ class Signinscreencontroller extends GetxController {
   var passModel = ValidationModel(null, null, isValidate: false).obs;
   RxBool isFormInvalidate = false.obs;
 
-  // Signinscreencontroller() {
-  //   emailNode = FocusNode();
-  //   passNode = FocusNode();
-
-  //   emailCtr = TextEditingController();
-  //   passCtr = TextEditingController();
-  // }
-
   var _isLoading = false.obs;
   bool get isloading => _isLoading.value;
   set isloading(bool value) => _isLoading.value = value;
@@ -58,7 +50,7 @@ class Signinscreencontroller extends GetxController {
     isFormInvalidate.value = false;
     _obsecureTextPass.value = true;
     _isLoading.value = false;
-    print('call signin screeen');
+    // print('call signin screeen');
     resetForm();
   }
 

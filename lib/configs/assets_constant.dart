@@ -20,6 +20,8 @@ class Asset {
   static const viewfamily = '$assets${svgFolder}family_mamber.svg';
   static const history = '$assets${svgFolder}history_new.svg';
   static const home = '$assets${svgFolder}home.svg';
+  static const whatsapp2 = '$assets${svgFolder}whatsapp.svg';
+
   static const intro = '$assets${svgFolder}intro.svg';
   static const logout = '$assets${svgFolder}logout.svg';
   static const resetpass = '$assets${svgFolder}resend_password.svg';

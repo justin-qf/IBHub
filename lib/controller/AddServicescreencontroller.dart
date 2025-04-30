@@ -14,7 +14,6 @@ import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
-import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
@@ -26,7 +25,6 @@ import 'package:ibh/utils/log.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;

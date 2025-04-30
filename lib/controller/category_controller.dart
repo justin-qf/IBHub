@@ -272,17 +272,17 @@ class CategoryController extends GetxController {
       context,
       "Category Details",
       isDescription: false,
-      
       contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         if (data.thumbnail.isNotEmpty)
           getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
               ? data.thumbnail
               : ""),
         getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow('Category:', data.name.capitalize.toString()),
+        getPartyDetailRow(
+            context, 'Category:', data.name.capitalize.toString()),
         getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
         getPartyDetailRow(
-            'Description:', data.description.capitalize.toString(),
+            context, 'Description:', data.description.capitalize.toString(),
             isAddress: true),
       ]),
     );

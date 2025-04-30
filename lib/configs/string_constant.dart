@@ -197,6 +197,7 @@ class ProfileScreenConst {
 }
 
 class HomeScreenconst {
+  static const titleScreen = 'HomeScreen';
   static const title = 'Home';
   static const search = 'Search';
   static const categories = 'Categories';
@@ -300,6 +301,7 @@ class DashboardText {
 
 class SearchScreenConstant {
   // Screen-related strings
+  static const titleScreen = 'Search Screen';
   static const title = 'Search';
   static const hint = 'Search Here';
   static const cancel =

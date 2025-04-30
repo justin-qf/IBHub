@@ -76,10 +76,10 @@ class EmailController extends GetxController {
     }
   }
 
-   getForgotOtp(context) async {
+  getForgotOtp(context) async {
     commonPostApiCallFormate(
       context,
-      title: EmailScreenConstant.title,
+      title: EmailScreenConstant.forgotpassword,
       body: {"email": emailctr.text.toString().trim()},
       apiEndPoint: ApiUrl.forgotPass,
       onResponse: (data) {

@@ -310,6 +310,106 @@ Future<void> launchWhatsApp(BuildContext context, String phoneNumber) async {
   }
 }
 
+/// Shares business details (business name, email, phone, address) via WhatsApp.
+/// Returns true if the operation is successful, false otherwise.
+Future<bool> shareBusinessDetailsOnWhatsApp({
+  required BuildContext context,
+  required String phoneNumber,
+  required String businessName,
+  required String email,
+  required String address,
+}) async {
+  // Sanitize phone number: remove spaces, dashes, parentheses, and '+' symbol
+  String sanitizedNumber = phoneNumber.replaceAll(RegExp(r'[\s-+()]+'), '');
+
+  // Ensure the number is in international format with India's country code (+91)
+  if (!sanitizedNumber.startsWith('91')) {
+    sanitizedNumber = '91$sanitizedNumber';
+  }
+
+  // Validate phone number length (India mobile numbers are typically 10 digits + country code)
+  if (sanitizedNumber.length != 12) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid Number'),
+          content: const Text(
+              'Please provide a valid 10-digit Indian mobile number.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+
+  // Construct the WhatsApp message with all details
+  final String message = '''
+*Business Details:*
+*Name*: $businessName
+*Email*: $email
+*Phone*: $phoneNumber
+*Address*: $address
+'''
+      .trim();
+
+  // Construct the WhatsApp URL
+  final Uri whatsappUrl = Uri.parse(
+    'https://wa.me/$sanitizedNumber?text=${Uri.encodeComponent(message)}',
+  );
+
+  // Launch WhatsApp
+  try {
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(
+        whatsappUrl,
+        mode: LaunchMode.externalApplication,
+      );
+      return true;
+    } else {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text(
+                'WhatsApp is not installed. Please install it to continue.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      return false;
+    }
+  } catch (e) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error opening WhatsApp: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+}
+
 String getStartDateOfCurrentMonth() {
   DateTime now = DateTime.now();
 

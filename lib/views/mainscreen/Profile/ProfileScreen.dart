@@ -280,12 +280,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
 
-                            getDynamicSizedBox(height: 10.h),
+                            getDynamicSizedBox(height: 13.h),
 
                             Container(
                               // color: Colors.yellow,
-                              padding: EdgeInsets.only(
-                                  top: 3.h, bottom: 3.h, left: 2.w),
+                              padding: EdgeInsets.all(5),
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
@@ -312,6 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ],
                               ),
                             ),
+                            getDynamicSizedBox(height: 2.h),
                             Text(
                               'Powered by IBH',
                               style: TextStyle(

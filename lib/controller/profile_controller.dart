@@ -58,7 +58,7 @@ class ProfileController extends GetxController {
 
   void getApiProfile(context) async {
     commonGetApiCallFormate(context,
-        title: 'Profile',
+        title: 'Profile Screen',
         apiEndPoint: ApiUrl.profile,
         allowHeader: true, apisLoading: (isTrue) {
       logcat("IsProfile:", isTrue.toString());
@@ -145,74 +145,72 @@ class ProfileController extends GetxController {
   //   }
   // }
 
+  // RxString pdflink = "".obs;
+  // RxString pdfname = "".obs;
+  // void getpdfFromApi(BuildContext context, {theme}) async {
+  //   var loadingIndicator = LoadingProgressDialogs();
+  //   loadingIndicator.show(context, '');
+  //   pdflink.value = '';
+  //   pdfname.value = '';
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, "Profile", Connection.noConnection,
+  //           callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
 
-
-  RxString pdflink = "".obs;
-  RxString pdfname = "".obs;
-  void getpdfFromApi(BuildContext context, {theme}) async {
-    var loadingIndicator = LoadingProgressDialogs();
-    loadingIndicator.show(context, '');
-    pdflink.value = '';
-    pdfname.value = '';
-    try {
-      if (networkManager.connectionType.value == 0) {
-        loadingIndicator.hide(context);
-        showDialogForScreen(context, "Profile", Connection.noConnection,
-            callback: () {
-          Get.back();
-        });
-        return;
-      }
-
-      var response = await Repository.post(
-        {"theme": theme},
-        ApiUrl.pdfDownload,
-        allowHeader: true,
-      );
-      // ignore: use_build_context_synchronously
-      loadingIndicator.hide(context);
-      var data = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        var responseDetail = PdfData.fromJson(data);
-        logcat("responseData::", jsonEncode(responseDetail));
-        if (responseDetail.success == true) {
-      pdflink.value = responseDetail.data.url;
-      pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
-      logcat("url::", pdflink.value.toString());
-      logcat("pdfname::", pdfname.value.toString());
-      final filePath = await downloadPDF(pdflink.value, pdfname.value);
-      if (filePath != null) {
-        sharefPopupDialogs(
-          context,
-          function: () {
-            sharePDF(filePath);
-          },
-        );
-      }
-          update();
-        } else {
-          logcat("SUccess-2", "NOT DONE");
-          states.value = ScreenState.apiError;
-          // ignore: use_build_context_synchronously
-          showDialogForScreen(context, "Profile", data['message'],
-              callback: () {});
-        }
-      } else {
-        states.value = ScreenState.apiError;
-        showDialogForScreen(
-            // ignore: use_build_context_synchronously
-            context,
-            "Profile",
-            data['message'] ?? "Server Error",
-            callback: () {});
-      }
-    } catch (e) {
-      states.value = ScreenState.apiError;
-      // ignore: use_build_context_synchronously
-      loadingIndicator.hide(context);
-      logcat("Error::", e.toString());
-    }
-  }
+  //     var response = await Repository.post(
+  //       {"theme": theme},
+  //       ApiUrl.pdfDownload,
+  //       allowHeader: true,
+  //     );
+  //     // ignore: use_build_context_synchronously
+  //     loadingIndicator.hide(context);
+  //     var data = jsonDecode(response.body);
+  //     if (response.statusCode == 200) {
+  //       var responseDetail = PdfData.fromJson(data);
+  //       logcat("responseData::", jsonEncode(responseDetail));
+  //       if (responseDetail.success == true) {
+  //     pdflink.value = responseDetail.data.url;
+  //     pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+  //     logcat("url::", pdflink.value.toString());
+  //     logcat("pdfname::", pdfname.value.toString());
+  //     final filePath = await downloadPDF(pdflink.value, pdfname.value);
+  //     if (filePath != null) {
+  //       sharefPopupDialogs(
+  //         context,
+  //         function: () {
+  //           sharePDF(filePath);
+  //         },
+  //       );
+  //     }
+  //         update();
+  //       } else {
+  //         logcat("SUccess-2", "NOT DONE");
+  //         states.value = ScreenState.apiError;
+  //         // ignore: use_build_context_synchronously
+  //         showDialogForScreen(context, "Profile", data['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       states.value = ScreenState.apiError;
+  //       showDialogForScreen(
+  //           // ignore: use_build_context_synchronously
+  //           context,
+  //           "Profile",
+  //           data['message'] ?? "Server Error",
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     states.value = ScreenState.apiError;
+  //     // ignore: use_build_context_synchronously
+  //     loadingIndicator.hide(context);
+  //     logcat("Error::", e.toString());
+  //   }
+  // }
 
   // void visitingCardAPI(context, {theme}) async {
   //   pdflink.value = '';
@@ -241,30 +239,30 @@ class ProfileController extends GetxController {
   //       allowHeader: true);
   // }
 
-  String extractPdfNameFromUrl(String url) {
-    // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
-    Uri uri = Uri.parse(url);
-    String path = uri.path;
+  // String extractPdfNameFromUrl(String url) {
+  //   // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
+  //   Uri uri = Uri.parse(url);
+  //   String path = uri.path;
 
-    // Split the path into segments
-    List<String> pathSegments = path.split('/');
+  //   // Split the path into segments
+  //   List<String> pathSegments = path.split('/');
 
-    // The PDF name should be the last segment (the filename)
-    String pdfFileName = pathSegments.last;
+  //   // The PDF name should be the last segment (the filename)
+  //   String pdfFileName = pathSegments.last;
 
-    // Remove the file extension (.pdf)
-    String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
+  //   // Remove the file extension (.pdf)
+  //   String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
 
-    // Return the extracted PDF name
-    return pdfNameWithoutExtension;
-  }
+  //   // Return the extracted PDF name
+  //   return pdfNameWithoutExtension;
+  // }
 
   void logoutApi(context) async {
     var loadingIndicator = LoadingProgressDialog();
     loadingIndicator.show(context, '');
     try {
       if (networkManager.connectionType.value == 0) {
-        showDialogForScreen(context, "Profile", Connection.noConnection,
+        showDialogForScreen(context, "Profile Screen", Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -280,7 +278,7 @@ class ProfileController extends GetxController {
           UserPreferences().logout();
           Get.offAll(const Signinscreen());
         } else {
-          showDialogForScreen(context, "Profile", data['message'],
+          showDialogForScreen(context, "Profile Screen", data['message'],
               callback: () {
             Get.back();
           });
@@ -290,12 +288,13 @@ class ProfileController extends GetxController {
         update();
       } else {
         states.value = ScreenState.apiError;
-        showDialogForScreen(context, "Profile", data['message'],
+        showDialogForScreen(context, "Profile Screen", data['message'],
             callback: () {});
       }
     } catch (e) {
       states.value = ScreenState.apiError;
-      showDialogForScreen(context, "Profile", ServerError.retryServererror,
+      showDialogForScreen(
+          context, "Profile Screen", ServerError.retryServererror,
           callback: () {});
     }
   }

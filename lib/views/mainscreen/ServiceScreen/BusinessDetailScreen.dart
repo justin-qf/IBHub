@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ibh/componant/dialogs/dialogs.dart';
+import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -15,6 +15,7 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -78,6 +79,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     }
   }
 
+  int idUsedinCtr = 0;
   getUserData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
     businessName = retrievedObject!.businessName;
@@ -87,8 +89,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     businessId = retrievedObject.id.toString();
     phone = retrievedObject.phone.toString();
     businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
-    final idUsedinCtr =
-        widget.item != null ? widget.item!.id : retrievedObject.id;
+    idUsedinCtr = widget.item != null ? widget.item!.id : retrievedObject.id;
     controller.bussinessID(idUsedinCtr);
     controller.getImageColor(
         url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
@@ -142,7 +143,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   Container(
                     padding: EdgeInsets.only(top: 4.h),
                     width: Device.width,
-                    height: 30.h,
+                    height: isSmallDevice(context) ? 31.h : 30.h,
                     decoration: BoxDecoration(
                       color: controller.bgColor.value,
                       borderRadius: BorderRadius.only(
@@ -234,10 +235,18 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         },
                         child: Row(
                           children: [
-                            Icon(
-                              Icons.email,
-                              size: 18.sp,
-                            ),
+                            Container(
+                                width: 6.w,
+                                height: 3.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: primaryColor),
+                                // padding: EdgeInsets.all(2),
+                                child: Icon(
+                                  Icons.email,
+                                  size: 15.sp,
+                                  color: white,
+                                )),
                             getDynamicSizedBox(width: 1.w),
                             controller.getLableText(
                                 widget.item != null
@@ -250,21 +259,34 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       getDynamicSizedBox(height: 1.h),
                       GestureDetector(
                         onTap: () {
-                          showShareSheetPopup(context, rightbtn: () {
-                            launchWhatsApp(
-                                context,
-                                widget.item != null
-                                    ? widget.item!.phone
-                                    : phone);
-                          }, leftbtn: () {
-                            launchPhoneCall(widget.item != null
-                                ? widget.item!.phone
-                                : phone);
-                          });
+                          launchPhoneCall(
+                              widget.item != null ? widget.item!.phone : phone);
+                          // showShareSheetPopup(context, rightbtn: () {
+                          //   launchWhatsApp(
+                          //       context,
+                          //       widget.item != null
+                          //           ? widget.item!.phone
+                          //           : phone);
+                          // }, leftbtn: () {
+                          //   launchPhoneCall(widget.item != null
+                          //       ? widget.item!.phone
+                          //       : phone);
+                          // });
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.call, size: 18.sp),
+                            Container(
+                                width: 6.w,
+                                height: 3.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: primaryColor),
+                                // padding: EdgeInsets.all(2),
+                                child: Icon(
+                                  Icons.call,
+                                  size: 15.sp,
+                                  color: white,
+                                )),
                             getDynamicSizedBox(width: 1.w),
                             controller.getLableText(
                                 widget.item != null
@@ -277,14 +299,26 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       getDynamicSizedBox(height: 1.h),
                       // if (widget.item != null && widget.item!.address.isNotEmpty)
                       //   controller.getLableText('Address : ', isMainTitle: false),
-                      getDynamicSizedBox(height: 0.5.h),
+
                       if (widget.item != null &&
                           widget.item!.address.isNotEmpty)
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(Icons.location_on, size: 18.sp),
+                            Container(
+                                width: 6.w,
+                                height: 3.h,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: primaryColor),
+                                // padding: EdgeInsets.all(2),
+                                child: Icon(
+                                  Icons.location_on,
+                                  size: 15.sp,
+                                  color: white,
+                                )),
+                            // Icon(Icons.location_on, size: 18.sp),
                             getDynamicSizedBox(width: 1.w),
                             controller.getTexts(
                               widget.item != null
@@ -330,15 +364,73 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 ),
                 Positioned(
                   right: 8.w,
-                  top: 4.5.h,
-                  child: GestureDetector(
-                    onTap: () {
-                      print('Share pdf');
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      child: Icon(Icons.share),
-                    ),
+                  top: 5.h,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          print('Share pdf');
+
+                          pdfPopupDialogs(
+                            // ignore: use_build_context_synchronously
+                            context,
+                            function: (String val) async {
+                              logcat("SelectedValue::", val);
+                              controller.getpdfFromApi(context,
+                                  theme: val, id: idUsedinCtr);
+                            },
+                          );
+                        },
+                        child: Container(
+                          height: 4.h,
+                          width: 10.w,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: primaryColor),
+                          padding: EdgeInsets.all(1),
+                          child: Icon(
+                            Icons.share,
+                            color: white,
+                            size: 17.sp,
+                          ),
+                        ),
+                      ),
+                      getDynamicSizedBox(height: 1.h),
+                      GestureDetector(
+                        onTap: () {
+                          shareBusinessDetailsOnWhatsApp(
+                              context: context,
+                              businessName: widget.item != null
+                                  ? widget.item!.businessName
+                                  : businessName,
+                              address: widget.item != null
+                                  ? widget.item!.address.toString()
+                                  : address,
+                              email: widget.item != null
+                                  ? widget.item!.email
+                                  : email,
+                              phoneNumber: widget.item != null
+                                  ? widget.item!.phone
+                                  : phone);
+                        },
+                        child: Container(
+                            height: 4.h,
+                            width: 10.w,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: primaryColor),
+                            padding: EdgeInsets.all(7),
+                            child: SvgPicture.asset(Asset.whatsapp2,
+                                height: 2.h,
+                                width: 2.w,
+                                colorFilter:
+                                    ColorFilter.mode(white, BlendMode.srcIn))
+
+                            // Icon(
+                            //   Icons.call_outlined,
+                            //   color: white,
+                            // ),
+                            ),
+                      ),
+                    ],
                   ),
                 )
               ],

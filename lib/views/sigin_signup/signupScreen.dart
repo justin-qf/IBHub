@@ -36,28 +36,13 @@ class _SignupscreenState extends State<Signupscreen> {
         hideKeyboard(context);
       },
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        // physics: NeverScrollableScrollPhysics(),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: Column(
             children: [
-              // SafeArea(
-              //   child: Align(
-              //     alignment: Alignment.centerLeft,
-              //     child: GestureDetector(
-              //         onTap: () {
-              //           Get.back(result: true);
-              //           ctr.resetForm();
-              //           ctr.unfocusAll();
-              //         },
-              //         child: SvgPicture.asset(Asset.arrowBack,
-              //             // ignore: deprecated_member_use
-              //             color: black,
-              //             height: 4.h)),
-              //   ),
-              // ),
               Container(
-                margin: EdgeInsets.only(top: 5.h, left: 0.w),
+                margin: EdgeInsets.only(top: 3.h, left: 0.w),
                 child: getleftsidebackbtn(
                     title: 'Create Your Account',
                     backFunction: () {
@@ -67,19 +52,18 @@ class _SignupscreenState extends State<Signupscreen> {
                     },
                     istitle: false),
               ),
-              getDynamicSizedBox(height: 1.4.h),
+              getDynamicSizedBox(height: 1.h),
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
                     // color: Colors.yellow,
-                    height: 8.h,
+                    height: 7.h,
                     width: 30.w,
                     child: Image.asset(
                       Asset.applogo,
                     )),
               ),
-
-              getDynamicSizedBox(height: 4.h),
+              getDynamicSizedBox(height: 2.h),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -88,7 +72,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       fontFamily: dM_sans_bold, fontSize: 20.sp, height: 1.1),
                 ),
               ),
-              getDynamicSizedBox(height: 5.h),
+              getDynamicSizedBox(height: 2.h),
               Obx(() {
                 return getTextField(
                   label: SignUpConstant.email,
@@ -170,7 +154,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       ctr.toggleConfPassObscureText();
                     });
               }),
-              getDynamicSizedBox(height: 5.h),
+              getDynamicSizedBox(height: isSmallDevice(context) ? 3.h : 5.h),
               Obx(() {
                 return ctr.isloading == false
                     ? Container(
@@ -187,8 +171,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       )
                     : const CircularProgressIndicator();
               }),
-
-              getDynamicSizedBox(height: 4.h),
+              getDynamicSizedBox(height: 5.h),
               Align(
                 alignment: Alignment.center,
                 child: Column(
@@ -272,7 +255,7 @@ class _SignupscreenState extends State<Signupscreen> {
                   ],
                 ),
               ),
-
+              getDynamicSizedBox(height: isSmallDevice(context) ? null : 2.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -315,7 +298,7 @@ class _SignupscreenState extends State<Signupscreen> {
                   ),
                 ],
               ),
-              getDynamicSizedBox(height: 3.h)
+              // getDynamicSizedBox(height: 3.h)
             ],
           ),
         ),

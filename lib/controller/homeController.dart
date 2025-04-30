@@ -191,7 +191,7 @@ class HomeScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, HomeScreenconst.title, Connection.noConnection,
+            context, 'Dashboard Screen', Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -214,7 +214,7 @@ class HomeScreenController extends GetxController {
         } else {
           message.value = responseData['message'];
           showDialogForScreen(
-              context, HomeScreenconst.title, responseData['message'],
+              context, 'Dashboard Screen', responseData['message'],
               callback: () {});
         }
       } else {
@@ -229,7 +229,7 @@ class HomeScreenController extends GetxController {
       state.value = ScreenState.apiError;
       message.value = ServerError.servererror;
       showDialogForScreen(
-          context, HomeScreenconst.title, ServerError.servererror,
+          context, 'Dashboard Screen', ServerError.servererror,
           callback: () {});
     }
   }
@@ -247,7 +247,7 @@ class HomeScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, CategoryScreenConstant.title, Connection.noConnection,
+            context, 'Dashboard Screen', Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -285,14 +285,14 @@ class HomeScreenController extends GetxController {
         } else {
           message.value = responseData['message'];
           showDialogForScreen(
-              context, CategoryScreenConstant.title, responseData['message'],
+              context, 'Dashboard Screen', responseData['message'],
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(
-            context, CategoryScreenConstant.title, ServerError.servererror,
+            context, 'Dashboard Screen', ServerError.servererror,
             callback: () {});
       }
     } catch (e) {
@@ -303,7 +303,7 @@ class HomeScreenController extends GetxController {
         loadingIndicator.hide(context);
       }
       showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
+          context, 'Dashboard Screen', ServerError.servererror,
           callback: () {});
     }
   }
@@ -321,7 +321,7 @@ class HomeScreenController extends GetxController {
     //  try {
     if (networkManager.connectionType.value == 0) {
       showDialogForScreen(
-          context, HomeScreenconst.title, Connection.noConnection,
+          context, 'Dashboard Screen', Connection.noConnection,
           callback: () {
         Get.back();
       });
@@ -360,13 +360,13 @@ class HomeScreenController extends GetxController {
       } else {
         message.value = responseData['message'];
         showDialogForScreen(
-            context, CategoryScreenConstant.title, responseData['message'],
+            context, 'Dashboard Screen', responseData['message'],
             callback: () {});
       }
     } else {
       state.value = ScreenState.apiError;
       message.value = APIResponseHandleText.serverError;
-      showDialogForScreen(context, HomeScreenconst.title,
+      showDialogForScreen(context, 'Dashboard Screen',
           responseData['message'] ?? ServerError.servererror,
           callback: () {});
     }
@@ -406,14 +406,13 @@ class HomeScreenController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(2),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
                 height: 11.h,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Colors.grey.withOpacity(0.8),
-                      width: 1), // border color and width
+                      color: primaryColor, width: 1), // border color and width
                   borderRadius: BorderRadius.circular(
                       Device.screenType == sizer.ScreenType.mobile
                           ? 3.5.w
@@ -502,7 +501,7 @@ class HomeScreenController extends GetxController {
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
-                            fontFamily: dM_sans_regular,
+                            fontFamily: dM_sans_semiBold,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
@@ -515,7 +514,7 @@ class HomeScreenController extends GetxController {
                                 : item.phone,
                         maxLines: 2,
                         style: TextStyle(
-                            fontFamily: dM_sans_regular,
+                            fontFamily: dM_sans_semiBold,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),

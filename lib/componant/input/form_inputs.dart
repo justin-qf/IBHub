@@ -27,7 +27,6 @@ Widget getReactiveFormField(
     bool? isDropdown,
     bool? isCalender,
     bool? isPass,
-    
     bool? isReport,
     bool? isdown,
     bool? isMick,
@@ -39,7 +38,7 @@ Widget getReactiveFormField(
     bool isAddress = false,
     bool isSearch = false,
     bool isReview = false,
-    bool isClose=false,
+    bool isClose = false,
     bool? isWhite,
     bool isGst = false,
     String? fromObsecureText,
@@ -60,7 +59,7 @@ Widget getReactiveFormField(
     //             : 6.0.w,
     //     vertical: 0.90.h),
     margin: EdgeInsets.symmetric(
-        vertical: Device.screenType == ScreenType.mobile ? 1.2.h : 1.h),
+        vertical: Device.screenType == ScreenType.mobile ? 0.2.h : 1.h),
     child: CustomFormField(
       index: index,
       fromObsecureText: fromObsecureText,
@@ -99,7 +98,6 @@ Widget getReactiveFormField(
       obscureFunction: obscureTextFunction,
       isMick: isMick,
       isClose: isClose,
-
     ),
   );
 }

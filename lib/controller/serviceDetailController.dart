@@ -16,6 +16,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/models/pdfModel.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -104,127 +105,131 @@ class ServiceDetailScreenController extends GetxController {
     );
   }
 
-  // RxString pdflink = "".obs;
-  // RxString pdfname = "".obs;
-  // void getpdfFromApi(BuildContext context, {theme}) async {
-  //   var loadingIndicator = LoadingProgressDialogs();
-  //   loadingIndicator.show(context, '');
-  //   pdflink.value = '';
-  //   pdfname.value = '';
-  //   try {
-  //     if (networkManager.connectionType.value == 0) {
-  //       loadingIndicator.hide(context);
-  //       showDialogForScreen(context, "Profile", Connection.noConnection,
-  //           callback: () {
-  //         Get.back();
-  //       });
-  //       return;
-  //     }
+  RxString pdflink = "".obs;
+  RxString pdfname = "".obs;
+  void getpdfFromApi(BuildContext context,
+      {required id, required theme}) async {
+    var loadingIndicator = LoadingProgressDialogs();
+    loadingIndicator.show(context, '');
+    pdflink.value = '';
+    pdfname.value = '';
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, "Profile", Connection.noConnection,
+            callback: () {
+          Get.back();
+        });
+        return;
+      }
 
-  //     var response = await Repository.post(
-  //       {"theme": theme},
-  //       ApiUrl.pdfDownload,
-  //       allowHeader: true,
-  //     );
-  //     // ignore: use_build_context_synchronously
-  //     loadingIndicator.hide(context);
-  //     var data = jsonDecode(response.body);
-  //     if (response.statusCode == 200) {
-  //       var responseDetail = PdfData.fromJson(data);
-  //       logcat("responseData::", jsonEncode(responseDetail));
-  //       if (responseDetail.success == true) {
-  //         pdflink.value = responseDetail.data.url;
-  //         pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
-  //         logcat("url::", pdflink.value.toString());
-  //         logcat("pdfname::", pdfname.value.toString());
-  //         final filePath = await downloadPDF(pdflink.value, pdfname.value);
-  //         if (filePath != null) {
-  //           sharefPopupDialogs(
-  //             context,
-  //             function: () {
-  //               sharePDF(filePath);
-  //             },
-  //           );
-  //         }
-  //         update();
-  //       } else {
-  //         logcat("SUccess-2", "NOT DONE");
-  //         state.value = ScreenState.apiError;
-  //         // ignore: use_build_context_synchronously
-  //         showDialogForScreen(context, "Profile", data['message'],
-  //             callback: () {});
-  //       }
-  //     } else {
-  //       state.value = ScreenState.apiError;
-  //       showDialogForScreen(
-  //           // ignore: use_build_context_synchronously
-  //           context,
-  //           "Profile",
-  //           data['message'] ?? "Server Error",
-  //           callback: () {});
-  //     }
-  //   } catch (e) {
-  //     state.value = ScreenState.apiError;
-  //     // ignore: use_build_context_synchronously
-  //     loadingIndicator.hide(context);
-  //     logcat("Error::", e.toString());
-  //   }
-  // }
+      var response = await Repository.post(
+        {
+          "id": id,
+          "theme": theme,
+        },
+        ApiUrl.pdfDownload,
+        allowHeader: true,
+      );
+      // ignore: use_build_context_synchronously
+      loadingIndicator.hide(context);
+      var data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        var responseDetail = PdfData.fromJson(data);
+        logcat("responseData::", jsonEncode(responseDetail));
+        if (responseDetail.success == true) {
+          pdflink.value = responseDetail.data.url;
+          pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
+          logcat("url::", pdflink.value.toString());
+          logcat("pdfname::", pdfname.value.toString());
+          final filePath = await downloadPDF(pdflink.value, pdfname.value);
+          if (filePath != null) {
+            sharefPopupDialogs(
+              context,
+              function: () {
+                sharePDF(filePath);
+              },
+            );
+          }
+          update();
+        } else {
+          logcat("SUccess-2", "NOT DONE");
+          state.value = ScreenState.apiError;
+          // ignore: use_build_context_synchronously
+          showDialogForScreen(context, "Profile", data['message'],
+              callback: () {});
+        }
+      } else {
+        state.value = ScreenState.apiError;
+        showDialogForScreen(
+            // ignore: use_build_context_synchronously
+            context,
+            "Profile",
+            data['message'] ?? "Server Error",
+            callback: () {});
+      }
+    } catch (e) {
+      state.value = ScreenState.apiError;
+      // ignore: use_build_context_synchronously
+      loadingIndicator.hide(context);
+      logcat("Error::", e.toString());
+    }
+  }
 
-  // String extractPdfNameFromUrl(String url) {
-  //   // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
-  //   Uri uri = Uri.parse(url);
-  //   String path = uri.path;
+  String extractPdfNameFromUrl(String url) {
+    // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
+    Uri uri = Uri.parse(url);
+    String path = uri.path;
 
-  //   // Split the path into segments
-  //   List<String> pathSegments = path.split('/');
+    // Split the path into segments
+    List<String> pathSegments = path.split('/');
 
-  //   // The PDF name should be the last segment (the filename)
-  //   String pdfFileName = pathSegments.last;
+    // The PDF name should be the last segment (the filename)
+    String pdfFileName = pathSegments.last;
 
-  //   // Remove the file extension (.pdf)
-  //   String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
+    // Remove the file extension (.pdf)
+    String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
 
-  //   // Return the extracted PDF name
-  //   return pdfNameWithoutExtension;
-  // }
+    // Return the extracted PDF name
+    return pdfNameWithoutExtension;
+  }
 
-  // Future<String?> downloadPDF(String url, String fileName) async {
-  //   try {
-  //     // Make HTTP request to download the PDF
-  //     final response = await http.get(Uri.parse(url));
-  //     if (response.statusCode == 200) {
-  //       // Get the temporary directory
-  //       final directory = await getTemporaryDirectory();
-  //       // Ensure the fileName has .pdf extension
-  //       final filePath =
-  //           '${directory.path}/${fileName.endsWith('.pdf') ? fileName : '$fileName.pdf'}';
-  //       // Write the PDF to a file
-  //       final file = File(filePath);
-  //       await file.writeAsBytes(response.bodyBytes);
-  //       return filePath;
-  //     } else {
-  //       print('Failed to download PDF: ${response.statusCode}');
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     print('Error downloading PDF: $e');
-  //     return null;
-  //   }
-  // }
+  Future<String?> downloadPDF(String url, String fileName) async {
+    try {
+      // Make HTTP request to download the PDF
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        // Get the temporary directory
+        final directory = await getTemporaryDirectory();
+        // Ensure the fileName has .pdf extension
+        final filePath =
+            '${directory.path}/${fileName.endsWith('.pdf') ? fileName : '$fileName.pdf'}';
+        // Write the PDF to a file
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+        return filePath;
+      } else {
+        print('Failed to download PDF: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error downloading PDF: $e');
+      return null;
+    }
+  }
 
-  // Future<void> sharePDF(String filePath) async {
-  //   try {
-  //     // ignore: deprecated_member_use
-  //     await Share.shareXFiles(
-  //       [XFile(filePath, mimeType: 'application/pdf')],
-  //       text: 'Check out my profile PDF!',
-  //       subject: 'Profile PDF',
-  //     );
-  //   } catch (e) {
-  //     print('Error sharing PDF: $e');
-  //   }
-  // }
+  Future<void> sharePDF(String filePath) async {
+    try {
+      // ignore: deprecated_member_use
+      await Share.shareXFiles(
+        [XFile(filePath, mimeType: 'application/pdf')],
+        text: 'Check out my profile PDF!',
+        subject: 'Profile PDF',
+      );
+    } catch (e) {
+      print('Error sharing PDF: $e');
+    }
+  }
 
   Widget getLableText(text, {isMainTitle}) {
     return Text(text,
@@ -430,13 +435,13 @@ class ServiceDetailScreenController extends GetxController {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.all(2),
                   margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                   width: 25.w,
                   height: 12.h,
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: Colors.grey.withOpacity(0.8),
+                        color: primaryColor,
                         width: 1), // border color and width
                     borderRadius: BorderRadius.circular(
                         Device.screenType == sizer.ScreenType.mobile
@@ -498,7 +503,7 @@ class ServiceDetailScreenController extends GetxController {
                       getDynamicSizedBox(height: 1.h),
                       Text(item.categoryName,
                           style: TextStyle(
-                              fontFamily: dM_sans_regular,
+                              fontFamily: dM_sans_semiBold,
                               fontSize: 15.sp,
                               color: black,
                               fontWeight: FontWeight.w500)),
@@ -521,16 +526,17 @@ class ServiceDetailScreenController extends GetxController {
                                           sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp,
-                                  fontFamily: dM_sans_regular,
-                                  color: grey),
+                                  fontWeight: FontWeight.w100,
+                                  fontFamily: dM_sans_semiBold,
+                                  color: primaryColor),
                               lessStyle: TextStyle(
-                                  fontFamily: dM_sans_regular,
+                                  fontFamily: dM_sans_semiBold,
                                   fontSize: Device.screenType ==
                                           sizer.ScreenType.mobile
                                       ? 15.sp
                                       : 12.sp),
                               moreStyle: TextStyle(
-                                  fontFamily: dM_sans_regular,
+                                  fontFamily: dM_sans_semiBold,
                                   fontSize: Device.screenType ==
                                           sizer.ScreenType.mobile
                                       ? 15.sp
@@ -571,7 +577,8 @@ class ServiceDetailScreenController extends GetxController {
                         ),
                       ),
                     ),
-                    getDynamicSizedBox(height: 1.5.h),
+                    getDynamicSizedBox(
+                        height: isSmallDevice(context) ? 0.2.h : 1.5.h),
                     GestureDetector(
                       onTap: () async {
                         final isDeleted = await deleteDialogs(
@@ -624,15 +631,21 @@ class ServiceDetailScreenController extends GetxController {
               : ""),
 
         getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow('Category:', data.categoryName.capitalize.toString()),
+        getPartyDetailRow(
+          context,
+          'Category:',
+          data.categoryName.capitalize.toString(),
+        ),
         // getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow('Service:', data.serviceTitle.capitalize.toString()),
+        getPartyDetailRow(
+            context, 'Service:', data.serviceTitle.capitalize.toString()),
         // getDynamicSizedBox(height: data.keywords.isNotEmpty ? 1.h : 0.0),
         // getPartyDetailRow('Keyword:', data.keywords.capitalize.toString()),
         // getDynamicSizedBox(
         //     height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
         if (data.description.toString().isNotEmpty)
-          getPartyDetailRow('Description:', data.description, isAddress: true),
+          getPartyDetailRow(context, 'Description:', data.description,
+              isAddress: true),
       ]),
     );
   }

@@ -59,7 +59,7 @@ class ServiceController extends GetxController {
           message.value = '';
           // serviceList.clear();
           var serviceListData = ServiceListModel.fromJson(responseData);
-      
+
           if (serviceListData.data.data.isNotEmpty) {
             serviceList.addAll(serviceListData.data.data);
             serviceList.refresh();
@@ -315,15 +315,18 @@ class ServiceController extends GetxController {
               ? data.thumbnail
               : ""),
         getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow('Category:', data.categoryName.capitalize.toString()),
+        getPartyDetailRow(
+            context, 'Category:', data.categoryName.capitalize.toString()),
         getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow('Service:', data.serviceTitle.capitalize.toString()),
+        getPartyDetailRow(
+            context, 'Service:', data.serviceTitle.capitalize.toString()),
         // getDynamicSizedBox(height: data.keywords.isNotEmpty ? 1.h : 0.0),
         // getPartyDetailRow('Keyword:', data.keywords.capitalize.toString()),
         getDynamicSizedBox(
             height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
         if (data.description.toString().isNotEmpty)
-          getPartyDetailRow('Description:', data.description, isAddress: true),
+          getPartyDetailRow(context, 'Description:', data.description,
+              isAddress: true),
       ]),
     );
   }

@@ -25,7 +25,7 @@
     </queries>
 
     <application
-        android:label="ib_hub"
+        android:label="IBH"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:largeHeap="true"
