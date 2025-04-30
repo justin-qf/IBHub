@@ -569,6 +569,61 @@ Future<Object?> logoutPopupDialogs(BuildContext context) {
       });
 }
 
+Future<Object?> imageValidationPopupDialogs(BuildContext context) {
+  return showGeneralDialog(
+      barrierColor: black.withOpacity(0.6),
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+              opacity: a1.value,
+              child: CupertinoAlertDialog(
+                title: const Text(
+                  "Logo",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: const Text(
+                  "Please Select Logo",
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: black,
+                    fontFamily: fontMedium,
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    isDefaultAction: true,
+                    isDestructiveAction: true,
+                    child: const Text("OK",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: black,
+                          fontFamily: fontBold,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  // The "No" button
+                ],
+              )),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      });
+}
+
 Future<Object?> commonDialog(BuildContext context,
     {bool? isFromAddOrder,
     bool? isFromCancleOrder,

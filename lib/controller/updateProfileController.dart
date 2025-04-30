@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
+import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
@@ -95,14 +96,17 @@ class Updateprofilecontroller extends GetxController {
   var searchCityModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isStateApiCallLoading = false.obs;
-  RxList stateFilterList = [].obs;
+  // RxList stateFilterList = [].obs;
+  RxList<StateListData> stateFilterList = <StateListData>[].obs;
+  RxList<StateListData> stateList = <StateListData>[].obs;
   RxString stateId = "".obs;
-  RxList stateList = [].obs;
+  // RxList stateList = [].obs;
 
   RxBool isCityApiCallLoading = false.obs;
-  RxList cityFilterList = [].obs;
+  RxList<CityListData> cityList = <CityListData>[].obs;
+  RxList<CityListData> cityFilterList = <CityListData>[].obs;
+
   RxString cityId = "".obs;
-  RxList cityList = [].obs;
 
   RxString imageURl = "".obs;
 
@@ -111,7 +115,6 @@ class Updateprofilecontroller extends GetxController {
     User? retrievedObject = await UserPreferences().getSignInInfo();
     nameCtr.text = retrievedObject!.name;
     emailCtr.text = retrievedObject.email;
-
     phoneCtr.text = retrievedObject.phone;
     bussinessCtr.text = retrievedObject.businessName;
     if (retrievedObject.state != null) {
@@ -294,8 +297,6 @@ class Updateprofilecontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (phoneModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (imageModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
     } else if (bussinessModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (stateModel.value.isValidate == false) {
@@ -309,6 +310,9 @@ class Updateprofilecontroller extends GetxController {
     } else {
       isFormInvalidate.value = true;
     }
+    //  else if (imageModel.value.isValidate == false) {
+    //   isFormInvalidate.value = false;
+    // }
     print("isFormInvalidate: ${isFormInvalidate.value}");
     update();
   }
@@ -428,76 +432,80 @@ class Updateprofilecontroller extends GetxController {
   Rx<File?> imageFile = null.obs;
 
   void updateProfile(context) async {
-    var loadingIndicator = LoadingProgressDialog();
-
-    // try {
-    if (networkManager.connectionType == 0) {
-      loadingIndicator.hide(context);
-      showDialogForScreen(context, "Signup Screen", Connection.noConnection,
-          callback: () {
-        Get.back();
-      });
+    if (imageURl.value.isEmpty) {
+      imageValidationPopupDialogs(context);
       return;
     }
-    loadingIndicator.show(context, '');
+    var loadingIndicator = LoadingProgressDialog();
 
-    var response = await Repository.multiPartPost({
-      "name": nameCtr.text.toString(),
-      "email": emailCtr.text.toString().trim(),
-      "phone": phoneCtr.text.toString(),
-      "business_name": bussinessCtr.text.toString(),
-      "city": cityId.toString(),
-      "state": stateId.toString(),
-      "address": addressCtr.text.toString(),
-      "pincode": pincodeCtr.text.toString(),
-      // "visiting_card": visitingcardCtr.text.toString(),
-    }, ApiUrl.updateProfile,
-        multiPart:
-            imageFile.value != null && imageFile.value.toString().isNotEmpty
-                ? http.MultipartFile(
-                    'visiting_card',
-                    imageFile.value!.readAsBytes().asStream(),
-                    imageFile.value!.lengthSync(),
-                    filename: imageFile.value!.path.split('/').last,
-                  )
-                : null,
-        allowHeader: true);
-    var responseData = await response.stream.toBytes();
-    loadingIndicator.hide(context);
-
-    var result = String.fromCharCodes(responseData);
-    var json = jsonDecode(result);
-    if (response.statusCode == 200) {
-      if (json['success'] == true) {
-        print('pref store succesfully');
-
-        print('print json: ${json.toString()}');
-
-        print(
-            'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
-
-        var responseDetail = LoginModel.fromJson(json);
-        UserPreferences().saveSignInInfo(responseDetail.data.user);
-        // UserPreferences().setToken(responseDetail.data.user.token.toString());
-        showDialogForScreen(context, "Update Profile Screen", json['message'],
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, "Signup Screen", Connection.noConnection,
             callback: () {
-          print('go back');
-          Get.back(result: true); //goto code
+          Get.back();
         });
+        return;
+      }
+      loadingIndicator.show(context, '');
+
+      var response = await Repository.multiPartPost({
+        "name": nameCtr.text.toString(),
+        "email": emailCtr.text.toString().trim(),
+        "phone": phoneCtr.text.toString(),
+        "business_name": bussinessCtr.text.toString(),
+        "city": cityId.toString(),
+        "state": stateId.toString(),
+        "address": addressCtr.text.toString(),
+        "pincode": pincodeCtr.text.toString(),
+      }, ApiUrl.updateProfile,
+          multiPart:
+              imageFile.value != null && imageFile.value.toString().isNotEmpty
+                  ? http.MultipartFile(
+                      'visiting_card',
+                      imageFile.value!.readAsBytes().asStream(),
+                      imageFile.value!.lengthSync(),
+                      filename: imageFile.value!.path.split('/').last,
+                    )
+                  : null,
+          allowHeader: true);
+      var responseData = await response.stream.toBytes();
+      loadingIndicator.hide(context);
+
+      var result = String.fromCharCodes(responseData);
+      var json = jsonDecode(result);
+      if (response.statusCode == 200) {
+        if (json['success'] == true) {
+          print('pref store succesfully');
+
+          print('print json: ${json.toString()}');
+
+          print(
+              'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
+
+          var responseDetail = LoginModel.fromJson(json);
+          UserPreferences().saveSignInInfo(responseDetail.data.user);
+          // UserPreferences().setToken(responseDetail.data.user.token.toString());
+          showDialogForScreen(context, "Update Profile Screen", json['message'],
+              callback: () {
+            print('go back');
+            Get.back(result: true); //goto code
+          });
+        } else {
+          showDialogForScreen(context, "Update Profile Screen", json['message'],
+              callback: () {});
+        }
       } else {
         showDialogForScreen(context, "Update Profile Screen", json['message'],
             callback: () {});
       }
-    } else {
-      showDialogForScreen(context, "Update Profile Screen", json['message'],
-          callback: () {
-        // Get.back();
-      });
+    } catch (e) {
+      logcat("Exception", e);
+      loadingIndicator.hide(context);
+      // showDialogForScreen(context, screenName, ServerError.servererror,
+      //     callback: () {});
     }
   }
-
-  // Rx<File?> avatarFile = null.obs;
-  // RxString profilePic = "".obs;
 
   getImage() {
     return Stack(
@@ -528,8 +536,8 @@ class Updateprofilecontroller extends GetxController {
                             imageURl.value,
                             fit: BoxFit.cover,
                           ),
-                      errorWidget: (context, url, error) => SvgPicture.asset(
-                            Asset.profileimg,
+                      errorWidget: (context, url, error) => Image.asset(
+                            Asset.bussinessPlaceholder,
                             height: 8.0.h,
                             width: 8.0.h,
                             fit: BoxFit.cover,
@@ -549,10 +557,11 @@ class Updateprofilecontroller extends GetxController {
                               ? 8.0.h
                               : 8.5.h,
                           errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.asset(
-                              Asset.profileimg,
+                            return Image.asset(
+                              Asset.bussinessPlaceholder,
                               height: 8.0.h,
                               width: 8.0.h,
+                              fit: BoxFit.cover,
                             );
                           },
                         ),
@@ -778,29 +787,57 @@ class Updateprofilecontroller extends GetxController {
     );
   }
 
-  void getCity(context) async {
-    commonGetApiCallFormate(
-      allowHeader: true,
-      title: 'City',
-      context,
-      onResponse: (data) {
-        var responsDetails = CityModel.fromJson(data);
-        cityList.addAll(responsDetails.data);
-        cityFilterList.clear();
-        cityFilterList.addAll(cityList);
+  // void getCity(context) async {
+  //   commonGetApiCallFormate(
+  //     allowHeader: true,
+  //     title: 'City',
+  //     context,
+  //     onResponse: (data) {
+  //       var responsDetails = CityModel.fromJson(data);
+  //       cityList.addAll(responsDetails.data);
+  //       cityFilterList.clear();
+  //       cityFilterList.addAll(cityList);
 
-        // print(stateList);
+  //       // print(stateList);
 
-        for (var city in cityList) {
-          print('ID: ${city.id}, Name: ${city.city}');
+  //       for (var city in cityList) {
+  //         print('ID: ${city.id}, Name: ${city.city}');
+  //       }
+  //     },
+  //     apiEndPoint: '${ApiUrl.city}+${stateId.value}',
+  //     networkManager: networkManager,
+  //     apisLoading: (bool val) {
+  //       // isloading = val;
+  //     },
+  //   );
+  // }
+
+  void getCityApi(context, cityID, bool isLoading) async {
+    var loadingIndicator = LoadingProgressDialogs();
+    commonGetApiCallFormate(context,
+        title: SearchScreenConstant.cityList,
+        // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
+        apiEndPoint: "${ApiUrl.getCity}/$cityID",
+        allowHeader: true, apisLoading: (isTrue) {
+      if (isLoading == true) {
+        if (isTrue) {
+          loadingIndicator.show(context, '');
+        } else {
+          loadingIndicator.hide(context);
         }
-      },
-      apiEndPoint: '${ApiUrl.city}+${stateId.value}',
-      networkManager: networkManager,
-      apisLoading: (bool val) {
-        // isloading = val;
-      },
-    );
+      }
+      isCityApiCallLoading.value = isTrue;
+      logcat("isCityList:", isTrue.toString());
+      update();
+    }, onResponse: (response) {
+      var data = CityModel.fromJson(response);
+      cityList.clear();
+      cityFilterList.clear();
+      cityList.addAll(data.data);
+      cityFilterList.addAll(data.data);
+      logcat("CITY_RESPONSE", jsonEncode(cityFilterList));
+      update();
+    }, networkManager: networkManager);
   }
 
   Widget setStateListDialog() {
@@ -828,6 +865,10 @@ class Updateprofilecontroller extends GetxController {
                   Get.back();
                   stateId.value = stateFilterList[index].id.toString();
                   stateCtr.text = stateFilterList[index].name;
+                  cityCtr.text = "";
+                  cityId.value = "";
+                  cityFilterList.clear();
+                  cityList.clear();
                   if (stateCtr.text.toString().isNotEmpty) {
                     stateFilterList.clear();
                     stateFilterList.addAll(stateList);
@@ -838,12 +879,9 @@ class Updateprofilecontroller extends GetxController {
                       errorText1: "State is required",
                       iscomman: true,
                       shouldEnableButton: true);
-                  // getState(context);
-                  cityCtr.text = "";
-                  cityId.value = "";
                   update();
                   futureDelay(() {
-                    // getCityApi(context, stateId.value.toString(), "", "");
+                    getCityApi(context, stateId.value.toString(), true);
                   }, isOneSecond: false);
                   // validateFields(stateCtr.text);
                 },
@@ -903,14 +941,7 @@ class Updateprofilecontroller extends GetxController {
                       errorText1: "City is required",
                       iscomman: true,
                       shouldEnableButton: true);
-                  // getState(context);
-                  // cityctr.text = "";
-                  // cityId.value = "";
                   update();
-                  futureDelay(() {
-                    // getCityApi(context, stateId.value.toString(), "", "");
-                  }, isOneSecond: false);
-                  // validateFields(stateCtr.text);
                 },
                 title: showSelectedTextInDialog(
                     name: cityFilterList[index].city,

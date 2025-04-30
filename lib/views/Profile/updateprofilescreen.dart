@@ -280,7 +280,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                             );
                           }),
                         ),
-                        SizedBox(width: 3.w), // Add spacing between fields
+                        getDynamicSizedBox(width: 3.w),
                         Expanded(
                           child: Obx(() {
                             return getTextField(
@@ -297,8 +297,8 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                               isRequired: true,
                               context: context,
                               gestureFunction: () {
+                                ctr.searchCityctr.text = "";
                                 ctr.unfocusAll();
-                                ctr.getCity(context);
                                 showDropdownMessage(
                                     context,
                                     ctr.setcityListDialog(),
@@ -308,7 +308,8 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                   ctr.applyFilter('', isState: false);
                                 }, refreshClick: () {
                                   futureDelay(() {
-                                    ctr.getCity(context);
+                                    ctr.getCityApi(context,
+                                        ctr.stateId.value.toString(), false);
                                   }, isOneSecond: false);
                                 });
                               },
@@ -363,16 +364,13 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                               margin: EdgeInsets.symmetric(horizontal: 5.w),
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
-                                  ctr.updateProfile(
-                                    context,
-                                  );
-
+                                  ctr.updateProfile(context);
                                   // ctr.validateLogin(context);
                                 }
                               }, ProfileScreenConst.save,
                                   validate: ctr.isFormInvalidate.value),
                             )
-                          : CircularProgressIndicator();
+                          : const CircularProgressIndicator();
                     }),
                     getDynamicSizedBox(height: 3.h)
                   ],

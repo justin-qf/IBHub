@@ -146,8 +146,15 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
                             height: Device.height / 1.5,
                             child: apiOtherStates(controller.state.value,
                                 controller, controller.searchList, () {
-                              // controller.getSearchList(context,
-                              //     controller.searchCtr.text.toString());
+                              controller.currentPage = 1;
+                              setState(() {});
+                              futureDelay(() {
+                                controller.getBusinessList(context, 1, false,
+                                    keyword:
+                                        controller.searchCtr.text.toString(),
+                                    categoryId: widget.item.id.toString(),
+                                    isFirstTime: true);
+                              }, isOneSecond: false);
                             }),
                           );
                         case ScreenState.apiSuccess:

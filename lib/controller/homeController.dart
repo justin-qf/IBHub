@@ -21,6 +21,7 @@ import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:marquee/marquee.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import '../utils/enum.dart';
@@ -41,6 +42,8 @@ class HomeScreenController extends GetxController {
   RxList categoryList = [].obs;
   RxString nextPageURL = "".obs;
   bool isFetchingMore = false;
+  final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void dispose() {
@@ -227,10 +230,10 @@ class HomeScreenController extends GetxController {
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
-      showDialogForScreen(
-          context, HomeScreenconst.title, ServerError.servererror,
-          callback: () {});
+      // message.value = ServerError.servererror;
+      // showDialogForScreen(
+      //     context, HomeScreenconst.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
@@ -351,6 +354,8 @@ class HomeScreenController extends GetxController {
             businessList.addAll(businessListData.data.data);
             businessList.refresh();
             update();
+          } else {
+            businessList.clear();
           }
           if (businessListData.data.nextPageUrl != null) {
             nextPageURL.value = businessListData.data.nextPageUrl.toString();
@@ -378,7 +383,7 @@ class HomeScreenController extends GetxController {
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
+      // message.value = ServerError.servererror;
       // showDialogForScreen(
       //     context, CategoryScreenConstant.title, ServerError.servererror,
       //     callback: () {});
@@ -453,9 +458,8 @@ class HomeScreenController extends GetxController {
                     ),
                     // const Center(
                     //     child: CircularProgressIndicator(color: primaryColor)),
-
                     errorWidget: (context, url, error) => Image.asset(
-                        Asset.placeholder,
+                        Asset.bussinessPlaceholder,
                         height: 10.h,
                         fit: BoxFit.cover),
                   ),

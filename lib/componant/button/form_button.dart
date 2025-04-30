@@ -99,7 +99,7 @@ getMiniButton(Function fun, str, {bool? icon}) {
       alignment: Alignment.center,
       padding: const EdgeInsets.only(top: 1),
       width: Device.screenType == ScreenType.mobile
-          ? Device.width / 1
+          ? Device.width / 3
           : Device.width / 4,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
@@ -123,7 +123,7 @@ getMiniButton(Function fun, str, {bool? icon}) {
                 color: white,
                 fontFamily: fontBold,
                 fontSize:
-                    Device.screenType == ScreenType.mobile ? 11.sp : 8.sp),
+                    Device.screenType == ScreenType.mobile ? 16.sp : 14.sp),
           ),
         ],
       ),

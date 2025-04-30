@@ -89,7 +89,6 @@ class _ServicescreenState extends State<AddServicescreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     getDynamicSizedBox(height: 3.h),
-
                     GestureDetector(
                       child: Obx(() {
                         return ctr.getImage();

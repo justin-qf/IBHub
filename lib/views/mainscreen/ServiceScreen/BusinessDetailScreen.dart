@@ -224,8 +224,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       child: Obx(() {
                         return GestureDetector(
                             onTap: () {
-                              logcat("FavIDDDD", jsonEncode(widget.item));
-                              logcat("FavIDs", widget.item!.id.toString());
                               controller.isFavourite.value == true
                                   ? removeFavouriteAPI(
                                       context,
@@ -254,7 +252,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   ? SvgPicture.asset(Asset.heart2)
                                   : SvgPicture.asset(Asset.heart),
                             ));
-                      }))
+                      }
+                      ))
                 ],
               ),
             ),
