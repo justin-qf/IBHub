@@ -38,8 +38,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
     futureDelay(() {
       controller.currentPage = 1;
       controller.getStateApi(context, "");
-      // controller.getCategoryApi(context);
-      controller.getFavouriteList(context, 1, false,
+      controller.getBusinessList(context, 1, false,
           isFirstTime: true, categoryId: widget.item.id.toString());
     }, isOneSecond: false);
     controller.scrollController.addListener(scrollListener);
@@ -58,7 +57,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
         Duration.zero,
         () {
           controller
-              .getFavouriteList(context, controller.currentPage, true,
+              .getBusinessList(context, controller.currentPage, true,
                   isFirstTime: false, categoryId: widget.item.id.toString())
               .whenComplete(() {
             if (mounted) {
@@ -114,7 +113,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
                       controller.currentPage = 1;
                       logcat("clear", "DONE");
                       futureDelay(() {
-                        controller.getFavouriteList(
+                        controller.getBusinessList(
                             context, controller.currentPage, false,
                             keyword: controller.searchCtr.text.toString(),
                             categoryId: widget.item.id.toString(),
@@ -179,7 +178,8 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
         itemBuilder: (context, index) {
           if (index < controller.businessList.length) {
             BusinessData data = controller.businessList[index];
-            return controller.getFavouriteListItem(context, data);
+            return controller.getFavouriteListItem(
+                context, data, widget.item.id.toString());
           } else if (controller.isFetchingMore) {
             return Center(
               child: Padding(
