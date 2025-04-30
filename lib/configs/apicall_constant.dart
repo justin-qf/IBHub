@@ -37,4 +37,7 @@ class ApiUrl {
   static const updateService = 'services/edit/';
   static const deleteService = 'services/delete/';
   static const updateProfile = 'profile/update';
+  static const addToFav = 'businesses/favorite/create';
+  static const removeToFav = 'businesses/favorite/delete';
+  static const favList = 'businesses/favorite/list';
 }

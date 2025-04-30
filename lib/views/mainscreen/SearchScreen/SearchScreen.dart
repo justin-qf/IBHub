@@ -12,6 +12,7 @@ import 'package:ibh/controller/searchController.dart';
 import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -127,23 +128,45 @@ class _SearchScreenState extends State<SearchScreen> {
               }),
               getDynamicSizedBox(height: 2.h),
               Expanded(
-                  child: Container(
-                      margin: EdgeInsets.only(left: 2.w, right: 2.w),
-                      child: Stack(children: [
-                        Obx(() {
+                child: SmartRefresher(
+                  physics: const BouncingScrollPhysics(),
+                  controller: controller.refreshController,
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  header: const WaterDropMaterialHeader(
+                      backgroundColor: primaryColor, color: white),
+                  onRefresh: () async {
+                    futureDelay(() {
+                      controller.currentPage = 1;
+                      controller.getBusinessList(context, 1, false,
+                          isFirstTime: true);
+                    }, isOneSecond: false);
+                    controller.refreshController.refreshCompleted();
+                  },
+                  child: CustomScrollView(
+                    controller: controller.scrollController,
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Obx(() {
                           switch (controller.state.value) {
                             case ScreenState.apiLoading:
                             case ScreenState.noNetwork:
                             case ScreenState.noDataFound:
                             case ScreenState.apiError:
                               return SizedBox(
-                                height: Device.height / 1.5,
-                                child: apiOtherStates(controller.state.value,
-                                    controller, controller.searchList, () {
-                                  // controller.getSearchList(context,
-                                  //     controller.searchCtr.text.toString());
-                                }),
-                              );
+                                  height: Device.height / 1.5,
+                                  child: apiOtherStates(controller.state.value,
+                                      controller, controller.categoryList, () {
+                                    futureDelay(() {
+                                      controller.currentPage = 1;
+                                      controller.getBusinessList(
+                                          context, 1, false,
+                                          isFirstTime: true);
+                                    }, isOneSecond: false);
+                                    controller.refreshController
+                                        .refreshCompleted();
+                                  }));
                             case ScreenState.apiSuccess:
                               return apiSuccess(controller.state.value);
                             default:
@@ -151,7 +174,37 @@ class _SearchScreenState extends State<SearchScreen> {
                           }
                           return Container();
                         }),
-                      ]))),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              // Expanded(
+              //     child: Container(
+              //         margin: EdgeInsets.only(left: 2.w, right: 2.w),
+              //         child: Stack(children: [
+              //           Obx(() {
+              //             switch (controller.state.value) {
+              //               case ScreenState.apiLoading:
+              //               case ScreenState.noNetwork:
+              //               case ScreenState.noDataFound:
+              //               case ScreenState.apiError:
+              //                 return SizedBox(
+              //                   height: Device.height / 1.5,
+              //                   child: apiOtherStates(controller.state.value,
+              //                       controller, controller.searchList, () {
+              //                     // controller.getSearchList(context,
+              //                     //     controller.searchCtr.text.toString());
+              //                   }),
+              //                 );
+              //               case ScreenState.apiSuccess:
+              //                 return apiSuccess(controller.state.value);
+              //               default:
+              //                 Container();
+              //             }
+              //             return Container();
+              //           }),
+              //         ]))),
             ]),
           ],
         ),
@@ -162,7 +215,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget apiSuccess(ScreenState state) {
     if (state == ScreenState.apiSuccess && controller.businessList.isNotEmpty) {
       return ListView.builder(
-        controller: controller.scrollController,
+        // controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
         padding:
             EdgeInsets.only(left: 1.w, right: 1.w, top: 0.5.h, bottom: 12.h),

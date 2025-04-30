@@ -14,9 +14,11 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:marquee/marquee.dart';
@@ -68,10 +70,10 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  getCategoryListItem(BuildContext context, CategoryData item) {
+  getCategoryListItem(BuildContext context, CategoryListData item) {
     return GestureDetector(
         onTap: () {
-          Get.to(const CategoryScreen())!.then((value) {});
+          Get.to(CategoryBusinessScreen(item))!.then((value) {});
         },
         child: Container(
             width: 8.h,
@@ -99,7 +101,7 @@ class HomeScreenController extends GetxController {
                           width: 7.h,
                           imageUrl: item.thumbnail,
                           placeholder: (context, url) => Container(
-                            padding: EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(4),
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: Image.asset(
@@ -113,9 +115,7 @@ class HomeScreenController extends GetxController {
                           //     height: 7.h,
                           //     fit: BoxFit.cover,
                           //   ),
-
                           // CircularProgressIndicator(color: primaryColor),
-
                           errorWidget: (context, url, error) => Image.asset(
                             Asset.placeholder,
                             height: 7.h,
@@ -187,7 +187,7 @@ class HomeScreenController extends GetxController {
   }
 
   void getCategoryList(context) async {
-    state.value = ScreenState.apiLoading;
+    // state.value = ScreenState.apiLoading;
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
@@ -219,7 +219,8 @@ class HomeScreenController extends GetxController {
         }
       } else {
         state.value = ScreenState.apiError;
-        message.value = APIResponseHandleText.serverError;
+        message.value =
+            responseData['message'] ?? APIResponseHandleText.serverError;
         // showDialogForScreen(context, HomeScreenconst.title,
         //     responseData['message'] ?? ServerError.servererror,
         //     callback: () {});
@@ -309,66 +310,79 @@ class HomeScreenController extends GetxController {
   }
 
   RxList businessList = [].obs;
-  getBusinessList(context, currentPage, bool hideloading) async {
-    var loadingIndicator = LoadingProgressDialog();
+  getBusinessList(context, currentPage, bool hideloading,
+      {bool? isFirstTime = false}) async {
+    // var loadingIndicator = LoadingProgressDialog();
 
-    if (hideloading == true) {
+    // if (hideloading == true) {
+    //   state.value = ScreenState.apiLoading;
+    // } else {
+    //   loadingIndicator.show(context, '');
+    //   update();
+    // }
+    if (hideloading == false) {
       state.value = ScreenState.apiLoading;
-    } else {
-      loadingIndicator.show(context, '');
-      update();
     }
-    //  try {
-    if (networkManager.connectionType.value == 0) {
-      showDialogForScreen(
-          context, 'Dashboard Screen', Connection.noConnection,
-          callback: () {
-        Get.back();
-      });
-      return;
-    }
-
-    var pageURL = '${ApiUrl.businessesList}?page=$currentPage';
-    var response = await Repository.post({}, pageURL, allowHeader: true);
-    if (hideloading != true) {
-      loadingIndicator.hide(context);
-    }
-    logcat("RESPONSE::", response.body);
-    var responseData = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      if (responseData['success'] == true) {
-        state.value = ScreenState.apiSuccess;
-        message.value = '';
-        businessList.clear();
-        var businessListData = BusinessModel.fromJson(responseData);
-        if (businessListData.data.data.isNotEmpty) {
-          businessList.addAll(businessListData.data.data);
-          businessList.refresh();
-          update();
-        }
-        if (businessListData.data.nextPageUrl != 'null' ||
-            businessListData.data.nextPageUrl != null) {
-          nextPageURL.value = businessListData.data.nextPageUrl.toString();
-          logcat("nextPageURL-1", nextPageURL.value.toString());
-          update();
-        } else {
-          nextPageURL.value = "";
-          logcat("nextPageURL-2", nextPageURL.value.toString());
-          update();
-        }
-        logcat("nextPageURL", nextPageURL.value.toString());
-      } else {
-        message.value = responseData['message'];
+    try {
+      if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, 'Dashboard Screen', responseData['message'],
+            context, HomeScreenconst.title, Connection.noConnection,
+            callback: () {
+          Get.back();
+        });
+        return;
+      }
+
+      var pageURL = '${ApiUrl.businessesList}?page=$currentPage';
+      var response = await Repository.post({}, pageURL, allowHeader: true);
+      // if (hideloading != true) {
+      //   loadingIndicator.hide(context);
+      // }
+      logcat("RESPONSE::", response.body);
+      var responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        if (responseData['success'] == true) {
+          state.value = ScreenState.apiSuccess;
+          message.value = '';
+          if (isFirstTime == true && businessList.isNotEmpty) {
+            businessList.clear();
+          }
+          var businessListData = BusinessModel.fromJson(responseData);
+          if (businessListData.data.data.isNotEmpty) {
+            businessList.addAll(businessListData.data.data);
+            businessList.refresh();
+            update();
+          }
+          if (businessListData.data.nextPageUrl != null) {
+            nextPageURL.value = businessListData.data.nextPageUrl.toString();
+            logcat("nextPageURL-1", nextPageURL.value.toString());
+            update();
+          } else {
+            nextPageURL.value = "";
+            logcat("nextPageURL-2", nextPageURL.value.toString());
+            update();
+          }
+          logcat("nextPageURL", nextPageURL.value.toString());
+        } else {
+          message.value = responseData['message'];
+          showDialogForScreen(
+              context, CategoryScreenConstant.title, responseData['message'],
+              callback: () {});
+        }
+      } else {
+        state.value = ScreenState.apiError;
+        message.value = APIResponseHandleText.serverError;
+        showDialogForScreen(context, HomeScreenconst.title,
+            responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
-    } else {
+    } catch (e) {
+      logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
-      message.value = APIResponseHandleText.serverError;
-      showDialogForScreen(context, 'Dashboard Screen',
-          responseData['message'] ?? ServerError.servererror,
-          callback: () {});
+      message.value = ServerError.servererror;
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
@@ -383,7 +397,13 @@ class HomeScreenController extends GetxController {
           Get.to(BusinessDetailScreen(
             item: item,
             isFromProfile: false,
-          ));
+          ))!
+              .then((value) {
+            currentPage = 1;
+            futureDelay(() {
+              getBusinessList(context, currentPage, false, isFirstTime: true);
+            }, isOneSecond: false);
+          });
         }
       },
       child: Container(

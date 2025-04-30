@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -18,6 +17,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
@@ -62,8 +62,8 @@ class AddServicescreencontroller extends GetxController {
   var searchCategoryModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isCategoryApiCallLoading = false.obs;
-  RxList<CategoryData> categoryFilterList = <CategoryData>[].obs;
-  RxList<CategoryData> categoryList = <CategoryData>[].obs;
+  RxList<CategoryListData> categoryFilterList = <CategoryListData>[].obs;
+  RxList<CategoryListData> categoryList = <CategoryListData>[].obs;
 
   RxString categoryId = "".obs;
 
@@ -374,7 +374,7 @@ class AddServicescreencontroller extends GetxController {
 
   void applyFilter(String keyword) {
     categoryFilterList.clear();
-    for (CategoryData categoryList in categoryList) {
+    for (CategoryListData categoryList in categoryList) {
       if (categoryList.name
           .toString()
           .toLowerCase()

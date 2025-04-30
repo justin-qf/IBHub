@@ -64,7 +64,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
             ),
           ),
           getDynamicSizedBox(height: 4.h),
-
           // GestureDetector(
           //   child: Obx(() {
           //     return ctr.getImage();
@@ -129,7 +128,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
           //   ],
           // ),
           getDynamicSizedBox(height: 1.h),
-
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5.w),

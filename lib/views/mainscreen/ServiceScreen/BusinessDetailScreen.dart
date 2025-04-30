@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
+import 'package:ibh/api_handle/CommonApiStructure.dart';
+import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -16,6 +20,7 @@ import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -24,9 +29,13 @@ import 'package:sizer/sizer.dart';
 // ignore: must_be_immutable
 class BusinessDetailScreen extends StatefulWidget {
   BusinessDetailScreen(
-      {required this.item, required this.isFromProfile, super.key});
+      {required this.item,
+      required this.isFromProfile,
+      this.isFromFav,
+      super.key});
   BusinessData? item;
   bool? isFromProfile;
+  bool? isFromFav = false;
 
   @override
   State<BusinessDetailScreen> createState() => _BusinessDetailScreenState();
@@ -36,7 +45,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   var controller = Get.put(ServiceDetailScreenController());
   bool showTitle = false;
   double? percentage;
-
   String businessName = '';
   String businessId = '';
   String thumbnail = '';
@@ -89,11 +97,22 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     businessId = retrievedObject.id.toString();
     phone = retrievedObject.phone.toString();
     businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
-    idUsedinCtr = widget.item != null ? widget.item!.id : retrievedObject.id;
+    // final idUsedinCtr =
+    //     widget.item != null ? widget.item!.id : retrievedObject.id;
+    final idUsedinCtr = widget.item != null
+        ? widget.isFromFav == true
+            ? int.parse(widget.item!.businessId)
+            : widget.item!.id
+        : retrievedObject.id;
     controller.bussinessID(idUsedinCtr);
     controller.getImageColor(
         url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);
-
+    if (widget.item != null && widget.item!.isFavorite == true) {
+      controller.isFavourite.value = widget.item!.isFavorite;
+    } else {
+      controller.isFavourite.value = false;
+    }
+    logcat("ISFav::", controller.isFavourite.value);
     futureDelay(() {
       controller.getServiceList(context, 1, true, idUsedinCtr,
           isFirstTime: true);
@@ -120,8 +139,15 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 child: getFloatingActionButton(onClick: () {
                   Get.to(AddServicescreen())?.then((value) {
                     if (value == true) {
-                      controller.getServiceList(context, 1, true,
-                          widget.item != null ? widget.item!.id : businessId,
+                      controller.getServiceList(
+                          context,
+                          1,
+                          true,
+                          widget.item != null
+                              ? widget.isFromFav == true
+                                  ? int.parse(widget.item!.businessId)
+                                  : widget.item!.id
+                              : businessId,
                           isFirstTime: true);
                     }
                   });
@@ -146,7 +172,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     height: isSmallDevice(context) ? 31.h : 30.h,
                     decoration: BoxDecoration(
                       color: controller.bgColor.value,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(25),
                         bottomRight: Radius.circular(25),
                       ),
@@ -201,11 +227,33 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       child: Obx(() {
                         return GestureDetector(
                             onTap: () {
-                              controller.toggleFavourite();
+                              logcat("FavIDDDD", jsonEncode(widget.item));
+                              logcat("FavIDs", widget.item!.id.toString());
+                              controller.isFavourite.value == true
+                                  ? removeFavouriteAPI(
+                                      context,
+                                      controller.networkManager,
+                                      widget.item != null
+                                          ? widget.isFromFav == true
+                                              ? widget.item!.businessId
+                                              : widget.item!.id.toString()
+                                          : businessId,
+                                      "Business Detail")
+                                  : addFavouriteAPI(
+                                      context,
+                                      controller.networkManager,
+                                      widget.item != null
+                                          ? widget.isFromFav == true
+                                              ? widget.item!.businessId
+                                              : widget.item!.id.toString()
+                                          : businessId,
+                                      "Business Detail");
+                              // controller.getIsProductAddToFav(
+                              //     controller.isFavourite.value);
                             },
                             child: Container(
-                              padding: EdgeInsets.all(5),
-                              child: controller.isFavourite.value
+                              padding: const EdgeInsets.all(5),
+                              child: controller.isFavourite.value == true
                                   ? SvgPicture.asset(Asset.heart2)
                                   : SvgPicture.asset(Asset.heart),
                             ));
@@ -351,7 +399,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                               ))!
                                   .then((value) {});
                             }, isFromDetailScreen: true, isShowSeeMore: false)
-                          : SizedBox.shrink()),
+                          : const SizedBox.shrink()),
                       // getHomeLable('Services List', () {
                       //   Get.to(ServiceScreen(
                       //     data: widget.isFromProfile == true ? null : widget.item,

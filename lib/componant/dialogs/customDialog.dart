@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +162,9 @@ class CustomLoginAlertRoundedDialog extends StatelessWidget {
                     textAlign: TextAlign.center,
                     LoginConst.subText,
                     style: TextStyle(
-                        color: black, fontFamily: dM_sans_bold, fontSize: 11.5.sp)),
+                        color: black,
+                        fontFamily: dM_sans_bold,
+                        fontSize: 11.5.sp)),
                 getDynamicSizedBox(height: 4.h),
                 Container(
                     margin: EdgeInsets.only(left: 5.w, right: 5.w),
@@ -202,10 +203,9 @@ class CustomLoginAlertRoundedDialog extends StatelessWidget {
                     ),
                     child: Icon(Icons.clear_outlined,
                         color: white,
-                        size:
-                            sizer.Device.screenType == sizer.ScreenType.mobile
-                                ? 3.h
-                                : 5.h)),
+                        size: sizer.Device.screenType == sizer.ScreenType.mobile
+                            ? 3.h
+                            : 5.h)),
               ),
             ),
           ),

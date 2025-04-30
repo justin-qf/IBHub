@@ -3,27 +3,30 @@ import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/search_chat_widgets.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/categoryBusinessController.dart';
 import 'package:ibh/models/businessListModel.dart';
+import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
 // ignore: must_be_immutable
-class FavouriteScreen extends StatefulWidget {
-  FavouriteScreen(this.callBack, {super.key});
-  Function callBack;
+class CategoryBusinessScreen extends StatefulWidget {
+  CategoryBusinessScreen(this.item, {super.key});
+  CategoryListData item;
 
   @override
-  State<FavouriteScreen> createState() => _FavouriteScreenState();
+  State<CategoryBusinessScreen> createState() => _CategoryBusinessScreenState();
 }
 
-class _FavouriteScreenState extends State<FavouriteScreen> {
+class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
   var controller = Get.put(CategoryBusinessController());
   bool showText = false;
   @override
@@ -34,12 +37,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     controller.isSearch = false;
     futureDelay(() {
       controller.currentPage = 1;
-      controller.getFavouriteList(
-        context,
-        1,
-        false,
-        isFirstTime: true,
-      );
+      controller.getStateApi(context, "");
+      // controller.getCategoryApi(context);
+      controller.getFavouriteList(context, 1, false,
+          isFirstTime: true, categoryId: widget.item.id.toString());
     }, isOneSecond: false);
     controller.scrollController.addListener(scrollListener);
     super.initState();
@@ -58,7 +59,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         () {
           controller
               .getFavouriteList(context, controller.currentPage, true,
-                  isFirstTime: false)
+                  isFirstTime: false, categoryId: widget.item.id.toString())
               .whenComplete(() {
             if (mounted) {
               setState(() => controller.isFetchingMore = false);
@@ -94,64 +95,49 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         color: transparent,
         child: Column(children: [
           getDynamicSizedBox(height: 4.h),
-          getCommonToolbar("Favourite", showBackButton: false),
-          // Obx(() {
-          //   return setSearchBars(
-          //       context, controller.searchCtr, SearchScreenConstant.title,
-          //       onCancleClick: () {
-          //         controller.isSearch = false;
-          //         controller.searchCtr.text = '';
-          //         setState(() {});
-          //       },
-          //       onClearClick: () {
-          //         if (controller.searchCtr.text.isNotEmpty) {
-          //           futureDelay(() {
-          //             controller.currentPage = 1;
-          //             logcat("clear", "DONE");
-          //             futureDelay(() {
-          //               controller.getFavouriteList(
-          //                   context, controller.currentPage, false,
-          //                   keyword: controller.searchCtr.text.toString(),
-          //                   isFirstTime: true);
-          //             }, isOneSecond: false);
-          //           });
-          //         }
-          //         controller.searchCtr.text = '';
-          //         setState(() {});
-          //       },
-          //       isCancle: false,
-          //       onFilterClick: () {
-          //         controller.showBottomSheetDialog(
-          //             context, );
-          //       },
-          //       isFilterApplied: controller.isFilterApplied.value);
-          // }),
+          getCommonToolBar(
+              title: widget.item.name ?? "Business List",
+              backFunction: () {
+                Get.back();
+              }),
+          Obx(() {
+            return setSearchBars(
+                context, controller.searchCtr, SearchScreenConstant.title,
+                onCancleClick: () {
+                  controller.isSearch = false;
+                  controller.searchCtr.text = '';
+                  setState(() {});
+                },
+                onClearClick: () {
+                  if (controller.searchCtr.text.isNotEmpty) {
+                    futureDelay(() {
+                      controller.currentPage = 1;
+                      logcat("clear", "DONE");
+                      futureDelay(() {
+                        controller.getFavouriteList(
+                            context, controller.currentPage, false,
+                            keyword: controller.searchCtr.text.toString(),
+                            categoryId: widget.item.id.toString(),
+                            isFirstTime: true);
+                      }, isOneSecond: false);
+                    });
+                  }
+                  controller.searchCtr.text = '';
+                  setState(() {});
+                },
+                isCancle: false,
+                onFilterClick: () {
+                  controller.showBottomSheetDialog(
+                      context, widget.item.id.toString());
+                },
+                isFilterApplied: controller.isFilterApplied.value);
+          }),
           getDynamicSizedBox(height: 1.h),
           Expanded(
-            child: SmartRefresher(
-              physics: const BouncingScrollPhysics(),
-              controller: controller.refreshController,
-              enablePullDown: true,
-              enablePullUp: false,
-              header: const WaterDropMaterialHeader(
-                  backgroundColor: primaryColor, color: white),
-              onRefresh: () async {
-                futureDelay(() {
-                  controller.currentPage = 1;
-                  controller.getFavouriteList(
-                    context,
-                    controller.currentPage,
-                    false,
-                    isFirstTime: true,
-                  );
-                }, isOneSecond: false);
-                controller.refreshController.refreshCompleted();
-              },
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Obx(() {
+              child: Container(
+                  margin: EdgeInsets.only(left: 2.w, right: 2.w),
+                  child: Stack(children: [
+                    Obx(() {
                       switch (controller.state.value) {
                         case ScreenState.apiLoading:
                         case ScreenState.noNetwork:
@@ -161,14 +147,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                             height: Device.height / 1.5,
                             child: apiOtherStates(controller.state.value,
                                 controller, controller.searchList, () {
-                              controller.currentPage = 1;
-                              controller.getFavouriteList(
-                                context,
-                                1,
-                                false,
-                                isFirstTime: true,
-                              );
-                              controller.refreshController.refreshCompleted();
+                              // controller.getSearchList(context,
+                              //     controller.searchCtr.text.toString());
                             }),
                           );
                         case ScreenState.apiSuccess:
@@ -178,37 +158,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       }
                       return Container();
                     }),
-                  )
-                ],
-              ),
-            ),
-          ),
-          // Expanded(
-          //     child: Container(
-          //         margin: EdgeInsets.only(left: 2.w, right: 2.w),
-          //         child: Stack(children: [
-          //           Obx(() {
-          //             switch (controller.state.value) {
-          //               case ScreenState.apiLoading:
-          //               case ScreenState.noNetwork:
-          //               case ScreenState.noDataFound:
-          //               case ScreenState.apiError:
-          //                 return SizedBox(
-          //                   height: Device.height / 1.5,
-          //                   child: apiOtherStates(controller.state.value,
-          //                       controller, controller.searchList, () {
-          //                     // controller.getSearchList(context,
-          //                     //     controller.searchCtr.text.toString());
-          //                   }),
-          //                 );
-          //               case ScreenState.apiSuccess:
-          //                 return apiSuccess(controller.state.value);
-          //               default:
-          //                 Container();
-          //             }
-          //             return Container();
-          //           }),
-          //         ]))),
+                  ]))),
         ]),
       ),
     );

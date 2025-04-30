@@ -30,7 +30,7 @@ import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
 
-class SearchScreenController extends GetxController {
+class CategoryBusinessController extends GetxController {
   RxInt currentTreeView = 2.obs;
   // Rx<ScreenState> state = ScreenState.apiLoading.obs;
   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
@@ -129,7 +129,7 @@ class SearchScreenController extends GetxController {
 
   RxBool isFilterApplied = false.obs;
 
-  Future showBottomSheetDialog(BuildContext context) {
+  Future showBottomSheetDialog(BuildContext context, String categoryId) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -245,44 +245,44 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
-                    getLable(SearchScreenConstant.categoryLabel,
-                        isFromRetailer: true),
-                    Container(
-                      margin: EdgeInsets.only(left: 9.w, right: 9.w),
-                      child: AnimatedSize(
-                        duration: const Duration(milliseconds: 300),
-                        child: Obx(() {
-                          return getReactiveFormField(
-                              node: categoryNode,
-                              controller: categoryCtr,
-                              hintLabel:
-                                  SearchScreenConstant.selectCategoryHint,
-                              onChanged: (val) {},
-                              onTap: () {
-                                searchCategoryctr.text = "";
-                                showDropdownMessage(
-                                    context,
-                                    setCategoryListDialog(),
-                                    SearchScreenConstant.categoryList,
-                                    isShowLoading: categoryFilterList,
-                                    onClick: () {
-                                  applyCategoryFilter('');
-                                }, refreshClick: () {
-                                  searchCategoryctr.text = "";
-                                  futureDelay(() {
-                                    getCategoryApi(context);
-                                  }, isOneSecond: false);
-                                });
-                              },
-                              isReadOnly: true,
-                              wantSuffix: true,
-                              isdown: true,
-                              isEnable: true,
-                              inputType: TextInputType.none,
-                              errorText: cityModel.value.error);
-                        }),
-                      ),
-                    ),
+                    // getLable(SearchScreenConstant.categoryLabel,
+                    //     isFromRetailer: true),
+                    // Container(
+                    //   margin: EdgeInsets.only(left: 9.w, right: 9.w),
+                    //   child: AnimatedSize(
+                    //     duration: const Duration(milliseconds: 300),
+                    //     child: Obx(() {
+                    //       return getReactiveFormField(
+                    //           node: categoryNode,
+                    //           controller: categoryCtr,
+                    //           hintLabel:
+                    //               SearchScreenConstant.selectCategoryHint,
+                    //           onChanged: (val) {},
+                    //           onTap: () {
+                    //             searchCategoryctr.text = "";
+                    //             showDropdownMessage(
+                    //                 context,
+                    //                 setCategoryListDialog(),
+                    //                 SearchScreenConstant.categoryList,
+                    //                 isShowLoading: categoryFilterList,
+                    //                 onClick: () {
+                    //               applyCategoryFilter('');
+                    //             }, refreshClick: () {
+                    //               searchCategoryctr.text = "";
+                    //               futureDelay(() {
+                    //                 getCategoryApi(context);
+                    //               }, isOneSecond: false);
+                    //             });
+                    //           },
+                    //           isReadOnly: true,
+                    //           wantSuffix: true,
+                    //           isdown: true,
+                    //           isEnable: true,
+                    //           inputType: TextInputType.none,
+                    //           errorText: cityModel.value.error);
+                    //     }),
+                    //   ),
+                    // ),
                     getDynamicSizedBox(height: 2.h),
                     Obx(() {
                       return Padding(
@@ -298,8 +298,9 @@ class SearchScreenController extends GetxController {
                                   Navigator.pop(context);
                                   currentPage = 1;
                                   futureDelay(() {
-                                    getBusinessList(context, currentPage, false,
-                                        categoryId: categoryId.value,
+                                    getFavouriteList(
+                                        context, currentPage, false,
+                                        categoryId: categoryId,
                                         cityId: cityId.value,
                                         stateId: stateId.value,
                                         isFirstTime: true);
@@ -321,12 +322,17 @@ class SearchScreenController extends GetxController {
                                 stateId.value = "";
                                 statectr.text = "";
                                 cityctr.text = "";
-                                categoryCtr.text = "";
-                                categoryId.value = "";
+                                // categoryCtr.text = "";
+                                // categoryId.value = "";
                                 isFilterApplied.value = false;
                                 futureDelay(() {
-                                  getBusinessList(context, currentPage, false,
-                                      isFirstTime: true);
+                                  getFavouriteList(
+                                    context,
+                                    currentPage,
+                                    false,
+                                    isFirstTime: true,
+                                    categoryId: categoryId,
+                                  );
                                 }, isOneSecond: false);
                               }, Button.clear, validate: true),
                             )
@@ -623,7 +629,7 @@ class SearchScreenController extends GetxController {
   void getCityApi(context, cityID, bool isLoading) async {
     var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: SearchScreenConstant.titleScreen,
+        title: SearchScreenConstant.cityList,
         // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
         apiEndPoint: "${ApiUrl.getCity}/$cityID",
         allowHeader: true, apisLoading: (isTrue) {
@@ -649,17 +655,10 @@ class SearchScreenController extends GetxController {
   }
 
   void getStateApi(context, stateID) async {
-    logcat("getStateApi", stateID.toString());
-    // var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: SearchScreenConstant.titleScreen,
+        title: SearchScreenConstant.stateList,
         apiEndPoint: ApiUrl.getState,
         allowHeader: true, apisLoading: (isTrue) {
-      // if (isTrue) {
-      //   loadingIndicator.show(context, '');
-      // } else {
-      //   loadingIndicator.hide(context);
-      // }
       isStateApiCallLoading.value = isTrue;
       logcat("isCityList:", isTrue.toString());
       update();
@@ -675,16 +674,10 @@ class SearchScreenController extends GetxController {
   }
 
   void getCategoryApi(context) async {
-    // var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: SearchScreenConstant.titleScreen,
+        title: SearchScreenConstant.categoryLabel,
         apiEndPoint: ApiUrl.getCategories,
         allowHeader: true, apisLoading: (isTrue) {
-      // if (isTrue) {
-      //   loadingIndicator.show(context, '');
-      // } else {
-      //   loadingIndicator.hide(context);
-      // }
       isCategoryApiCallLoading.value = isTrue;
       update();
     }, onResponse: (response) {
@@ -699,7 +692,7 @@ class SearchScreenController extends GetxController {
   }
 
   RxList businessList = [].obs;
-  getBusinessList(context, currentPage, bool hideloading,
+  getFavouriteList(context, currentPage, bool hideloading,
       {String? stateId,
       String? cityId,
       String? categoryId,
@@ -711,33 +704,32 @@ class SearchScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, SearchScreenConstant.titleScreen, Connection.noConnection,
+            context, CategoryScreenConstant.title, Connection.noConnection,
             callback: () {
           Get.back();
         });
         return;
       }
 
-      var pageURL = '${ApiUrl.businessesList}?page=$currentPage';
+      var pageURL = '${ApiUrl.favList}?page=$currentPage';
 
       Map<String, dynamic> requestBody = {};
 
-      if (stateId != null && stateId.isNotEmpty) {
-        requestBody['state'] = int.parse(stateId);
-      }
-      if (cityId != null && cityId.isNotEmpty) {
-        requestBody['city'] = int.parse(cityId);
-      }
-      if (categoryId != null && categoryId.isNotEmpty) {
-        requestBody['category'] = int.parse(categoryId);
-      }
-      if (keyword != null && keyword.isNotEmpty) {
-        requestBody['keyword'] = [keyword]; // list
-      }
+      // if (stateId != null && stateId.isNotEmpty) {
+      //   requestBody['state'] = int.parse(stateId);
+      // }
+      // if (cityId != null && cityId.isNotEmpty) {
+      //   requestBody['city'] = int.parse(cityId);
+      // }
+      // if (categoryId != null && categoryId.isNotEmpty) {
+      //   requestBody['category'] = int.parse(categoryId);
+      // }
+      // if (keyword != null && keyword.isNotEmpty) {
+      //   requestBody['keyword'] = [keyword]; // list
+      // }
 
       logcat("BusinessListParam::", requestBody.toString());
-      var response =
-          await Repository.post(requestBody, pageURL, allowHeader: true);
+      var response = await Repository.get({}, pageURL, allowHeader: true);
       logcat("RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -757,24 +749,22 @@ class SearchScreenController extends GetxController {
           }
           if (businessListData.data.nextPageUrl != null) {
             nextPageURL.value = businessListData.data.nextPageUrl.toString();
-            logcat("nextPageURL-1", nextPageURL.value.toString());
             update();
           } else {
             nextPageURL.value = "";
-            logcat("nextPageURL-2", nextPageURL.value.toString());
             update();
           }
           logcat("nextPageURL", nextPageURL.value.toString());
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(
-              context, SearchScreenConstant.titleScreen, responseData['message'],
+          showDialogForScreen(context, CategoryScreenConstant.title,
+              responseData['message'] ?? ServerError.servererror,
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(context, SearchScreenConstant.titleScreen,
+        showDialogForScreen(context, CategoryScreenConstant.title,
             responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
@@ -782,16 +772,13 @@ class SearchScreenController extends GetxController {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
       message.value = ServerError.servererror;
-      // if (hideloading != true) {
-      //   loadingIndicator.hide(context);
-      // }
-      showDialogForScreen(
-          context, SearchScreenConstant.titleScreen, ServerError.servererror,
-          callback: () {});
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
-  getBusinessListItem(BuildContext context, BusinessData item) {
+  getFavouriteListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();
@@ -799,15 +786,23 @@ class SearchScreenController extends GetxController {
           // ignore: use_build_context_synchronously
           showBottomSheetPopup(context);
         } else {
+          // Get.to(BusinessDetailScreen(
+          //   item: item,
+          //   isFromProfile: false,
+          // ));
           Get.to(BusinessDetailScreen(
             item: item,
             isFromProfile: false,
-          ));
+            isFromFav: true,
+          ))!
+              .then((value) {
+            currentPage = 1;
+            futureDelay(() {
+              logcat("isREfressh", "DONE");
+              getFavouriteList(context, currentPage, true, isFirstTime: true);
+            }, isOneSecond: false);
+          });
         }
-        // Get.to(BusinessDetailScreen(
-        //   item: item,
-        //   isFromProfile: false,
-        // ));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -830,13 +825,14 @@ class SearchScreenController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(5),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
                 height: 12.h,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: primaryColor, width: 1), // border color and width
+                      color: Colors.grey.withOpacity(0.8),
+                      width: 1), // border color and width
                   borderRadius: BorderRadius.circular(
                       Device.screenType == sizer.ScreenType.mobile
                           ? 3.5.w
@@ -912,7 +908,7 @@ class SearchScreenController extends GetxController {
                     getDynamicSizedBox(height: 1.h),
                     Text(item.name,
                         style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
+                            fontFamily: dM_sans_regular,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
@@ -925,7 +921,7 @@ class SearchScreenController extends GetxController {
                                 : item.phone,
                         maxLines: 2,
                         style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
+                            fontFamily: dM_sans_regular,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),

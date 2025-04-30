@@ -502,13 +502,6 @@ class Updateprofilecontroller extends GetxController {
   getImage() {
     return Stack(
       children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          child: Container(
-            width: 12.h,
-          ),
-        ),
         Container(
           height: Device.screenType == sizer.ScreenType.mobile ? 10.h : 10.8.h,
           margin: const EdgeInsets.only(right: 10),
@@ -517,18 +510,15 @@ class Updateprofilecontroller extends GetxController {
             border: Border.all(color: white, width: 1.w),
             borderRadius: BorderRadius.circular(100.w),
             boxShadow: [
-              BoxShadow(
-                color: black.withOpacity(0.1),
-                blurRadius: 5.0,
-              )
+              BoxShadow(color: black.withOpacity(0.1), blurRadius: 5.0)
             ],
           ),
-          child: CircleAvatar(
+          child: ClipOval(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50.0),
               child: imageFile.value == null && imageURl.value.isNotEmpty
                   ? CachedNetworkImage(
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                       imageUrl: imageURl.value,
                       placeholder: (context, url) => const Center(
                             child:
@@ -536,12 +526,13 @@ class Updateprofilecontroller extends GetxController {
                           ),
                       imageBuilder: (context, imageProvider) => Image.network(
                             imageURl.value,
-                            fit: BoxFit.fitWidth,
+                            fit: BoxFit.cover,
                           ),
                       errorWidget: (context, url, error) => SvgPicture.asset(
                             Asset.profileimg,
                             height: 8.0.h,
                             width: 8.0.h,
+                            fit: BoxFit.cover,
                           ))
                   : imageFile.value == null
                       ? SvgPicture.asset(
@@ -577,16 +568,12 @@ class Updateprofilecontroller extends GetxController {
             padding: const EdgeInsets.all(5),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: primaryColor,
-              border: Border.all(color: white, width: 0.6.w),
-              borderRadius: BorderRadius.circular(100.w),
-              boxShadow: [
-                BoxShadow(
-                  color: black.withOpacity(0.1),
-                  blurRadius: 5.0,
-                )
-              ],
-            ),
+                color: primaryColor,
+                border: Border.all(color: white, width: 0.6.w),
+                borderRadius: BorderRadius.circular(100.w),
+                boxShadow: [
+                  BoxShadow(color: black.withOpacity(0.1), blurRadius: 5.0)
+                ]),
             child: SvgPicture.asset(
               Asset.add,
               height: 12.0.h,
@@ -682,7 +669,6 @@ class Updateprofilecontroller extends GetxController {
             errorText1: "Profile picture is required",
             iscomman: true,
             shouldEnableButton: true);
-        print('No image selected');
         update();
       }
     });

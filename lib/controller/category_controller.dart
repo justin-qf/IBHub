@@ -17,6 +17,7 @@ import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -37,7 +38,6 @@ class CategoryController extends GetxController {
 
   getCategoryList(context, currentPage, bool hideloading,
       {bool? isFirstTime = false}) async {
-    var loadingIndicator = LoadingProgressDialog();
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -55,8 +55,8 @@ class CategoryController extends GetxController {
       var response = await Repository.get({}, pageURL, allowHeader: true);
 
       logcat("RESPONSE::", response.body);
+      var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
@@ -69,8 +69,8 @@ class CategoryController extends GetxController {
             categoryList.refresh();
             update();
           }
-          if (categoryData.data.nextPageUrl != 'null' ||
-              categoryData.data.nextPageUrl != null) {
+          // categoryData.data.nextPageUrl != 'null' ||
+          if (categoryData.data.nextPageUrl != null) {
             nextPageURL.value = categoryData.data.nextPageUrl.toString();
             logcat("nextPageURL-1", nextPageURL.value.toString());
             update();
@@ -89,20 +89,17 @@ class CategoryController extends GetxController {
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(
-            context, CategoryScreenConstant.title, ServerError.servererror,
+        showDialogForScreen(context, CategoryScreenConstant.title,
+            responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
       message.value = ServerError.servererror;
-      if (hideloading != true) {
-        loadingIndicator.hide(context);
-      }
-      showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
-          callback: () {});
+      // showDialogForScreen(
+      //     context, CategoryScreenConstant.title, ServerError.servererror,
+      //     callback: () {});
     }
   }
 
@@ -205,12 +202,13 @@ class CategoryController extends GetxController {
   getOldListItem(BuildContext context, {required CategoryListData data}) {
     return GestureDetector(
       onTap: () {
-        getServiceDetails(context, data);
+        // getServiceDetails(context, data);
+        Get.to(CategoryBusinessScreen(data))!.then((value) {});
       },
       child: Container(
         height: 15.h,
         width: 3.w,
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: white,
@@ -219,14 +217,14 @@ class CategoryController extends GetxController {
               color: Colors.grey.withOpacity(0.2), // Shadow color
               spreadRadius: 1, // Spread radius
               blurRadius: 5, // Blur radius
-              offset: Offset(0, 3), // Position of shadow
+              offset: const Offset(0, 3), // Position of shadow
             ),
           ],
         ),
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10))),

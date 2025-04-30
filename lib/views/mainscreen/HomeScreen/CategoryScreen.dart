@@ -27,7 +27,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   void initState() {
-    controller.getCategoryList(context, 1, false, isFirstTime: true);
+    futureDelay(() {
+      controller.getCategoryList(context, 1, false, isFirstTime: true);
+    }, isOneSecond: false);
+    controller.refreshController.refreshCompleted();
     controller.scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -79,19 +82,21 @@ class _CategoryScreenState extends State<CategoryScreen> {
       body: Container(
         color: transparent,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            getDynamicSizedBox(height: 5.h),
+            getDynamicSizedBox(height: 4.h),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 5.w),
-              child: getleftsidebackbtn(
-                title: 'Category',
-                backFunction: () {
-                  Get.back(result: true);
-                },
-              ),
-            ),
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                child: getleftsidebackbtn(
+                  title: 'Category',
+                  backFunction: () {
+                    Get.back(result: true);
+                  },
+                )),
             Expanded(
               child: SmartRefresher(
+                physics: const BouncingScrollPhysics(),
                 controller: controller.refreshController,
                 enablePullDown: true,
                 enablePullUp: false,
@@ -120,7 +125,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 child: apiOtherStates(controller.state.value,
                                     controller, controller.categoryList, () {
                                   controller.getCategoryList(
-                                      context, controller.currentPage, true);
+                                      context, controller.currentPage, false,
+                                      isFirstTime: true);
+                                  controller.refreshController
+                                      .refreshCompleted();
                                 }));
                           case ScreenState.apiSuccess:
                             return apiSuccess(controller.state.value);
@@ -134,27 +142,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               ),
             ),
-            // Expanded(
-            //   child: Obx(() {
-            //     switch (controller.state.value) {
-            //       case ScreenState.apiLoading:
-            //       case ScreenState.noNetwork:
-            //       case ScreenState.noDataFound:
-            //       case ScreenState.apiError:
-            //         return apiOtherStates(controller.state.value, controller,
-            //             controller.categoryList, () {
-            //           controller.getCategoryList(
-            //               context, controller.currentPage, true);
-            //         });
-            //       case ScreenState.apiSuccess:
-            //         return apiSuccess(controller.state.value);
-            //       // ignore: unreachable_switch_default
-            //       default:
-            //         Container();
-            //     }
-            //     return Container();
-            //   }),
-            // )
           ],
         ),
       ),
@@ -167,7 +154,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       return MasonryGridView.count(
         controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
+        padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 1.h),
         crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
         mainAxisSpacing: 10,
         crossAxisSpacing: 8,

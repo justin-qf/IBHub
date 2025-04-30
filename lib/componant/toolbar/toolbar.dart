@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ibh/configs/assets_constant.dart';
@@ -6,7 +5,9 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:marquee/marquee.dart';
 import 'package:sizer/sizer.dart';
+import 'package:sizer/sizer.dart' as sizer;
 import 'package:get/get.dart' as getx;
 
 getToolbar(
@@ -645,13 +646,13 @@ getleftsidebackbtn(
                 : EdgeInsets.only(top: 2.h, bottom: 2.h),
             // color: Colors.yellow,
             // padding: EdgeInsets.all(5),
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: primaryColor),
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: primaryColor),
             child: Padding(
-              padding: EdgeInsets.all(2),
+              padding: const EdgeInsets.all(2),
               child: SvgPicture.asset(
                 Asset.arrowBack,
-                colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(white, BlendMode.srcIn),
                 fit: BoxFit.contain,
               ),
             )),
@@ -663,6 +664,69 @@ getleftsidebackbtn(
           style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
         )
     ],
+  );
+}
+
+getCommonToolBar({required backFunction, String? title, istitle = true}) {
+  return Container(
+    padding: EdgeInsets.only(left: 4.w, right: 4.w),
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: backFunction,
+          child: Container(
+              margin: EdgeInsets.only(top: 2.h, bottom: 2.h),
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: primaryColor),
+              child: Padding(
+                padding: const EdgeInsets.all(2),
+                child: SvgPicture.asset(
+                  Asset.arrowBack,
+                  colorFilter: const ColorFilter.mode(white, BlendMode.srcIn),
+                  fit: BoxFit.contain,
+                ),
+              )),
+        ),
+        getDynamicSizedBox(width: 2.w),
+        if (istitle == true)
+          // title!.length > 9
+          //     ? Expanded(
+          //         child: Marquee(
+          //             style: TextStyle(
+          //               fontFamily: dM_sans_regular,
+          //               color: black,
+          //               fontSize: Device.screenType == sizer.ScreenType.mobile
+          //                   ? 14.sp
+          //                   : 9.sp,
+          //             ),
+          //             text: title,
+          //             scrollAxis: Axis.horizontal,
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             blankSpace:
+          //                 20.0, // Adjust the space between text repetitions
+          //             velocity: 50.0, // Adjust the scrolling speed
+          //             pauseAfterRound: const Duration(
+          //                 seconds: 1), // Time to pause after each scroll
+          //             startPadding: 10.0, // Adjust the initial padding
+          //             accelerationDuration:
+          //                 const Duration(seconds: 1), // Duration for acceleration
+          //             accelerationCurve: Curves.linear, // Acceleration curve
+          //             decelerationDuration: const Duration(
+          //                 milliseconds: 500), // Duration for deceleration
+          //             decelerationCurve: Curves.easeOut),
+          //       )
+          Expanded(
+            child: Text(
+              title!,
+              maxLines: 1,
+              style: TextStyle(
+                  fontFamily: dM_sans_bold,
+                  fontSize: 18.sp,
+                  overflow: TextOverflow.ellipsis),
+            ),
+          )
+      ],
+    ),
   );
 }
 

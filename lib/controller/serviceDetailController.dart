@@ -16,6 +16,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/ServiceListModel.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/models/pdfModel.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
@@ -61,9 +62,19 @@ class ServiceDetailScreenController extends GetxController {
 
   RxBool isFavourite = false.obs;
 
-  toggleFavourite() {
-    isFavourite.value = !isFavourite.value;
+  // toggleFavourite() {
+  //   isFavourite.value = !isFavourite.value;
+  // }
+
+  getIsProductAddToFav(bool isAddedToFav) {
+    isFavourite.value = isAddedToFav;
+    update();
   }
+
+  // getIsProductAddedToFav(String productId) async {
+  //   isFavourite!.value = await UserPreferences.isFavorite(productId);
+  //   update();
+  // }
 
   Rx<Color> bgColor = Rx<Color>(Colors.white); // Background color
 
