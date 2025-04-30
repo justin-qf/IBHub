@@ -99,7 +99,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
     // final idUsedinCtr =
     //     widget.item != null ? widget.item!.id : retrievedObject.id;
-    final idUsedinCtr = widget.item != null
+    idUsedinCtr = widget.item != null
         ? widget.isFromFav == true
             ? int.parse(widget.item!.businessId)
             : widget.item!.id
@@ -221,43 +221,45 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       ],
                     ),
                   ),
-                  Positioned(
-                      top: 7.h,
-                      right: 6.w,
-                      child: Obx(() {
-                        return GestureDetector(
-                            onTap: () {
-                              logcat("FavIDDDD", jsonEncode(widget.item));
-                              logcat("FavIDs", widget.item!.id.toString());
-                              controller.isFavourite.value == true
-                                  ? removeFavouriteAPI(
-                                      context,
-                                      controller.networkManager,
-                                      widget.item != null
-                                          ? widget.isFromFav == true
-                                              ? widget.item!.businessId
-                                              : widget.item!.id.toString()
-                                          : businessId,
-                                      "Business Detail")
-                                  : addFavouriteAPI(
-                                      context,
-                                      controller.networkManager,
-                                      widget.item != null
-                                          ? widget.isFromFav == true
-                                              ? widget.item!.businessId
-                                              : widget.item!.id.toString()
-                                          : businessId,
-                                      "Business Detail");
-                              // controller.getIsProductAddToFav(
-                              //     controller.isFavourite.value);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: controller.isFavourite.value == true
-                                  ? SvgPicture.asset(Asset.heart2)
-                                  : SvgPicture.asset(Asset.heart),
-                            ));
-                      }))
+                  widget.isFromProfile == false
+                      ? Positioned(
+                          top: 6.5.h,
+                          right: 6.w,
+                          child: Obx(() {
+                            return GestureDetector(
+                                onTap: () {
+                                  logcat("FavIDDDD", jsonEncode(widget.item));
+                                  logcat("FavIDs", widget.item!.id.toString());
+                                  controller.isFavourite.value == true
+                                      ? removeFavouriteAPI(
+                                          context,
+                                          controller.networkManager,
+                                          widget.item != null
+                                              ? widget.isFromFav == true
+                                                  ? widget.item!.businessId
+                                                  : widget.item!.id.toString()
+                                              : businessId,
+                                          "Business Detail")
+                                      : addFavouriteAPI(
+                                          context,
+                                          controller.networkManager,
+                                          widget.item != null
+                                              ? widget.isFromFav == true
+                                                  ? widget.item!.businessId
+                                                  : widget.item!.id.toString()
+                                              : businessId,
+                                          "Business Detail");
+                                  // controller.getIsProductAddToFav(
+                                  //     controller.isFavourite.value);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: controller.isFavourite.value == true
+                                      ? SvgPicture.asset(Asset.heart2)
+                                      : SvgPicture.asset(Asset.heart),
+                                ));
+                          }))
+                      : SizedBox.shrink()
                 ],
               ),
             ),
