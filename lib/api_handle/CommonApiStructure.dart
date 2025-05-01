@@ -9,6 +9,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/controller/serviceDetailController.dart';
 import 'package:ibh/models/login_model.dart';
+import 'package:ibh/models/statusCheckModel.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/log.dart';
 
@@ -122,7 +123,7 @@ void removeFavouriteAPI(context, InternetController networkManager,
   }
 }
 
-void changeStatusAPI(context, InternetController networkManager, int status,
+void changeStatusAPI(context, InternetController networkManager, String status,
     String serviceId, String screenName,
     {Function? onSuccess, Function? onFailure}) async {
   var loadingIndicator = LoadingProgressDialogs();
@@ -137,11 +138,11 @@ void changeStatusAPI(context, InternetController networkManager, int status,
       });
       return;
     }
-
+    print('status id' + status);
     // Make the PUT request
     var response = await Repository.put(
       {
-        "status": status.toString(),
+        "status": status.toString().trim(),
       },
       '${ApiUrl.changeStatus}/$serviceId',
       allowHeader: true,
@@ -149,28 +150,26 @@ void changeStatusAPI(context, InternetController networkManager, int status,
 
     // Decode the response
     loadingIndicator.hide(context);
-    var data = jsonDecode(response.body);
-    logcat("Change Status Response", data);
+    final decodedJson = jsonDecode(response.body);
+    StatusCheck data = StatusCheck.fromJson(decodedJson);
+    logcat("Change Status Response", data.toString());
 
     // Handle the response based on status code
     if (response.statusCode == 200) {
-      if (data['success'] == true) {
-        // If success, call onSuccess callback (if provided)
-        print('update');
-        Get.find<ServiceDetailScreenController>().getIsServiceActive(true);
-        showCustomToast(context, data['Service is Active'].toString());
-        if (onSuccess != null) {
-          onSuccess();
-        }
+      if (data.success == true) {
+        final isActive =
+            data.data.isActive == '1'; // Adjust this based on your API logic
+
+        showCustomToast(
+            context, isActive ? 'Service is Active' : 'Service is InActive');
       } else {
         // If the API returned an error message, show it in a toast
-        Get.find<ServiceDetailScreenController>().getIsServiceActive(false);
-        showCustomToast(context, data['Service is InActive'].toString());
+
+        showCustomToast(context, data.message);
       }
     } else {
       // If the status code is not 200, show an error message in a dialog
-      showDialogForScreen(context, screenName, data['message'] ?? "",
-          callback: () {});
+      showDialogForScreen(context, screenName, data.message, callback: () {});
     }
   } catch (e) {
     logcat("Exception", e);

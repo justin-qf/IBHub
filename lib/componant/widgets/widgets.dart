@@ -261,7 +261,7 @@ Widget getHomeLable(String title, Function onCLick,
                     Text(DashboardText.seeAll,
                         style: TextStyle(
                           color: isDarkMode() ? white : primaryColor,
-                          fontFamily: dM_sans_regular,
+                          fontFamily: dM_sans_medium,
                           fontWeight: FontWeight.w500,
                           fontSize: Device.screenType == ScreenType.mobile
                               ? 16.sp

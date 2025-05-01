@@ -101,8 +101,7 @@ class _MainScreenState extends State<MainScreen> {
                             icon: Icons.home_rounded,
                             text: BottomConstant.home),
                         GButton(
-                            icon: Icons.search_rounded,
-                            text: BottomConstant.search),
+                            icon: Icons.search, text: BottomConstant.search),
                         GButton(
                           icon: Icons.star,
                           text: BottomConstant.favourite,

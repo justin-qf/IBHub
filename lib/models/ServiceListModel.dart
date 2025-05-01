@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 ServiceListModel serviceListModelFromJson(String str) =>
     ServiceListModel.fromJson(json.decode(str));
 
@@ -91,7 +93,7 @@ class ServiceDataList {
   String keywords;
   String categoryId;
   String thumbnail;
-  int isActive;
+  RxInt isActive;
   String categoryName;
 
   ServiceDataList({
@@ -101,9 +103,9 @@ class ServiceDataList {
     required this.keywords,
     required this.categoryId,
     required this.thumbnail,
-    required this.isActive,
+    required int isActive,
     required this.categoryName,
-  });
+  }) : isActive = RxInt(isActive);
 
   factory ServiceDataList.fromJson(Map<String, dynamic> json) =>
       ServiceDataList(
@@ -113,7 +115,7 @@ class ServiceDataList {
         keywords: json["keywords"] ?? '',
         categoryId: json["category_id"].toString(),
         thumbnail: json["thumbnail"] ?? '',
-        isActive: json["is_active"],
+        isActive: json["is_active"] ?? 0,
         categoryName: json["category_name"] ?? '',
       );
 
@@ -124,7 +126,7 @@ class ServiceDataList {
         "keywords": keywords,
         "category_id": categoryId,
         "thumbnail": thumbnail,
-        "is_active": isActive,
+        "is_active": isActive.value,
         "category_name": categoryName,
       };
 }

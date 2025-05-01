@@ -90,91 +90,105 @@ class HomeScreenController extends GetxController {
                       shape: BoxShape.circle,
                       color: white,
                       border: Border.all(
-                        color: grey, // Border color
-                        width: 0.5, // Border width
+                        color: primaryColor, // Border color
+                        // Border width
                       ),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.all(4.0),
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          fit: BoxFit.cover,
-                          height: 7.h,
-                          width: 7.h,
-                          imageUrl: item.thumbnail,
-                          placeholder: (context, url) => Container(
-                            padding: const EdgeInsets.all(4),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.asset(
-                                  Asset.bussinessPlaceholder,
-                                  // width: 3.w,
-                                )),
-                          ),
-                          //  Center(
-                          //   child: Image.asset(
-                          //     Asset.placeholder,
-                          //     height: 7.h,
-                          //     fit: BoxFit.cover,
-                          //   ),
-                          // CircularProgressIndicator(color: primaryColor),
-                          errorWidget: (context, url, error) => Image.asset(
-                            Asset.placeholder,
-                            height: 7.h,
-                            fit: BoxFit.cover,
-                          ),
-                          imageBuilder: (context, imageProvider) {
-                            return Image(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            );
-                          },
+                    child: ClipOval(
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        height: 7.7.h,
+                        width: 7.h,
+                        imageUrl: item.thumbnail,
+                        placeholder: (context, url) => Container(
+                          padding: const EdgeInsets.all(4),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.asset(
+                                Asset.bussinessPlaceholder,
+                                // width: 3.w,
+                              )),
                         ),
+                        //  Center(
+                        //   child: Image.asset(
+                        //     Asset.placeholder,
+                        //     height: 7.h,
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // CircularProgressIndicator(color: primaryColor),
+                        errorWidget: (context, url, error) => Image.asset(
+                          Asset.placeholder,
+                          height: 7.h,
+                          fit: BoxFit.cover,
+                        ),
+                        imageBuilder: (context, imageProvider) {
+                          return Image(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                   ),
                   getDynamicSizedBox(height: 1.h),
-                  item.name.length > 9
-                      ? Expanded(
-                          child: Marquee(
-                              style: TextStyle(
-                                fontFamily: dM_sans_regular,
-                                color: black,
-                                fontSize:
-                                    Device.screenType == sizer.ScreenType.mobile
-                                        ? 14.sp
-                                        : 9.sp,
-                              ),
-                              text: item.name,
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              blankSpace:
-                                  20.0, // Adjust the space between text repetitions
-                              velocity: 50.0, // Adjust the scrolling speed
-                              pauseAfterRound: const Duration(
-                                  seconds:
-                                      1), // Time to pause after each scroll
-                              startPadding: 10.0, // Adjust the initial padding
-                              accelerationDuration: const Duration(
-                                  seconds: 1), // Duration for acceleration
-                              accelerationCurve:
-                                  Curves.linear, // Acceleration curve
-                              decelerationDuration: const Duration(
-                                  milliseconds:
-                                      500), // Duration for deceleration
-                              decelerationCurve: Curves.easeOut),
-                        )
-                      : Text(
-                          item.name,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontFamily: dM_sans_regular,
-                              color: black,
-                              fontSize:
-                                  Device.screenType == sizer.ScreenType.mobile
-                                      ? 12.sp
-                                      : 9.sp),
-                        )
+                  Expanded(
+                    child: Text(
+                      item.name,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                      maxLines: 2, // Allows text to go to a second line
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: dM_sans_medium,
+                        color: black,
+                        fontSize: Device.screenType == sizer.ScreenType.mobile
+                            ? 13.sp
+                            : 10.sp,
+                      ),
+                    ),
+                  )
+                  // item.name.length > 9
+                  //     ? Expanded(
+                  //         child: Marquee(
+                  //             style: TextStyle(
+                  //               fontFamily: dM_sans_regular,
+                  //               color: black,
+                  //               fontSize:
+                  //                   Device.screenType == sizer.ScreenType.mobile
+                  //                       ? 14.sp
+                  //                       : 9.sp,
+                  //             ),
+                  //             text: item.name,
+                  //             scrollAxis: Axis.horizontal,
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             blankSpace:
+                  //                 20.0, // Adjust the space between text repetitions
+                  //             velocity: 50.0, // Adjust the scrolling speed
+                  //             pauseAfterRound: const Duration(
+                  //                 seconds:
+                  //                     1), // Time to pause after each scroll
+                  //             startPadding: 10.0, // Adjust the initial padding
+                  //             accelerationDuration: const Duration(
+                  //                 seconds: 1), // Duration for acceleration
+                  //             accelerationCurve:
+                  //                 Curves.linear, // Acceleration curve
+                  //             decelerationDuration: const Duration(
+                  //                 milliseconds:
+                  //                     500), // Duration for deceleration
+                  //             decelerationCurve: Curves.easeOut),
+                  //       )
+                  //     : Text(
+                  //         item.name,
+                  //         textAlign: TextAlign.center,
+                  //         style: TextStyle(
+                  //             fontFamily: dM_sans_regular,
+                  //             color: black,
+                  //             fontSize:
+                  //                 Device.screenType == sizer.ScreenType.mobile
+                  //                     ? 12.sp
+                  //                     : 9.sp),
+                  //       )
                 ])));
   }
 
@@ -192,8 +206,8 @@ class HomeScreenController extends GetxController {
     // state.value = ScreenState.apiLoading;
     try {
       if (networkManager.connectionType.value == 0) {
-        showDialogForScreen(
-            context, 'Home Screen', Connection.noConnection, callback: () {
+        showDialogForScreen(context, 'Home Screen', Connection.noConnection,
+            callback: () {
           Get.back();
         });
         return;
@@ -214,8 +228,7 @@ class HomeScreenController extends GetxController {
           }
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(
-              context, 'Home Screen', responseData['message'],
+          showDialogForScreen(context, 'Home Screen', responseData['message'],
               callback: () {});
         }
       } else {
@@ -248,8 +261,8 @@ class HomeScreenController extends GetxController {
     }
     try {
       if (networkManager.connectionType.value == 0) {
-        showDialogForScreen(
-            context, 'Home Screen', Connection.noConnection, callback: () {
+        showDialogForScreen(context, 'Home Screen', Connection.noConnection,
+            callback: () {
           Get.back();
         });
         return;
@@ -285,15 +298,13 @@ class HomeScreenController extends GetxController {
           logcat("nextPageURL", nextPageURL.value.toString());
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(
-              context, 'Home Screen', responseData['message'],
+          showDialogForScreen(context, 'Home Screen', responseData['message'],
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(
-            context, 'Home Screen', ServerError.servererror,
+        showDialogForScreen(context, 'Home Screen', ServerError.servererror,
             callback: () {});
       }
     } catch (e) {
@@ -366,8 +377,7 @@ class HomeScreenController extends GetxController {
           logcat("nextPageURL", nextPageURL.value.toString());
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(
-              context, 'Home Screen', responseData['message'],
+          showDialogForScreen(context, 'Home Screen', responseData['message'],
               callback: () {});
         }
       } else {
@@ -426,7 +436,7 @@ class HomeScreenController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(2),
+                // padding: const EdgeInsets.all(2),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
                 height: 11.h,

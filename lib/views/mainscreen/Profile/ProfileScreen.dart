@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
@@ -73,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       padding:
                           EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
                       decoration: BoxDecoration(
-                        color: secondaryColor.withOpacity(0.6),
+                        color: primaryColor,
                         borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(35),
                             bottomRight: Radius.circular(35)),
@@ -98,9 +97,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 }
                               }, child: Obx(() {
                                 return CircleAvatar(
-                                  radius: 4.2.h,
+                                  backgroundColor: primaryColor,
+                                  radius: 25.sp,
                                   child: CachedNetworkImage(
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.cover,
                                     height: 20.h,
                                     width: 20.w,
                                     imageUrl: controller.profilePic.value,
@@ -111,13 +111,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     imageBuilder: (context, imageProvider) =>
                                         CircleAvatar(
                                       radius: 25.h,
-                                      backgroundColor: white,
+                                      backgroundColor: primaryColor,
                                       backgroundImage: imageProvider,
                                     ),
                                     errorWidget: (context, url, error) =>
                                         CircleAvatar(
                                             radius: 25.h,
-                                            backgroundColor: white,
+                                            backgroundColor: primaryColor,
                                             child: const Icon(Icons.person)),
                                   ),
                                 );
@@ -143,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             maxLines: 1,
                                             style: TextStyle(
                                                 fontSize: 16.sp,
-                                                color: black,
+                                                color: white,
                                                 fontFamily: dM_sans_semiBold,
                                                 fontWeight: FontWeight.w800),
                                           );
@@ -161,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             maxLines: 2,
                                             style: TextStyle(
                                                 fontSize: 16.sp,
-                                                color: black,
+                                                color: white,
                                                 fontFamily: dM_sans_semiBold,
                                                 fontWeight: FontWeight.w500),
                                           );
@@ -267,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
-                            getDynamicSizedBox(height: 10.h),
+                            getDynamicSizedBox(height: 13.h),
                             GestureDetector(
                               onTap: () {
                                 Get.to(const PrivacyPolicyScreen());
@@ -303,7 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                               ),
                             ),
-                            getDynamicSizedBox(height: 2.h),
+                            // getDynamicSizedBox(height: 2.h),
                             Text(
                               'Powered by IBH',
                               style: TextStyle(

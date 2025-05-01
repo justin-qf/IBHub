@@ -811,10 +811,7 @@ class SearchScreenController extends GetxController {
         //   isFromProfile: false,
         // ));
       },
-      child:
-      
-      
-       Container(
+      child: Container(
         decoration: BoxDecoration(
           color: white,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -835,7 +832,7 @@ class SearchScreenController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(2),
+                // padding: const EdgeInsets.all(2),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
                 height: 12.h,

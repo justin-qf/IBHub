@@ -420,16 +420,13 @@ class ServiceDetailScreenController extends GetxController {
 
   RxInt bussinessID = 0.obs;
 
-  // int currentStatus = 0;
-  RxBool isActice = false.obs;
+  // RxBool isActive = false.obs;
 
-  getIsServiceActive(bool isActived) {
-    isActice.value = isActived;
-    update();
-  }
-
-  toggleActiveStatus(BuildContext context,
-      {required statusID, required serviceId}) {
+  toggleActiveStatus(
+    BuildContext context, {
+    required statusID,
+    required serviceId,
+  }) {
     changeStatusAPI(context, networkManager, statusID, serviceId, 'Service',
         onSuccess: () {});
   }
@@ -439,37 +436,35 @@ class ServiceDetailScreenController extends GetxController {
     return Column(
       children: [
         isFromProfile
-            ? Obx(
-                () => Align(
-                  alignment: Alignment.centerRight,
-                  child: SizedBox(
-                    height: 3.h,
-                    width: 35.w,
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontFamily: dM_sans_medium,
-                          fontSize:
-                              16.sp, // Optional: set your desired font size
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'Status : ',
-                            style: TextStyle(
-                                fontFamily: dM_sans_medium,
-                                color: primaryColor), // Always black
-                          ),
-                          TextSpan(
-                            text: isActice.value ? 'Active' : 'InActive',
-                            style: TextStyle(
-                              fontFamily: dM_sans_medium,
-                              color: isActice.value
-                                  ? primaryColor
-                                  : secondaryColor, // Change color
-                            ),
-                          ),
-                        ],
+            ? Align(
+                alignment: Alignment.centerRight,
+                child: SizedBox(
+                  height: 3.h,
+                  width: 35.w,
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: dM_sans_medium,
+                        fontSize: 16.sp, // Optional: set your desired font size
                       ),
+                      children: [
+                        TextSpan(
+                          text: 'Status : ',
+                          style: TextStyle(
+                              fontFamily: dM_sans_medium,
+                              color: primaryColor), // Always black
+                        ),
+                        TextSpan(
+                          text:
+                              item.isActive.value == 1 ? 'Active' : 'InActive',
+                          style: TextStyle(
+                            fontFamily: dM_sans_medium,
+                            color: item.isActive.value == 1
+                                ? primaryColor
+                                : secondaryColor, // Change color
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -504,7 +499,7 @@ class ServiceDetailScreenController extends GetxController {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(2),
+                          // padding: const EdgeInsets.all(2),
                           margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                           width: 25.w,
                           height: 12.h,
@@ -514,7 +509,7 @@ class ServiceDetailScreenController extends GetxController {
                                 width: 1), // border color and width
                             borderRadius: BorderRadius.circular(
                                 Device.screenType == sizer.ScreenType.mobile
-                                    ? 3.5.w
+                                    ? 3.6.w
                                     : 2.5.w),
                           ),
                           child: ClipRRect(
@@ -524,7 +519,7 @@ class ServiceDetailScreenController extends GetxController {
                                     : 2.5.w),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
-                              height: 18.h,
+                              height: 17.h,
                               imageUrl: item.thumbnail,
                               placeholder: (context, url) =>
                                   Image.asset(Asset.bussinessPlaceholder),
@@ -713,17 +708,22 @@ class ServiceDetailScreenController extends GetxController {
                               scale: 3.5.sp,
                               child: SwitchListTile(
                                 dense: true,
-                                value: isActice.value,
+                                value: item.isActive.value == 1,
                                 onChanged: (value) {
-                                  print(item.isActive.toString());
-                                  toggleActiveStatus(context,
-                                      statusID: item.isActive,
-                                      serviceId: item.id.toString());
+                                  int newStatus =
+                                      item.isActive.value == 0 ? 1 : 0;
+
+                                  toggleActiveStatus(
+                                    context,
+                                    statusID: newStatus.toString(),
+                                    serviceId: item.id.toString(),
+                                  );
+                                  // update();
                                 },
                               ),
                             ),
                           );
-                        }),
+                        })
                       ],
                     ),
 

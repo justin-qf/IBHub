@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
@@ -16,9 +13,7 @@ import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
-import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
-import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
@@ -30,7 +25,6 @@ import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
