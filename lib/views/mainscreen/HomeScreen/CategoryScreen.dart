@@ -11,6 +11,7 @@ import 'package:ibh/controller/category_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -45,8 +46,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
       setState(() => controller.isFetchingMore = true);
       controller.currentPage++;
       Future.delayed(
-        Duration.zero,
+        const Duration(seconds: 1),
         () {
+          logcat("scrollListener::", "DONE");
           controller
               // ignore: use_build_context_synchronously
               .getCategoryList(context, controller.currentPage, true,
@@ -104,6 +106,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 header: const WaterDropMaterialHeader(
                     backgroundColor: primaryColor, color: white),
                 onRefresh: () async {
+                  controller.currentPage = 1;
                   futureDelay(() {
                     controller.getCategoryList(
                         context, controller.currentPage, false,
@@ -126,6 +129,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 height: Device.height / 1.5,
                                 child: apiOtherStates(controller.state.value,
                                     controller, controller.categoryList, () {
+                                  controller.currentPage = 1;
                                   controller.getCategoryList(
                                       context, controller.currentPage, false,
                                       isFirstTime: true);

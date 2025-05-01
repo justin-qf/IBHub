@@ -44,6 +44,7 @@ class HomeScreenController extends GetxController {
   bool isFetchingMore = false;
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
+  var isBusinessLoading = false.obs;
 
   @override
   void dispose() {
@@ -325,8 +326,14 @@ class HomeScreenController extends GetxController {
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
+    if (isFirstTime == true) {
+      isBusinessLoading(true);
+    }
     try {
       if (networkManager.connectionType.value == 0) {
+        if (isFirstTime == true) {
+          isBusinessLoading(false);
+        }
         showDialogForScreen(
             context, HomeScreenconst.title, Connection.noConnection,
             callback: () {
@@ -340,6 +347,9 @@ class HomeScreenController extends GetxController {
       // if (hideloading != true) {
       //   loadingIndicator.hide(context);
       // }
+      if (isFirstTime == true) {
+        isBusinessLoading(false);
+      }
       logcat("RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -382,6 +392,9 @@ class HomeScreenController extends GetxController {
       }
     } catch (e) {
       logcat("Ecxeption", e);
+      if (isFirstTime == true) {
+        isBusinessLoading(false);
+      }
       state.value = ScreenState.apiError;
       // message.value = ServerError.servererror;
       // showDialogForScreen(
