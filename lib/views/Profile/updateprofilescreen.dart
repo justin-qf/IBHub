@@ -1,3 +1,4 @@
+// import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -5,6 +6,7 @@ import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/updateProfileController.dart';
@@ -24,7 +26,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
   @override
   void initState() {
     super.initState();
-
+    ctr.getVerificationyApi(context); // this will call API on screen load
     ctr.getProfileData();
     ctr.getState(context);
   }
@@ -153,6 +155,16 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                     // getDynamicSizedBox(height: 1.h),
                     getLable('Logo', isRequired: true),
                     getDynamicSizedBox(height: 2.h),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Personal Details :-',
+                        style: TextStyle(fontFamily: dM_sans_bold),
+                      ),
+                    ),
+                    getDynamicSizedBox(height: 1.h),
+                    Divider(),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,
@@ -168,6 +180,38 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                           hint: SignUpConstant.namehint,
                           isRequired: true);
                     }),
+
+                    Obx(
+                      () {
+                        return getTextField(
+                            label: SignUpConstant.contactLabel,
+                            ctr: ctr.phoneCtr,
+                            node: ctr.phoneNode,
+                            model: ctr.phoneModel.value,
+                            function: (val) {
+                              ctr.validateFields(
+                                val,
+                                isnumber: true,
+                                model: ctr.phoneModel,
+                                errorText1: SignUpConstant.contactNumHint,
+                                errorText2: SignUpConstant.contactNumLengthHint,
+                              );
+                            },
+                            hint: SignUpConstant.contactNumHint,
+                            isNumeric: true,
+                            isRequired: true);
+                      },
+                    ),
+                    getDynamicSizedBox(height: 2.h),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Bussiness Details :-',
+                        style: TextStyle(fontFamily: dM_sans_bold),
+                      ),
+                    ),
+                    getDynamicSizedBox(height: 1.h),
+                    Divider(),
                     Obx(
                       () {
                         return getTextField(
@@ -185,6 +229,24 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                             isRequired: true);
                       },
                     ),
+                    Obx(
+                      () {
+                        return getTextField(
+                            label: 'Website Link',
+                            ctr: ctr.websiteCtr,
+                            node: ctr.websiteNode,
+                            model: ctr.websiteModel.value,
+                            function: (val) {
+                              ctr.validateFields(val,
+                                  iscomman: true,
+                                  model: ctr.websiteModel,
+                                  errorText1: 'Enter Website Link');
+                            },
+                            hint: 'Enter Website Link',
+                            isRequired: true);
+                      },
+                    ),
+
                     // Obx(() {
                     //   return getTextField(
                     //     useOnChanged: false,
@@ -223,27 +285,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         isRequired: true,
                       );
                     }),
-                    Obx(
-                      () {
-                        return getTextField(
-                            label: SignUpConstant.contactLabel,
-                            ctr: ctr.phoneCtr,
-                            node: ctr.phoneNode,
-                            model: ctr.phoneModel.value,
-                            function: (val) {
-                              ctr.validateFields(
-                                val,
-                                isnumber: true,
-                                model: ctr.phoneModel,
-                                errorText1: SignUpConstant.contactNumHint,
-                                errorText2: SignUpConstant.contactNumLengthHint,
-                              );
-                            },
-                            hint: SignUpConstant.contactNumHint,
-                            isNumeric: true,
-                            isRequired: true);
-                      },
-                    ),
+
                     Row(
                       children: [
                         Expanded(
@@ -358,6 +400,49 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       },
                     ),
                     getDynamicSizedBox(height: 2.h),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Verification Details :-',
+                        style: TextStyle(fontFamily: dM_sans_bold),
+                      ),
+                    ),
+                    getDynamicSizedBox(height: 1.h),
+                    Divider(),
+                    getDynamicSizedBox(height: 1.h),
+                    Obx(() {
+                      return getTextField(
+                        useOnChanged: false,
+                        label: 'Verification Type',
+                        ctr: ctr.verificationCtr,
+                        node: ctr.verificationNode,
+                        model: ctr.verificationModel.value,
+                        hint: 'Select Document Type',
+                        wantsuffix: true,
+                        isenable: false,
+                        isdropdown: true,
+                        usegesture: true,
+                        isRequired: true,
+                        context: context,
+                        gestureFunction: () {
+                          ctr.unfocusAll();
+                          showDropdownMessage(
+                              context,
+                              ctr.setVerificationListDialog(),
+                              'Verification Type',
+                              isShowLoading: ctr.verificationList, onClick: () {
+                            ctr.applyFilter('', isState: false);
+                          }, refreshClick: () {
+                            futureDelay(() {
+                              ctr.getVerificationyApi(context);
+                            }, isOneSecond: false);
+                          });
+                        },
+                      );
+                    }),
+
+                    getDynamicSizedBox(height: 3.h),
+
                     Obx(() {
                       return ctr.isloading == false
                           ? Container(

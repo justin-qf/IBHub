@@ -41,5 +41,5 @@ class ApiUrl {
   static const removeToFav = 'businesses/favorite/delete';
   static const favList = 'businesses/favorite/list';
   static const changeStatus = 'services/change-status';
-
+  static const verification = 'document-upload/type/list';
 }

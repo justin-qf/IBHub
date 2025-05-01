@@ -17,6 +17,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/models/VerificationModel.dart';
 import 'package:ibh/models/cityModel.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
@@ -48,12 +49,14 @@ class Updateprofilecontroller extends GetxController {
       cityNode,
       pincodeNode,
       websiteNode,
+      verificationNode,
       // visitingcardNode,
       addressNode;
   late TextEditingController nameCtr,
       emailCtr,
       phoneCtr,
       bussinessCtr,
+      verificationCtr,
       stateCtr,
       cityCtr,
       pincodeCtr,
@@ -71,6 +74,7 @@ class Updateprofilecontroller extends GetxController {
   var imageModel = ValidationModel(null, null, isValidate: false).obs;
   var websiteModel = ValidationModel(null, null, isValidate: false).obs;
   var addressModel = ValidationModel(null, null, isValidate: false).obs;
+  var verificationModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isFormInvalidate = false.obs;
 
@@ -86,10 +90,14 @@ class Updateprofilecontroller extends GetxController {
   bool get isObsecureConPassText => obsecureTextConPass.value;
   set isObsecureConPassText(bool value) => obsecureTextConPass.value = value;
 
-  late TextEditingController searchStatectr, searchCityctr;
-  late FocusNode searchStateNode, searchCityNode;
+  late TextEditingController searchStatectr,
+      searchCityctr,
+      searchVerificationctr;
+  late FocusNode searchStateNode, searchCityNode, searchVerificationNode;
   var searchStateModel = ValidationModel(null, null, isValidate: false).obs;
   var searchCityModel = ValidationModel(null, null, isValidate: false).obs;
+  var searchVerificationModel =
+      ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isStateApiCallLoading = false.obs;
   // RxList stateFilterList = [].obs;
@@ -101,6 +109,10 @@ class Updateprofilecontroller extends GetxController {
   RxBool isCityApiCallLoading = false.obs;
   RxList<CityListData> cityList = <CityListData>[].obs;
   RxList<CityListData> cityFilterList = <CityListData>[].obs;
+
+  RxBool isVerificationApiCallLoading = false.obs;
+  RxList<VerificationData> verificationList = <VerificationData>[].obs;
+  RxString selectedVerification = "".obs;
 
   RxString cityId = "".obs;
 
@@ -207,6 +219,14 @@ class Updateprofilecontroller extends GetxController {
           iscomman: true,
           shouldEnableButton: false);
     }
+
+    if (websiteCtr.text.isNotEmpty) {
+      validateFields(verificationCtr.text,
+          model: verificationModel,
+          errorText1: "Verification Document is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
     // if (nameCtr.text.isNotEmpty ||
     //     emailCtr.text.isNotEmpty ||
     //     bussinessCtr.text.isNotEmpty ||
@@ -247,7 +267,9 @@ class Updateprofilecontroller extends GetxController {
     addressNode = FocusNode();
     searchStateNode = FocusNode();
     searchCityNode = FocusNode();
+    searchVerificationNode = FocusNode();
     websiteNode = FocusNode();
+    verificationNode = FocusNode();
 
     nameCtr = TextEditingController();
     emailCtr = TextEditingController();
@@ -260,7 +282,9 @@ class Updateprofilecontroller extends GetxController {
     addressCtr = TextEditingController();
     searchStatectr = TextEditingController();
     searchCityctr = TextEditingController();
+    searchVerificationctr = TextEditingController();
     websiteCtr = TextEditingController();
+    verificationCtr = TextEditingController();
   }
 
   @override
@@ -314,6 +338,8 @@ class Updateprofilecontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (websiteModel.value.isValidate == false) {
       isFormInvalidate.value = false;
+    } else if (verificationModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
     }
@@ -347,6 +373,7 @@ class Updateprofilecontroller extends GetxController {
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
     websiteModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
+    verificationModel.value = ValidationModel(null, null, isValidate: false);
 
     // Reset reactive variables
     isFormInvalidate.value = false;
@@ -370,7 +397,9 @@ class Updateprofilecontroller extends GetxController {
     addressCtr.clear();
     searchStatectr.clear();
     searchCityctr.clear();
+    searchVerificationctr.clear();
     websiteCtr.clear();
+    verificationCtr.clear();
 
     nameNode.unfocus();
     emailNode.unfocus();
@@ -383,7 +412,9 @@ class Updateprofilecontroller extends GetxController {
     addressNode.unfocus();
     searchStateNode.unfocus();
     searchCityNode.unfocus();
+    searchVerificationNode.unfocus();
     websiteNode.unfocus();
+    verificationNode.unfocus();
 
     // Reset validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -396,6 +427,7 @@ class Updateprofilecontroller extends GetxController {
     // visitingCardModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
     websiteModel.value = ValidationModel(null, null, isValidate: false);
+    verificationModel.value = ValidationModel(null, null, isValidate: false);
     isFormInvalidate.value = false;
     isloading = false;
   }
@@ -438,6 +470,26 @@ class Updateprofilecontroller extends GetxController {
           enableSignUpButton();
         });
   }
+
+//stepper
+  // var _isMovingForward = true.obs;
+  // bool get ismovingForward => _isMovingForward.value;
+  // set ismovingForward(bool value) => _isMovingForward.value = value;
+
+  // var _stepperValue = 0.obs;
+  // int get StepperValue => _stepperValue.value;
+  // set StepperValue(int value) => _stepperValue.value = value;
+
+  // void incrementstepper() {
+  //   print(StepperValue);
+  //   StepperValue += 1;
+  //   update();
+  // }
+
+  // void decerementstepper() {
+  //   StepperValue -= 1;
+  //   update();
+  // }
 
   // final ImagePicker _picker = ImagePicker();
   Rx<File?> imageFile = null.obs;
@@ -517,6 +569,12 @@ class Updateprofilecontroller extends GetxController {
       //     callback: () {});
     }
   }
+
+
+  Rx<File?> verificationFile = null.obs;
+  
+
+
 
   getImage() {
     return Stack(
@@ -851,6 +909,61 @@ class Updateprofilecontroller extends GetxController {
     }, networkManager: networkManager);
   }
 
+  void getVerificationyApi(context) async {
+    print('calllinggg');
+
+    commonGetApiCallFormate(
+      allowHeader: true,
+      title: 'State',
+      context,
+      onResponse: (data) {
+        Verification responsDetails = Verification.fromJson(data);
+
+        verificationList.clear();
+
+        verificationList.addAll(responsDetails.data);
+
+        logcat("VERIFICATION_RESPONSE", jsonEncode(verificationList));
+        // print(stateList);
+
+        for (var state in stateList) {
+          print('ID: ${state.id}, Name: ${state.name}');
+        }
+      },
+      apiEndPoint: ApiUrl.verification,
+      networkManager: networkManager,
+      apisLoading: (bool val) {
+        // isloading = val;
+      },
+    );
+
+    var loadingIndicator = LoadingProgressDialogs();
+    commonGetApiCallFormate(context,
+        title: SearchScreenConstant.cityList,
+        // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
+        apiEndPoint: ApiUrl.verification,
+        allowHeader: true, apisLoading: (isTrue) {
+      if (isLoading == true) {
+        if (isTrue) {
+          loadingIndicator.show(context, '');
+        } else {
+          loadingIndicator.hide(context);
+        }
+      }
+      isVerificationApiCallLoading.value = isTrue;
+
+      update();
+    }, onResponse: (response) {
+      Verification data = Verification.fromJson(response);
+      cityList.clear();
+
+      verificationList.addAll(data.data);
+
+      logcat("VERIFICATION_RESPONSE", jsonEncode(verificationList));
+      update();
+    }, networkManager: networkManager);
+  }
+
   Widget setStateListDialog() {
     return Obx(() {
       if (isStateApiCallLoading.value == true) {
@@ -917,19 +1030,21 @@ class Updateprofilecontroller extends GetxController {
     });
   }
 
-  Widget setcityListDialog() {
-    return Obx(() {
-      if (isCityApiCallLoading.value == true) {
-        return setDropDownContent([].obs, const Text("Loading"),
-            isApiIsLoading: isCityApiCallLoading.value);
-      }
-      return setDropDownContent(
-          cityFilterList,
-          controller: searchCityctr,
+  Widget setVerificationListDialog() {
+    return Obx(
+      () {
+        if (isCityApiCallLoading.value == true) {
+          return setDropDownContent([].obs, const Text("Loading"),
+              isApiIsLoading: isCityApiCallLoading.value);
+        }
+        return setDropDownContent(
+          isVerificationPopup: true,
+          verificationList,
+          controller: searchVerificationctr,
           ListView.builder(
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            itemCount: cityFilterList.length,
+            itemCount: verificationList.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 dense: true,
@@ -940,39 +1055,88 @@ class Updateprofilecontroller extends GetxController {
                 minLeadingWidth: 5,
                 onTap: () async {
                   Get.back();
-                  cityId.value = cityFilterList[index].id.toString();
-                  cityCtr.text = cityFilterList[index].city;
-                  if (cityCtr.text.toString().isNotEmpty) {
-                    cityFilterList.clear();
-                    cityFilterList.addAll(cityList);
-                  }
 
-                  validateFields(cityCtr.text,
-                      model: cityModel,
-                      errorText1: "City is required",
-                      iscomman: true,
-                      shouldEnableButton: true);
+                  verificationCtr.text = verificationList[index].name;
+
+                  if (verificationCtr.text.isNotEmpty) {
+                    validateFields(verificationCtr.text,
+                        model: verificationModel,
+                        errorText1: "Verification Document is required",
+                        iscomman: true,
+                        shouldEnableButton: true);
+                  }
                   update();
                 },
                 title: showSelectedTextInDialog(
-                    name: cityFilterList[index].city,
-                    modelId: cityFilterList[index].id.toString(),
-                    storeId: cityId.value),
+                  name: verificationList[index].name,
+                ),
               );
             },
           ),
-          searchcontent: getReactiveFormField(
-              node: searchCityNode,
-              controller: searchCityctr,
-              hintLabel: "Search Here",
-              onChanged: (val) {
-                applyFilter(val.toString(), isState: false);
-                update();
+        );
+      },
+    );
+  }
+
+  Widget setcityListDialog() {
+    return Obx(
+      () {
+        if (isCityApiCallLoading.value == true) {
+          return setDropDownContent([].obs, const Text("Loading"),
+              isApiIsLoading: isCityApiCallLoading.value);
+        }
+        return setDropDownContent(
+            cityFilterList,
+            controller: searchCityctr,
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: cityFilterList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  dense: true,
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  contentPadding:
+                      const EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
+                  horizontalTitleGap: null,
+                  minLeadingWidth: 5,
+                  onTap: () async {
+                    Get.back();
+                    cityId.value = cityFilterList[index].id.toString();
+                    cityCtr.text = cityFilterList[index].city;
+                    if (cityCtr.text.toString().isNotEmpty) {
+                      cityFilterList.clear();
+                      cityFilterList.addAll(cityList);
+                    }
+
+                    validateFields(cityCtr.text,
+                        model: cityModel,
+                        errorText1: "City is required",
+                        iscomman: true,
+                        shouldEnableButton: true);
+                    update();
+                  },
+                  title: showSelectedTextInDialog(
+                      name: cityFilterList[index].city,
+                      modelId: cityFilterList[index].id.toString(),
+                      storeId: cityId.value),
+                );
               },
-              isSearch: true,
-              inputType: TextInputType.text,
-              errorText: searchCityModel.value.error));
-    });
+            ),
+            searchcontent: getReactiveFormField(
+                node: searchCityNode,
+                controller: searchCityctr,
+                hintLabel: "Search Here",
+                onChanged: (val) {
+                  applyFilter(val.toString(), isState: false);
+                  update();
+                },
+                isSearch: true,
+                inputType: TextInputType.text,
+                errorText: searchCityModel.value.error));
+      },
+    );
   }
 
   void applyFilter(String keyword, {isState = false}) {
