@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -87,6 +88,88 @@ class MainScreenController extends GetxController {
   //     }
   //   });
   // }
+
+  void showUpdatePopup(BuildContext context) {
+    Future.delayed(const Duration(seconds: 10), () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(2.0.w), // Responsive border radius
+            ),
+            child: Container(
+              padding: EdgeInsets.all(4.0.w), // Responsive padding
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(2.0.w),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Placeholder for the celebratory character image
+                  Image.asset(
+                    Asset.applogo,
+                    height: 20.0.h, // 25% of screen height
+                    width: 20.0.w, // 25% of screen width
+                  ),
+                  SizedBox(height: 2.0.h), // Responsive spacing
+                  // Generic title
+                  Text(
+                    'Exciting Update Available!',
+                    style: TextStyle(
+                      fontFamily: dM_sans_medium,
+                      fontSize: 18.0.sp, // Responsive font size
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor,
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h), // Responsive spacing
+                  // Generic description
+                  Text(
+                    'A new version is here!\nEnjoy fresh features and improvements.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: dM_sans_medium,
+                      fontSize: 14.0.sp, // Responsive font size
+                      color: primaryColor,
+                    ),
+                  ),
+                  SizedBox(height: 2.0.h), // Responsive spacing
+                  // Update App button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                      // Add your update logic here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1.5.w),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0.w,
+                        vertical: 1.5.h,
+                      ),
+                    ),
+                    child: Text(
+                      'UPDATE APP',
+                      style: TextStyle(
+                        fontFamily: dM_sans_medium,
+                        fontSize: 14.0.sp, // Responsive font size
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
 
   void showBottomSheetPopup(BuildContext context) {
     showModalBottomSheet(

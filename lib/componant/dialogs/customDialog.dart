@@ -355,7 +355,7 @@ Future<Object?> pdfPopupDialogs(BuildContext context,
           opacity: a1.value,
           child: CupertinoAlertDialog(
             title: const Text(
-              "Download PDF",
+              "Visiting Card",
               style: TextStyle(
                 fontSize: 18,
                 color: black,
@@ -364,7 +364,7 @@ Future<Object?> pdfPopupDialogs(BuildContext context,
               ),
             ),
             content: const Text(
-              "Do you want to download the PDF in Dark Mode or Light Mode?",
+              "Share in Dark or Light Mode?",
               style: TextStyle(
                 fontSize: 13,
                 color: black,
@@ -380,7 +380,7 @@ Future<Object?> pdfPopupDialogs(BuildContext context,
                 isDefaultAction: true,
                 isDestructiveAction: false,
                 child: const Text(
-                  "Dark Mode",
+                  "Dark",
                   style: TextStyle(
                     fontSize: 15,
                     color: black,
@@ -397,7 +397,7 @@ Future<Object?> pdfPopupDialogs(BuildContext context,
                 isDefaultAction: true,
                 isDestructiveAction: false,
                 child: const Text(
-                  "Light Mode",
+                  "Light",
                   style: TextStyle(
                     fontSize: 15,
                     color: black,

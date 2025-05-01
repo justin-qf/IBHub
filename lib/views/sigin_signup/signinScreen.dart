@@ -61,7 +61,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       Asset.applogo,
                     )),
               ),
-              getDynamicSizedBox(height: 3.h),
+              getDynamicSizedBox(height: 4.h),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -71,15 +71,15 @@ class _SigninscreenState extends State<Signinscreen> {
                 ),
               ),
               getDynamicSizedBox(height: 3.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    'Empowering creators and clients alike \nJoin the platform where work meets talent.',
-                    style: TextStyle(
-                        fontFamily: dM_sans_semiBold,
-                        fontSize: 16.sp,
-                        color: grey)),
-              ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //       'Empowering creators and clients alike \nJoin the platform where work meets talent.',
+              //       style: TextStyle(
+              //           fontFamily: dM_sans_semiBold,
+              //           fontSize: 16.sp,
+              //           color: grey)),
+              // ),
               getDynamicSizedBox(height: 3.h),
               Obx(() {
                 return getTextField(

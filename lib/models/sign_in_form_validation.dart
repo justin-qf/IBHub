@@ -3,4 +3,5 @@ class ValidationModel {
   String? error;
   bool isValidate;
   ValidationModel(this.value, this.error, {this.isValidate = false});
+
 }

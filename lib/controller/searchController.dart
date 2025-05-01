@@ -769,8 +769,8 @@ class SearchScreenController extends GetxController {
           logcat("nextPageURL", nextPageURL.value.toString());
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(
-              context, SearchScreenConstant.titleScreen, responseData['message'],
+          showDialogForScreen(context, SearchScreenConstant.titleScreen,
+              responseData['message'],
               callback: () {});
         }
       } else {
@@ -811,7 +811,10 @@ class SearchScreenController extends GetxController {
         //   isFromProfile: false,
         // ));
       },
-      child: Container(
+      child:
+      
+      
+       Container(
         decoration: BoxDecoration(
           color: white,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -824,7 +827,7 @@ class SearchScreenController extends GetxController {
                 offset: const Offset(0.5, 0.5)),
           ],
         ),
-        margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 2.h),
+        margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
         child: Padding(
           padding:
               EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
@@ -874,7 +877,7 @@ class SearchScreenController extends GetxController {
                       children: [
                         SizedBox(
                           width: Device.screenType == sizer.ScreenType.mobile
-                              ? 64.w
+                              ? 61.w
                               : 70.w,
                           child: Text(item.businessName,
                               maxLines: 2,
@@ -926,7 +929,7 @@ class SearchScreenController extends GetxController {
                       child: Text(item.name,
                           maxLines: 2,
                           style: TextStyle(
-                              fontFamily: dM_sans_regular,
+                              fontFamily: dM_sans_semiBold,
                               fontSize: 14.sp,
                               color: black,
                               fontWeight: FontWeight.w500)),

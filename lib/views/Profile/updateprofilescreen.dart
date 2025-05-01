@@ -53,7 +53,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
       },
       body: Column(
         children: [
-          getDynamicSizedBox(height: 5.h),
+          getDynamicSizedBox(height: 3.h),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5.w),
             child: getleftsidebackbtn(
@@ -63,7 +63,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
               },
             ),
           ),
-          getDynamicSizedBox(height: 4.h),
+          getDynamicSizedBox(height: 2.h),
           // GestureDetector(
           //   child: Obx(() {
           //     return ctr.getImage();
@@ -127,7 +127,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
           //     )
           //   ],
           // ),
-          getDynamicSizedBox(height: 1.h),
+
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -150,7 +150,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         setState(() {});
                       },
                     ),
-                    getDynamicSizedBox(height: 2.h),
+                    // getDynamicSizedBox(height: 1.h),
                     getLable('Logo', isRequired: true),
                     getDynamicSizedBox(height: 2.h),
                     Obx(() {

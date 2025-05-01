@@ -81,6 +81,29 @@ class Repository {
     return response;
   }
 
+    static Future<http.Response> put(
+      Map<String, dynamic> body, String endPoint,
+      {bool? allowHeader}) async {
+    logcat("APIURL:::", buildUrl(endPoint));
+    String token = await UserPreferences().getToken();
+    logcat("TOKEN", token.toString());
+    
+    // Set up headers for the PUT request
+    Map<String, String> headers = {
+      'Content-Type': "application/json",
+      'Authorization': "Bearer " + token,
+    };
+
+    // Make the PUT request
+    var response = await client.put(
+      buildUrl(endPoint),
+      body: jsonEncode(body),  // Convert body to JSON format
+      headers: allowHeader == true ? headers : await buildHeader,
+    );
+
+    return response;
+  }
+
   static Future<http.StreamedResponse> multiPartPost(var body, String endPoint,
       {bool allowHeader = false,
       http.MultipartFile? multiPart,

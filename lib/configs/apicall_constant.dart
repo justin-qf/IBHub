@@ -40,4 +40,6 @@ class ApiUrl {
   static const addToFav = 'businesses/favorite/create';
   static const removeToFav = 'businesses/favorite/delete';
   static const favList = 'businesses/favorite/list';
+  static const changeStatus = 'services/change-status';
+
 }

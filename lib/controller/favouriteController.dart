@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ibh/api_handle/CommonApiStructure.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -631,7 +629,7 @@ class FavouriteController extends GetxController {
   void getCityApi(context, cityID, bool isLoading) async {
     var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
-        title: SearchScreenConstant.cityList,
+        title: 'Favourite Screen',
         // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
         apiEndPoint: "${ApiUrl.getCity}/$cityID",
         allowHeader: true, apisLoading: (isTrue) {
@@ -658,7 +656,7 @@ class FavouriteController extends GetxController {
 
   void getStateApi(context, stateID) async {
     commonGetApiCallFormate(context,
-        title: SearchScreenConstant.stateList,
+        title: 'Favourite Screen',
         apiEndPoint: ApiUrl.getState,
         allowHeader: true, apisLoading: (isTrue) {
       isStateApiCallLoading.value = isTrue;
@@ -677,7 +675,7 @@ class FavouriteController extends GetxController {
 
   void getCategoryApi(context) async {
     commonGetApiCallFormate(context,
-        title: SearchScreenConstant.categoryLabel,
+        title: 'Favourite Screen',
         apiEndPoint: ApiUrl.getCategories,
         allowHeader: true, apisLoading: (isTrue) {
       isCategoryApiCallLoading.value = isTrue;
@@ -759,14 +757,14 @@ class FavouriteController extends GetxController {
           logcat("nextPageURL", nextPageURL.value.toString());
         } else {
           message.value = responseData['message'];
-          showDialogForScreen(context, CategoryScreenConstant.title,
+          showDialogForScreen(context, 'Favourite Screen',
               responseData['message'] ?? ServerError.servererror,
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(context, CategoryScreenConstant.title,
+        showDialogForScreen(context, 'Favourite Screen',
             responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
@@ -815,10 +813,10 @@ class FavouriteController extends GetxController {
                 color: black.withOpacity(0.2),
                 spreadRadius: 0.1,
                 blurRadius: 5,
-                offset: const Offset(0.5, 0.5))
+                offset: const Offset(0.5, 0.5)),
           ],
         ),
-        margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 2.h),
+        margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
         child: Padding(
           padding:
               EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
@@ -826,14 +824,13 @@ class FavouriteController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(2),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
                 height: 12.h,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Colors.grey.withOpacity(0.8),
-                      width: 1), // border color and width
+                      color: primaryColor, width: 1), // border color and width
                   borderRadius: BorderRadius.circular(
                       Device.screenType == sizer.ScreenType.mobile
                           ? 3.5.w
@@ -867,50 +864,36 @@ class FavouriteController extends GetxController {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(item.businessName,
-                            style: TextStyle(
-                                fontFamily: dM_sans_semiBold,
-                                fontSize: 15.sp,
-                                color: black,
-                                fontWeight: FontWeight.w900)),
+                        SizedBox(
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 61.w
+                              : 70.w,
+                          child: Text(item.businessName,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 15.sp,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: black,
+                                  fontWeight: FontWeight.w900)),
+                        ),
                         const Spacer(),
-                        GestureDetector(
-                            onTap: () {
-                              item.isFavorite == true
-                                  ? removeFavouriteAPI(
-                                      context,
-                                      networkManager,
-                                      item.businessId.toString(),
-                                      "Favourite", onClick: () {
-                                      futureDelay(() {
-                                        currentPage = 1;
-                                        getFavouriteList(context, 1, false,
-                                            isFirstTime: true);
-                                      }, isOneSecond: false);
-                                    })
-                                  : addFavouriteAPI(
-                                      context,
-                                      networkManager,
-                                      item.businessId.toString(),
-                                      "Favourite", onClick: () {
-                                      futureDelay(() {
-                                        currentPage = 1;
-                                        getFavouriteList(context, 1, false,
-                                            isFirstTime: true);
-                                      }, isOneSecond: false);
-                                    });
-                              // controller.getIsProductAddToFav(
-                              //     controller.isFavourite.value);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              child: item.isFavorite == true
-                                  ? SvgPicture.asset(
-                                      Asset.heart2,
-                                      height: 2.5.h,
-                                    )
-                                  : SvgPicture.asset(Asset.heart),
-                            ))
+                        // RatingBar.builder(
+                        //   initialRating: item.businessReviewsAvgRating ?? 0.0,
+                        //   minRating: 1,
+                        //   direction: Axis.horizontal,
+                        //   allowHalfRating: true,
+                        //   itemCount: 1,
+                        //   itemSize: 3.5.w,
+                        //   unratedColor: Colors.orange,
+                        //   itemBuilder: (context, _) => const Icon(
+                        //     Icons.star,
+                        //     color: Colors.orange,
+                        //   ),
+                        //   onRatingUpdate: (rating) {
+                        //     logcat("RATING", rating);
+                        //   },
+                        // ),
                         // getText(
                         //   item.businessReviewsAvgRating != null
                         //       ? (item.businessReviewsAvgRating ?? 0.0)
@@ -928,12 +911,18 @@ class FavouriteController extends GetxController {
                       ],
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Text(item.name,
-                        style: TextStyle(
-                            fontFamily: dM_sans_regular,
-                            fontSize: 14.sp,
-                            color: black,
-                            fontWeight: FontWeight.w500)),
+                    SizedBox(
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 64.w
+                          : 70.w,
+                      child: Text(item.name,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
                     getDynamicSizedBox(height: 1.h),
                     Text(
                         item.address.isNotEmpty
@@ -943,7 +932,7 @@ class FavouriteController extends GetxController {
                                 : item.phone,
                         maxLines: 2,
                         style: TextStyle(
-                            fontFamily: dM_sans_regular,
+                            fontFamily: dM_sans_semiBold,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),
@@ -956,4 +945,181 @@ class FavouriteController extends GetxController {
       ),
     );
   }
+
+  // getFavouriteListItem(BuildContext context, BusinessData item) {
+  //   return GestureDetector(
+  //     onTap: () async {
+  //       bool isEmpty = await isAnyFieldEmpty();
+  //       if (isEmpty) {
+  //         // ignore: use_build_context_synchronously
+  //         showBottomSheetPopup(context);
+  //       } else {
+  //         // Get.to(BusinessDetailScreen(
+  //         //   item: item,
+  //         //   isFromProfile: false,
+  //         // ));
+  //         Get.to(BusinessDetailScreen(
+  //           item: item,
+  //           isFromProfile: false,
+  //           isFromFav: true,
+  //         ))!
+  //             .then((value) {
+  //           currentPage = 1;
+  //           futureDelay(() {
+  //             getFavouriteList(context, currentPage, true, isFirstTime: true);
+  //           }, isOneSecond: false);
+  //         });
+  //       }
+  //     },
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: white,
+  //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+  //         boxShadow: [
+  //           BoxShadow(
+  //               // ignore: deprecated_member_use
+  //               color: black.withOpacity(0.2),
+  //               spreadRadius: 0.1,
+  //               blurRadius: 5,
+  //               offset: const Offset(0.5, 0.5))
+  //         ],
+  //       ),
+  //       margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 2.h),
+  //       child: Padding(
+  //         padding:
+  //             EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+  //         child: Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             Container(
+  //               padding: const EdgeInsets.all(5),
+  //               margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+  //               width: 25.w,
+  //               height: 12.h,
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(
+  //                     color: Colors.grey.withOpacity(0.8),
+  //                     width: 1), // border color and width
+  //                 borderRadius: BorderRadius.circular(
+  //                     Device.screenType == sizer.ScreenType.mobile
+  //                         ? 3.5.w
+  //                         : 2.5.w),
+  //               ),
+  //               child: ClipRRect(
+  //                 borderRadius: BorderRadius.circular(
+  //                     Device.screenType == sizer.ScreenType.mobile
+  //                         ? 3.5.w
+  //                         : 2.5.w),
+  //                 child: CachedNetworkImage(
+  //                   fit: BoxFit.cover,
+  //                   height: 18.h,
+  //                   imageUrl: item.visitingCardUrl,
+  //                   placeholder: (context, url) => const Center(
+  //                       child: CircularProgressIndicator(color: primaryColor)),
+  //                   errorWidget: (context, url, error) => Image.asset(
+  //                       Asset.placeholder,
+  //                       height: 10.h,
+  //                       fit: BoxFit.cover),
+  //                 ),
+  //               ),
+  //             ),
+  //             getDynamicSizedBox(width: 2.w),
+  //             Expanded(
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     children: [
+  //                       Text(item.businessName,
+  //                           style: TextStyle(
+  //                               fontFamily: dM_sans_semiBold,
+  //                               fontSize: 15.sp,
+  //                               color: black,
+  //                               fontWeight: FontWeight.w900)),
+  //                       const Spacer(),
+  //                       GestureDetector(
+  //                           onTap: () {
+  //                             item.isFavorite == true
+  //                                 ? removeFavouriteAPI(
+  //                                     context,
+  //                                     networkManager,
+  //                                     item.businessId.toString(),
+  //                                     "Favourite", onClick: () {
+  //                                     futureDelay(() {
+  //                                       currentPage = 1;
+  //                                       getFavouriteList(context, 1, false,
+  //                                           isFirstTime: true);
+  //                                     }, isOneSecond: false);
+  //                                   })
+  //                                 : addFavouriteAPI(
+  //                                     context,
+  //                                     networkManager,
+  //                                     item.businessId.toString(),
+  //                                     "Favourite", onClick: () {
+  //                                     futureDelay(() {
+  //                                       currentPage = 1;
+  //                                       getFavouriteList(context, 1, false,
+  //                                           isFirstTime: true);
+  //                                     }, isOneSecond: false);
+  //                                   });
+  //                             // controller.getIsProductAddToFav(
+  //                             //     controller.isFavourite.value);
+  //                           },
+  //                           child: Container(
+  //                             padding: const EdgeInsets.all(10),
+  //                             child: item.isFavorite == true
+  //                                 ? SvgPicture.asset(
+  //                                     Asset.heart2,
+  //                                     height: 2.5.h,
+  //                                   )
+  //                                 : SvgPicture.asset(Asset.heart),
+  //                           ))
+  //                       // getText(
+  //                       //   item.businessReviewsAvgRating != null
+  //                       //       ? (item.businessReviewsAvgRating ?? 0.0)
+  //                       //           .toStringAsFixed(1)
+  //                       //       : '0.0',
+  //                       //   TextStyle(
+  //                       //       fontFamily: fontSemiBold,
+  //                       //       color: lableColor,
+  //                       //       fontSize:
+  //                       //           Device.screenType == sizer.ScreenType.mobile
+  //                       //               ? 14.sp
+  //                       //               : 7.sp,
+  //                       //       height: 1.2),
+  //                       // ),
+  //                     ],
+  //                   ),
+  //                   getDynamicSizedBox(height: 1.h),
+  //                   Text(item.name,
+  //                       style: TextStyle(
+  //                           fontFamily: dM_sans_regular,
+  //                           fontSize: 14.sp,
+  //                           color: black,
+  //                           fontWeight: FontWeight.w500)),
+  //                   getDynamicSizedBox(height: 1.h),
+  //                   Text(
+  //                       item.address.isNotEmpty
+  //                           ? item.address
+  //                           : item.city != null
+  //                               ? item.city!.city
+  //                               : item.phone,
+  //                       maxLines: 2,
+  //                       style: TextStyle(
+  //                           fontFamily: dM_sans_regular,
+  //                           fontSize: 14.sp,
+  //                           color: black,
+  //                           fontWeight: FontWeight.w500)),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

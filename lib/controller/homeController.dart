@@ -193,8 +193,7 @@ class HomeScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, 'Dashboard Screen', Connection.noConnection,
-            callback: () {
+            context, 'Home Screen', Connection.noConnection, callback: () {
           Get.back();
         });
         return;
@@ -216,7 +215,7 @@ class HomeScreenController extends GetxController {
         } else {
           message.value = responseData['message'];
           showDialogForScreen(
-              context, 'Dashboard Screen', responseData['message'],
+              context, 'Home Screen', responseData['message'],
               callback: () {});
         }
       } else {
@@ -250,8 +249,7 @@ class HomeScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         showDialogForScreen(
-            context, 'Dashboard Screen', Connection.noConnection,
-            callback: () {
+            context, 'Home Screen', Connection.noConnection, callback: () {
           Get.back();
         });
         return;
@@ -288,14 +286,14 @@ class HomeScreenController extends GetxController {
         } else {
           message.value = responseData['message'];
           showDialogForScreen(
-              context, 'Dashboard Screen', responseData['message'],
+              context, 'Home Screen', responseData['message'],
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(
-            context, 'Dashboard Screen', ServerError.servererror,
+            context, 'Home Screen', ServerError.servererror,
             callback: () {});
       }
     } catch (e) {
@@ -305,8 +303,7 @@ class HomeScreenController extends GetxController {
       if (hideloading != true) {
         loadingIndicator.hide(context);
       }
-      showDialogForScreen(
-          context, 'Dashboard Screen', ServerError.servererror,
+      showDialogForScreen(context, 'Home Screen', ServerError.servererror,
           callback: () {});
     }
   }
@@ -370,13 +367,13 @@ class HomeScreenController extends GetxController {
         } else {
           message.value = responseData['message'];
           showDialogForScreen(
-              context, CategoryScreenConstant.title, responseData['message'],
+              context, 'Home Screen', responseData['message'],
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(context, HomeScreenconst.title,
+        showDialogForScreen(context, 'Home Screen',
             responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
@@ -401,14 +398,12 @@ class HomeScreenController extends GetxController {
           Get.to(BusinessDetailScreen(
             item: item,
             isFromProfile: false,
-          ))!
-              .then((value) {
-            currentPage = 1;
-            futureDelay(() {
-              getBusinessList(context, currentPage, false, isFirstTime: true);
-            }, isOneSecond: false);
-          });
+          ));
         }
+        // Get.to(BusinessDetailScreen(
+        //   item: item,
+        //   isFromProfile: false,
+        // ));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -416,6 +411,7 @@ class HomeScreenController extends GetxController {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
+                // ignore: deprecated_member_use
                 color: black.withOpacity(0.2),
                 spreadRadius: 0.1,
                 blurRadius: 5,
@@ -451,14 +447,10 @@ class HomeScreenController extends GetxController {
                     fit: BoxFit.cover,
                     height: 18.h,
                     imageUrl: item.visitingCardUrl,
-                    placeholder: (context, url) => Image.asset(
-                      Asset.bussinessPlaceholder,
-                      // width: 3.w,
-                    ),
-                    // const Center(
-                    //     child: CircularProgressIndicator(color: primaryColor)),
+                    placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(color: primaryColor)),
                     errorWidget: (context, url, error) => Image.asset(
-                        Asset.bussinessPlaceholder,
+                        Asset.placeholder,
                         height: 10.h,
                         fit: BoxFit.cover),
                   ),
@@ -470,64 +462,69 @@ class HomeScreenController extends GetxController {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.businessName,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 15.sp,
-                            color: black,
-                            fontWeight: FontWeight.w900)),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   crossAxisAlignment: CrossAxisAlignment.center,
-                    //   children: [
-                    //     Text(item.businessName,
-                    //         style: TextStyle(
-                    //             fontFamily: dM_sans_semiBold,
-                    //             fontSize: 15.sp,
-                    //             color: black,
-                    //             fontWeight: FontWeight.w900)),
-                    //     const Spacer(),
-                    //     RatingBar.builder(
-                    //       initialRating: item.businessReviewsAvgRating ?? 0.0,
-                    //       minRating: 1,
-                    //       direction: Axis.horizontal,
-                    //       allowHalfRating: true,
-                    //       itemCount: 1,
-                    //       itemSize: 3.5.w,
-                    //       unratedColor: Colors.orange,
-                    //       itemBuilder: (context, _) => const Icon(
-                    //         Icons.star,
-                    //         color: Colors.orange,
-                    //       ),
-                    //       onRatingUpdate: (rating) {
-                    //         logcat("RATING", rating);
-                    //       },
-                    //     ),
-                    //     getText(
-                    //       item.businessReviewsAvgRating != null
-                    //           ? (item.businessReviewsAvgRating ?? 0.0)
-                    //               .toStringAsFixed(1)
-                    //           : '0.0',
-                    //       TextStyle(
-                    //           fontFamily: fontSemiBold,
-                    //           color: lableColor,
-                    //           fontSize:
-                    //               Device.screenType == sizer.ScreenType.mobile
-                    //                   ? 14.sp
-                    //                   : 7.sp,
-                    //           height: 1.2),
-                    //     ),
-                    //   ],
-                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 61.w
+                              : 70.w,
+                          child: Text(item.businessName,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 15.sp,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: black,
+                                  fontWeight: FontWeight.w900)),
+                        ),
+                        const Spacer(),
+                        // RatingBar.builder(
+                        //   initialRating: item.businessReviewsAvgRating ?? 0.0,
+                        //   minRating: 1,
+                        //   direction: Axis.horizontal,
+                        //   allowHalfRating: true,
+                        //   itemCount: 1,
+                        //   itemSize: 3.5.w,
+                        //   unratedColor: Colors.orange,
+                        //   itemBuilder: (context, _) => const Icon(
+                        //     Icons.star,
+                        //     color: Colors.orange,
+                        //   ),
+                        //   onRatingUpdate: (rating) {
+                        //     logcat("RATING", rating);
+                        //   },
+                        // ),
+                        // getText(
+                        //   item.businessReviewsAvgRating != null
+                        //       ? (item.businessReviewsAvgRating ?? 0.0)
+                        //           .toStringAsFixed(1)
+                        //       : '0.0',
+                        //   TextStyle(
+                        //       fontFamily: fontSemiBold,
+                        //       color: lableColor,
+                        //       fontSize:
+                        //           Device.screenType == sizer.ScreenType.mobile
+                        //               ? 14.sp
+                        //               : 7.sp,
+                        //       height: 1.2),
+                        // ),
+                      ],
+                    ),
                     getDynamicSizedBox(height: 1.h),
-                    Text(item.name,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            fontSize: 14.sp,
-                            color: black,
-                            fontWeight: FontWeight.w500)),
+                    SizedBox(
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 64.w
+                          : 70.w,
+                      child: Text(item.name,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
                     getDynamicSizedBox(height: 1.h),
                     Text(
                         item.address.isNotEmpty
@@ -550,4 +547,165 @@ class HomeScreenController extends GetxController {
       ),
     );
   }
+
+  // getBusinessListItem(BuildContext context, BusinessData item) {
+  //   return GestureDetector(
+  //     onTap: () async {
+  //       bool isEmpty = await isAnyFieldEmpty();
+  //       if (isEmpty) {
+  //         // ignore: use_build_context_synchronously
+  //         showBottomSheetPopup(context);
+  //       } else {
+  //         Get.to(BusinessDetailScreen(
+  //           item: item,
+  //           isFromProfile: false,
+  //         ))!
+  //             .then((value) {
+  //           currentPage = 1;
+  //           futureDelay(() {
+  //             getBusinessList(context, currentPage, false, isFirstTime: true);
+  //           }, isOneSecond: false);
+  //         });
+  //       }
+  //     },
+  //     child: Container(
+  //       decoration: BoxDecoration(
+  //         color: white,
+  //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+  //         boxShadow: [
+  //           BoxShadow(
+  //               color: black.withOpacity(0.2),
+  //               spreadRadius: 0.1,
+  //               blurRadius: 5,
+  //               offset: const Offset(0.5, 0.5)),
+  //         ],
+  //       ),
+  //       margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
+  //       child: Padding(
+  //         padding:
+  //             EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+  //         child: Row(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             Container(
+  //               padding: const EdgeInsets.all(2),
+  //               margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+  //               width: 25.w,
+  //               height: 11.h,
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(
+  //                     color: primaryColor, width: 1), // border color and width
+  //                 borderRadius: BorderRadius.circular(
+  //                     Device.screenType == sizer.ScreenType.mobile
+  //                         ? 3.5.w
+  //                         : 2.5.w),
+  //               ),
+  //               child: ClipRRect(
+  //                 borderRadius: BorderRadius.circular(
+  //                     Device.screenType == sizer.ScreenType.mobile
+  //                         ? 3.5.w
+  //                         : 2.5.w),
+  //                 child: CachedNetworkImage(
+  //                   fit: BoxFit.cover,
+  //                   height: 18.h,
+  //                   imageUrl: item.visitingCardUrl,
+  //                   placeholder: (context, url) => Image.asset(
+  //                     Asset.bussinessPlaceholder,
+  //                     // width: 3.w,
+  //                   ),
+  //                   // const Center(
+  //                   //     child: CircularProgressIndicator(color: primaryColor)),
+  //                   errorWidget: (context, url, error) => Image.asset(
+  //                       Asset.bussinessPlaceholder,
+  //                       height: 10.h,
+  //                       fit: BoxFit.cover),
+  //                 ),
+  //               ),
+  //             ),
+  //             getDynamicSizedBox(width: 2.w),
+  //             Expanded(
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(item.businessName,
+  //                       maxLines: 1,
+  //                       style: TextStyle(
+  //                           fontFamily: dM_sans_semiBold,
+  //                           overflow: TextOverflow.ellipsis,
+  //                           fontSize: 15.sp,
+  //                           color: black,
+  //                           fontWeight: FontWeight.w900)),
+  //                   // Row(
+  //                   //   mainAxisAlignment: MainAxisAlignment.center,
+  //                   //   crossAxisAlignment: CrossAxisAlignment.center,
+  //                   //   children: [
+  //                   //     Text(item.businessName,
+  //                   //         style: TextStyle(
+  //                   //             fontFamily: dM_sans_semiBold,
+  //                   //             fontSize: 15.sp,
+  //                   //             color: black,
+  //                   //             fontWeight: FontWeight.w900)),
+  //                   //     const Spacer(),
+  //                   //     RatingBar.builder(
+  //                   //       initialRating: item.businessReviewsAvgRating ?? 0.0,
+  //                   //       minRating: 1,
+  //                   //       direction: Axis.horizontal,
+  //                   //       allowHalfRating: true,
+  //                   //       itemCount: 1,
+  //                   //       itemSize: 3.5.w,
+  //                   //       unratedColor: Colors.orange,
+  //                   //       itemBuilder: (context, _) => const Icon(
+  //                   //         Icons.star,
+  //                   //         color: Colors.orange,
+  //                   //       ),
+  //                   //       onRatingUpdate: (rating) {
+  //                   //         logcat("RATING", rating);
+  //                   //       },
+  //                   //     ),
+  //                   //     getText(
+  //                   //       item.businessReviewsAvgRating != null
+  //                   //           ? (item.businessReviewsAvgRating ?? 0.0)
+  //                   //               .toStringAsFixed(1)
+  //                   //           : '0.0',
+  //                   //       TextStyle(
+  //                   //           fontFamily: fontSemiBold,
+  //                   //           color: lableColor,
+  //                   //           fontSize:
+  //                   //               Device.screenType == sizer.ScreenType.mobile
+  //                   //                   ? 14.sp
+  //                   //                   : 7.sp,
+  //                   //           height: 1.2),
+  //                   //     ),
+  //                   //   ],
+  //                   // ),
+  //                   getDynamicSizedBox(height: 1.h),
+  //                   Text(item.name,
+  //                       style: TextStyle(
+  //                           fontFamily: dM_sans_semiBold,
+  //                           fontSize: 14.sp,
+  //                           color: black,
+  //                           fontWeight: FontWeight.w500)),
+  //                   getDynamicSizedBox(height: 1.h),
+  //                   Text(
+  //                       item.address.isNotEmpty
+  //                           ? item.address
+  //                           : item.city != null
+  //                               ? item.city!.city
+  //                               : item.phone,
+  //                       maxLines: 2,
+  //                       style: TextStyle(
+  //                           fontFamily: dM_sans_semiBold,
+  //                           fontSize: 14.sp,
+  //                           color: black,
+  //                           fontWeight: FontWeight.w500)),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

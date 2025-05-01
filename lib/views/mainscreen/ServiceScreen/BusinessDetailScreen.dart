@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/api_handle/CommonApiStructure.dart';
-import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
@@ -19,7 +18,6 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/utils/log.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/ServiceScreen.dart';
@@ -112,6 +110,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
             ? int.parse(widget.item!.businessId)
             : widget.item!.id
         : retrievedObject.id;
+
+    print('id used in ctr:${idUsedinCtr.toString()}');
     controller.bussinessID(idUsedinCtr);
     controller.getImageColor(
         url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);

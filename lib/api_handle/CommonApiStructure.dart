@@ -121,3 +121,63 @@ void removeFavouriteAPI(context, InternetController networkManager,
     loadingIndicator.hide(context);
   }
 }
+
+void changeStatusAPI(context, InternetController networkManager, int status,
+    String serviceId, String screenName,
+    {Function? onSuccess, Function? onFailure}) async {
+  var loadingIndicator = LoadingProgressDialogs();
+  loadingIndicator.show(context, 'Changing status...');
+  try {
+    // Check for network connection
+    if (networkManager.connectionType.value == 0) {
+      loadingIndicator.hide(context);
+      showDialogForScreen(context, screenName, Connection.noConnection,
+          callback: () {
+        Get.back();
+      });
+      return;
+    }
+
+    // Make the PUT request
+    var response = await Repository.put(
+      {
+        "status": status.toString(),
+      },
+      '${ApiUrl.changeStatus}/$serviceId',
+      allowHeader: true,
+    );
+
+    // Decode the response
+    loadingIndicator.hide(context);
+    var data = jsonDecode(response.body);
+    logcat("Change Status Response", data);
+
+    // Handle the response based on status code
+    if (response.statusCode == 200) {
+      if (data['success'] == true) {
+        // If success, call onSuccess callback (if provided)
+        print('update');
+        Get.find<ServiceDetailScreenController>().getIsServiceActive(true);
+        showCustomToast(context, data['Service is Active'].toString());
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      } else {
+        // If the API returned an error message, show it in a toast
+        Get.find<ServiceDetailScreenController>().getIsServiceActive(false);
+        showCustomToast(context, data['Service is InActive'].toString());
+      }
+    } else {
+      // If the status code is not 200, show an error message in a dialog
+      showDialogForScreen(context, screenName, data['message'] ?? "",
+          callback: () {});
+    }
+  } catch (e) {
+    logcat("Exception", e);
+    // Show a server error dialog in case of an exception
+    showDialogForScreen(context, screenName, ServerError.servererror,
+        callback: () {});
+  } finally {
+    loadingIndicator.hide(context);
+  }
+}

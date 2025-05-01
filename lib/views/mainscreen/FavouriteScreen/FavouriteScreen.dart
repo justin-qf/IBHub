@@ -121,7 +121,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           //       },
           //       isFilterApplied: controller.isFilterApplied.value);
           // }),
-          getDynamicSizedBox(height: 1.h),
+          getDynamicSizedBox(height: 2.h),
           Expanded(
             child: SmartRefresher(
               physics: const BouncingScrollPhysics(),

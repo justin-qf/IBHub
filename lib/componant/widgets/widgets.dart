@@ -1002,34 +1002,45 @@ getPartyDetailRow(context, String title, String data, {bool? isAddress}) {
         ),
         // getDynamicSizedBox(height: 0.5.h),
         isAddress == true
-            ? SizedBox(
-                width: double.infinity,
-                height: Device.screenType == ScreenType.mobile
-                    ? isSmallDevice(context)
-                        ? 10.h
-                        : 16.h
-                    : 5.h,
-                child: Scrollbar(
-                  thumbVisibility: true,
-                  thickness: 1.5,
-                  radius: const Radius.circular(50),
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Text(
-                      data,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: Device.screenType == ScreenType.mobile
-                            ? 16.sp
-                            : 10.sp,
-                        color: isDarkMode() ? white : black,
-                        fontFamily: fontRegular,
-                      ),
-                    ),
-                  ),
+            ? Text(
+                data,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize:
+                      Device.screenType == ScreenType.mobile ? 16.sp : 10.sp,
+                  color: isDarkMode() ? white : black,
+                  fontFamily: fontRegular,
                 ),
               )
-            : Text(
+            :
+            // SizedBox(
+            //     width: double.infinity,
+            //     height: Device.screenType == ScreenType.mobile
+            //         ? isSmallDevice(context)
+            //             ? 10.h
+            //             : 16.h
+            //         : 5.h,
+            //     child: Scrollbar(
+            //       thumbVisibility: true,
+            //       thickness: 1.5,
+            //       radius: const Radius.circular(50),
+            //       child: SingleChildScrollView(
+            //         physics: const BouncingScrollPhysics(),
+            //         child: Text(
+            //           data,
+            //           textAlign: TextAlign.start,
+            //           style: TextStyle(
+            //             fontSize: Device.screenType == ScreenType.mobile
+            //                 ? 16.sp
+            //                 : 10.sp,
+            //             color: isDarkMode() ? white : black,
+            //             fontFamily: fontRegular,
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   )
+            Text(
                 data,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,

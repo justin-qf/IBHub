@@ -71,7 +71,7 @@ class _ServicescreenState extends State<AddServicescreen> {
         padding: EdgeInsets.symmetric(horizontal: 4.w),
         child: Column(
           children: [
-            getDynamicSizedBox(height: 5.h),
+            getDynamicSizedBox(height: 3.h),
             getleftsidebackbtn(
                 title: ctr.isFromUpdate.value
                     ? AddServiceScreenViewConst.editService
@@ -238,10 +238,21 @@ class _ServicescreenState extends State<AddServicescreen> {
                               errorText1: ServicesScreenConstant.enterKeyword);
                         },
                         onSubmitted: (text) {
-                          if (text.trim().isNotEmpty &&
-                              text.trim().length >= 3) {
+                          if (text.trim().isEmpty) {
+                            ctr.keywordsModel.update((model) {
+                              model?.error = ServicesScreenConstant
+                                  .enterKeyword; // "Keyword cannot be empty"
+                            });
+                          } else if (text.trim().length < 3) {
+                            ctr.keywordsModel.update((model) {
+                              model?.error =
+                                  'Keyword must be at least 3 characters long';
+                            });
+                          } else {
+                            ctr.keywordsModel.update((model) {
+                              model?.error = null;
+                            });
                             ctr.addKeyword(text);
-
                             ctr.enableSubmitButton();
                           }
                         },

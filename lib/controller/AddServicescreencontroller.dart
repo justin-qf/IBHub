@@ -277,7 +277,9 @@ class AddServicescreencontroller extends GetxController {
 
   void getCategory(context, stateID, {isfromHomescreen}) async {
     commonGetApiCallFormate(context,
-        title: AddServiceScreenViewConst.category,
+        title: isFromUpdate.value
+            ? AddServiceScreenViewConst.editService
+            : AddServiceScreenViewConst.addService,
         apiEndPoint: ApiUrl.getCategories,
         allowHeader: true, apisLoading: (isTrue) {
       isCategoryApiCallLoading.value = isTrue;
@@ -860,7 +862,11 @@ class AddServicescreencontroller extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+        showDialogForScreen(
+            context,
+            isFromUpdate.value
+                ? AddServiceScreenViewConst.editService
+                : AddServiceScreenViewConst.addService,
             Connection.noConnection, callback: () {
           Get.back();
         });

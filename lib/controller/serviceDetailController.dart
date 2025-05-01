@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/api_handle/CommonApiStructure.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
@@ -153,7 +154,9 @@ class ServiceDetailScreenController extends GetxController {
           pdfname.value = extractPdfNameFromUrl(responseDetail.data.url);
           logcat("url::", pdflink.value.toString());
           logcat("pdfname::", pdfname.value.toString());
+          loadingIndicator.show(context, '');
           final filePath = await downloadPDF(pdflink.value, pdfname.value);
+          loadingIndicator.hide(context);
           if (filePath != null) {
             sharefPopupDialogs(
               context,
@@ -247,7 +250,7 @@ class ServiceDetailScreenController extends GetxController {
         //textAlign: TextAlign.center,
         style: TextStyle(
           color: black,
-          fontFamily: isMainTitle == true ? dM_sans_bold : null,
+          fontFamily: isMainTitle == true ? dM_sans_bold : dM_sans_regular,
           fontWeight: isMainTitle == true ? FontWeight.w900 : FontWeight.w500,
           fontSize: isMainTitle == true
               ? Device.screenType == sizer.ScreenType.mobile
@@ -302,8 +305,8 @@ class ServiceDetailScreenController extends GetxController {
         title,
         textAlign: TextAlign.justify,
         style: TextStyle(
-          fontFamily: dM_sans_medium,
-          color: black,
+          fontFamily: dM_sans_regular,
+          color: primaryColor,
           height: 1.3,
           fontSize: Device.screenType == sizer.ScreenType.mobile ? 16.sp : 7.sp,
         ),
@@ -417,214 +420,325 @@ class ServiceDetailScreenController extends GetxController {
 
   RxInt bussinessID = 0.obs;
 
+  // int currentStatus = 0;
+  RxBool isActice = false.obs;
+
+  getIsServiceActive(bool isActived) {
+    isActice.value = isActived;
+    update();
+  }
+
+  toggleActiveStatus(BuildContext context,
+      {required statusID, required serviceId}) {
+    changeStatusAPI(context, networkManager, statusID, serviceId, 'Service',
+        onSuccess: () {});
+  }
+
   getServiceListItem(BuildContext context, ServiceDataList item,
       {isFromProfile = false}) {
-    return Stack(
-      clipBehavior: Clip.none,
+    return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            getServiceDetails(context, item);
-            // Get.to(BusinessDetailScreen(item: item));
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: white,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                    color: black.withOpacity(0.2),
-                    spreadRadius: 0.1,
-                    blurRadius: 5,
-                    offset: const Offset(0.5, 0.5)),
-              ],
-            ),
-            padding: EdgeInsets.only(
-                left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
-            margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-                  width: 25.w,
-                  height: 12.h,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: primaryColor,
-                        width: 1), // border color and width
-                    borderRadius: BorderRadius.circular(
-                        Device.screenType == sizer.ScreenType.mobile
-                            ? 3.5.w
-                            : 2.5.w),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        Device.screenType == sizer.ScreenType.mobile
-                            ? 3.5.w
-                            : 2.5.w),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 18.h,
-                      imageUrl: item.thumbnail,
-                      placeholder: (context, url) =>
-                          Image.asset(Asset.bussinessPlaceholder),
-
-                      // Center(child: Icon(Icons.business_outlined)
-
-                      // CircularProgressIndicator(color: primaryColor),
-                      errorWidget: (context, url, error) => Image.asset(
-                          Asset.placeholder,
-                          height: 10.h,
-                          fit: BoxFit.cover),
-                    ),
-
-                    //  Icon(Icons.business_outlined)
-
-                    //  CachedNetworkImage(
-                    //   fit: BoxFit.cover,
-                    //   height: 18.h,
-                    //   imageUrl: item.thumbnail,
-                    //   placeholder: (context, url) =>
-                    //       const Center(child: Icon(Icons.business_outlined)
-
-                    //           // CircularProgressIndicator(color: primaryColor),
-
-                    //           ),
-                    //   errorWidget: (context, url, error) => Image.asset(
-                    //       Asset.placeholder,
-                    //       height: 10.h,
-                    //       fit: BoxFit.cover),
-                    // ),
-                  ),
-                ),
-                getDynamicSizedBox(width: 2.w),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(item.serviceTitle,
-                          style: TextStyle(
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 15.8.sp,
-                              color: black,
-                              fontWeight: FontWeight.w900)),
-                      getDynamicSizedBox(height: 1.h),
-                      Text(item.categoryName,
-                          style: TextStyle(
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 15.sp,
-                              color: black,
-                              fontWeight: FontWeight.w500)),
-                      getDynamicSizedBox(height: 1.h),
-                      AbsorbPointer(
-                          absorbing: true,
-                          child: ReadMoreText(item.description,
-                              textAlign: TextAlign.start,
-                              trimLines: 2, callback: (val) {
-                            logcat("ONTAP", val.toString());
-                          },
-                              colorClickableText: primaryColor,
-                              trimMode: TrimMode.Line,
-                              trimCollapsedText: '...Show more',
-                              trimExpandedText: '',
-                              delimiter: ' ',
-                              style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: Device.screenType ==
-                                          sizer.ScreenType.mobile
-                                      ? 15.sp
-                                      : 12.sp,
-                                  fontWeight: FontWeight.w100,
-                                  fontFamily: dM_sans_semiBold,
-                                  color: primaryColor),
-                              lessStyle: TextStyle(
-                                  fontFamily: dM_sans_semiBold,
-                                  fontSize: Device.screenType ==
-                                          sizer.ScreenType.mobile
-                                      ? 15.sp
-                                      : 12.sp),
-                              moreStyle: TextStyle(
-                                  fontFamily: dM_sans_semiBold,
-                                  fontSize: Device.screenType ==
-                                          sizer.ScreenType.mobile
-                                      ? 15.sp
-                                      : 12.sp,
-                                  color: primaryColor))),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
         isFromProfile
-            ? Positioned(
-                top: 1.h,
-                right: 7.w,
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        print('goto add service screen');
-                        Get.to(AddServicescreen(
-                          item: item,
-                          isFromHomeScreen: true,
-                        ))?.then((value) {
-                          if (value == true) {
-                            if (!context.mounted) return;
-                            getServiceList(context, 1, true, bussinessID.value,
-                                isFirstTime: true);
-                          }
-                        });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(3),
-                        child: Icon(
-                          Icons.edit,
-                          size: 20.sp,
+            ? Obx(
+                () => Align(
+                  alignment: Alignment.centerRight,
+                  child: SizedBox(
+                    height: 3.h,
+                    width: 35.w,
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontFamily: dM_sans_medium,
+                          fontSize:
+                              16.sp, // Optional: set your desired font size
                         ),
+                        children: [
+                          TextSpan(
+                            text: 'Status : ',
+                            style: TextStyle(
+                                fontFamily: dM_sans_medium,
+                                color: primaryColor), // Always black
+                          ),
+                          TextSpan(
+                            text: isActice.value ? 'Active' : 'InActive',
+                            style: TextStyle(
+                              fontFamily: dM_sans_medium,
+                              color: isActice.value
+                                  ? primaryColor
+                                  : secondaryColor, // Change color
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    getDynamicSizedBox(
-                        height: isSmallDevice(context) ? 0.2.h : 1.5.h),
-                    GestureDetector(
-                      onTap: () async {
-                        final isDeleted = await deleteDialogs(
-                          context,
-                          function: () {
-                            deleteService(context);
-                          },
-                        );
-                        // if (isDeleted == true) {
-                        //   if (!context.mounted) return;
-
-                        // }
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(3),
-                        child: Icon(
-                          Icons.delete,
-                          size: 20.sp,
-                          color: red,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-
-                // Text(
-                //   'Edit',
-                //   style: TextStyle(
-                //       fontFamily: dM_sans_semiBold,
-                //       fontSize: 15.8.sp,
-                //       color: black,
-                //       fontWeight: FontWeight.w900),
-                // ),
               )
-            : SizedBox()
+            : SizedBox.shrink(),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    getServiceDetails(context, item);
+                    // Get.to(BusinessDetailScreen(item: item));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: white,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: black.withOpacity(0.2),
+                            spreadRadius: 0.1,
+                            blurRadius: 5,
+                            offset: const Offset(0.5, 0.5)),
+                      ],
+                    ),
+                    padding: EdgeInsets.only(
+                        left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+                    margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                          width: 25.w,
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: primaryColor,
+                                width: 1), // border color and width
+                            borderRadius: BorderRadius.circular(
+                                Device.screenType == sizer.ScreenType.mobile
+                                    ? 3.5.w
+                                    : 2.5.w),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                Device.screenType == sizer.ScreenType.mobile
+                                    ? 3.5.w
+                                    : 2.5.w),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              height: 18.h,
+                              imageUrl: item.thumbnail,
+                              placeholder: (context, url) =>
+                                  Image.asset(Asset.bussinessPlaceholder),
+
+                              // Center(child: Icon(Icons.business_outlined)
+
+                              // CircularProgressIndicator(color: primaryColor),
+                              errorWidget: (context, url, error) => Image.asset(
+                                  Asset.placeholder,
+                                  height: 10.h,
+                                  fit: BoxFit.cover),
+                            ),
+
+                            //  Icon(Icons.business_outlined)
+
+                            //  CachedNetworkImage(
+                            //   fit: BoxFit.cover,
+                            //   height: 18.h,
+                            //   imageUrl: item.thumbnail,
+                            //   placeholder: (context, url) =>
+                            //       const Center(child: Icon(Icons.business_outlined)
+
+                            //           // CircularProgressIndicator(color: primaryColor),
+
+                            //           ),
+                            //   errorWidget: (context, url, error) => Image.asset(
+                            //       Asset.placeholder,
+                            //       height: 10.h,
+                            //       fit: BoxFit.cover),
+                            // ),
+                          ),
+                        ),
+                        getDynamicSizedBox(width: 2.w),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  width: 50.w,
+                                  height: 2.h,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Text(item.serviceTitle,
+                                        style: TextStyle(
+                                            fontFamily: dM_sans_medium,
+                                            fontSize: 15.8.sp,
+                                            color: black,
+                                            fontWeight: FontWeight.w900)),
+                                  )
+                                  //  Marquee(
+                                  //   velocity: 5,
+                                  //   text: item.serviceTitle,
+                                  //   style: TextStyle(
+                                  //     fontFamily: dM_sans_medium,
+                                  //     fontSize: 15.8.sp,
+                                  //     color: black,
+                                  //     fontWeight: FontWeight.w900,
+                                  //   ),
+                                  // ),
+                                  ),
+                              // Container(
+                              //   width: 30.w,
+                              //   child: Text(item.serviceTitle,
+                              //       style: TextStyle(
+                              //           fontFamily: dM_sans_medium,
+                              //           fontSize: 15.8.sp,
+                              //           color: black,
+                              //           fontWeight: FontWeight.w900)),
+                              // ),
+                              getDynamicSizedBox(height: 1.h),
+                              SizedBox(
+                                width: 50.w,
+                                child: Text(item.categoryName,
+                                    style: TextStyle(
+                                        fontFamily: dM_sans_medium,
+                                        fontSize: 15.sp,
+                                        color: black,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                              getDynamicSizedBox(height: 1.h),
+                              SizedBox(
+                                width: 50.w,
+                                child: AbsorbPointer(
+                                    absorbing: true,
+                                    child: ReadMoreText(item.description,
+                                        textAlign: TextAlign.start,
+                                        trimLines: 2, callback: (val) {
+                                      logcat("ONTAP", val.toString());
+                                    },
+                                        colorClickableText: primaryColor,
+                                        trimMode: TrimMode.Line,
+                                        trimCollapsedText: '...Show more',
+                                        trimExpandedText: '',
+                                        delimiter: ' ',
+                                        style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontSize: Device.screenType ==
+                                                    sizer.ScreenType.mobile
+                                                ? 15.sp
+                                                : 12.sp,
+                                            fontWeight: FontWeight.w100,
+                                            fontFamily: dM_sans_medium,
+                                            color: primaryColor),
+                                        lessStyle: TextStyle(
+                                            fontFamily: dM_sans_medium,
+                                            fontSize: Device.screenType ==
+                                                    sizer.ScreenType.mobile
+                                                ? 15.sp
+                                                : 12.sp),
+                                        moreStyle: TextStyle(
+                                            fontFamily: dM_sans_medium,
+                                            fontSize: Device.screenType ==
+                                                    sizer.ScreenType.mobile
+                                                ? 15.sp
+                                                : 12.sp,
+                                            color: primaryColor))),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            isFromProfile
+                ? Positioned(
+                    top: 0.2.h,
+                    right: 5.w,
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            print('goto add service screen');
+                            Get.to(AddServicescreen(
+                              item: item,
+                              isFromHomeScreen: true,
+                            ))?.then((value) {
+                              if (value == true) {
+                                if (!context.mounted) return;
+                                getServiceList(
+                                    context, 1, true, bussinessID.value,
+                                    isFirstTime: true);
+                              }
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(3),
+                            child: Icon(
+                              Icons.edit,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
+                        getDynamicSizedBox(
+                            height: isSmallDevice(context) ? 0.2.h : 0.4.h),
+                        GestureDetector(
+                          onTap: () async {
+                            await deleteDialogs(
+                              context,
+                              function: () {
+                                deleteService(context);
+                              },
+                            );
+                            // if (isDeleted == true) {
+                            //   if (!context.mounted) return;
+
+                            // }
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(3),
+                            child: Icon(
+                              Icons.delete,
+                              size: 20.sp,
+                              color: red,
+                            ),
+                          ),
+                        ),
+                        Obx(() {
+                          return SizedBox(
+                            // color: Colors.yellow,
+                            width: 10.w,
+                            child: Transform.scale(
+                              scale: 3.5.sp,
+                              child: SwitchListTile(
+                                dense: true,
+                                value: isActice.value,
+                                onChanged: (value) {
+                                  print(item.isActive.toString());
+                                  toggleActiveStatus(context,
+                                      statusID: item.isActive,
+                                      serviceId: item.id.toString());
+                                },
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+
+                    // Text(
+                    //   'Edit',
+                    //   style: TextStyle(
+                    //       fontFamily: dM_sans_semiBold,
+                    //       fontSize: 15.8.sp,
+                    //       color: black,
+                    //       fontWeight: FontWeight.w900),
+                    // ),
+                  )
+                : SizedBox.shrink(),
+          ],
+        ),
       ],
     );
   }
@@ -635,29 +749,43 @@ class ServiceDetailScreenController extends GetxController {
       "Service Details",
       isDescription: false,
       isfromService: true,
-      contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (data.thumbnail.isNotEmpty)
-          getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
-              ? data.thumbnail
-              : ""),
-
-        getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow(
-          context,
-          'Category:',
-          data.categoryName.capitalize.toString(),
+      contain: Expanded(
+        child: Column(
+          children: [
+            if (data.thumbnail.isNotEmpty)
+              getImageView(
+                  data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
+                      ? data.thumbnail
+                      : ""),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      getDynamicSizedBox(
+                          height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
+                      getPartyDetailRow(
+                        context,
+                        'Category:',
+                        data.categoryName.capitalize.toString(),
+                      ),
+                      // getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
+                      getPartyDetailRow(context, 'Service:',
+                          data.serviceTitle.capitalize.toString()),
+                      // getDynamicSizedBox(height: data.keywords.isNotEmpty ? 1.h : 0.0),
+                      // getPartyDetailRow('Keyword:', data.keywords.capitalize.toString()),
+                      // getDynamicSizedBox(
+                      //     height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
+                      if (data.description.toString().isNotEmpty)
+                        getPartyDetailRow(
+                            context, 'Description:', data.description,
+                            isAddress: true),
+                    ]),
+              ),
+            ),
+          ],
         ),
-        // getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow(
-            context, 'Service:', data.serviceTitle.capitalize.toString()),
-        // getDynamicSizedBox(height: data.keywords.isNotEmpty ? 1.h : 0.0),
-        // getPartyDetailRow('Keyword:', data.keywords.capitalize.toString()),
-        // getDynamicSizedBox(
-        //     height: data.description.toString().isNotEmpty ? 0.5.h : 0.0),
-        if (data.description.toString().isNotEmpty)
-          getPartyDetailRow(context, 'Description:', data.description,
-              isAddress: true),
-      ]),
+      ),
     );
   }
 

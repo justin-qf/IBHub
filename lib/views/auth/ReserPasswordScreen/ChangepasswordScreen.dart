@@ -40,7 +40,7 @@ class ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: Form(
         key: ctr.resetpasskey,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          getDynamicSizedBox(height: 5.h),
+          getDynamicSizedBox(height: 3.h),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 5.w),
             child: getleftsidebackbtn(

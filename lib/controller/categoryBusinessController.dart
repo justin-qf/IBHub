@@ -824,7 +824,7 @@ class CategoryBusinessController extends GetxController {
                 offset: const Offset(0.5, 0.5)),
           ],
         ),
-        margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 2.h),
+        margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
         child: Padding(
           padding:
               EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
@@ -832,14 +832,13 @@ class CategoryBusinessController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(2),
                 margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
                 width: 25.w,
                 height: 12.h,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Colors.grey.withOpacity(0.8),
-                      width: 1), // border color and width
+                      color: primaryColor, width: 1), // border color and width
                   borderRadius: BorderRadius.circular(
                       Device.screenType == sizer.ScreenType.mobile
                           ? 3.5.w
@@ -873,12 +872,19 @@ class CategoryBusinessController extends GetxController {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(item.businessName,
-                            style: TextStyle(
-                                fontFamily: dM_sans_semiBold,
-                                fontSize: 15.sp,
-                                color: black,
-                                fontWeight: FontWeight.w900)),
+                        SizedBox(
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 57.w
+                              : 65.w,
+                          child: Text(item.businessName,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 15.sp,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: black,
+                                  fontWeight: FontWeight.w900)),
+                        ),
                         const Spacer(),
                         // RatingBar.builder(
                         //   initialRating: item.businessReviewsAvgRating ?? 0.0,
@@ -913,12 +919,18 @@ class CategoryBusinessController extends GetxController {
                       ],
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Text(item.name,
-                        style: TextStyle(
-                            fontFamily: dM_sans_regular,
-                            fontSize: 14.sp,
-                            color: black,
-                            fontWeight: FontWeight.w500)),
+                    SizedBox(
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 64.w
+                          : 70.w,
+                      child: Text(item.name,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
                     getDynamicSizedBox(height: 1.h),
                     Text(
                         item.address.isNotEmpty
@@ -928,7 +940,7 @@ class CategoryBusinessController extends GetxController {
                                 : item.phone,
                         maxLines: 2,
                         style: TextStyle(
-                            fontFamily: dM_sans_regular,
+                            fontFamily: dM_sans_semiBold,
                             fontSize: 14.sp,
                             color: black,
                             fontWeight: FontWeight.w500)),

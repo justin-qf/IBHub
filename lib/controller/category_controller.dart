@@ -81,13 +81,13 @@ class CategoryController extends GetxController {
         } else {
           message.value = responseData['message'];
           showDialogForScreen(
-              context, CategoryScreenConstant.title, responseData['message'],
+              context, 'Category Screen', responseData['message'],
               callback: () {});
         }
       } else {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(context, CategoryScreenConstant.title,
+        showDialogForScreen(context, 'Category Screen',
             responseData['message'] ?? ServerError.servererror,
             callback: () {});
       }
@@ -102,101 +102,101 @@ class CategoryController extends GetxController {
     }
   }
 
-  getListItem(CategoryListData data) {
-    return Wrap(
-      children: [
-        GestureDetector(
-          onTap: () {},
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(
-                Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
-            child: Container(
-              width: 45.w,
-              margin: EdgeInsets.only(right: 2.w),
-              padding: EdgeInsets.all(
-                1.w,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: grey, // Border color
-                  width: 0.5, // Border width
-                ),
-                color: white,
-                borderRadius: BorderRadius.circular(
-                    Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
-              ),
-              child: Stack(children: [
-                // Background Image
-                SizedBox(
-                  width: double.infinity,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        Device.screenType == sizer.ScreenType.mobile
-                            ? 3.5.w
-                            : 2.5.w),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 18.h,
-                      imageUrl: ApiUrl.imageUrl,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(color: primaryColor),
-                      ),
-                      errorWidget: (context, url, error) => Image.asset(
-                        Asset.placeholder,
-                        height: 10.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                // Fog Shadow
-                Positioned.fill(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        Device.screenType == sizer.ScreenType.mobile
-                            ? 3.5.w
-                            : 2.5.w),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          // ignore: deprecated_member_use
-                          colors: [black.withOpacity(0.6), transparent],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                // Title at Bottom Center
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding:
-                        EdgeInsets.only(left: 2.w, right: 2.w, bottom: 0.5.h),
-                    child: Text(
-                      data.name,
-                      style: TextStyle(
-                          fontFamily: dM_sans_semiBold,
-                          fontWeight: FontWeight.w500,
-                          color: white,
-                          fontSize: Device.screenType == sizer.ScreenType.mobile
-                              ? 12.sp
-                              : 7.sp,
-                          height: 1.2),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ]),
-            ),
-          ),
-        )
-      ],
-    );
-  }
+  // getListItem(CategoryListData data) {
+  //   return Wrap(
+  //     children: [
+  //       GestureDetector(
+  //         onTap: () {},
+  //         child: ClipRRect(
+  //           borderRadius: BorderRadius.circular(
+  //               Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
+  //           child: Container(
+  //             width: 45.w,
+  //             margin: EdgeInsets.only(right: 2.w),
+  //             padding: EdgeInsets.all(
+  //               1.w,
+  //             ),
+  //             decoration: BoxDecoration(
+  //               border: Border.all(
+  //                 color: grey, // Border color
+  //                 width: 0.5, // Border width
+  //               ),
+  //               color: white,
+  //               borderRadius: BorderRadius.circular(
+  //                   Device.screenType == sizer.ScreenType.mobile ? 4.w : 2.2.w),
+  //             ),
+  //             child: Stack(children: [
+  //               // Background Image
+  //               SizedBox(
+  //                 width: double.infinity,
+  //                 child: ClipRRect(
+  //                   borderRadius: BorderRadius.circular(
+  //                       Device.screenType == sizer.ScreenType.mobile
+  //                           ? 3.5.w
+  //                           : 2.5.w),
+  //                   child: CachedNetworkImage(
+  //                     fit: BoxFit.cover,
+  //                     height: 18.h,
+  //                     imageUrl: ApiUrl.imageUrl,
+  //                     placeholder: (context, url) => const Center(
+  //                       child: CircularProgressIndicator(color: primaryColor),
+  //                     ),
+  //                     errorWidget: (context, url, error) => Image.asset(
+  //                       Asset.placeholder,
+  //                       height: 10.h,
+  //                       fit: BoxFit.cover,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               // Fog Shadow
+  //               Positioned.fill(
+  //                 child: ClipRRect(
+  //                   borderRadius: BorderRadius.circular(
+  //                       Device.screenType == sizer.ScreenType.mobile
+  //                           ? 3.5.w
+  //                           : 2.5.w),
+  //                   child: Container(
+  //                     decoration: BoxDecoration(
+  //                       gradient: LinearGradient(
+  //                         begin: Alignment.bottomCenter,
+  //                         end: Alignment.topCenter,
+  //                         // ignore: deprecated_member_use
+  //                         colors: [black.withOpacity(0.6), transparent],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               // Title at Bottom Center
+  //               Positioned(
+  //                 bottom: 0,
+  //                 left: 0,
+  //                 right: 0,
+  //                 child: Container(
+  //                   padding:
+  //                       EdgeInsets.only(left: 2.w, right: 2.w, bottom: 0.5.h),
+  //                   child: Text(
+  //                     data.name,
+  //                     style: TextStyle(
+  //                         fontFamily: dM_sans_semiBold,
+  //                         fontWeight: FontWeight.w500,
+  //                         color: white,
+  //                         fontSize: Device.screenType == sizer.ScreenType.mobile
+  //                             ? 12.sp
+  //                             : 7.sp,
+  //                         height: 1.2),
+  //                     textAlign: TextAlign.center,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ]),
+  //           ),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   getOldListItem(BuildContext context, {required CategoryListData data}) {
     return GestureDetector(
@@ -263,24 +263,24 @@ class CategoryController extends GetxController {
     );
   }
 
-  getServiceDetails(BuildContext context, CategoryListData data) {
-    return commonDetailsDialog(
-      context,
-      "Category Details",
-      isDescription: false,
-      contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        if (data.thumbnail.isNotEmpty)
-          getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
-              ? data.thumbnail
-              : ""),
-        getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow(
-            context, 'Category:', data.name.capitalize.toString()),
-        getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-        getPartyDetailRow(
-            context, 'Description:', data.description.capitalize.toString(),
-            isAddress: true),
-      ]),
-    );
-  }
+  // getServiceDetails(BuildContext context, CategoryListData data) {
+  //   return commonDetailsDialog(
+  //     context,
+  //     "Category Details",
+  //     isDescription: false,
+  //     contain: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //       if (data.thumbnail.isNotEmpty)
+  //         getImageView(data.thumbnail.isNotEmpty && data.thumbnail.isNotEmpty
+  //             ? data.thumbnail
+  //             : ""),
+  //       getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
+  //       getPartyDetailRow(
+  //           context, 'Category:', data.name.capitalize.toString()),
+  //       getDynamicSizedBox(height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
+  //       getPartyDetailRow(
+  //           context, 'Description:', data.description.capitalize.toString(),
+  //           isAddress: true),
+  //     ]),
+  //   );
+  // }
 }

@@ -97,31 +97,30 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           {Statusbar().trasparentStatusbar()});
                                 }
                               }, child: Obx(() {
-                                return ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(30)),
-                                    child: CachedNetworkImage(
-                                      fit: BoxFit.contain,
-                                      height: 20.h,
-                                      width: 20.w,
-                                      imageUrl: controller.profilePic.value,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                        child: CircularProgressIndicator(
-                                            color: primaryColor),
-                                      ),
-                                      imageBuilder: (context, imageProvider) =>
-                                          CircleAvatar(
-                                        radius: 25.h,
-                                        backgroundColor: white,
-                                        backgroundImage: imageProvider,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          CircleAvatar(
-                                              radius: 25.h,
-                                              backgroundColor: white,
-                                              child: const Icon(Icons.person)),
-                                    ));
+                                return CircleAvatar(
+                                  radius: 4.2.h,
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.contain,
+                                    height: 20.h,
+                                    width: 20.w,
+                                    imageUrl: controller.profilePic.value,
+                                    placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator(
+                                          color: primaryColor),
+                                    ),
+                                    imageBuilder: (context, imageProvider) =>
+                                        CircleAvatar(
+                                      radius: 25.h,
+                                      backgroundColor: white,
+                                      backgroundImage: imageProvider,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        CircleAvatar(
+                                            radius: 25.h,
+                                            backgroundColor: white,
+                                            child: const Icon(Icons.person)),
+                                  ),
+                                );
                               })),
                               Expanded(
                                 child: Container(

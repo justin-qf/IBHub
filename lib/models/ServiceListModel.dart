@@ -91,7 +91,7 @@ class ServiceDataList {
   String keywords;
   String categoryId;
   String thumbnail;
-  // int isActive;
+  int isActive;
   String categoryName;
 
   ServiceDataList({
@@ -101,7 +101,7 @@ class ServiceDataList {
     required this.keywords,
     required this.categoryId,
     required this.thumbnail,
-    // required this.isActive,
+    required this.isActive,
     required this.categoryName,
   });
 
@@ -113,7 +113,7 @@ class ServiceDataList {
         keywords: json["keywords"] ?? '',
         categoryId: json["category_id"].toString(),
         thumbnail: json["thumbnail"] ?? '',
-        // isActive: json["is_active"],
+        isActive: json["is_active"],
         categoryName: json["category_name"] ?? '',
       );
 
@@ -124,7 +124,7 @@ class ServiceDataList {
         "keywords": keywords,
         "category_id": categoryId,
         "thumbnail": thumbnail,
-        // "is_active": isActive,
+        "is_active": isActive,
         "category_name": categoryName,
       };
 }

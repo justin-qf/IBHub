@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -82,7 +84,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Statusbar().transparentStatusbarIsNormalScreen();
     return CustomParentScaffold(
       onWillPop: () async {
-        SystemNavigator.pop();
+        getpopup(context,
+            title: 'Exit App',
+            message: 'Are you sure you want to quit the app?', function: () {
+          exit(0);
+        });
         return false;
       },
       body: Column(
