@@ -47,6 +47,7 @@ class Updateprofilecontroller extends GetxController {
       stateNode,
       cityNode,
       pincodeNode,
+      websiteNode,
       // visitingcardNode,
       addressNode;
   late TextEditingController nameCtr,
@@ -56,6 +57,7 @@ class Updateprofilecontroller extends GetxController {
       stateCtr,
       cityCtr,
       pincodeCtr,
+      websiteCtr,
       // visitingcardCtr,
       addressCtr;
 
@@ -67,7 +69,7 @@ class Updateprofilecontroller extends GetxController {
   var cityModel = ValidationModel(null, null, isValidate: false).obs;
   var pincodeModel = ValidationModel(null, null, isValidate: false).obs;
   var imageModel = ValidationModel(null, null, isValidate: false).obs;
-  // var visitingCardModel = ValidationModel(null, null, isValidate: false).obs;
+  var websiteModel = ValidationModel(null, null, isValidate: false).obs;
   var addressModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isFormInvalidate = false.obs;
@@ -198,6 +200,13 @@ class Updateprofilecontroller extends GetxController {
           shouldEnableButton: false);
     }
 
+    if (websiteCtr.text.isNotEmpty) {
+      validateFields(addressCtr.text,
+          model: websiteModel,
+          errorText1: "Website is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
     // if (nameCtr.text.isNotEmpty ||
     //     emailCtr.text.isNotEmpty ||
     //     bussinessCtr.text.isNotEmpty ||
@@ -238,6 +247,7 @@ class Updateprofilecontroller extends GetxController {
     addressNode = FocusNode();
     searchStateNode = FocusNode();
     searchCityNode = FocusNode();
+    websiteNode = FocusNode();
 
     nameCtr = TextEditingController();
     emailCtr = TextEditingController();
@@ -250,6 +260,7 @@ class Updateprofilecontroller extends GetxController {
     addressCtr = TextEditingController();
     searchStatectr = TextEditingController();
     searchCityctr = TextEditingController();
+    websiteCtr = TextEditingController();
   }
 
   @override
@@ -301,6 +312,8 @@ class Updateprofilecontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (addressModel.value.isValidate == false) {
       isFormInvalidate.value = false;
+    } else if (websiteModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
     }
@@ -322,6 +335,7 @@ class Updateprofilecontroller extends GetxController {
     pincodeCtr.clear();
     // visitingcardCtr.clear();
     addressCtr.clear();
+    websiteCtr.clear();
 
     // Reset all validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -331,7 +345,7 @@ class Updateprofilecontroller extends GetxController {
     stateModel.value = ValidationModel(null, null, isValidate: false);
     cityModel.value = ValidationModel(null, null, isValidate: false);
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
-    // visitingCardModel.value = ValidationModel(null, null, isValidate: false);
+    websiteModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
 
     // Reset reactive variables
@@ -356,6 +370,7 @@ class Updateprofilecontroller extends GetxController {
     addressCtr.clear();
     searchStatectr.clear();
     searchCityctr.clear();
+    websiteCtr.clear();
 
     nameNode.unfocus();
     emailNode.unfocus();
@@ -368,6 +383,7 @@ class Updateprofilecontroller extends GetxController {
     addressNode.unfocus();
     searchStateNode.unfocus();
     searchCityNode.unfocus();
+    websiteNode.unfocus();
 
     // Reset validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -379,6 +395,7 @@ class Updateprofilecontroller extends GetxController {
     pincodeModel.value = ValidationModel(null, null, isValidate: false);
     // visitingCardModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
+    websiteModel.value = ValidationModel(null, null, isValidate: false);
     isFormInvalidate.value = false;
     isloading = false;
   }

@@ -12,7 +12,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 // ignore: must_be_immutable
 class PrivacyPolicyScreen extends StatefulWidget {
-  const PrivacyPolicyScreen({super.key});
+  bool ispolicyScreen;
+  PrivacyPolicyScreen({super.key, required this.ispolicyScreen});
   @override
   State<PrivacyPolicyScreen> createState() => PrivacyPolicyScreenState();
 }
@@ -62,7 +63,9 @@ class PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
           },
         ),
       )
-      ..loadRequest(Uri.parse(PrivacyPolicyScreenText.url));
+      ..loadRequest(Uri.parse(widget.ispolicyScreen
+          ? PrivacyPolicyScreenText.privacy
+          : PrivacyPolicyScreenText.terms));
   }
 
   @override
@@ -82,7 +85,9 @@ class PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 4.w),
             child: getleftsidebackbtn(
-              title: PrivacyPolicyScreenText.termAndCOndition,
+              title: widget.ispolicyScreen
+                  ? PrivacyPolicyScreenText.privacyPolicy
+                  : PrivacyPolicyScreenText.termAndCOndition,
               backFunction: () {
                 Get.back(result: true);
               },

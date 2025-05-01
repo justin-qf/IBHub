@@ -270,7 +270,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             getDynamicSizedBox(height: 13.h),
                             GestureDetector(
                               onTap: () {
-                                Get.to(const PrivacyPolicyScreen());
+                                Get.to(PrivacyPolicyScreen(
+                                  ispolicyScreen: false,
+                                ));
                               },
                               child: Container(
                                 // color: Colors.yellow,

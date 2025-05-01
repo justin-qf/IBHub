@@ -21,6 +21,7 @@ class Asset {
   static const history = '$assets${svgFolder}history_new.svg';
   static const home = '$assets${svgFolder}home.svg';
   static const whatsapp2 = '$assets${svgFolder}whatsapp.svg';
+  static const search2 = '$assets${svgFolder}search2.svg';
 
   static const intro = '$assets${svgFolder}intro.svg';
   static const logout = '$assets${svgFolder}logout.svg';

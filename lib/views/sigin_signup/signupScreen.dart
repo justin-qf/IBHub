@@ -11,6 +11,7 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signupScreenController.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/privacypolicy/PrivacyPolicyScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class Signupscreen extends StatefulWidget {
@@ -188,7 +189,9 @@ class _SignupscreenState extends State<Signupscreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            print('navigate to term screen');
+                            Get.to(PrivacyPolicyScreen(
+                              ispolicyScreen: false,
+                            ));
                           },
                           child: Container(
                             // color: Colors.yellow,
@@ -222,6 +225,9 @@ class _SignupscreenState extends State<Signupscreen> {
                         GestureDetector(
                           onTap: () {
                             // Navigate to Privacy Policy page
+                            Get.to(PrivacyPolicyScreen(
+                              ispolicyScreen: true,
+                            ));
                             print('navigate to policy screen');
                           },
                           child: Container(

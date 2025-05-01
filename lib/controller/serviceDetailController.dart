@@ -435,41 +435,41 @@ class ServiceDetailScreenController extends GetxController {
       {isFromProfile = false}) {
     return Column(
       children: [
-        isFromProfile
-            ? Align(
-                alignment: Alignment.centerRight,
-                child: SizedBox(
-                  height: 3.h,
-                  width: 35.w,
-                  child: RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontFamily: dM_sans_medium,
-                        fontSize: 16.sp, // Optional: set your desired font size
-                      ),
-                      children: [
-                        TextSpan(
-                          text: 'Status : ',
-                          style: TextStyle(
-                              fontFamily: dM_sans_medium,
-                              color: primaryColor), // Always black
-                        ),
-                        TextSpan(
-                          text:
-                              item.isActive.value == 1 ? 'Active' : 'InActive',
-                          style: TextStyle(
-                            fontFamily: dM_sans_medium,
-                            color: item.isActive.value == 1
-                                ? primaryColor
-                                : secondaryColor, // Change color
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : SizedBox.shrink(),
+        // isFromProfile
+        //     ? Align(
+        //         alignment: Alignment.centerRight,
+        //         child: SizedBox(
+        //           height: 3.h,
+        //           width: 35.w,
+        //           child: RichText(
+        //             text: TextSpan(
+        //               style: TextStyle(
+        //                 fontFamily: dM_sans_medium,
+        //                 fontSize: 16.sp, // Optional: set your desired font size
+        //               ),
+        //               children: [
+        //                 TextSpan(
+        //                   text: 'Status : ',
+        //                   style: TextStyle(
+        //                       fontFamily: dM_sans_medium,
+        //                       color: primaryColor), // Always black
+        //                 ),
+        //                 TextSpan(
+        //                   text:
+        //                       item.isActive.value == 1 ? 'Active' : 'InActive',
+        //                   style: TextStyle(
+        //                     fontFamily: dM_sans_medium,
+        //                     color: item.isActive.value == 1
+        //                         ? primaryColor
+        //                         : secondaryColor, // Change color
+        //                   ),
+        //                 ),
+        //               ],
+        //             ),
+        //           ),
+        //         ),
+        //       )
+        //     : SizedBox.shrink(),
         Stack(
           clipBehavior: Clip.none,
           children: [

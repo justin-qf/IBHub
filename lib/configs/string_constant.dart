@@ -592,7 +592,9 @@ class ServerError {
 class PrivacyPolicyScreenText {
   static const privacyPolicy = 'Privacy Policy';
   static const termAndCOndition = 'terms & Conditions';
-  static const url = 'http://www.indianbusinesshub.in/privacy_policy.html';
+  static const privacy = 'http://www.indianbusinesshub.in/privacy_policy.html';
+  static const terms =
+      'http://www.indianbusinesshub.in/terms_and_condition.html';
   static const googleUrl = 'https://www.google.com/';
 }
 

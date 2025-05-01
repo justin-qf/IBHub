@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/homeController.dart';
@@ -96,12 +98,24 @@ class _MainScreenState extends State<MainScreen> {
                       tabBorderRadius: 15,
                       tabBackgroundColor: primaryColor,
                       color: primaryColor,
-                      tabs: const [
+                      tabs: [
                         GButton(
                             icon: Icons.home_rounded,
                             text: BottomConstant.home),
                         GButton(
-                            icon: Icons.search, text: BottomConstant.search),
+                            leading: SvgPicture.asset(
+                              Asset.search2,
+                              height: 3.5.h,
+                              width: 3.5.w,
+                              colorFilter: ColorFilter.mode(
+                                controller.currentPage == 1
+                                    ? white
+                                    : primaryColor,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            icon: Icons.search,
+                            text: BottomConstant.search),
                         GButton(
                           icon: Icons.star,
                           text: BottomConstant.favourite,
