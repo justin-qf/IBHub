@@ -11,6 +11,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../configs/colors_constant.dart';
 import '../../configs/font_constant.dart';
 
@@ -47,17 +48,19 @@ Future<bool?> getpopup(BuildContext context,
       return CupertinoAlertDialog(
         title: Text(
           title ?? '',
+          style: TextStyle(fontFamily: dM_sans_extraBold, fontSize: 18.sp),
         ),
-        content: Text(
-          message,
-          style: const TextStyle(fontFamily: dM_sans_medium),
-        ),
+        content: Text(message,
+            style: TextStyle(fontFamily: dM_sans_medium, fontSize: 16.sp)),
         actions: [
           if (istimerrunout == false)
             CupertinoDialogAction(
-                child: const Text(
+                child: Text(
                   'Cancel',
-                  style: TextStyle(color: black),
+                  style: TextStyle(
+                      color: grey,
+                      fontFamily: dM_sans_extraBold,
+                      fontSize: 18.sp),
                 ),
                 onPressed: () {
                   Navigator.of(context).pop(false);
@@ -65,7 +68,10 @@ Future<bool?> getpopup(BuildContext context,
           CupertinoDialogAction(
               child: Text(
                 isFromProfile == true ? 'Confirm' : 'Add',
-                style: TextStyle(color: green),
+                style: TextStyle(
+                    color: primaryColor,
+                    fontFamily: dM_sans_extraBold,
+                    fontSize: 18.sp),
               ),
               onPressed: () {
                 Navigator.of(context).pop(true);
@@ -748,7 +754,7 @@ getEmptyUi({isservice = false}) {
   );
 }
 
-void showUpdatePopup(BuildContext context) {
+void showUpdatePopup(BuildContext context, String appUrl, bool isForcefully) {
   Future.delayed(const Duration(seconds: 0), () {
     showDialog(
       context: context,
@@ -767,19 +773,20 @@ void showUpdatePopup(BuildContext context) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Icon(Icons.cancel,
-                                size: Device.screenType == ScreenType.mobile
-                                    ? 4.h
-                                    : 5.h,
-                                color: isDarkMode() ? white : black)))),
+                if (isForcefully == false)
+                  Align(
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.all(5),
+                              child: Icon(Icons.cancel,
+                                  size: Device.screenType == ScreenType.mobile
+                                      ? 4.h
+                                      : 5.h,
+                                  color: isDarkMode() ? white : black)))),
                 // Placeholder for the celebratory character image
                 Image.asset(Asset.applogo, height: 6.0.h),
                 SizedBox(height: 4.0.h), // Responsive spacing
@@ -806,9 +813,14 @@ void showUpdatePopup(BuildContext context) {
                 SizedBox(height: 2.0.h), // Responsive spacing
                 // Update App button
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    // Add your update logic here
+                  onPressed: () async {
+                    if (await canLaunchUrl(Uri.parse(appUrl))) {
+                      await launchUrl(Uri.parse(appUrl),
+                          mode: LaunchMode.externalApplication);
+                    } else {
+                      throw 'Could not launch $appUrl';
+                    }
+                    // Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,

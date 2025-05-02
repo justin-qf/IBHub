@@ -7,6 +7,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/otpController.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -18,9 +19,11 @@ class OtpScreen extends StatefulWidget {
     super.key,
     this.email,
     this.otp,
+    this.isFromSingIn,
   });
   String? otp;
   String? email = '';
+  bool? isFromSingIn = false;
   @override
   State<OtpScreen> createState() => OtpScreenState();
 }
@@ -39,6 +42,11 @@ class OtpScreenState extends State<OtpScreen> {
 
   @override
   void initState() {
+    if (widget.isFromSingIn == true) {
+      futureDelay(() {
+        controller.getRegisterOtp(context, widget.email.toString());
+      }, isOneSecond: false);
+    }
     controller.clearFocuseNode();
     controller.fieldOne.text = '';
     controller.fieldTwo.text = '';
@@ -46,7 +54,9 @@ class OtpScreenState extends State<OtpScreen> {
     controller.fieldFour.text = '';
     controller.otpController.text = "";
     controller.otpController.clear();
-    controller.startTimer();
+    if (widget.isFromSingIn == false) {
+      controller.startTimer();
+    }
     super.initState();
   }
 
@@ -181,8 +191,17 @@ class OtpScreenState extends State<OtpScreen> {
                                   getDynamicSizedBox(height: 1.5.h),
                                   GestureDetector(
                                     onTap: () {
-                                      controller.getForgotOtp(
-                                          context, widget.email!);
+                                      if (widget.isFromSingIn == true) {
+                                        logcat("isFromSingIn:", "TRUE");
+                                        controller.getRegisterOtp(
+                                            context, widget.email ?? '');
+                                      } else {
+                                        logcat("isFromSingIn:", "FALSE");
+                                        controller.getForgotOtp(
+                                            context, widget.email ?? '');
+                                      }
+                                      // controller.getForgotOtp(
+                                      //     context, widget.email!);
                                     },
                                     child: Text(OtpConstant.resend,
                                         style: TextStyle(
@@ -224,7 +243,13 @@ class OtpScreenState extends State<OtpScreen> {
                   child: Obx(() {
                     return getFormButton(context, () {
                       if (controller.isFormInvalidate.value == true) {
-                        controller.verifyForgotOtp(context, widget.email!);
+                        if (widget.isFromSingIn == true) {
+                          logcat("isFromSingIn:", "TRUE");
+                          controller.verifyRegisterOtp(context, widget.email!);
+                        } else {
+                          logcat("isFromSingIn:", "FALSE");
+                          controller.verifyForgotOtp(context, widget.email!);
+                        }
                       }
                     }, OtpConstant.verify,
                         validate: controller.isFormInvalidate.value);

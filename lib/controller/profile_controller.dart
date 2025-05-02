@@ -33,7 +33,7 @@ class ProfileController extends GetxController {
   RxString email = "".obs;
   RxString profilePic = "".obs;
   RxString apkUrl =
-      "https://play.google.com/store/apps/details?id=com.app.indianbussinesshub"
+      "https://play.google.com/store/apps/details?id=com.app.indianbusinesshub"
           .obs;
   RxString gender = "".obs;
   AnimationController? controllers;

@@ -1,13 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/device_type.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
+import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -26,18 +26,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     // Trigger the animation after a short delay (e.g. 50ms)
-    Future.delayed(Duration(milliseconds: 50), () {
+    Future.delayed(const Duration(milliseconds: 50), () {
       setState(() {
         _opacity = 1.0;
         _scale = 1.0;
       });
     });
+
     Timer(const Duration(seconds: 3), () async {
-      User? retrievedObject = await UserPreferences().getSignInInfo();
-      if (retrievedObject != null) {
+      User? userData = await UserPreferences().getSignInInfo();
+      if (userData != null && userData.isEmailVerified == true) {
         Get.offAll(const MainScreen());
+      } else if (userData != null && userData.isEmailVerified == false) {
+        Get.to(() => OtpScreen(
+              email: userData.email.toString().trim(),
+              otp: "1235",
+              isFromSingIn: true,
+            ))?.then((value) {});
       } else {
         Get.offAll(const Signinscreen());
       }

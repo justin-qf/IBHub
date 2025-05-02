@@ -3,7 +3,7 @@ description: "Indian Business Hub"
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -38,6 +38,15 @@ dependencies:
   image_cropper: ^5.0.0
   pull_to_refresh_flutter3: ^2.0.2
   webview_flutter: ^4.8.0
+  package_info_plus: ^8.0.2
+  firebase_dynamic_links: any
+  firebase_auth: ^4.19.5
+  firebase_core: ^2.31.0
+  firebase_crashlytics: ^3.4.9
+  firebase_messaging: ^14.9.2
+  flutter_local_notifications: ^17.1.2
+  hive: ^2.2.3
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -46,7 +55,6 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 
 flutter:
-
 
   uses-material-design: true
 

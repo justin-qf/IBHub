@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     futureDelay(() {
       controller.getCategoryList(context);
       controller.getBusinessList(context, 1, false, isFirstTime: true);
+      controller.getUpdateApi(context, false);
     }, isOneSecond: false);
   }
 
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() => controller.isFetchingMore = true);
       controller.currentPage++;
       Future.delayed(
-        Duration.zero,
+        const Duration(seconds: 1),
         () {
           controller.isBusinessLoading.value = false;
           controller

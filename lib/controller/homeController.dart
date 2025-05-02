@@ -4,23 +4,29 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
+import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
+import 'package:ibh/models/appUpdateModel.dart';
 import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
+import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:marquee/marquee.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -202,7 +208,7 @@ class HomeScreenController extends GetxController {
       }
       var response =
           await Repository.get({}, ApiUrl.getCategories, allowHeader: true);
-      logcat("RESPONSE::", response.body);
+      logcat("CATEGORY_RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
         if (responseData['success'] == true) {
@@ -222,8 +228,8 @@ class HomeScreenController extends GetxController {
         }
       } else {
         state.value = ScreenState.apiError;
-        message.value =
-            responseData['message'] ?? APIResponseHandleText.serverError;
+        // message.value =
+        //     responseData['message'] ?? APIResponseHandleText.serverError;
         // showDialogForScreen(context, HomeScreenconst.title,
         //     responseData['message'] ?? ServerError.servererror,
         //     callback: () {});
@@ -238,79 +244,79 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  RxList serviceList = [].obs;
-  getServiceList(context, currentPage, bool hideloading) async {
-    var loadingIndicator = LoadingProgressDialog();
+  // RxList serviceList = [].obs;
+  // getServiceList(context, currentPage, bool hideloading) async {
+  //   var loadingIndicator = LoadingProgressDialog();
 
-    if (hideloading == true) {
-      state.value = ScreenState.apiLoading;
-    } else {
-      loadingIndicator.show(context, '');
-      update();
-    }
-    try {
-      if (networkManager.connectionType.value == 0) {
-        showDialogForScreen(
-            context, CategoryScreenConstant.title, Connection.noConnection,
-            callback: () {
-          Get.back();
-        });
-        return;
-      }
+  //   if (hideloading == true) {
+  //     state.value = ScreenState.apiLoading;
+  //   } else {
+  //     loadingIndicator.show(context, '');
+  //     update();
+  //   }
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       showDialogForScreen(
+  //           context, CategoryScreenConstant.title, Connection.noConnection,
+  //           callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
 
-      var pageURL = '${ApiUrl.getServiceList}?page=$currentPage';
-      var response = await Repository.get({}, pageURL, allowHeader: true);
-      if (hideloading != true) {
-        loadingIndicator.hide(context);
-      }
-      logcat("RESPONSE::", response.body);
-      if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
-        if (responseData['success'] == true) {
-          state.value = ScreenState.apiSuccess;
-          message.value = '';
-          var serviceListData = ServiceListModel.fromJson(responseData);
-          if (serviceListData.data.data.isNotEmpty) {
-            serviceList.addAll(serviceListData.data.data);
-            serviceList.refresh();
-            update();
-          }
-          if (serviceListData.data.nextPageUrl != 'null' ||
-              serviceListData.data.nextPageUrl != null) {
-            nextPageURL.value = serviceListData.data.nextPageUrl.toString();
-            logcat("nextPageURL-1", nextPageURL.value.toString());
-            update();
-          } else {
-            nextPageURL.value = "";
-            logcat("nextPageURL-2", nextPageURL.value.toString());
-            update();
-          }
-          logcat("nextPageURL", nextPageURL.value.toString());
-        } else {
-          message.value = responseData['message'];
-          showDialogForScreen(
-              context, CategoryScreenConstant.title, responseData['message'],
-              callback: () {});
-        }
-      } else {
-        state.value = ScreenState.apiError;
-        message.value = APIResponseHandleText.serverError;
-        showDialogForScreen(
-            context, CategoryScreenConstant.title, ServerError.servererror,
-            callback: () {});
-      }
-    } catch (e) {
-      logcat("Ecxeption", e);
-      state.value = ScreenState.apiError;
-      message.value = ServerError.servererror;
-      if (hideloading != true) {
-        loadingIndicator.hide(context);
-      }
-      showDialogForScreen(
-          context, CategoryScreenConstant.title, ServerError.servererror,
-          callback: () {});
-    }
-  }
+  //     var pageURL = '${ApiUrl.getServiceList}?page=$currentPage';
+  //     var response = await Repository.get({}, pageURL, allowHeader: true);
+  //     if (hideloading != true) {
+  //       loadingIndicator.hide(context);
+  //     }
+  //     logcat("RESPONSE::", response.body);
+  //     if (response.statusCode == 200) {
+  //       var responseData = jsonDecode(response.body);
+  //       if (responseData['success'] == true) {
+  //         state.value = ScreenState.apiSuccess;
+  //         message.value = '';
+  //         var serviceListData = ServiceListModel.fromJson(responseData);
+  //         if (serviceListData.data.data.isNotEmpty) {
+  //           serviceList.addAll(serviceListData.data.data);
+  //           serviceList.refresh();
+  //           update();
+  //         }
+  //         if (serviceListData.data.nextPageUrl != 'null' ||
+  //             serviceListData.data.nextPageUrl != null) {
+  //           nextPageURL.value = serviceListData.data.nextPageUrl.toString();
+  //           logcat("nextPageURL-1", nextPageURL.value.toString());
+  //           update();
+  //         } else {
+  //           nextPageURL.value = "";
+  //           logcat("nextPageURL-2", nextPageURL.value.toString());
+  //           update();
+  //         }
+  //         logcat("nextPageURL", nextPageURL.value.toString());
+  //       } else {
+  //         message.value = responseData['message'];
+  //         showDialogForScreen(
+  //             context, CategoryScreenConstant.title, responseData['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       state.value = ScreenState.apiError;
+  //       message.value = APIResponseHandleText.serverError;
+  //       showDialogForScreen(
+  //           context, CategoryScreenConstant.title, ServerError.servererror,
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     logcat("Ecxeption", e);
+  //     state.value = ScreenState.apiError;
+  //     message.value = ServerError.servererror;
+  //     if (hideloading != true) {
+  //       loadingIndicator.hide(context);
+  //     }
+  //     showDialogForScreen(
+  //         context, CategoryScreenConstant.title, ServerError.servererror,
+  //         callback: () {});
+  //   }
+  // }
 
   RxList businessList = [].obs;
   getBusinessList(context, currentPage, bool hideloading,
@@ -387,8 +393,10 @@ class HomeScreenController extends GetxController {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(context, HomeScreenconst.title,
-            responseData['message'] ?? ServerError.servererror,
-            callback: () {});
+            responseData['message'] ?? ServerError.servererror, callback: () {
+          getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+        });
       }
     } catch (e) {
       logcat("Ecxeption", e);
@@ -401,6 +409,43 @@ class HomeScreenController extends GetxController {
       //     context, CategoryScreenConstant.title, ServerError.servererror,
       //     callback: () {});
     }
+  }
+
+  void getUpdateApi(context, bool isLoading) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String currentVersion = packageInfo.version; // e.g. "1.0.0"
+    // var loadingIndicator = LoadingProgressDialogs();
+    commonGetApiCallFormate(context,
+        title: HomeScreenconst.title,
+        // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
+        apiEndPoint: ApiUrl.appUpdate,
+        allowHeader: true, apisLoading: (isTrue) {
+      if (isLoading == true) {
+        // if (isTrue) {
+        //   loadingIndicator.show(context, '');
+        // } else {
+        //   loadingIndicator.hide(context);
+        // }
+      }
+      logcat("IsAppUpdate:", isTrue.toString());
+      update();
+    }, onResponse: (response) {
+      var appUpdateModel = AppUpdateModel.fromJson(response);
+      String serverVersion = appUpdateModel.data.version.toString();
+      logcat("AppUpdate", jsonEncode(appUpdateModel));
+      logcat("AppVersion", serverVersion.toString());
+      logcat("currentVersion", currentVersion.toString());
+      logcat("isForcefully", appUpdateModel.data.isForcefullyUpdate.toString());
+      if (isNewVersionAvailable(currentVersion, serverVersion)) {
+        const url =
+            'https://play.google.com/store/apps/details?id=com.app.medicalhistory';
+        bool isForcefully =
+            appUpdateModel.data.isForcefullyUpdate == 1 ? true : false;
+        showUpdatePopup(context, url ?? appUpdateModel.data.appUrl.toString(),
+            isForcefully);
+      }
+      update();
+    }, networkManager: networkManager);
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {

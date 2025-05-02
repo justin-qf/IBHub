@@ -50,6 +50,7 @@ class User {
   String pincode;
   String visitingCardUrl;
   bool isVerified;
+  bool isEmailVerified;
   String token;
   double? businessReviewsAvgRating;
 
@@ -67,6 +68,7 @@ class User {
     required this.visitingCardUrl,
     required this.isVerified,
     required this.token,
+    required this.isEmailVerified,
     required this.businessReviewsAvgRating,
   });
 
@@ -83,6 +85,7 @@ class User {
         pincode: json["pincode"] ?? '',
         visitingCardUrl: json["visiting_card_url"] ?? '',
         isVerified: json["is_verified"],
+        isEmailVerified: json["is_email_verified"],
         token: json["token"] ?? '',
         businessReviewsAvgRating: json["business_reviews_avg_rating"] != null
             ? json["business_reviews_avg_rating"]?.toDouble()
@@ -102,6 +105,7 @@ class User {
         "pincode": pincode,
         "visiting_card_url": visitingCardUrl,
         "is_verified": isVerified,
+        "is_email_verified": isEmailVerified,
         "token": token,
         "business_reviews_avg_rating": businessReviewsAvgRating,
       };

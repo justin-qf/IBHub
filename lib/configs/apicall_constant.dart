@@ -5,8 +5,8 @@ class ApiUrl {
   // static const imageUrl = '${baseUrl}swooosh_admin/public/storage/';
 
   //LIVE
-  // static const liveUrl = "http://192.168.1.21/indian_business_hub/";
-  static const liveUrl = "https://indianbusinesshub.in/";
+  static const liveUrl = "http://192.168.1.21/indian_business_hub/";
+  // static const liveUrl = "https://indianbusinesshub.in/";
   static const buildApiUrl = '${liveUrl}api/';
   static const imageUrl = '${liveUrl}public/storage';
 
@@ -41,4 +41,7 @@ class ApiUrl {
   static const addToFav = 'businesses/favorite/create';
   static const removeToFav = 'businesses/favorite/delete';
   static const favList = 'businesses/favorite/list';
+  static const appUpdate = 'app_updates';
+  static const emailVerificationOtp = 'email-verification-otp';
+  static const emailVerificationVerifyOtp = 'email-verification-verify-otp';
 }

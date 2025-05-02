@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -13,6 +13,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signinScreenController.dart';
+import 'package:ibh/services/firebaseNoticationsHandler.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/EmailScreen.dart';
 import 'package:ibh/views/sigin_signup/signupScreen.dart';
@@ -27,6 +28,17 @@ class Signinscreen extends StatefulWidget {
 
 class _SigninscreenState extends State<Signinscreen> {
   final Signinscreencontroller ctr = Get.put(Signinscreencontroller());
+
+  @override
+  void initState() {
+    setFirebaseNotificationPermission();
+    super.initState();
+  }
+
+  setFirebaseNotificationPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await NotificationService.requestPermission(context, messaging);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,8 +157,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       ctr.resetForm();
                     }
                   },
-                  child: 
-                  Container(
+                  child: Container(
                     // color: Colors.yellow,
                     padding: EdgeInsets.only(top: 3.h, bottom: 3.h, left: 2.w),
                     child: Stack(

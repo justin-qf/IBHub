@@ -264,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             getMenuListItem(
                                 callback: () {
                                   logoutPopupDialogs(context);
-                                  // showUpdatePopup(context);
+                            
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
