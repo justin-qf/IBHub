@@ -1,14 +1,35 @@
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:ibh/configs/app_constants.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/services/firebaseNoticationsHandler.dart';
+import 'package:ibh/services/push_notification.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Firebase
+  await Firebase.initializeApp();
+  if (Platform.isAndroid) {
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  }
+  // Initialize Hive
+  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  await Hive.openBox<String>(AppConstants.openFirebaseTokenBox);
+  await Hive.openBox<bool>(AppConstants.openLanguageBox);
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await NotificationService.initialize();
   screenOrientations();
   Get.lazyPut<InternetController>(() => InternetController());
   runApp(const MyApp());

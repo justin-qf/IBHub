@@ -605,6 +605,18 @@ class AppConstant {
   static const filter = 'Filter';
 }
 
+class Notifications {
+  static const appId = 'com.app.indianbusinesshub';
+  static const appName = "indianbusinesshub";
+  static const appIcon = '@drawable/ic_launcher';
+  static const appLargeIcon = '@mipmap/ic_launcher';
+  static const groupKey = "com.app.indianbusinesshub.medcare";
+  static const channelId = 'indian_business_hub';
+  static const channelName = 'IndianBusinessHub';
+  static const channelDescription =
+      "This channel is used for important notifications";
+}
+
 class IndiaRupeeConstant {
   static const inrCode = "\u{20B9}";
 }

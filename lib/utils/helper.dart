@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:hive/hive.dart';
+import 'package:ibh/configs/app_constants.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
@@ -453,4 +458,32 @@ Future<Uint8List> loadImageFromAssets(String assetName) async {
 
 Duration getAnimationDuration() {
   return const Duration(milliseconds: 10); // or any desired duration
+}
+
+bool isNewVersionAvailable(String currentVersion, String newVersion) {
+  List<int> current = currentVersion.split('.').map(int.parse).toList();
+  List<int> latest = newVersion.split('.').map(int.parse).toList();
+
+  for (int i = 0; i < latest.length; i++) {
+    if (i >= current.length || latest[i] > current[i]) return true;
+    if (latest[i] < current[i]) return false;
+  }
+  return false;
+}
+
+getUnauthenticatedUser(BuildContext context, String key, String value) {
+  if (key == value) {
+    Navigator.pop(context);
+    UserPreferences().logout();
+    Get.offAll(const Signinscreen());
+    return;
+  }
+}
+
+Future<String?> getFirebaseToken() async {
+  final openFirebaseTokenBox =
+      await Hive.openBox<String>(AppConstants.openFirebaseTokenBox);
+  var firebaseToken = openFirebaseTokenBox.get(AppConstants.storeFirebaseToken,
+      defaultValue: '');
+  return firebaseToken;
 }

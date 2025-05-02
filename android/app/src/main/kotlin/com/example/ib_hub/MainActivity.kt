@@ -1,4 +1,4 @@
-package com.app.ib_hub
+package com.app.indianbusinesshub
 
 import io.flutter.embedding.android.FlutterActivity
 

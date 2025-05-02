@@ -10,6 +10,8 @@ import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class Signupscreencontroller extends GetxController {
@@ -172,13 +174,15 @@ class Signupscreencontroller extends GetxController {
 
   void registerAPI(context) async {
     // var loadingIndicator = LoadingProgressDialog();
-
+    String? firebaseToken = await getFirebaseToken();
+    logcat("firebaseToken::", firebaseToken.toString());
     commonPostApiCallFormate(context,
         title: LoginConst.signup,
         body: {
           "email": emailCtr.text.toString().trim(),
           "password": passCtr.text.toString().trim(),
-          "password_confirmation": confpassCtr.text.toString()
+          "password_confirmation": confpassCtr.text.toString(),
+          "device_token": firebaseToken ?? ''
         },
         apiEndPoint: ApiUrl.register, onResponse: (data) {
       var responseDetail = LoginModel.fromJson(data);

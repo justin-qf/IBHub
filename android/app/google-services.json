@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "210905767385",
+    "project_id": "indian-business-hub-5173e",
+    "storage_bucket": "indian-business-hub-5173e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210905767385:android:450190187da81c801a8dc8",
+        "android_client_info": {
+          "package_name": "com.app.indianbusinesshub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnOMMAFlUFbS3Pvtr2759RAoxbmN6FciQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

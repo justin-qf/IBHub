@@ -9,9 +9,12 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/models/login_model.dart';
+import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
+import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class OtpController extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -186,6 +189,68 @@ class OtpController extends GetxController {
     }
   }
 
+  void verifyRegisterOtp(context, String email) async {
+    var loadingIndicator = LoadingProgressDialog();
+    loadingIndicator.show(context, '');
+
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, OtpConstant.title, Connection.noConnection,
+            callback: () {
+          Get.back();
+        });
+        return;
+      }
+      logcat("REGISTER_PASS_PARAM", {
+        "email": email,
+        "otp": otpController.text.toString(),
+      });
+      var response = await Repository.post({
+        "email": email,
+        "otp": otpController.text.toString(),
+      }, ApiUrl.emailVerificationVerifyOtp);
+      loadingIndicator.hide(context);
+      var data = jsonDecode(response.body);
+      logcat("RESPONSE", jsonEncode(data));
+      if (response.statusCode == 200) {
+        if (data['success'] == true) {
+          var responseDetail = LoginModel.fromJson(data);
+          UserPreferences().saveSignInInfo(responseDetail.data.user);
+          logcat("LoginResponse::", jsonEncode(responseDetail));
+          Get.offAll(const MainScreen());
+        } else {
+          showDialogForScreen(
+              context,
+              OtpConstant.title,
+              data['message']
+                      .toString()
+                      .contains('The selected code is invalid.')
+                  ? "Entered OTP is invalid."
+                  : data['message'], callback: () {
+            FocusScope.of(context).requestFocus(otpNode);
+            otpController.text = "";
+          });
+        }
+      } else {
+        showDialogForScreen(
+            context,
+            OtpConstant.title,
+            data['message'].toString().contains('The selected code is invalid.')
+                ? "Entered OTP is invalid."
+                : data['message'], callback: () {
+          startTimer();
+          FocusScope.of(context).requestFocus(otpNode);
+          otpController.text = "";
+        });
+      }
+    } catch (e) {
+      logcat("Exception", e);
+      showDialogForScreen(context, OtpConstant.title, Connection.servererror,
+          callback: () {});
+    }
+  }
+
   void getForgotOtp(context, String email) async {
     commonPostApiCallFormate(context,
         title: OtpConstant.title,
@@ -197,6 +262,17 @@ class OtpController extends GetxController {
       startTimer();
       otpController.text = '';
       FocusScope.of(context).requestFocus(otpNode);
+    }, networkManager: networkManager, isModelResponse: false);
+  }
+
+  void getRegisterOtp(context, String email) async {
+    commonPostApiCallFormate(context,
+        title: OtpConstant.title,
+        body: {"email": email.toString().trim()},
+        apiEndPoint: ApiUrl.emailVerificationOtp, onResponse: (data) {
+      countdown.value = 60;
+      startTimer();
+      update();
     }, networkManager: networkManager, isModelResponse: false);
   }
 

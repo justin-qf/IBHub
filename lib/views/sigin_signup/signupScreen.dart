@@ -162,9 +162,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         margin: EdgeInsets.symmetric(horizontal: 5.w),
                         child: getFormButton(context, () async {
                           if (ctr.isFormInvalidate.value == true) {
-                            ctr.registerAPI(
-                              context,
-                            );
+                            ctr.registerAPI(context);
                             // ctr.validateLogin(context);
                           }
                         }, SignUpConstant.signup,
@@ -195,7 +193,7 @@ class _SignupscreenState extends State<Signupscreen> {
                           },
                           child: Container(
                             // color: Colors.yellow,
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
@@ -231,7 +229,7 @@ class _SignupscreenState extends State<Signupscreen> {
                             print('navigate to policy screen');
                           },
                           child: Container(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Stack(
                               alignment: Alignment.center,
                               children: [

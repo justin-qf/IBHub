@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     futureDelay(() {
       controller.getCategoryList(context);
       controller.getBusinessList(context, 1, false, isFirstTime: true);
+      controller.getUpdateApi(context, false);
     }, isOneSecond: false);
   }
 
@@ -62,8 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() => controller.isFetchingMore = true);
       controller.currentPage++;
       Future.delayed(
-        Duration.zero,
+        const Duration(seconds: 1),
         () {
+          controller.isBusinessLoading.value = false;
           controller
               .getBusinessList(context, controller.currentPage, true,
                   isFirstTime: false)
@@ -219,143 +221,153 @@ class _HomeScreenState extends State<HomeScreen> {
             }, isShowSeeMore: false),
             Obx(
               () {
-                return controller.businessList.isNotEmpty
-                    ? SingleChildScrollView(
-                        // controller: controller.scrollController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.only(bottom: 5.h),
-                        child: ListView.builder(
-                          padding:
-                              EdgeInsets.only(left: 1.w, right: 1.w, top: 2.h),
-                          physics: const NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          clipBehavior: Clip.antiAlias,
-                          itemCount: controller.businessList.length +
-                              (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            if (index < controller.businessList.length) {
-                              BusinessData data =
-                                  controller.businessList[index];
-                              return controller.getBusinessListItem(
-                                  context, data);
-                            } else if (controller.isFetchingMore) {
-                              return Center(
-                                  child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: const CircularProgressIndicator(
-                                          color: primaryColor)));
-                            } else {
-                              return controller.isFetchingMore
-                                  ? Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 2.h),
-                                      child: const Center(
-                                        child: SizedBox(
-                                          height: 30,
-                                          width: 30,
-                                          child: CircularProgressIndicator(
-                                              color: primaryColor),
-                                        ),
-                                      ),
-                                    )
-                                  : Container();
-                            }
-                          },
-                        ),
+                return controller.isBusinessLoading.value
+                    ? SizedBox(
+                        height: 20.h,
+                        child: const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor)),
                       )
-
-                    // SizedBox(
-                    //     height: Device.height,
-                    //     child: SmartRefresher(
-                    //       physics: const BouncingScrollPhysics(),
-                    //       controller: controller.refreshController,
-                    //       enablePullDown: true,
-                    //       enablePullUp: false,
-                    //       header: const WaterDropMaterialHeader(
-                    //           backgroundColor: primaryColor, color: white),
-                    //       onRefresh: () async {
-                    //         futureDelay(() {
-                    //           controller.currentPage = 1;
-                    //           controller.getBusinessList(context, 1, false,
-                    //               isFirstTime: true);
-                    //         }, isOneSecond: false);
-                    //         controller.refreshController.refreshCompleted();
-                    //       },
-                    //       child: SingleChildScrollView(
-                    //         controller: controller.scrollController,
-                    //         physics: const BouncingScrollPhysics(),
-                    //         padding: EdgeInsets.only(bottom: 48.h),
-                    //         child: ListView.builder(
-                    //           padding: EdgeInsets.only(
-                    //               left: 1.w, right: 1.w, top: 2.h),
-                    //           physics: const NeverScrollableScrollPhysics(),
-                    //           scrollDirection: Axis.vertical,
-                    //           shrinkWrap: true,
-                    //           clipBehavior: Clip.antiAlias,
-                    //           itemCount: controller.businessList.length +
-                    //               (controller.nextPageURL.value.isNotEmpty
-                    //                   ? 1
-                    //                   : 0),
-                    //           itemBuilder: (context, index) {
-                    //             if (index < controller.businessList.length) {
-                    //               BusinessData data =
-                    //                   controller.businessList[index];
-                    //               return controller.getBusinessListItem(
-                    //                   context, data);
-                    //             } else if (controller.isFetchingMore) {
-                    //               return Center(
-                    //                   child: Padding(
-                    //                       padding: EdgeInsets.symmetric(
-                    //                           vertical: 2.h),
-                    //                       child:
-                    //                           const CircularProgressIndicator(
-                    //                               color: primaryColor)));
-                    //             } else {
-                    //               return controller.isFetchingMore
-                    //                   ? Padding(
-                    //                       padding: EdgeInsets.symmetric(
-                    //                           vertical: 2.h),
-                    //                       child: const Center(
-                    //                         child: SizedBox(
-                    //                           height: 30,
-                    //                           width: 30,
-                    //                           child: CircularProgressIndicator(
-                    //                               color: primaryColor),
-                    //                         ),
-                    //                       ),
-                    //                     )
-                    //                   : Container();
-                    //             }
-                    //           },
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   )
-                    // controller.businessList.isEmpty
-                    //     ? Center(
-                    //         child: Padding(
-                    //             padding: EdgeInsets.symmetric(vertical: 2.h),
-                    //             child: const CircularProgressIndicator(
-                    //                 color: primaryColor)))
-                    : controller.businessList.isEmpty
-                        ? SizedBox(
-                            height: 22.h,
-                            child: Center(
-                                child: SizedBox(
-                              child: Center(
-                                child: Text(
-                                  Common.businessdatanotfound,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: dM_sans_medium,
-                                      fontSize: 16.sp),
-                                ),
-                              ),
-                            )),
+                    : controller.businessList.isNotEmpty
+                        ? SingleChildScrollView(
+                            // controller: controller.scrollController,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: EdgeInsets.only(bottom: 5.h),
+                            child: ListView.builder(
+                              padding: EdgeInsets.only(
+                                  left: 1.w, right: 1.w, top: 2.h),
+                              physics: const NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              clipBehavior: Clip.antiAlias,
+                              itemCount: controller.businessList.length +
+                                  (controller.nextPageURL.value.isNotEmpty
+                                      ? 1
+                                      : 0),
+                              itemBuilder: (context, index) {
+                                if (index < controller.businessList.length) {
+                                  BusinessData data =
+                                      controller.businessList[index];
+                                  return controller.getBusinessListItem(
+                                      context, data);
+                                } else if (controller.isFetchingMore) {
+                                  return Center(
+                                      child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.h),
+                                          child:
+                                              const CircularProgressIndicator(
+                                                  color: primaryColor)));
+                                } else {
+                                  return controller.isFetchingMore
+                                      ? Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2.h),
+                                          child: const Center(
+                                            child: SizedBox(
+                                              height: 30,
+                                              width: 30,
+                                              child: CircularProgressIndicator(
+                                                  color: primaryColor),
+                                            ),
+                                          ),
+                                        )
+                                      : Container();
+                                }
+                              },
+                            ),
                           )
-                        : Container();
+
+                        // SizedBox(
+                        //     height: Device.height,
+                        //     child: SmartRefresher(
+                        //       physics: const BouncingScrollPhysics(),
+                        //       controller: controller.refreshController,
+                        //       enablePullDown: true,
+                        //       enablePullUp: false,
+                        //       header: const WaterDropMaterialHeader(
+                        //           backgroundColor: primaryColor, color: white),
+                        //       onRefresh: () async {
+                        //         futureDelay(() {
+                        //           controller.currentPage = 1;
+                        //           controller.getBusinessList(context, 1, false,
+                        //               isFirstTime: true);
+                        //         }, isOneSecond: false);
+                        //         controller.refreshController.refreshCompleted();
+                        //       },
+                        //       child: SingleChildScrollView(
+                        //         controller: controller.scrollController,
+                        //         physics: const BouncingScrollPhysics(),
+                        //         padding: EdgeInsets.only(bottom: 48.h),
+                        //         child: ListView.builder(
+                        //           padding: EdgeInsets.only(
+                        //               left: 1.w, right: 1.w, top: 2.h),
+                        //           physics: const NeverScrollableScrollPhysics(),
+                        //           scrollDirection: Axis.vertical,
+                        //           shrinkWrap: true,
+                        //           clipBehavior: Clip.antiAlias,
+                        //           itemCount: controller.businessList.length +
+                        //               (controller.nextPageURL.value.isNotEmpty
+                        //                   ? 1
+                        //                   : 0),
+                        //           itemBuilder: (context, index) {
+                        //             if (index < controller.businessList.length) {
+                        //               BusinessData data =
+                        //                   controller.businessList[index];
+                        //               return controller.getBusinessListItem(
+                        //                   context, data);
+                        //             } else if (controller.isFetchingMore) {
+                        //               return Center(
+                        //                   child: Padding(
+                        //                       padding: EdgeInsets.symmetric(
+                        //                           vertical: 2.h),
+                        //                       child:
+                        //                           const CircularProgressIndicator(
+                        //                               color: primaryColor)));
+                        //             } else {
+                        //               return controller.isFetchingMore
+                        //                   ? Padding(
+                        //                       padding: EdgeInsets.symmetric(
+                        //                           vertical: 2.h),
+                        //                       child: const Center(
+                        //                         child: SizedBox(
+                        //                           height: 30,
+                        //                           width: 30,
+                        //                           child: CircularProgressIndicator(
+                        //                               color: primaryColor),
+                        //                         ),
+                        //                       ),
+                        //                     )
+                        //                   : Container();
+                        //             }
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   )
+                        // controller.businessList.isEmpty
+                        //     ? Center(
+                        //         child: Padding(
+                        //             padding: EdgeInsets.symmetric(vertical: 2.h),
+                        //             child: const CircularProgressIndicator(
+                        //                 color: primaryColor)))
+                        : controller.businessList.isEmpty
+                            ? SizedBox(
+                                height: 22.h,
+                                child: Center(
+                                    child: SizedBox(
+                                  child: Center(
+                                    child: Text(
+                                      Common.businessdatanotfound,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: dM_sans_medium,
+                                          fontSize: 16.sp),
+                                    ),
+                                  ),
+                                )),
+                              )
+                            : Container();
               },
             )
           ]);

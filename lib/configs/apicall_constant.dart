@@ -40,6 +40,9 @@ class ApiUrl {
   static const addToFav = 'businesses/favorite/create';
   static const removeToFav = 'businesses/favorite/delete';
   static const favList = 'businesses/favorite/list';
+  static const appUpdate = 'app_updates';
+  static const emailVerificationOtp = 'email-verification-otp';
+  static const emailVerificationVerifyOtp = 'email-verification-verify-otp';
   static const changeStatus = 'services/change-status';
   static const verification = 'document-upload/type/list';
 }

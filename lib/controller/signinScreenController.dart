@@ -13,6 +13,7 @@ import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class Signinscreencontroller extends GetxController {
@@ -139,12 +140,36 @@ class Signinscreencontroller extends GetxController {
       UserPreferences().saveSignInInfo(responseDetail.data!.user);
       UserPreferences().setToken(responseDetail.data!.user!.token.toString());
       logcat("LoginResponse::", jsonEncode(responseDetail));
-      User? retrievedObject = await UserPreferences().getSignInInfo();
-      logcat("LoginResponsePref::", jsonEncode(retrievedObject));
-
-      Get.offAll(const MainScreen());
+      // User? retrievedObject = await UserPreferences().getSignInInfo();
+      if (responseDetail.data.user.isEmailVerified == true) {
+        Get.offAll(const MainScreen());
+      } else {
+        Get.to(() => OtpScreen(
+              email: responseDetail.data.user.email.toString().trim(),
+              otp: "1235",
+              isFromSingIn: true,
+            ))?.then((value) {});
+        // getRegiaterOtp(context, responseDetail.data.user.email.toString());
+      }
     }, networkManager: networkManager, isModelResponse: true);
   }
+
+  // getRegiaterOtp(context, String emailId) async {
+  //   commonPostApiCallFormate(
+  //     context,
+  //     title: EmailScreenConstant.title,
+  //     body: {"email": emailId.toString().trim()},
+  //     apiEndPoint: ApiUrl.emailVerificationOtp,
+  //     onResponse: (data) {
+  //       Get.to(() => OtpScreen(
+  //             email: emailId.toString().trim(),
+  //             otp: "1235",
+  //             isFromSingIn: true,
+  //           ))?.then((value) {});
+  //     },
+  //     networkManager: networkManager,
+  //   );
+  // }
 
   validateFields(
     val, {
