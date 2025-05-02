@@ -215,6 +215,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: controller.categoryList.length)
                       : Container();
                 })),
+            if (controller.isUserVerified.value == true)
+              getDynamicSizedBox(height: 3.h),
+            controller.isUserVerified.value
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: Text(
+                      'To Get your business listed and verified. Upload your docs now!',
+                      style: TextStyle(
+                        fontFamily: dM_sans_semiBold,
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});

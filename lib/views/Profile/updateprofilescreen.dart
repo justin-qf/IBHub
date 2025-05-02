@@ -429,7 +429,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         isenable: ctr.isUserVerfied.value ? false : true,
                         isVerified: ctr.isUserVerfied.value ? true : false,
                         isdropdown: true,
-                        usegesture: ctr.isUserVerfied.value ? false : true,
+                        usegesture: true,
                         isRequired: ctr.isUserVerfied.value ? false : true,
                         context: context,
                         gestureFunction: () {
