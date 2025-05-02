@@ -16,7 +16,7 @@ import 'package:sizer/sizer.dart';
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  static late AndroidNotificationChannel channel;
+  static late AndroidNotificationChannel channel; 
   static String obtainedFirebaseToken = "";
 
   static Future<void> initialize() async {
