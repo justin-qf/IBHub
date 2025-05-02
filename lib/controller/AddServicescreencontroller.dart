@@ -654,14 +654,14 @@ class AddServicescreencontroller extends GetxController {
                             imageURl.value,
                             fit: BoxFit.fitWidth,
                           ),
-                      errorWidget: (context, url, error) => SvgPicture.asset(
-                            Asset.profileimg,
+                      errorWidget: (context, url, error) => Image.asset(
+                            Asset.bussinessPlaceholder,
                             height: 8.0.h,
                             width: 8.0.h,
                           ))
                   : imageFile.value == null
-                      ? SvgPicture.asset(
-                          Asset.profileimg,
+                      ? Image.asset(
+                          Asset.bussinessPlaceholder,
                           height: 8.0.h,
                           width: 8.0.h,
                         )
@@ -674,8 +674,8 @@ class AddServicescreencontroller extends GetxController {
                               ? 8.0.h
                               : 8.5.h,
                           errorBuilder: (context, error, stackTrace) {
-                            return SvgPicture.asset(
-                              Asset.profileimg,
+                            return Image.asset(
+                              Asset.bussinessPlaceholder,
                               height: 8.0.h,
                               width: 8.0.h,
                             );

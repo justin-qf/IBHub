@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     controller.currentPage = 0;
     controller.getProfileData();
-    controller.showUpdatePopup(context);
+    // controller.showUpdatePopup(context);
     // controller.getTimerPopup(context);
     setState(() {
       pageOptions = [

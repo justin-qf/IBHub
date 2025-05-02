@@ -269,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
-                            getDynamicSizedBox(height: 13.h),
+                            getDynamicSizedBox(height: 12.h),
                             GestureDetector(
                               onTap: () {
                                 Get.to(PrivacyPolicyScreen(

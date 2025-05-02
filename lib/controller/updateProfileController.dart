@@ -168,7 +168,7 @@ class Updateprofilecontroller extends GetxController {
     if (selectedPDFName.value.isNotEmpty) {
       validateFields(
         selectedPDFName.value,
-        model: imageModel,
+        model: verificationDocModel,
         errorText1: "Document is required",
         iscomman: true,
         shouldEnableButton: false,
@@ -728,8 +728,8 @@ class Updateprofilecontroller extends GetxController {
                             fit: BoxFit.cover,
                           ))
                   : imageFile.value == null
-                      ? SvgPicture.asset(
-                          Asset.profileimg,
+                      ? Image.asset(
+                          Asset.bussinessPlaceholder,
                           height: 8.0.h,
                           width: 8.0.h,
                         )
@@ -1030,15 +1030,13 @@ class Updateprofilecontroller extends GetxController {
 
     commonGetApiCallFormate(
       allowHeader: true,
-      title: 'State',
+      title: 'Edit Profile',
       context,
       onResponse: (data) {
         Verification responsDetails = Verification.fromJson(data);
 
         verificationList.clear();
-
         verificationList.addAll(responsDetails.data);
-
         logcat("VERIFICATION_RESPONSE", jsonEncode(verificationList));
         // print(stateList);
 
@@ -1053,31 +1051,31 @@ class Updateprofilecontroller extends GetxController {
       },
     );
 
-    var loadingIndicator = LoadingProgressDialogs();
-    commonGetApiCallFormate(context,
-        title: SearchScreenConstant.cityList,
-        // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
-        apiEndPoint: ApiUrl.verification,
-        allowHeader: true, apisLoading: (isTrue) {
-      if (isLoading == true) {
-        if (isTrue) {
-          loadingIndicator.show(context, '');
-        } else {
-          loadingIndicator.hide(context);
-        }
-      }
-      isVerificationApiCallLoading.value = isTrue;
+    // var loadingIndicator = LoadingProgressDialogs();
+    // commonGetApiCallFormate(context,
+    //     title: SearchScreenConstant.cityList,
+    //     // apiEndPoint: "${ApiUrl.getCity}/" + cityID,
+    //     apiEndPoint: ApiUrl.verification,
+    //     allowHeader: true, apisLoading: (isTrue) {
+    //   if (isLoading == true) {
+    //     if (isTrue) {
+    //       loadingIndicator.show(context, '');
+    //     } else {
+    //       loadingIndicator.hide(context);
+    //     }
+    //   }
+    //   isVerificationApiCallLoading.value = isTrue;
 
-      update();
-    }, onResponse: (response) {
-      Verification data = Verification.fromJson(response);
-      cityList.clear();
+    //   update();
+    // }, onResponse: (response) {
+    //   Verification data = Verification.fromJson(response);
+    //   cityList.clear();
 
-      verificationList.addAll(data.data);
+    //   verificationList.addAll(data.data);
 
-      logcat("VERIFICATION_RESPONSE", jsonEncode(verificationList));
-      update();
-    }, networkManager: networkManager);
+    //   logcat("VERIFICATION_RESPONSE", jsonEncode(verificationList));
+    //   update();
+    // }, networkManager: networkManager);
   }
 
   Widget setStateListDialog() {
@@ -1214,19 +1212,19 @@ class Updateprofilecontroller extends GetxController {
       print(selectedPdfFile.value);
 
       validateFields(selectedPDFName.value,
-          model: imageModel,
+          model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
           shouldEnableButton: true);
 
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selected: ${file.path.split('/').last}')),
-      );
+      // if (!context.mounted) return;
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Selected: ${file.path.split('/').last}')),
+      // );
     } else {
       debugPrint("PDF picking cancelled.");
       validateFields(selectedPDFName.value,
-          model: imageModel,
+          model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
           shouldEnableButton: false);
@@ -1246,18 +1244,18 @@ class Updateprofilecontroller extends GetxController {
       selectedPDFName.value = selectedPdfFile.value!.path.split('/').last;
       print(selectedPdfFile.value);
       validateFields(selectedPDFName.value,
-          model: imageModel,
+          model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
           shouldEnableButton: true);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selected: ${imageFile.path.split('/').last}')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('Selected: ${imageFile.path.split('/').last}')),
+      // );
     } else {
       debugPrint("Image picking cancelled.");
       validateFields(selectedPDFName.value,
-          model: imageModel,
+          model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
           shouldEnableButton: false);

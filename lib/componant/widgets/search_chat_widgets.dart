@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/input/style.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -172,13 +174,24 @@ setSearchBars(context, controller, String tag,
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
                         fillColor: white.withOpacity(0.1),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: isDarkMode() ? black : black,
-                          size: Device.screenType == sizer.ScreenType.mobile
-                              ? 20
-                              : 25,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SvgPicture.asset(
+                            Asset.search2,
+                            // colorFilter: ColorFilter.mode(
+                            //   controller.currentPage == 1 ? white : primaryColor,
+                            //   BlendMode.srcIn,
+                            // ),
+                          ),
                         ),
+
+                        //  Icon(
+                        //   Icons.searc,
+                        //   color: isDarkMode() ? black : black,
+                        //   size: Device.screenType == sizer.ScreenType.mobile
+                        //       ? 20
+                        //       : 25,
+                        // ),
                         labelStyle: styleTextForFieldHint(),
                         suffixIcon: value.text.isNotEmpty
                             ? GestureDetector(
@@ -212,9 +225,9 @@ setSearchBars(context, controller, String tag,
                 ),
               ),
               Container(
-                  height: 4.h,
+                  height: 3.5.h,
                   width: 1,
-                  color: Colors.grey.withOpacity(0.5),
+                  color: primaryColor,
                   margin: EdgeInsets.symmetric(horizontal: 2.w)),
               Container(
                 margin: EdgeInsets.only(right: 3.w),
@@ -231,7 +244,7 @@ setSearchBars(context, controller, String tag,
                                 ? black
                                 : black,
                         size: Device.screenType == sizer.ScreenType.mobile
-                            ? 20
+                            ? 24
                             : 25)),
               ),
             ])),

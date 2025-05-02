@@ -90,10 +90,13 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
   int idUsedinCtr = 0;
 
-  
-
   getUserData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
+    if (retrievedObject == null) {
+      // You could show an error, fallback, or early return
+      print("Retrieved user is null");
+      return;
+    }
     businessName = retrievedObject!.businessName ?? '';
     thumbnail = retrievedObject.visitingCardUrl ?? '';
     email = retrievedObject.email ?? '';
@@ -103,7 +106,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     businessId = retrievedObject.id.toString();
     phone = retrievedObject.phone.toString();
     pincode = retrievedObject.pincode.toString();
-    businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating!;
+    businessReviewsAvgRating = retrievedObject.businessReviewsAvgRating != null
+        ? retrievedObject.businessReviewsAvgRating!
+        : 0.0;
     // final idUsedinCtr =
     //     widget.item != null ? widget.item!.id : retrievedObject.id;
 

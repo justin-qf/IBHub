@@ -743,11 +743,9 @@ Widget setDropDownContent(RxList<dynamic> list, Widget content,
     TextEditingController? controller,
     isVerificationPopup = false}) {
   return SizedBox(
-      height: isVerificationPopup
-          ? Device.height / 5.9 // Smaller height for verification popup
-          : (Device.screenType == ScreenType.mobile
-              ? Device.height / 2
-              : Device.height / 1.9),
+      height: (Device.screenType == ScreenType.mobile
+          ? Device.height / 2
+          : Device.height / 1.9),
       width: Device.width,
       child: Column(
         children: [

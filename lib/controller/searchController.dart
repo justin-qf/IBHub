@@ -201,6 +201,7 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
+                    getDynamicSizedBox(height: 1.h),
                     getLable(SearchScreenConstant.cityLabel,
                         isFromRetailer: true),
                     Container(
@@ -247,6 +248,7 @@ class SearchScreenController extends GetxController {
                         }),
                       ),
                     ),
+                    getDynamicSizedBox(height: 1.h),
                     getLable(SearchScreenConstant.categoryLabel,
                         isFromRetailer: true),
                     Container(
@@ -853,10 +855,12 @@ class SearchScreenController extends GetxController {
                     fit: BoxFit.cover,
                     height: 18.h,
                     imageUrl: item.visitingCardUrl,
-                    placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(color: primaryColor)),
+                    placeholder: (context, url) => Center(
+                      child: Image.asset(Asset.itemPlaceholder,
+                          height: 10.h, fit: BoxFit.cover),
+                    ),
                     errorWidget: (context, url, error) => Image.asset(
-                        Asset.placeholder,
+                        Asset.itemPlaceholder,
                         height: 10.h,
                         fit: BoxFit.cover),
                   ),

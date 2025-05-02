@@ -500,6 +500,7 @@ class HomeScreenController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Stack(
+                clipBehavior: Clip.none,
                 children: [
                   Container(
                     // padding: const EdgeInsets.all(2),
@@ -524,23 +525,33 @@ class HomeScreenController extends GetxController {
                         fit: BoxFit.cover,
                         height: 18.h,
                         imageUrl: item.visitingCardUrl,
-                        placeholder: (context, url) => const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor)),
+                        placeholder: (context, url) => Center(
+                          child: Image.asset(Asset.itemPlaceholder,
+                              height: 10.h, fit: BoxFit.cover),
+                        ),
                         errorWidget: (context, url, error) => Image.asset(
-                            Asset.placeholder,
+                            Asset.itemPlaceholder,
                             height: 10.h,
                             fit: BoxFit.cover),
                       ),
                     ),
                   ),
+                  Positioned(
+                      top: 0.2.h,
+                      right: -2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: white,
+                        ),
+                        child: SvgPicture.asset(
+                          Asset.badge,
+                          color: blue,
+                        ),
+                      )),
                   // item.isEmailVerified
                   //     ?
 
-                  Positioned(
-                      child: SvgPicture.asset(
-                    Asset.badge,
-                  ))
                   // : SizedBox.shrink()
                 ],
               ),

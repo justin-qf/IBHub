@@ -216,7 +216,7 @@ class OtpController extends GetxController {
       if (response.statusCode == 200) {
         if (data['success'] == true) {
           var responseDetail = LoginModel.fromJson(data);
-          UserPreferences().saveSignInInfo(responseDetail.data.user);
+          UserPreferences().saveSignInInfo(responseDetail.data!.user);
           logcat("LoginResponse::", jsonEncode(responseDetail));
           Get.offAll(const MainScreen());
         } else {

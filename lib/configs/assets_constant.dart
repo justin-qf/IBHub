@@ -118,8 +118,8 @@ class Asset {
 
   //PNGS//
 
-  // static const bussinessPlaceholder =
-  //     '$assets${pngFolder}bussinessPlaceholder.png';
+  static const itemPlaceholder =
+      '$assets${pngFolder}bussinessPlaceholder.png';
   static const bussinessPlaceholder = '$assets${pngFolder}placeholder.png';
   static const appBarBg = '$assets${pngFolder}home_appbar_bg.png';
   static const loginBg = '$assets${pngFolder}bg_one.png';

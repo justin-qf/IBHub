@@ -141,11 +141,11 @@ class Signinscreencontroller extends GetxController {
       UserPreferences().setToken(responseDetail.data!.user!.token.toString());
       logcat("LoginResponse::", jsonEncode(responseDetail));
       // User? retrievedObject = await UserPreferences().getSignInInfo();
-      if (responseDetail.data.user.isEmailVerified == true) {
+      if (responseDetail.data!.user!.isEmailVerified == true) {
         Get.offAll(const MainScreen());
       } else {
         Get.to(() => OtpScreen(
-              email: responseDetail.data.user.email.toString().trim(),
+              email: responseDetail.data!.user!.email.toString().trim(),
               otp: "1235",
               isFromSingIn: true,
             ))?.then((value) {});

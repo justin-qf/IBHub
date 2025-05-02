@@ -482,7 +482,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                     deleteIcon: Icon(Icons.close, size: 20.sp),
                                     onDeleted: () {
                                       ctr.clearpdf();
-
                                       ctr.update();
                                     },
                                   )
