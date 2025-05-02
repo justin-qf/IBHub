@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     futureDelay(() {
       controller.getCategoryList(context);
       controller.getBusinessList(context, 1, false, isFirstTime: true);
-      // controller.getUpdateApi(context, false);
+      controller.getUpdateApi(context, false);
     }, isOneSecond: true);
     controller.pageController =
         PageController(initialPage: controller.currentPage);

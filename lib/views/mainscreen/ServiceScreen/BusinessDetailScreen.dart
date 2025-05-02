@@ -465,92 +465,246 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   // controller.getLableText('Services List',
                   //     isMainTitle: false),
 
-                      Obx(() => controller.serviceList.isNotEmpty
-                          ? getHomeLable('Services List', () {
-                              Get.to(ServiceScreen(
-                                data: widget.isFromProfile == true
-                                    ? null
-                                    : widget.item,
-                                id: businessId,
-                              ))!
-                                  .then((value) {});
-                            }, isFromDetailScreen: true, isShowSeeMore: false)
-                          : const SizedBox.shrink()),
-                      // getHomeLable('Services List', () {
-                      //   Get.to(ServiceScreen(
-                      //     data: widget.isFromProfile == true ? null : widget.item,
-                      //     id: businessId,
-                      //   ))!
-                      //       .then((value) {});
-                      // }, isFromDetailScreen: true),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  right: 6.w,
-                  top: 1.5.h,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          shareBusinessDetailsOnWhatsApp(
-                              context: context,
-                              businessName: widget.item != null
-                                  ? widget.item!.businessName
-                                  : businessName,
-                              address: widget.item != null
-                                  ? widget.item!.address.toString()
-                                  : address,
-                              email: widget.item != null
-                                  ? widget.item!.email
-                                  : email,
-                              phoneNumber: widget.item != null
-                                  ? widget.item!.phone
-                                  : phone);
-                        },
-                        child: Container(
-                            height: 4.h,
-                            width: 10.w,
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: primaryColor),
-                            padding: const EdgeInsets.all(7),
-                            child: SvgPicture.asset(Asset.whatsapp2,
-                                height: 2.h,
-                                width: 2.w,
-                                colorFilter: const ColorFilter.mode(
-                                    white, BlendMode.srcIn))),
-                      ),
-                      getDynamicSizedBox(width: 1.h),
-                      GestureDetector(
-                        onTap: () {
-                          pdfPopupDialogs(
-                            // ignore: use_build_context_synchronously
-                            context,
-                            function: (String val) async {
-                              logcat("SelectedValue::", val);
-                              controller.getpdfFromApi(context,
-                                  theme: val, id: idUsedinCtr);
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: 4.h,
-                          width: 10.w,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: primaryColor),
-                          padding: const EdgeInsets.all(1),
-                          child: Icon(
-                            Icons.share,
-                            color: white,
-                            size: 17.sp,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                  Obx(() => controller.serviceList.isNotEmpty
+                      ? getHomeLable('Services List', () {
+                          Get.to(ServiceScreen(
+                            data: widget.isFromProfile == true
+                                ? null
+                                : widget.item,
+                            id: businessId,
+                          ))!
+                              .then((value) {});
+                        }, isFromDetailScreen: true, isShowSeeMore: false)
+                      : const SizedBox.shrink()),
+                  // getHomeLable('Services List', () {
+                  //   Get.to(ServiceScreen(
+                  //     data: widget.isFromProfile == true ? null : widget.item,
+                  //     id: businessId,
+                  //   ))!
+                  //       .then((value) {});
+                  // }, isFromDetailScreen: true),
+                ],
+              ),
             ),
+            // Stack(
+            //   children: [
+            //     Container(
+            //       padding: EdgeInsets.symmetric(horizontal: 4.w),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           getDynamicSizedBox(height: 1.h),
+            //           SizedBox(
+            //             width: 70.w,
+            //             child: controller.getLableText(
+            //                 widget.item != null
+            //                     ? widget.item!.businessName
+            //                     : businessName,
+            //                 isMainTitle: true),
+            //           ),
+            //           // controller.getCategoryLable(widget.item.businessName),
+            //           getDynamicSizedBox(height: 1.h),
+            //           GestureDetector(
+            //             onTap: () {
+            //               lanchEmail(
+            //                   widget.item != null ? widget.item!.email : email);
+            //             },
+            //             child: Row(
+            //               children: [
+            //                 Container(
+            //                     width: 6.w,
+            //                     height: 3.h,
+            //                     decoration: BoxDecoration(
+            //                         shape: BoxShape.circle,
+            //                         color: primaryColor),
+            //                     // padding: EdgeInsets.all(2),
+            //                     child: Icon(
+            //                       Icons.email,
+            //                       size: 15.sp,
+            //                       color: white,
+            //                     )),
+            //                 getDynamicSizedBox(width: 1.w),
+            //                 controller.getLableText(
+            //                     widget.item != null
+            //                         ? widget.item!.email
+            //                         : email,
+            //                     isMainTitle: false),
+            //               ],
+            //             ),
+            //           ),
+            //           getDynamicSizedBox(height: 1.h),
+            //           GestureDetector(
+            //             onTap: () {
+            //               launchPhoneCall(
+            //                   widget.item != null ? widget.item!.phone : phone);
+            //               // showShareSheetPopup(context, rightbtn: () {
+            //               //   launchWhatsApp(
+            //               //       context,
+            //               //       widget.item != null
+            //               //           ? widget.item!.phone
+            //               //           : phone);
+            //               // }, leftbtn: () {
+            //               //   launchPhoneCall(widget.item != null
+            //               //       ? widget.item!.phone
+            //               //       : phone);
+            //               // });
+            //             },
+            //             child: Row(
+            //               children: [
+            //                 Container(
+            //                     width: 6.w,
+            //                     height: 3.h,
+            //                     decoration: BoxDecoration(
+            //                         shape: BoxShape.circle,
+            //                         color: primaryColor),
+            //                     // padding: EdgeInsets.all(2),
+            //                     child: Icon(
+            //                       Icons.call,
+            //                       size: 15.sp,
+            //                       color: white,
+            //                     )),
+            //                 getDynamicSizedBox(width: 1.w),
+            //                 controller.getLableText(
+            //                     widget.item != null
+            //                         ? widget.item!.phone
+            //                         : phone,
+            //                     isMainTitle: false)
+            //               ],
+            //             ),
+            //           ),
+            //           getDynamicSizedBox(height: 1.h),
+            //           // if (widget.item != null && widget.item!.address.isNotEmpty)
+            //           //   controller.getLableText('Address : ', isMainTitle: false),
+            //           if ((widget.item != null &&
+            //                   widget.item!.address.isNotEmpty) ||
+            //               (widget.item == null && address.isNotEmpty))
+            //             Row(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               mainAxisAlignment: MainAxisAlignment.start,
+            //               children: [
+            //                 Container(
+            //                     width: 6.w,
+            //                     height: 3.h,
+            //                     decoration: BoxDecoration(
+            //                         shape: BoxShape.circle,
+            //                         color: primaryColor),
+            //                     // padding: EdgeInsets.all(2),
+            //                     child: Icon(
+            //                       Icons.location_on,
+            //                       size: 15.sp,
+            //                       color: white,
+            //                     )),
+            //                 // Icon(Icons.location_on, size: 18.sp),
+            //                 getDynamicSizedBox(width: 1.w),
+            //                 controller.getTexts(
+            //                   widget.item != null
+            //                       ? '${widget.item!.address}, ${widget.item!.city!.city}, ${widget.item!.state!.name}, ${widget.item!.pincode.toString()}'
+            //                       : '$address, $city, $state, $pincode ',
+            //                 )
+            //               ],
+            //             ),
+            //           getDynamicSizedBox(
+            //               height: Device.screenType == sizer.ScreenType.mobile
+            //                   ? widget.item != null &&
+            //                           widget.item!.address.isNotEmpty
+            //                       ? 1.h
+            //                       : 0.0
+            //                   : 0.8.h),
+            //           getDynamicSizedBox(
+            //               height: Device.screenType == sizer.ScreenType.mobile
+            //                   ? 1.h
+            //                   : 0.8.h),
+            //           // controller.getLableText('Services List',
+            //           //     isMainTitle: false),
+
+            //           Obx(() => controller.serviceList.isNotEmpty
+            //               ? getHomeLable('Services List', () {
+            //                   Get.to(ServiceScreen(
+            //                     data: widget.isFromProfile == true
+            //                         ? null
+            //                         : widget.item,
+            //                     id: businessId,
+            //                   ))!
+            //                       .then((value) {});
+            //                 }, isFromDetailScreen: true, isShowSeeMore: false)
+            //               : const SizedBox.shrink()),
+            //           // getHomeLable('Services List', () {
+            //           //   Get.to(ServiceScreen(
+            //           //     data: widget.isFromProfile == true ? null : widget.item,
+            //           //     id: businessId,
+            //           //   ))!
+            //           //       .then((value) {});
+            //           // }, isFromDetailScreen: true),
+            //         ],
+            //       ),
+            //     ),
+            //     Positioned(
+            //       right: 6.w,
+            //       top: 1.5.h,
+            //       child: Row(
+            //         children: [
+            //           GestureDetector(
+            //             onTap: () {
+            //               shareBusinessDetailsOnWhatsApp(
+            //                   context: context,
+            //                   businessName: widget.item != null
+            //                       ? widget.item!.businessName
+            //                       : businessName,
+            //                   address: widget.item != null
+            //                       ? widget.item!.address.toString()
+            //                       : address,
+            //                   email: widget.item != null
+            //                       ? widget.item!.email
+            //                       : email,
+            //                   phoneNumber: widget.item != null
+            //                       ? widget.item!.phone
+            //                       : phone);
+            //             },
+            //             child: Container(
+            //                 height: 4.h,
+            //                 width: 10.w,
+            //                 decoration: BoxDecoration(
+            //                     shape: BoxShape.circle, color: primaryColor),
+            //                 padding: EdgeInsets.all(7),
+            //                 child: SvgPicture.asset(Asset.whatsapp2,
+            //                     height: 2.h,
+            //                     width: 2.w,
+            //                     colorFilter:
+            //                         ColorFilter.mode(white, BlendMode.srcIn))),
+            //           ),
+            //           getDynamicSizedBox(width: 1.h),
+            //           GestureDetector(
+            //             onTap: () {
+            //               print('Share pdf');
+
+            //               pdfPopupDialogs(
+            //                 // ignore: use_build_context_synchronously
+            //                 context,
+            //                 function: (String val) async {
+            //                   logcat("SelectedValue::", val);
+            //                   controller.getpdfFromApi(context,
+            //                       theme: val, id: idUsedinCtr);
+            //                 },
+            //               );
+            //             },
+            //             child: Container(
+            //               height: 4.h,
+            //               width: 10.w,
+            //               decoration: BoxDecoration(
+            //                   shape: BoxShape.circle, color: primaryColor),
+            //               padding: EdgeInsets.all(1),
+            //               child: Icon(
+            //                 Icons.share,
+            //                 color: white,
+            //                 size: 17.sp,
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     )
+            //   ],
+            // ),
             Expanded(
               child: SingleChildScrollView(
                 controller: controller.scrollController,
