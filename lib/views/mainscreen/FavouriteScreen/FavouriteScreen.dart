@@ -224,7 +224,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         itemBuilder: (context, index) {
           if (index < controller.businessList.length) {
             BusinessData data = controller.businessList[index];
-            return controller.getFavouriteListItem(context, data);
+            return controller.getBusinessListItem(context, data);
           } else if (controller.isFetchingMore) {
             return Center(
               child: Padding(
