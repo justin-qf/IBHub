@@ -45,7 +45,10 @@ class OtpScreenState extends State<OtpScreen> {
     if (widget.isFromSingIn == true) {
       futureDelay(() {
         controller.getRegisterOtp(context, widget.email.toString());
-      }, isOneSecond: false);
+      }, isOneSecond: true);
+    } else {
+      controller.countdown = 60.obs;
+      controller.startTimer();
     }
     controller.clearFocuseNode();
     controller.fieldOne.text = '';
@@ -54,9 +57,11 @@ class OtpScreenState extends State<OtpScreen> {
     controller.fieldFour.text = '';
     controller.otpController.text = "";
     controller.otpController.clear();
-    if (widget.isFromSingIn == false) {
-      controller.startTimer();
-    }
+    // if (widget.isFromSingIn == false) {
+    //   controller.countdown = 60.obs;
+    //   logcat("startTimer", "DONE");
+    //   controller.startTimer();
+    // }
     super.initState();
   }
 

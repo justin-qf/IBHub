@@ -12,6 +12,7 @@ import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 
 class Signupscreencontroller extends GetxController {
@@ -188,7 +189,18 @@ class Signupscreencontroller extends GetxController {
       var responseDetail = LoginModel.fromJson(data);
       UserPreferences().saveSignInInfo(responseDetail.data!.user);
       UserPreferences().setToken(responseDetail.data!.user!.token.toString());
-      Get.offAll(const MainScreen());
+      // Get.offAll(const MainScreen());
+      if (responseDetail.data!.user!.isEmailVerified == true) {
+        Get.offAll(const MainScreen());
+      } else {
+        logcat("EMAILID", responseDetail.data!.user!.email.toString().trim());
+        Get.to(() => OtpScreen(
+              email: responseDetail.data!.user!.email.toString().trim(),
+              otp: "1235",
+              isFromSingIn: true,
+            ))?.then((value) {});
+        // getRegiaterOtp(context, responseDetail.data.user.email.toString());
+      }
     }, networkManager: networkManager, isModelResponse: true);
   }
 }

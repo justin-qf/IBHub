@@ -750,6 +750,7 @@ class SearchScreenController extends GetxController {
           message.value = '';
           var businessListData = BusinessModel.fromJson(responseData);
           if (isFirstTime == true && businessList.isNotEmpty) {
+            currentPage = 1;
             businessList.clear();
           }
           if (businessListData.data.data.isNotEmpty) {

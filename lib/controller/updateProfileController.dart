@@ -525,7 +525,7 @@ class Updateprofilecontroller extends GetxController {
   // final ImagePicker _picker = ImagePicker();
   Rx<File?> imageFile = null.obs;
 
-  void updateProfile(context) async {
+  updateProfile(context) async {
     if (imageURl.value.isEmpty) {
       imageValidationPopupDialogs(context);
       return;
@@ -546,7 +546,6 @@ class Updateprofilecontroller extends GetxController {
       loadingIndicator.show(context, '');
 
       List<http.MultipartFile> files = [];
-
       // First file: visiting card
       if (imageFile.value != null) {
         files.add(http.MultipartFile(
@@ -584,22 +583,15 @@ class Updateprofilecontroller extends GetxController {
       loadingIndicator.hide(context);
 
       var result = String.fromCharCodes(responseData);
+
       var json = jsonDecode(result);
 
       if (response.statusCode == 200 && json['success'] == true) {
         LoginModel responseDetail = LoginModel.fromJson(json);
-        // responseDetail.data
-
         if (responseDetail.data?.user != null) {
-          responseDetail.data!.user!.document ??= Document();
-          responseDetail.data!.user!.document!.documentType =
-              verificationCtr.text;
-          responseDetail.data!.user!.document!.documentUrl =
-              selectedPDFName.value;
-
           UserPreferences().saveSignInInfo(responseDetail.data!.user);
+          logcat("isUpdate", jsonEncode(responseDetail.data?.user));
         }
-
         showDialogForScreen(context, "Update Profile Screen", json['message'],
             callback: () {
           Get.back(result: true);

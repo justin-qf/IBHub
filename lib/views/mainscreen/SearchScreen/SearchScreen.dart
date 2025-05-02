@@ -39,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
       controller.getStateApi(context, "");
       controller.getCategoryApi(context);
       controller.getBusinessList(context, 1, false, isFirstTime: true);
-    }, isOneSecond: false);
+    }, isOneSecond: true);
     controller.scrollController.addListener(scrollListener);
 
     super.initState();

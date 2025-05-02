@@ -327,6 +327,11 @@ class SearchScreenConstant {
   static const timeRemaining = 'Time remaining: %s seconds';
 }
 
+class BusinessCategoryConstant {
+  // Screen-related strings
+  static const title = 'Category Detail Screen';
+}
+
 class ServicesScreenConstant {
   static const delete = 'Delete';
   static const update = 'Update';

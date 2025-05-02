@@ -52,6 +52,7 @@ class HomeScreenController extends GetxController {
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
   var isBusinessLoading = false.obs;
+  var isCategoryLoading = false.obs;
 
   @override
   void dispose() {
@@ -212,8 +213,10 @@ class HomeScreenController extends GetxController {
 
   void getCategoryList(context) async {
     // state.value = ScreenState.apiLoading;
+    isCategoryLoading(true);
     try {
       if (networkManager.connectionType.value == 0) {
+        isCategoryLoading(false);
         showDialogForScreen(context, 'Home Screen', Connection.noConnection,
             callback: () {
           Get.back();
@@ -222,6 +225,7 @@ class HomeScreenController extends GetxController {
       }
       var response =
           await Repository.get({}, ApiUrl.getCategories, allowHeader: true);
+      isCategoryLoading(false);
       logcat("CATEGORY_RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -250,6 +254,7 @@ class HomeScreenController extends GetxController {
     } catch (e) {
       logcat("Ecxeption", e);
       state.value = ScreenState.apiError;
+      isCategoryLoading(false);
       // message.value = ServerError.servererror;
       // showDialogForScreen(
       //     context, HomeScreenconst.title, ServerError.servererror,
@@ -376,6 +381,7 @@ class HomeScreenController extends GetxController {
           state.value = ScreenState.apiSuccess;
           message.value = '';
           if (isFirstTime == true && businessList.isNotEmpty) {
+            currentPage = 1;
             businessList.clear();
           }
           var businessListData = BusinessModel.fromJson(responseData);
@@ -454,7 +460,7 @@ class HomeScreenController extends GetxController {
         bool isForcefully =
             appUpdateModel.data.isForcefullyUpdate == 1 ? true : false;
         showUpdatePopup(context, url ?? appUpdateModel.data.appUrl.toString(),
-            isForcefully);
+            appUpdateModel.data.description, isForcefully);
       }
       update();
     }, networkManager: networkManager);

@@ -8,7 +8,7 @@ import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/full_image_viewer.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
@@ -72,9 +72,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       width: Device.width,
                       padding:
                           EdgeInsets.only(right: 3.w, left: 10.w, top: 1.h),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: primaryColor,
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(35),
                             bottomRight: Radius.circular(35)),
                       ),
@@ -101,26 +101,32 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   backgroundColor: primaryColor,
                                   radius: 25.sp,
                                   child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    height: 20.h,
-                                    width: 20.w,
-                                    imageUrl: controller.profilePic.value,
-                                    placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator(
-                                          color: primaryColor),
-                                    ),
-                                    imageBuilder: (context, imageProvider) =>
-                                        CircleAvatar(
-                                      radius: 25.h,
-                                      backgroundColor: primaryColor,
-                                      backgroundImage: imageProvider,
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        CircleAvatar(
-                                            radius: 25.h,
-                                            backgroundColor: primaryColor,
-                                            child: const Icon(Icons.person)),
-                                  ),
+                                      fit: BoxFit.cover,
+                                      height: 20.h,
+                                      width: 20.w,
+                                      imageUrl: controller.profilePic.value,
+                                      // placeholder: (context, url) => const Center(
+                                      //   child: CircularProgressIndicator(
+                                      //       color: primaryColor),
+                                      // ),
+                                      placeholder: (context, url) => ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: Image.asset(
+                                              Asset.bussinessPlaceholder,
+                                              fit: BoxFit.contain)),
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                              radius: 25.h,
+                                              backgroundColor: primaryColor,
+                                              backgroundImage: imageProvider),
+                                      errorWidget: (context, url, error) =>
+                                          ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.asset(
+                                                  Asset.bussinessPlaceholder,
+                                                  fit: BoxFit.contain))),
                                 );
                               })),
                               Expanded(
@@ -265,7 +271,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                             getMenuListItem(
                                 callback: () {
                                   logoutPopupDialogs(context);
-                            
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),

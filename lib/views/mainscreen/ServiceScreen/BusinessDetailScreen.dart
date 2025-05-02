@@ -455,20 +455,18 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         child: Container(
                             height: 4.h,
                             width: 10.w,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 shape: BoxShape.circle, color: primaryColor),
-                            padding: EdgeInsets.all(7),
+                            padding: const EdgeInsets.all(7),
                             child: SvgPicture.asset(Asset.whatsapp2,
                                 height: 2.h,
                                 width: 2.w,
-                                colorFilter:
-                                    ColorFilter.mode(white, BlendMode.srcIn))),
+                                colorFilter: const ColorFilter.mode(
+                                    white, BlendMode.srcIn))),
                       ),
                       getDynamicSizedBox(width: 1.h),
                       GestureDetector(
                         onTap: () {
-                          print('Share pdf');
-
                           pdfPopupDialogs(
                             // ignore: use_build_context_synchronously
                             context,
@@ -482,9 +480,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         child: Container(
                           height: 4.h,
                           width: 10.w,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               shape: BoxShape.circle, color: primaryColor),
-                          padding: EdgeInsets.all(1),
+                          padding: const EdgeInsets.all(1),
                           child: Icon(
                             Icons.share,
                             color: white,

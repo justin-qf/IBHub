@@ -157,10 +157,14 @@ class CategoryBusinessController extends GetxController {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getFilterHeader(context, true),
+                    getDynamicSizedBox(height: 1.h),
                     getLable(SearchScreenConstant.stateLabel,
                         isFromRetailer: true),
                     Container(
-                      margin: EdgeInsets.only(left: 9.w, right: 9.w),
+                      margin: EdgeInsets.only(
+                        left: 9.w,
+                        right: 9.w,
+                      ),
                       child: AnimatedSize(
                         duration: const Duration(milliseconds: 300),
                         child: Obx(() {
@@ -199,6 +203,7 @@ class CategoryBusinessController extends GetxController {
                         }),
                       ),
                     ),
+                    getDynamicSizedBox(height: 1.5.h),
                     getLable(SearchScreenConstant.cityLabel,
                         isFromRetailer: true),
                     Container(
@@ -738,6 +743,7 @@ class CategoryBusinessController extends GetxController {
           message.value = '';
           var businessListData = BusinessModel.fromJson(responseData);
           if (isFirstTime == true && businessList.isNotEmpty) {
+            currentPage = 1;
             businessList.clear();
           }
           if (businessListData.data.data.isNotEmpty) {

@@ -31,7 +31,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     futureDelay(() {
       controller.currentPage = 1;
       controller.getCategoryList(context, 1, false, isFirstTime: true);
-    }, isOneSecond: false);
+    }, isOneSecond: true);
     controller.refreshController.refreshCompleted();
     controller.scrollController.addListener(scrollListener);
     super.initState();

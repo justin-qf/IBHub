@@ -40,7 +40,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
       controller.getStateApi(context, "");
       controller.getBusinessList(context, 1, false,
           isFirstTime: true, categoryId: widget.item.id.toString());
-    }, isOneSecond: false);
+    }, isOneSecond: true);
     controller.scrollController.addListener(scrollListener);
     super.initState();
   }
@@ -101,7 +101,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
               }),
           Obx(() {
             return setSearchBars(
-                context, controller.searchCtr, SearchScreenConstant.title,
+                context, controller.searchCtr, BusinessCategoryConstant.title,
                 onCancleClick: () {
                   controller.isSearch = false;
                   controller.searchCtr.text = '';
@@ -124,6 +124,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
                   controller.searchCtr.text = '';
                   setState(() {});
                 },
+                categoryId: widget.item.id.toString(),
                 isCancle: false,
                 onFilterClick: () {
                   controller.showBottomSheetDialog(

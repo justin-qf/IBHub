@@ -7,6 +7,7 @@ import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
+import 'package:ibh/controller/categoryBusinessController.dart';
 import 'package:ibh/controller/searchController.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
@@ -118,6 +119,7 @@ setSearchBars(context, controller, String tag,
     Function? onClearClick,
     Function? onFilterClick,
     bool? isCancle,
+    String? categoryId = '',
     bool? isFilterApplied}) {
   return Row(
     children: [
@@ -157,14 +159,31 @@ setSearchBars(context, controller, String tag,
                       keyboardType: TextInputType.text,
                       textAlign: TextAlign.start,
                       onEditingComplete: () {
-                        futureDelay(() {
-                          Get.find<SearchScreenController>().getBusinessList(
-                              context, 1, false,
-                              keyword: controller.text.toString(),
-                              isFirstTime: true);
-                        }, isOneSecond: false);
-                        Get.find<SearchScreenController>()
-                            .hideKeyboard(context);
+                        if (tag == BusinessCategoryConstant.title) {
+                          futureDelay(() {
+                            Get.find<CategoryBusinessController>()
+                                .getBusinessList(context, 1, false,
+                                    keyword: controller.text.toString(),
+                                    categoryId: categoryId,
+                                    isFirstTime: true);
+                          }, isOneSecond: false);
+                          // futureDelay(() {
+                          //   controller.getBusinessList(context, 1, false,
+                          //       isFirstTime: true,
+                          //       categoryId: widget.item.id.toString());
+                          // }, isOneSecond: true);
+                          Get.find<CategoryBusinessController>()
+                              .hideKeyboard(context);
+                        } else {
+                          futureDelay(() {
+                            Get.find<SearchScreenController>().getBusinessList(
+                                context, 1, false,
+                                keyword: controller.text.toString(),
+                                isFirstTime: true);
+                          }, isOneSecond: false);
+                          Get.find<SearchScreenController>()
+                              .hideKeyboard(context);
+                        }
                       },
                       onChanged: (val) {
                         logcat("Val", val.toString());

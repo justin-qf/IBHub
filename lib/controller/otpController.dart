@@ -266,6 +266,7 @@ class OtpController extends GetxController {
   }
 
   void getRegisterOtp(context, String email) async {
+    logcat("EMAIL::", email.toString().trim());
     commonPostApiCallFormate(context,
         title: OtpConstant.title,
         body: {"email": email.toString().trim()},

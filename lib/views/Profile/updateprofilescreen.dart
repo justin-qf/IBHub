@@ -46,7 +46,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
   @override
   Widget build(BuildContext context) {
     Statusbar().trasparentStatusbar();
-
     return CustomParentScaffold(
       isExtendBodyScreen: true,
       onWillPop: () async {
@@ -154,11 +153,9 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         setState(() {});
                       },
                     ),
-                    // getDynamicSizedBox(height: 1.h),
                     getLable('Logo', isRequired: true),
                     getDynamicSizedBox(height: 2.h),
-
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Personal Details :-',
@@ -166,7 +163,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Divider(),
+                    const Divider(),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,
@@ -205,7 +202,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       },
                     ),
                     getDynamicSizedBox(height: 2.h),
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Bussiness Details :-',
@@ -213,7 +210,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Divider(),
+                    const Divider(),
                     Obx(
                       () {
                         return getTextField(
@@ -287,7 +284,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         isRequired: true,
                       );
                     }),
-
                     Row(
                       children: [
                         Expanded(
@@ -402,7 +398,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       },
                     ),
                     getDynamicSizedBox(height: 2.h),
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Verification Details :-',
@@ -410,7 +406,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Divider(),
+                    const Divider(),
                     getDynamicSizedBox(height: 1.h),
                     Obx(() {
                       return getTextField(
@@ -492,9 +488,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                   );
                           })),
                     ),
-
                     getDynamicSizedBox(height: 3.h),
-
                     Obx(() {
                       return ctr.isloading == false
                           ? Container(
@@ -502,7 +496,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
                                   ctr.updateProfile(context);
-                                  // ctr.validateLogin(context);
                                 }
                               }, ProfileScreenConst.save,
                                   validate: ctr.isFormInvalidate.value),
