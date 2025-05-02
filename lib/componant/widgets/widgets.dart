@@ -359,6 +359,7 @@ Widget getTextField(
     bool isobscure = false,
     Function? obscureFunction,
     bool useOnChanged = true,
+    bool isVerified = false,
     bool isAdd = false,
     Function? onAddBtn,
     Function? ontap,
@@ -395,13 +396,14 @@ Widget getTextField(
       isBorderSideEnable: isBorderSideEnable ? true : false,
       obscuretext: isobscure ? true : false,
       obscureTextFunction: obscureFunction,
-      onTap: ontap);
+      onTap: ontap,
+      isVerified: isVerified);
 
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      getLable(label, isRequired: isRequired),
+      getLable(label, isRequired: isRequired,isVerified: isVerified),
       usegesture
           ? GestureDetector(
               onTap: () {
@@ -637,10 +639,13 @@ Widget getRichText(title, desc) {
       textScaler: const TextScaler.linear(1));
 }
 
-getLable(String title,
-    {bool? isFromVisitReport,
-    bool? isFromRetailer = false,
-    bool isRequired = false}) {
+getLable(
+  String title, {
+  bool? isFromVisitReport,
+  bool? isFromRetailer = false,
+  bool isRequired = false,
+  isVerified = false,
+}) {
   return Container(
     // height: 2.h,
     margin: isFromRetailer != null && isFromRetailer == true
@@ -656,7 +661,7 @@ getLable(String title,
               TextSpan(
                 text: title,
                 style: TextStyle(
-                  color: isDarkMode() ? white : black,
+                  color: isVerified ? grey : black,
                   fontFamily: dM_sans_bold,
                   fontSize:
                       Device.screenType == ScreenType.mobile ? 16.sp : 8.5.sp,

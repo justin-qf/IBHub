@@ -119,6 +119,8 @@ class Updateprofilecontroller extends GetxController {
   RxString cityId = "".obs;
 
   RxString imageURl = "".obs;
+  RxBool isEmailVerifed = false.obs;
+  RxBool isUserVerfied = false.obs;
 
   getProfileData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
@@ -146,6 +148,11 @@ class Updateprofilecontroller extends GetxController {
 
     selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
     verificationCtr.text = retrievedObject.document?.documentType ?? '';
+
+    isEmailVerifed.value = retrievedObject.isEmailVerified ?? false;
+    isUserVerfied.value = retrievedObject.isVerified ?? false;
+
+    print('isUserVerified:${isUserVerfied.value}');
 
     imageURl.value = retrievedObject.visitingCardUrl ?? '';
     print('imageUrl is ::::$imageURl');
@@ -256,15 +263,15 @@ class Updateprofilecontroller extends GetxController {
       );
     }
 
-    if (websiteCtr.text.isNotEmpty) {
-      validateFields(
-        websiteCtr.text,
-        model: websiteModel,
-        errorText1: "Website is required",
-        iscomman: true,
-        shouldEnableButton: false,
-      );
-    }
+    // if (websiteCtr.text.isNotEmpty) {
+    //   validateFields(
+    //     websiteCtr.text,
+    //     model: websiteModel,
+    //     errorText1: "Website is required",
+    //     iscomman: true,
+    //     shouldEnableButton: false,
+    //   );
+    // }
 
     if (verificationCtr.text.isNotEmpty) {
       validateFields(
@@ -363,9 +370,12 @@ class Updateprofilecontroller extends GetxController {
       isFormInvalidate.value = false;
     } else if (addressModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (websiteModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (verificationModel.value.isValidate == false) {
+    }
+    // else if (websiteModel.value.isValidate == false) {
+    //   isFormInvalidate.value = false;
+    // }
+
+    else if (verificationModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (verificationDocModel.value.isValidate == false) {
       isFormInvalidate.value = false;
@@ -837,25 +847,26 @@ class Updateprofilecontroller extends GetxController {
 
           imageFile.refresh(); // Ensure Obx is notified
           update();
-        } else {
-          imageFile.value = null;
-          imageURl.value = "";
-          validateFields("",
-              model: imageModel,
-              errorText1: "Profile picture is required",
-              iscomman: true,
-              shouldEnableButton: true);
-          update();
         }
-      } else {
-        imageFile.value = null;
-        imageURl.value = "";
-        validateFields("",
-            model: imageModel,
-            errorText1: "Profile picture is required",
-            iscomman: true,
-            shouldEnableButton: true);
-        update();
+        //   } else {
+        //     imageFile.value = null;
+        //     imageURl.value = "";
+        //     validateFields("",
+        //         model: imageModel,
+        //         errorText1: "Profile picture is required",
+        //         iscomman: true,
+        //         shouldEnableButton: true);
+        //     update();
+        //   }
+        // } else {
+        //   imageFile.value = null;
+        //   imageURl.value = "";
+        //   validateFields("",
+        //       model: imageModel,
+        //       errorText1: "Profile picture is required",
+        //       iscomman: true,
+        //       shouldEnableButton: true);
+        //   update();
       }
     });
 
@@ -1333,7 +1344,7 @@ class Updateprofilecontroller extends GetxController {
       }
       stateFilterList.refresh();
       stateFilterList.call();
-      logcat('filterApply', stateFilterList.length.toString());
+      // logcat('filterApply', stateFilterList.length.toString());
     } else {
       cityFilterList.clear();
       for (CityListData citylist in cityList) {
@@ -1346,7 +1357,7 @@ class Updateprofilecontroller extends GetxController {
       }
       cityFilterList.refresh();
       cityFilterList.call();
-      logcat('filterApply', cityFilterList.length.toString());
+      // logcat('filterApply', cityFilterList.length.toString());
     }
 
     update();

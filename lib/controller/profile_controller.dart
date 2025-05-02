@@ -47,11 +47,11 @@ class ProfileController extends GetxController {
     states.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
     if (retrievedObject != null) {
-      userName.value = retrievedObject.name??'';
-      email.value = retrievedObject.email??'';
-      number.value = retrievedObject.phone??'';
-      bussiness.value = retrievedObject.businessName??'';
-      profilePic.value = retrievedObject.visitingCardUrl??'';
+      userName.value = retrievedObject.name ?? '';
+      email.value = retrievedObject.email ?? '';
+      number.value = retrievedObject.phone ?? '';
+      bussiness.value = retrievedObject.businessName ?? '';
+      profilePic.value = retrievedObject.visitingCardUrl ?? '';
       apkUrl.value = "";
     }
     update();
@@ -67,8 +67,11 @@ class ProfileController extends GetxController {
       update();
     }, onResponse: (response) {
       var profileData = LoginModel.fromJson(response);
-      profilePic.value = profileData.data!.user!.visitingCardUrl??'';
-      apkUrl.value = profileData.data!.user!.appUrl??'';
+      profilePic.value = profileData.data!.user!.visitingCardUrl ?? '';
+      apkUrl.value = profileData.data!.user!.appUrl ?? '';
+
+      UserPreferences().saveSignInInfo(profileData.data!.user);
+
       update();
     }, networkManager: networkManager);
   }

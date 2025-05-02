@@ -596,7 +596,7 @@ class ServerError {
 
 class PrivacyPolicyScreenText {
   static const privacyPolicy = 'Privacy Policy';
-  static const termAndCOndition = 'terms & Conditions';
+  static const termAndCOndition = 'Terms & Conditions';
   static const privacy = 'http://www.indianbusinesshub.in/privacy_policy.html';
   static const terms =
       'http://www.indianbusinesshub.in/terms_and_condition.html';
