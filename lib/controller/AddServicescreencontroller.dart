@@ -771,40 +771,40 @@ class AddServicescreencontroller extends GetxController {
         if (croppedFile != null) {
           imageFile = File(croppedFile.path).obs;
           imageURl.value = croppedFile.path;
-          logcat("isUpdated", imageURl.value.toString());
+
           validateFields(croppedFile.path,
               model: imageModel,
               errorText1: "Profile picture is required",
               iscomman: true,
               shouldEnableButton: true);
+
           imageFile.refresh(); // Ensure Obx is notified
           update();
-          update();
-        } else {
-          imageFile.value = null;
-          imageURl.value = "";
-          validateFields("",
-              model: imageModel,
-              errorText1: "Profile picture is required",
-              iscomman: true,
-              shouldEnableButton: true);
-          update();
         }
-      } else {
-        imageFile.value = null;
-        imageURl.value = "";
-        validateFields("",
-            model: imageModel,
-            errorText1: "Profile picture is required",
-            iscomman: true,
-            shouldEnableButton: true);
-        print('No image selected');
-        update();
+        //   } else {
+        //     imageFile.value = null;
+        //     imageURl.value = "";
+        //     validateFields("",
+        //         model: imageModel,
+        //         errorText1: "Profile picture is required",
+        //         iscomman: true,
+        //         shouldEnableButton: true);
+        //     update();
+        //   }
+        // } else {
+        //   imageFile.value = null;
+        //   imageURl.value = "";
+        //   validateFields("",
+        //       model: imageModel,
+        //       errorText1: "Profile picture is required",
+        //       iscomman: true,
+        //       shouldEnableButton: true);
+        //   update();
       }
     });
+
     update();
   }
-
   // deleteService(context) async {
   //   var loadingIndicator = LoadingProgressDialog();
 

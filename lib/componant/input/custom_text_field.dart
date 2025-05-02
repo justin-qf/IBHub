@@ -64,7 +64,7 @@ class CustomFormField extends StatefulWidget {
   final Function(String?)? onChanged;
   final String? Function(String?)? validator;
   final TextInputType inputType;
-  final bool? isVerified;
+
   final Function? onVerifiyButtonClick;
   final bool? wantSuffix;
   final bool? isDropdown;
@@ -95,6 +95,8 @@ class CustomFormField extends StatefulWidget {
   bool isBorderSideEnable = true;
   bool obsecuretext = false;
   final Function? obscureFunction;
+
+  bool? isVerified = false;
 
   @override
   State<CustomFormField> createState() => _CustomFormFieldState();
@@ -140,7 +142,9 @@ class _CustomFormFieldState extends State<CustomFormField> {
                 : widget.isGst == true
                     ? 20
                     : null,
-        style: styleTextFormFieldText(isWhite: widget.isWhite),
+        style: widget.isVerified != null && widget.isVerified!
+            ? styleTextFormFieldTextGrey()
+            : styleTextFormFieldText(isWhite: widget.isWhite),
         decoration: InputDecoration(
           filled: true,
           fillColor: inputBgColor,

@@ -13,6 +13,15 @@ styleTextFormFieldText({isWhite}) {
   );
 }
 
+styleTextFormFieldTextGrey() {
+  return TextStyle(
+    fontFamily: dM_sans_regular,
+    color: grey,
+    fontWeight: FontWeight.w300,
+    fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 9.sp,
+  );
+}
+
 styleTextForFieldLabel(usernameNode) {
   return TextStyle(
     fontFamily: fontRegular,

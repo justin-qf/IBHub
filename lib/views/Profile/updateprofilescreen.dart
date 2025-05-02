@@ -217,18 +217,21 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                     Obx(
                       () {
                         return getTextField(
-                            label: SignUpConstant.bussinessLabel,
-                            ctr: ctr.bussinessCtr,
-                            node: ctr.bussinessNode,
-                            model: ctr.bussinessModel.value,
-                            function: (val) {
-                              ctr.validateFields(val,
-                                  iscomman: true,
-                                  model: ctr.bussinessModel,
-                                  errorText1: SignUpConstant.namehint);
-                            },
-                            hint: SignUpConstant.namehint,
-                            isRequired: true);
+                          label: SignUpConstant.bussinessLabel,
+                          ctr: ctr.bussinessCtr,
+                          node: ctr.bussinessNode,
+                          model: ctr.bussinessModel.value,
+                          isenable: ctr.isUserVerfied.value ? false : true,
+                          isVerified: ctr.isUserVerfied.value ? true : false,
+                          function: (val) {
+                            ctr.validateFields(val,
+                                iscomman: true,
+                                model: ctr.bussinessModel,
+                                errorText1: SignUpConstant.namehint);
+                          },
+                          hint: SignUpConstant.namehint,
+                          isRequired: ctr.isUserVerfied.value ? false : true,
+                        );
                       },
                     ),
                     Obx(
@@ -245,7 +248,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                   errorText1: 'Enter Website Link');
                             },
                             hint: 'Enter Website Link',
-                            isRequired: true);
+                            isRequired: false);
                       },
                     ),
 
@@ -276,6 +279,8 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         ctr: ctr.emailCtr,
                         node: ctr.emailNode,
                         model: ctr.emailModel.value,
+                        isenable: ctr.isEmailVerifed.value ? false : true,
+                        isVerified: ctr.isEmailVerifed.value ? true : false,
                         function: (val) {
                           ctr.validateFields(val,
                               isemail: true,
@@ -284,7 +289,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                               errorText2: SignUpConstant.emailcontain,
                               errorText3: SignUpConstant.invalidEmailFormat);
                         },
-                        isRequired: true,
+                        isRequired: ctr.isEmailVerifed.value ? false : true,
                       );
                     }),
 
@@ -421,10 +426,11 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         model: ctr.verificationModel.value,
                         hint: 'Select Document Type',
                         wantsuffix: true,
-                        isenable: false,
+                        isenable: ctr.isUserVerfied.value ? false : true,
+                        isVerified: ctr.isUserVerfied.value ? true : false,
                         isdropdown: true,
-                        usegesture: true,
-                        isRequired: true,
+                        usegesture: ctr.isUserVerfied.value ? false : true,
+                        isRequired: ctr.isUserVerfied.value ? false : true,
                         context: context,
                         gestureFunction: () {
                           ctr.unfocusAll();
@@ -443,55 +449,103 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       );
                     }),
 
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: getLable('Document', isRequired: true),
+                    Obx(
+                      () => Align(
+                        alignment: Alignment.centerLeft,
+                        child: getLable('Document',
+                            isVerified: ctr.isUserVerfied.value ? true : false,
+                            isRequired: ctr.isUserVerfied.value ? false : true),
+                      ),
                     ),
                     getDynamicSizedBox(height: 0.5.h),
-                    GestureDetector(
-                      onTap: () {
-                        ctr.unfocusAll();
-                        selectPdfFromCameraOrGallery(context, cameraClick: () {
-                          ctr.pickImageFromGallery(context);
-                        }, galleryClick: () {
-                          ctr.pickPdfFromFile(context);
-                        });
-                      },
-                      child: Container(
-                          height: 7.h,
-                          alignment: Alignment.centerLeft,
-                          width: 100.w,
-                          // margin: EdgeInsets.only(left: 2.w),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 1.h, horizontal: 5.w),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: inputBgColor),
-                          child: Obx(() {
-                            // ignore: unnecessary_null_comparison
-                            return ctr.selectedPDFName.value != ''
-                                ? Chip(
-                                    label: Text(ctr.selectedPDFName.value,
-                                        style: const TextStyle(
-                                            color: primaryColor,
-                                            fontFamily: dM_sans_regular)),
-                                    backgroundColor: white,
-                                    shape: RoundedRectangleBorder(
+
+                    Obx(() {
+                      return ctr.isUserVerfied.value == true
+                          ? Container(
+                              height: 7.h,
+                              alignment: Alignment.centerLeft,
+                              width: 100.w,
+                              // margin: EdgeInsets.only(left: 2.w),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 1.h, horizontal: 5.w),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: inputBgColor),
+                              child: Obx(() {
+                                // ignore: unnecessary_null_comparison
+                                return ctr.selectedPDFName.value != ''
+                                    ? Chip(
+                                        label: Text(ctr.selectedPDFName.value,
+                                            style: const TextStyle(
+                                                color: primaryColor,
+                                                fontFamily: dM_sans_regular)),
+                                        backgroundColor: white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        deleteIcon:
+                                            Icon(Icons.close, size: 20.sp),
+                                        onDeleted: () {
+                                          // ctr.update();
+                                        },
+                                      )
+                                    : Text(
+                                        'Select Document',
+                                        style: styleTextHintFieldLabel(
+                                            isWhite: true),
+                                      );
+                              }))
+                          : GestureDetector(
+                              onTap: () {
+                                ctr.unfocusAll();
+                                selectPdfFromCameraOrGallery(context,
+                                    cameraClick: () {
+                                  ctr.pickImageFromGallery(context);
+                                }, galleryClick: () {
+                                  ctr.pickPdfFromFile(context);
+                                });
+                              },
+                              child: Container(
+                                  height: 7.h,
+                                  alignment: Alignment.centerLeft,
+                                  width: 100.w,
+                                  // margin: EdgeInsets.only(left: 2.w),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 1.h, horizontal: 5.w),
+                                  decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    deleteIcon: Icon(Icons.close, size: 20.sp),
-                                    onDeleted: () {
-                                      ctr.clearpdf();
-                                      ctr.update();
-                                    },
-                                  )
-                                : Text(
-                                    'Select Document',
-                                    style:
-                                        styleTextHintFieldLabel(isWhite: true),
-                                  );
-                          })),
-                    ),
+                                      color: inputBgColor),
+                                  child: Obx(() {
+                                    // ignore: unnecessary_null_comparison
+                                    return ctr.selectedPDFName.value != ''
+                                        ? Chip(
+                                            label: Text(
+                                                ctr.selectedPDFName.value,
+                                                style: const TextStyle(
+                                                    color: primaryColor,
+                                                    fontFamily:
+                                                        dM_sans_regular)),
+                                            backgroundColor: white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            deleteIcon:
+                                                Icon(Icons.close, size: 20.sp),
+                                            onDeleted: () {
+                                              ctr.clearpdf();
+                                              ctr.update();
+                                            },
+                                          )
+                                        : Text(
+                                            'Select Document',
+                                            style: styleTextHintFieldLabel(
+                                                isWhite: true),
+                                          );
+                                  })),
+                            );
+                    }),
 
                     getDynamicSizedBox(height: 3.h),
 
