@@ -242,7 +242,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
         itemBuilder: (context, index) {
           if (index < controller.businessList.length) {
             BusinessData data = controller.businessList[index];
-            return controller.getBusinessiteListItem(
+            return controller.getBusinessListItem(
                 context, data, widget.item.id.toString());
           } else if (controller.isFetchingMore) {
             return Center(

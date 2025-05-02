@@ -20,6 +20,7 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
+import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
@@ -72,6 +73,17 @@ class HomeScreenController extends GetxController {
   void onInit() {
     searchCtr = TextEditingController();
     super.onInit();
+    getProfileData();
+  }
+
+  RxBool isUserVerified = false.obs;
+
+  getProfileData() async {
+    User? retrievedObject = await UserPreferences().getSignInInfo();
+
+    if (retrievedObject != null) {
+      isUserVerified.value = retrievedObject.isVerified ?? false;
+    }
   }
 
   void hideKeyboard(context) {
@@ -499,155 +511,134 @@ class HomeScreenController extends GetxController {
           ],
         ),
         margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: 2.5.w, right: 2.5.w, top: 0.5.h, bottom: 0.5.h),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    // padding: const EdgeInsets.all(2),
-                    margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-                    width: 25.w,
-                    height: 11.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: primaryColor,
-                          width: 1), // border color and width
-                      borderRadius: BorderRadius.circular(
-                          Device.screenType == sizer.ScreenType.mobile
-                              ? 3.5.w
-                              : 2.5.w),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          Device.screenType == sizer.ScreenType.mobile
-                              ? 3.5.w
-                              : 2.5.w),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        height: 18.h,
-                        imageUrl: item.visitingCardUrl,
-                        placeholder: (context, url) => Center(
-                          child: Image.asset(Asset.itemPlaceholder,
-                              height: 10.h, fit: BoxFit.cover),
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                            Asset.itemPlaceholder,
-                            height: 10.h,
-                            fit: BoxFit.cover),
+        padding: EdgeInsets.only(left: 2.w, top: 1.h, bottom: 1.h, right: 2.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  // padding: const EdgeInsets.all(2),
+                  margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                  width: 25.w,
+                  height: 11.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: primaryColor,
+                        width: 1), // border color and width
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 3.5.w
+                            : 2.5.w),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 3.5.w
+                            : 2.5.w),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      height: 18.h,
+                      imageUrl: item.visitingCardUrl,
+                      placeholder: (context, url) => Center(
+                        child: Image.asset(Asset.itemPlaceholder,
+                            height: 10.h, fit: BoxFit.cover),
                       ),
+                      errorWidget: (context, url, error) => Image.asset(
+                          Asset.itemPlaceholder,
+                          height: 10.h,
+                          fit: BoxFit.cover),
                     ),
                   ),
-                  Positioned(
-                      top: 0.2.h,
-                      right: -2,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: white,
-                        ),
-                        child: SvgPicture.asset(
-                          Asset.badge,
-                          color: blue,
-                        ),
-                      )),
-                  // item.isEmailVerified
-                  //     ?
+                ),
+                Positioned(
+                    top: 0.2.h,
+                    right: -2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: white,
+                      ),
+                      child: SvgPicture.asset(
+                        Asset.badge,
+                        color: blue,
+                      ),
+                    )),
+                // item.isEmailVerified
+                //     ?
 
-                  // : SizedBox.shrink()
-                ],
-              ),
-              getDynamicSizedBox(width: 2.w),
-              Expanded(
+                // : SizedBox.shrink()
+              ],
+            ),
+            getDynamicSizedBox(width: 2.w),
+            Expanded(
+              child: Container(
+                height: 11.h,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: Device.screenType == sizer.ScreenType.mobile
-                              ? 58.w
-                              : 65.w,
-                          child: Text(item.businessName,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontFamily: dM_sans_semiBold,
-                                  fontSize: 15.sp,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: black,
-                                  fontWeight: FontWeight.w900)),
-                        ),
-                        const Spacer(),
-                        // RatingBar.builder(
-                        //   initialRating: item.businessReviewsAvgRating ?? 0.0,
-                        //   minRating: 1,
-                        //   direction: Axis.horizontal,
-                        //   allowHalfRating: true,
-                        //   itemCount: 1,
-                        //   itemSize: 3.5.w,
-                        //   unratedColor: Colors.orange,
-                        //   itemBuilder: (context, _) => const Icon(
-                        //     Icons.star,
-                        //     color: Colors.orange,
-                        //   ),
-                        //   onRatingUpdate: (rating) {
-                        //     logcat("RATING", rating);
-                        //   },
-                        // ),
-                        // getText(
-                        //   item.businessReviewsAvgRating != null
-                        //       ? (item.businessReviewsAvgRating ?? 0.0)
-                        //           .toStringAsFixed(1)
-                        //       : '0.0',
-                        //   TextStyle(
-                        //       fontFamily: fontSemiBold,
-                        //       color: lableColor,
-                        //       fontSize:
-                        //           Device.screenType == sizer.ScreenType.mobile
-                        //               ? 14.sp
-                        //               : 7.sp,
-                        //       height: 1.2),
-                        // ),
-                      ],
+                    SizedBox(
+                      // height: 4.h,
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 58.w
+                          : 65.w,
+                      child: Text(
+                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+                          item.businessName,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 15.sp,
+                              height: 1.1,
+                              overflow: TextOverflow.ellipsis,
+                              color: black,
+                              fontWeight: FontWeight.w900)),
                     ),
                     getDynamicSizedBox(height: 1.h),
                     SizedBox(
+                      // height: 2.h,
                       width: Device.screenType == sizer.ScreenType.mobile
-                          ? 64.w
+                          ? 58.w
                           : 70.w,
                       child: Text(item.name,
                           maxLines: 1,
                           style: TextStyle(
+                              height: 1.1,
                               fontFamily: dM_sans_semiBold,
                               fontSize: 14.sp,
                               color: black,
                               fontWeight: FontWeight.w500)),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Text(
-                        item.address.isNotEmpty
-                            ? item.address
-                            : item.city != null
-                                ? item.city!.city
-                                : item.phone,
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontFamily: dM_sans_semiBold,
-                            fontSize: 14.sp,
-                            color: black,
-                            fontWeight: FontWeight.w500)),
+                    SizedBox(
+                      // height: 4.h,
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 58.w
+                          : 65.w,
+                      child: Text(
+                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+                          item.address.isNotEmpty
+                              ? item.address
+                              : item.city != null
+                                  ? item.city!.city
+                                  : item.phone,
+                          maxLines: 2,
+                          style: TextStyle(
+                              height: 1.1,
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
