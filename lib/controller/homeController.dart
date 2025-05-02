@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
@@ -398,6 +399,7 @@ class HomeScreenController extends GetxController {
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {
+    print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();
@@ -430,41 +432,55 @@ class HomeScreenController extends GetxController {
         ),
         margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
         child: Padding(
-          padding:
-              EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+          padding: EdgeInsets.only(
+              left: 2.5.w, right: 2.5.w, top: 0.5.h, bottom: 0.5.h),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                // padding: const EdgeInsets.all(2),
-                margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-                width: 25.w,
-                height: 11.h,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: primaryColor, width: 1), // border color and width
-                  borderRadius: BorderRadius.circular(
-                      Device.screenType == sizer.ScreenType.mobile
-                          ? 3.5.w
-                          : 2.5.w),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      Device.screenType == sizer.ScreenType.mobile
-                          ? 3.5.w
-                          : 2.5.w),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    height: 18.h,
-                    imageUrl: item.visitingCardUrl,
-                    placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(color: primaryColor)),
-                    errorWidget: (context, url, error) => Image.asset(
-                        Asset.placeholder,
-                        height: 10.h,
-                        fit: BoxFit.cover),
+              Stack(
+                children: [
+                  Container(
+                    // padding: const EdgeInsets.all(2),
+                    margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                    width: 25.w,
+                    height: 11.h,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: primaryColor,
+                          width: 1), // border color and width
+                      borderRadius: BorderRadius.circular(
+                          Device.screenType == sizer.ScreenType.mobile
+                              ? 3.5.w
+                              : 2.5.w),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          Device.screenType == sizer.ScreenType.mobile
+                              ? 3.5.w
+                              : 2.5.w),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        height: 18.h,
+                        imageUrl: item.visitingCardUrl,
+                        placeholder: (context, url) => const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor)),
+                        errorWidget: (context, url, error) => Image.asset(
+                            Asset.placeholder,
+                            height: 10.h,
+                            fit: BoxFit.cover),
+                      ),
+                    ),
                   ),
-                ),
+                  // item.isEmailVerified
+                  //     ?
+
+                  Positioned(
+                      child: SvgPicture.asset(
+                    Asset.badge,
+                  ))
+                  // : SizedBox.shrink()
+                ],
               ),
               getDynamicSizedBox(width: 2.w),
               Expanded(
@@ -478,10 +494,10 @@ class HomeScreenController extends GetxController {
                       children: [
                         SizedBox(
                           width: Device.screenType == sizer.ScreenType.mobile
-                              ? 61.w
-                              : 70.w,
+                              ? 58.w
+                              : 65.w,
                           child: Text(item.businessName,
-                              maxLines: 2,
+                              maxLines: 1,
                               style: TextStyle(
                                   fontFamily: dM_sans_semiBold,
                                   fontSize: 15.sp,
@@ -528,7 +544,7 @@ class HomeScreenController extends GetxController {
                           ? 64.w
                           : 70.w,
                       child: Text(item.name,
-                          maxLines: 2,
+                          maxLines: 1,
                           style: TextStyle(
                               fontFamily: dM_sans_semiBold,
                               fontSize: 14.sp,
@@ -558,6 +574,168 @@ class HomeScreenController extends GetxController {
     );
   }
 
+// Widget getBusinessListItem(BuildContext context, BusinessData item) {
+//     return GestureDetector(
+//       onTap: () async {
+//         bool isEmpty = await isAnyFieldEmpty();
+//         if (isEmpty) {
+//           showBottomSheetPopup(context);
+//         } else {
+//           Get.to(BusinessDetailScreen(
+//             item: item,
+//             isFromProfile: false,
+//           ));
+//         }
+//       },
+//       child: Container(
+//         margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+//         padding: EdgeInsets.all(3.w),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(10),
+//           boxShadow: [
+//             BoxShadow(
+//               color: Colors.black12,
+//               blurRadius: 3,
+//               offset: Offset(0, 0),
+//             ),
+//           ],
+//         ),
+//         child: Row(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             // Visiting Card Image
+//             ClipRRect(
+//               borderRadius: BorderRadius.circular(11),
+//               child: CachedNetworkImage(
+//                 imageUrl: item.visitingCardUrl,
+//                 width: 18.w,
+//                 height: 18.w,
+//                 fit: BoxFit.cover,
+//                 placeholder: (context, url) => Container(
+//                   width: 18.w,
+//                   height: 18.w,
+//                   alignment: Alignment.center,
+//                   child: CircularProgressIndicator(strokeWidth: 2),
+//                 ),
+//                 errorWidget: (context, url, error) => Image.asset(
+//                   Asset.placeholder,
+//                   width: 18.w,
+//                   height: 18.w,
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//             ),
+//             SizedBox(width: 4.w),
+
+//             // Text Info with Heart Icon
+//             Expanded(
+//               child: Stack(
+//                 children: [
+//                   Padding(
+//                     padding:
+//                         EdgeInsets.only(right: 6.w), // Leave space for heart
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         // Business Name
+//                         Row(
+//                           crossAxisAlignment: CrossAxisAlignment.center,
+//                           children: [
+//                             Icon(Icons.business, size: 16, color: primaryColor),
+//                             SizedBox(width: 1.w),
+//                             Expanded(
+//                               child: Text(
+//                                 item.businessName,
+//                                 style: TextStyle(
+//                                   fontSize: 15.sp,
+//                                   fontFamily: dM_sans_semiBold,
+//                                   fontWeight: FontWeight.w700,
+//                                   color: primaryColor,
+//                                 ),
+//                                 maxLines: 1,
+//                                 overflow: TextOverflow.ellipsis,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         SizedBox(height: 0.5.h),
+
+//                         // Owner Name
+//                         Row(
+//                           crossAxisAlignment: CrossAxisAlignment.center,
+//                           children: [
+//                             Icon(Icons.person, size: 16, color: primaryColor),
+//                             SizedBox(width: 1.w),
+//                             Expanded(
+//                               child: Text(
+//                                 item.name,
+//                                 style: TextStyle(
+//                                   fontSize: 13.5.sp,
+//                                   fontFamily: dM_sans_semiBold,
+//                                   color: primaryColor,
+//                                   fontWeight: FontWeight.w500,
+//                                 ),
+//                                 maxLines: 1,
+//                                 overflow: TextOverflow.ellipsis,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         SizedBox(height: 0.5.h),
+
+//                         // Address
+//                         Row(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Icon(Icons.location_on,
+//                                 size: 16, color: primaryColor),
+//                             SizedBox(width: 1.w),
+//                             Expanded(
+//                               child: Text(
+//                                 item.address.isNotEmpty
+//                                     ? item.address
+//                                     : item.city?.city ?? item.phone,
+//                                 style: TextStyle(
+//                                   fontSize: 13.5.sp,
+//                                   fontFamily: dM_sans_semiBold,
+//                                   color: primaryColor,
+//                                   fontWeight: FontWeight.w500,
+//                                 ),
+//                                 maxLines: 2,
+//                                 overflow: TextOverflow.ellipsis,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   // Heart Icon (top-right corner)
+//                   Positioned(
+//                     top: 0,
+//                     right: 0,
+//                     child: GestureDetector(
+//                       onTap: () {
+//                         // TODO: Add your favorite toggle logic here
+//                       },
+//                       child: Icon(
+//                         Icons
+//                             .favorite_border, // Replace with Icons.favorite if active
+//                         color: Colors.grey,
+//                         size: 22.sp,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
   // getBusinessListItem(BuildContext context, BusinessData item) {
   //   return GestureDetector(
   //     onTap: () async {

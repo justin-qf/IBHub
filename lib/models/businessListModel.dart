@@ -94,6 +94,7 @@ class BusinessData {
   StateDataList? state;
   String pincode;
   String visitingCardUrl;
+  bool isEmailVerified;
   double? businessReviewsAvgRating;
   bool isFavorite;
 
@@ -109,6 +110,7 @@ class BusinessData {
     required this.state,
     required this.pincode,
     required this.visitingCardUrl,
+    required this.isEmailVerified,
     required this.businessReviewsAvgRating,
     required this.isFavorite,
   });
@@ -127,6 +129,7 @@ class BusinessData {
             : null,
         pincode: json["pincode"] ?? '',
         visitingCardUrl: json["visiting_card_url"] ?? '',
+        isEmailVerified: json["is_email_verified"] ?? false,
         businessReviewsAvgRating: json["business_reviews_avg_rating"] != null
             ? json["business_reviews_avg_rating"]?.toDouble()
             : 0.0,
@@ -147,6 +150,7 @@ class BusinessData {
         "visiting_card_url": visitingCardUrl,
         "business_reviews_avg_rating": businessReviewsAvgRating,
         "is_favorite": isFavorite,
+        "is_email_verified": isEmailVerified
       };
 }
 

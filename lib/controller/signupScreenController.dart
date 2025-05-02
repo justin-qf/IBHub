@@ -182,8 +182,8 @@ class Signupscreencontroller extends GetxController {
         },
         apiEndPoint: ApiUrl.register, onResponse: (data) {
       var responseDetail = LoginModel.fromJson(data);
-      UserPreferences().saveSignInInfo(responseDetail.data.user);
-      UserPreferences().setToken(responseDetail.data.user.token.toString());
+      UserPreferences().saveSignInInfo(responseDetail.data!.user);
+      UserPreferences().setToken(responseDetail.data!.user!.token.toString());
       Get.offAll(const MainScreen());
     }, networkManager: networkManager, isModelResponse: true);
   }

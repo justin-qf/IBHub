@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
+import 'package:ibh/componant/input/style.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
+import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
@@ -440,6 +442,57 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         },
                       );
                     }),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: getLable('Document', isRequired: true),
+                    ),
+                    getDynamicSizedBox(height: 0.5.h),
+                    GestureDetector(
+                      onTap: () {
+                        ctr.unfocusAll();
+                        selectPdfFromCameraOrGallery(context, cameraClick: () {
+                          ctr.pickImageFromGallery(context);
+                        }, galleryClick: () {
+                          ctr.pickPdfFromFile(context);
+                        });
+                      },
+                      child: Container(
+                          height: 7.h,
+                          alignment: Alignment.centerLeft,
+                          width: 100.w,
+                          // margin: EdgeInsets.only(left: 2.w),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 1.h, horizontal: 5.w),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: inputBgColor),
+                          child: Obx(() {
+                            // ignore: unnecessary_null_comparison
+                            return ctr.selectedPDFName.value != ''
+                                ? Chip(
+                                    label: Text(ctr.selectedPDFName.value,
+                                        style: const TextStyle(
+                                            color: primaryColor,
+                                            fontFamily: dM_sans_regular)),
+                                    backgroundColor: white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    deleteIcon: Icon(Icons.close, size: 20.sp),
+                                    onDeleted: () {
+                                      ctr.clearpdf();
+
+                                      ctr.update();
+                                    },
+                                  )
+                                : Text(
+                                    'Select Document',
+                                    style:
+                                        styleTextHintFieldLabel(isWhite: true),
+                                  );
+                          })),
+                    ),
 
                     getDynamicSizedBox(height: 3.h),
 

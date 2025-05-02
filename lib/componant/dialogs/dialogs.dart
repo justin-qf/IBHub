@@ -858,6 +858,77 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
       });
 }
 
+Future<Object?> selectPdfFromCameraOrGallery(BuildContext context,
+    {Function? cameraClick, Function? galleryClick}) {
+  return showGeneralDialog(
+      // ignore: deprecated_member_use
+      barrierColor: black.withOpacity(isDarkMode() ? 0.4 : 0.6),
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+            scale: a1.value,
+            child: Opacity(
+                opacity: a1.value,
+                child: CupertinoAlertDialog(
+                    title: Text(
+                      'Document',
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: isDarkMode() ? white : black,
+                          fontFamily: fontMedium,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    content: Text(
+                      'Choose From',
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: isDarkMode() ? white : black,
+                          fontFamily: fontBold),
+                    ),
+                    actions: [
+                      CupertinoDialogAction(
+                          onPressed: () {
+                            cameraClick!();
+                            Navigator.pop(context);
+                          },
+                          isDefaultAction: true,
+                          isDestructiveAction: true,
+                          child: Text('Gallery',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: isDarkMode() ? white : black,
+                                  fontFamily: fontRegular,
+                                  fontSize:
+                                      Device.screenType == ScreenType.mobile
+                                          ? 16.sp
+                                          : 11.sp))),
+                      CupertinoDialogAction(
+                          onPressed: () {
+                            galleryClick!();
+                            Navigator.pop(context);
+                          },
+                          isDefaultAction: true,
+                          isDestructiveAction: true,
+                          child: Text(
+                            'PDF',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: isDarkMode() ? white : black,
+                                fontFamily: fontRegular,
+                                fontSize: Device.screenType == ScreenType.mobile
+                                    ? 16.sp
+                                    : 11.sp),
+                          ))
+                    ])));
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      });
+}
+
 Future commonDetailsDialog(BuildContext context, String title,
     {Widget? contain, bool? isDescription, isfromService = false}) {
   return showDialog(

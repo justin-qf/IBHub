@@ -136,8 +136,8 @@ class Signinscreencontroller extends GetxController {
         },
         apiEndPoint: ApiUrl.login, onResponse: (data) async {
       var responseDetail = LoginModel.fromJson(data);
-      UserPreferences().saveSignInInfo(responseDetail.data.user);
-      UserPreferences().setToken(responseDetail.data.user.token.toString());
+      UserPreferences().saveSignInInfo(responseDetail.data!.user);
+      UserPreferences().setToken(responseDetail.data!.user!.token.toString());
       logcat("LoginResponse::", jsonEncode(responseDetail));
       User? retrievedObject = await UserPreferences().getSignInInfo();
       logcat("LoginResponsePref::", jsonEncode(retrievedObject));

@@ -60,14 +60,14 @@ class MainScreenController extends GetxController {
   getProfileData() async {
     state.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
-    name.value = retrievedObject!.name;
-    bussiness.value = retrievedObject.businessName;
-    phone.value = retrievedObject.phone;
-    address.value = retrievedObject.address;
+    name.value = retrievedObject!.name??'';
+    bussiness.value = retrievedObject.businessName??'';
+    phone.value = retrievedObject.phone??'';
+    address.value = retrievedObject.address??'';
     city.value = retrievedObject.city.toString();
     states.value = retrievedObject.state.toString();
     pincode.value = retrievedObject.pincode.toString();
-    visitingCardUrl.value = retrievedObject.visitingCardUrl;
+    visitingCardUrl.value = retrievedObject.visitingCardUrl??'';
     update();
     state.value = ScreenState.apiSuccess;
   }

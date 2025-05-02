@@ -90,12 +90,14 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
 
   int idUsedinCtr = 0;
 
+  
+
   getUserData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
-    businessName = retrievedObject!.businessName;
-    thumbnail = retrievedObject.visitingCardUrl;
-    email = retrievedObject.email;
-    address = retrievedObject.address;
+    businessName = retrievedObject!.businessName ?? '';
+    thumbnail = retrievedObject.visitingCardUrl ?? '';
+    email = retrievedObject.email ?? '';
+    address = retrievedObject.address ?? '';
     city = retrievedObject.city!.city.toString();
     state = retrievedObject.state!.name.toString();
     businessId = retrievedObject.id.toString();
@@ -106,10 +108,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     //     widget.item != null ? widget.item!.id : retrievedObject.id;
 
     idUsedinCtr = widget.item != null
-        ? widget.isFromFav == true
-            ? int.parse(widget.item!.businessId)
-            : widget.item!.id
-        : retrievedObject.id;
+        ? (widget.isFromFav == true
+            ? int.tryParse(widget.item!.businessId) ?? 0
+            : widget.item!.id ?? 0)
+        : retrievedObject.id ?? 0;
 
     print('id used in ctr:${idUsedinCtr.toString()}');
     controller.bussinessID(idUsedinCtr);
@@ -383,8 +385,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                             getDynamicSizedBox(width: 1.w),
                             controller.getTexts(
                               widget.item != null
-                                  ? '${widget.item!.address}, ${widget.item!.state!.name}, ${widget.item!.city!.city}, ${widget.item!.pincode.toString()}'
-                                  : '$address, $state, $city, $pincode ',
+                                  ? '${widget.item!.address}, ${widget.item!.city!.city}, ${widget.item!.state!.name}, ${widget.item!.pincode.toString()}'
+                                  : '$address, $city, $state, $pincode ',
                             )
                           ],
                         ),

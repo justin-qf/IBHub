@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 2.h),
             Container(
               margin: EdgeInsets.only(left: 5.w),
               child: SizedBox(
@@ -181,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Asset.applogo,
                   )),
             ),
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {
                 futureDelay(() {
@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }, isOneSecond: false);
               });
             }),
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 2.h),
             SizedBox(
                 height:
                     Device.screenType == sizer.ScreenType.mobile ? 13.h : 13.h,
@@ -213,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: controller.categoryList.length)
                       : Container();
                 })),
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),

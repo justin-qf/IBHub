@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -75,6 +76,7 @@ class Updateprofilecontroller extends GetxController {
   var websiteModel = ValidationModel(null, null, isValidate: false).obs;
   var addressModel = ValidationModel(null, null, isValidate: false).obs;
   var verificationModel = ValidationModel(null, null, isValidate: false).obs;
+  var verificationDocModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isFormInvalidate = false.obs;
 
@@ -112,146 +114,169 @@ class Updateprofilecontroller extends GetxController {
 
   RxBool isVerificationApiCallLoading = false.obs;
   RxList<VerificationData> verificationList = <VerificationData>[].obs;
-  RxString selectedVerification = "".obs;
+  // RxString selectedVerification = "".obs;
 
   RxString cityId = "".obs;
 
   RxString imageURl = "".obs;
 
   getProfileData() async {
-    // state.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
-    nameCtr.text = retrievedObject!.name;
-    emailCtr.text = retrievedObject.email;
-    phoneCtr.text = retrievedObject.phone;
-    bussinessCtr.text = retrievedObject.businessName;
-    if (retrievedObject.state != null) {
-      stateCtr.text = retrievedObject.state!.name;
-      stateId.value = retrievedObject.state!.id.toString();
-    }
-    if (retrievedObject.city != null) {
-      cityCtr.text = retrievedObject.city!.city;
-      cityId.value = retrievedObject.city!.id.toString();
+
+    if (retrievedObject == null) {
+      // You could show an error, fallback, or early return
+      print("Retrieved user is null");
+      return;
     }
 
-    imageURl.value = retrievedObject.visitingCardUrl;
+    nameCtr.text = retrievedObject.name ?? '';
+    emailCtr.text = retrievedObject.email ?? '';
+    phoneCtr.text = retrievedObject.phone ?? '';
+    bussinessCtr.text = retrievedObject.businessName ?? '';
+
+    if (retrievedObject.state != null) {
+      stateCtr.text = retrievedObject.state!.name ?? '';
+      stateId.value = retrievedObject.state!.id?.toString() ?? '';
+    }
+
+    if (retrievedObject.city != null) {
+      cityCtr.text = retrievedObject.city!.city ?? '';
+      cityId.value = retrievedObject.city!.id?.toString() ?? '';
+    }
+
+    selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
+    verificationCtr.text = retrievedObject.document?.documentType ?? '';
+
+    imageURl.value = retrievedObject.visitingCardUrl ?? '';
     print('imageUrl is ::::$imageURl');
 
-    pincodeCtr.text = retrievedObject.pincode;
-    addressCtr.text = retrievedObject.address;
+    pincodeCtr.text = retrievedObject.pincode ?? '';
+    addressCtr.text = retrievedObject.address ?? '';
+    websiteCtr.text = retrievedObject.website ?? '';
 
-    if (imageURl.isNotEmpty) {
-      validateFields(imageURl.value,
-          model: imageModel,
-          errorText1: "Profile picture is required",
-          iscomman: true,
-          shouldEnableButton: false);
+    // Start validation logic
+    if (imageURl.value.isNotEmpty) {
+      validateFields(
+        imageURl.value,
+        model: imageModel,
+        errorText1: "Profile picture is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
+    }
+
+    if (selectedPDFName.value.isNotEmpty) {
+      validateFields(
+        selectedPDFName.value,
+        model: imageModel,
+        errorText1: "Document is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (nameCtr.text.isNotEmpty) {
-      validateFields(nameCtr.text,
-          model: nameModel,
-          errorText1: "Name is required",
-          iscomman: true,
-          shouldEnableButton: false);
+      validateFields(
+        nameCtr.text,
+        model: nameModel,
+        errorText1: "Name is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (bussinessCtr.text.isNotEmpty) {
-      validateFields(bussinessCtr.text,
-          model: bussinessModel,
-          errorText1: "Business name is required",
-          iscomman: true,
-          shouldEnableButton: false);
+      validateFields(
+        bussinessCtr.text,
+        model: bussinessModel,
+        errorText1: "Business name is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
+
     if (emailCtr.text.isNotEmpty) {
-      validateFields(retrievedObject.email,
-          model: emailModel,
-          errorText1: "Email is required",
-          errorText2: "Invalid email format",
-          isemail: true,
-          shouldEnableButton: false);
+      validateFields(
+        emailCtr.text,
+        model: emailModel,
+        errorText1: "Email is required",
+        errorText2: "Invalid email format",
+        isemail: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (phoneCtr.text.isNotEmpty) {
-      validateFields(phoneCtr.text,
-          model: phoneModel,
-          errorText1: "Phone number is required",
-          isnumber: true,
-          shouldEnableButton: false);
+      validateFields(
+        phoneCtr.text,
+        model: phoneModel,
+        errorText1: "Phone number is required",
+        isnumber: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (stateCtr.text.isNotEmpty) {
-      validateFields(stateCtr.text,
-          model: stateModel,
-          errorText1: "State is required",
-          iscomman: true,
-          shouldEnableButton: false);
+      validateFields(
+        stateCtr.text,
+        model: stateModel,
+        errorText1: "State is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (cityCtr.text.isNotEmpty) {
-      validateFields(cityCtr.text,
-          model: cityModel,
-          errorText1: "City is required",
-          iscomman: true,
-          shouldEnableButton: false);
+      validateFields(
+        cityCtr.text,
+        model: cityModel,
+        errorText1: "City is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (pincodeCtr.text.isNotEmpty) {
-      validateFields(pincodeCtr.text,
-          model: pincodeModel,
-          errorText1: "Pincode is required",
-          isPincode: true,
-          shouldEnableButton: false);
+      validateFields(
+        pincodeCtr.text,
+        model: pincodeModel,
+        errorText1: "Pincode is required",
+        isPincode: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (addressCtr.text.isNotEmpty) {
-      validateFields(addressCtr.text,
-          model: addressModel,
-          errorText1: "Address is required",
-          iscomman: true,
-          shouldEnableButton: false);
+      validateFields(
+        addressCtr.text,
+        model: addressModel,
+        errorText1: "Address is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
 
     if (websiteCtr.text.isNotEmpty) {
-      validateFields(addressCtr.text,
-          model: websiteModel,
-          errorText1: "Website is required",
-          iscomman: true,
-          shouldEnableButton: false);
+      validateFields(
+        websiteCtr.text,
+        model: websiteModel,
+        errorText1: "Website is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
 
-    if (websiteCtr.text.isNotEmpty) {
-      validateFields(verificationCtr.text,
-          model: verificationModel,
-          errorText1: "Verification Document is required",
-          iscomman: true,
-          shouldEnableButton: false);
+    if (verificationCtr.text.isNotEmpty) {
+      validateFields(
+        verificationCtr.text,
+        model: verificationModel,
+        errorText1: "Verification Type is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
     }
-    // if (nameCtr.text.isNotEmpty ||
-    //     emailCtr.text.isNotEmpty ||
-    //     bussinessCtr.text.isNotEmpty ||
-    //     phoneCtr.text.isNotEmpty ||
-    //     stateCtr.text.isNotEmpty ||
-    //     cityCtr.text.isNotEmpty ||
-    //     pincodeCtr.text.isNotEmpty ||
-    //     addressCtr.text.isNotEmpty ||
-    //     imageURl.value.isNotEmpty) {
-    //   // validateFields(visitingcardCtr.text,
-    //   //     model: visitingCardModel,
-    //   //     errorText1: "Visiting card is required",
-    //   //     iscomman: true,
-    //   //     shouldEnableButton: false);
 
-    //   validateFields(addressCtr.text,
-    //       model: addressModel,
-    //       errorText1: "Address is required",
-    //       iscomman: true,
-    //       shouldEnableButton: false);
-    // }
-
-    enableSignUpButton(); // Call explicitly after initial validation
-
-    // state.value = ScreenState.apiSuccess;
+    enableSignUpButton();
     update();
   }
 
@@ -319,6 +344,8 @@ class Updateprofilecontroller extends GetxController {
     print('cityModel.isValidate: ${cityModel.value.isValidate}');
     print('pincodeModel.isValidate: ${pincodeModel.value.isValidate}');
     print('addressModel.isValidate: ${addressModel.value.isValidate}');
+    print('validateType.isValidate: ${verificationModel.value.isValidate}');
+    print('ValidateUrl.isValidate: ${verificationDocModel.value.isValidate}');
 
     if (nameModel.value.isValidate == false) {
       isFormInvalidate.value = false;
@@ -339,6 +366,8 @@ class Updateprofilecontroller extends GetxController {
     } else if (websiteModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (verificationModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
+    } else if (verificationDocModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else {
       isFormInvalidate.value = true;
@@ -362,6 +391,8 @@ class Updateprofilecontroller extends GetxController {
     // visitingcardCtr.clear();
     addressCtr.clear();
     websiteCtr.clear();
+
+    selectedPdfFile.value = null;
 
     // Reset all validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -499,6 +530,7 @@ class Updateprofilecontroller extends GetxController {
       imageValidationPopupDialogs(context);
       return;
     }
+
     var loadingIndicator = LoadingProgressDialog();
 
     try {
@@ -510,54 +542,68 @@ class Updateprofilecontroller extends GetxController {
         });
         return;
       }
+
       loadingIndicator.show(context, '');
 
+      List<http.MultipartFile> files = [];
+
+      // First file: visiting card
+      if (imageFile.value != null) {
+        files.add(http.MultipartFile(
+          'visiting_card',
+          imageFile.value!.readAsBytes().asStream(),
+          imageFile.value!.lengthSync(),
+          filename: imageFile.value!.path.split('/').last,
+        ));
+      }
+
+      // Second file: verification document (example)
+      if (selectedPdfFile.value != null) {
+        files.add(http.MultipartFile(
+          'document_url',
+          selectedPdfFile.value!.readAsBytes().asStream(),
+          selectedPdfFile.value!.lengthSync(),
+          filename: selectedPdfFile.value!.path.split('/').last,
+        ));
+      }
+
       var response = await Repository.multiPartPost({
-        "name": nameCtr.text.toString(),
-        "email": emailCtr.text.toString().trim(),
-        "phone": phoneCtr.text.toString(),
-        "business_name": bussinessCtr.text.toString(),
+        "name": nameCtr.text.trim(),
+        "email": emailCtr.text.trim(),
+        "phone": phoneCtr.text.trim(),
+        "business_name": bussinessCtr.text.trim(),
         "city": cityId.toString(),
         "state": stateId.toString(),
-        "address": addressCtr.text.toString(),
-        "pincode": pincodeCtr.text.toString(),
-      }, ApiUrl.updateProfile,
-          multiPart:
-              imageFile.value != null && imageFile.value.toString().isNotEmpty
-                  ? http.MultipartFile(
-                      'visiting_card',
-                      imageFile.value!.readAsBytes().asStream(),
-                      imageFile.value!.lengthSync(),
-                      filename: imageFile.value!.path.split('/').last,
-                    )
-                  : null,
-          allowHeader: true);
+        "address": addressCtr.text.trim(),
+        "website": websiteCtr.text.trim(),
+        "pincode": pincodeCtr.text.trim(),
+        "document_type": verificationCtr.text.trim()
+      }, ApiUrl.updateProfile, multiPartData: files, allowHeader: true);
+
       var responseData = await response.stream.toBytes();
       loadingIndicator.hide(context);
 
       var result = String.fromCharCodes(responseData);
       var json = jsonDecode(result);
-      if (response.statusCode == 200) {
-        if (json['success'] == true) {
-          print('pref store succesfully');
 
-          print('print json: ${json.toString()}');
+      if (response.statusCode == 200 && json['success'] == true) {
+        LoginModel responseDetail = LoginModel.fromJson(json);
+        // responseDetail.data
 
-          print(
-              'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
+        if (responseDetail.data?.user != null) {
+          responseDetail.data!.user!.document ??= Document();
+          responseDetail.data!.user!.document!.documentType =
+              verificationCtr.text;
+          responseDetail.data!.user!.document!.documentUrl =
+              selectedPDFName.value;
 
-          var responseDetail = LoginModel.fromJson(json);
-          UserPreferences().saveSignInInfo(responseDetail.data.user);
-          // UserPreferences().setToken(responseDetail.data.user.token.toString());
-          showDialogForScreen(context, "Update Profile Screen", json['message'],
-              callback: () {
-            print('go back');
-            Get.back(result: true); //goto code
-          });
-        } else {
-          showDialogForScreen(context, "Update Profile Screen", json['message'],
-              callback: () {});
+          UserPreferences().saveSignInInfo(responseDetail.data!.user);
         }
+
+        showDialogForScreen(context, "Update Profile Screen", json['message'],
+            callback: () {
+          Get.back(result: true);
+        });
       } else {
         showDialogForScreen(context, "Update Profile Screen", json['message'],
             callback: () {});
@@ -565,16 +611,86 @@ class Updateprofilecontroller extends GetxController {
     } catch (e) {
       logcat("Exception", e);
       loadingIndicator.hide(context);
-      // showDialogForScreen(context, screenName, ServerError.servererror,
-      //     callback: () {});
     }
   }
 
+  // void updateProfile(context) async {
+  //   if (imageURl.value.isEmpty) {
+  //     imageValidationPopupDialogs(context);
+  //     return;
+  //   }
+  //   var loadingIndicator = LoadingProgressDialog();
+
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, "Signup Screen", Connection.noConnection,
+  //           callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
+  //     loadingIndicator.show(context, '');
+
+  //     var response = await Repository.multiPartPost({
+  //       "name": nameCtr.text.toString(),
+  //       "email": emailCtr.text.toString().trim(),
+  //       "phone": phoneCtr.text.toString(),
+  //       "business_name": bussinessCtr.text.toString(),
+  //       "city": cityId.toString(),
+  //       "state": stateId.toString(),
+  //       "address": addressCtr.text.toString(),
+  //       "pincode": pincodeCtr.text.toString(),
+  //     }, ApiUrl.updateProfile,
+  //         multiPart:
+  //             imageFile.value != null && imageFile.value.toString().isNotEmpty
+  //                 ? http.MultipartFile(
+  //                     'visiting_card',
+  //                     imageFile.value!.readAsBytes().asStream(),
+  //                     imageFile.value!.lengthSync(),
+  //                     filename: imageFile.value!.path.split('/').last,
+  //                   )
+  //                 : null,
+  //         allowHeader: true);
+  //     var responseData = await response.stream.toBytes();
+  //     loadingIndicator.hide(context);
+
+  //     var result = String.fromCharCodes(responseData);
+  //     var json = jsonDecode(result);
+  //     if (response.statusCode == 200) {
+  //       if (json['success'] == true) {
+  //         print('pref store succesfully');
+
+  //         print('print json: ${json.toString()}');
+
+  //         print(
+  //             'JSON Success Response:\n${JsonEncoder.withIndent('  ').convert(json)}');
+
+  //         var responseDetail = LoginModel.fromJson(json);
+  //         UserPreferences().saveSignInInfo(responseDetail.data.user);
+  //         // UserPreferences().setToken(responseDetail.data.user.token.toString());
+  //         showDialogForScreen(context, "Update Profile Screen", json['message'],
+  //             callback: () {
+  //           print('go back');
+  //           Get.back(result: true); //goto code
+  //         });
+  //       } else {
+  //         showDialogForScreen(context, "Update Profile Screen", json['message'],
+  //             callback: () {});
+  //       }
+  //     } else {
+  //       showDialogForScreen(context, "Update Profile Screen", json['message'],
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     logcat("Exception", e);
+  //     loadingIndicator.hide(context);
+  //     // showDialogForScreen(context, screenName, ServerError.servererror,
+  //     //     callback: () {});
+  //   }
+  // }
 
   Rx<File?> verificationFile = null.obs;
-  
-
-
 
   getImage() {
     return Stack(
@@ -1076,6 +1192,81 @@ class Updateprofilecontroller extends GetxController {
         );
       },
     );
+  }
+
+//pdf
+  RxString pdfFilePath = ''.obs;
+  final selectedPdfFile = Rxn<File>();
+  RxString selectedPDFName = "".obs;
+
+  void pickPdfFromFile(BuildContext context) async {
+    selectedPdfFile.value = null;
+    selectedPDFName.value = '';
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null && result.files.single.path != null) {
+      File file = File(result.files.single.path!);
+      selectedPdfFile.value = file;
+      selectedPDFName.value = selectedPdfFile.value!.path.split('/').last;
+      print(selectedPdfFile.value);
+
+      validateFields(selectedPDFName.value,
+          model: imageModel,
+          errorText1: "Profile picture is required",
+          iscomman: true,
+          shouldEnableButton: true);
+
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Selected: ${file.path.split('/').last}')),
+      );
+    } else {
+      debugPrint("PDF picking cancelled.");
+      validateFields(selectedPDFName.value,
+          model: imageModel,
+          errorText1: "Profile picture is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
+  }
+
+  void pickImageFromGallery(BuildContext context) async {
+    selectedPdfFile.value = null;
+    selectedPDFName.value = '';
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      File imageFile = File(pickedImage.path);
+      selectedPdfFile.value = imageFile;
+      selectedPDFName.value = selectedPdfFile.value!.path.split('/').last;
+      print(selectedPdfFile.value);
+      validateFields(selectedPDFName.value,
+          model: imageModel,
+          errorText1: "Profile picture is required",
+          iscomman: true,
+          shouldEnableButton: true);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Selected: ${imageFile.path.split('/').last}')),
+      );
+    } else {
+      debugPrint("Image picking cancelled.");
+      validateFields(selectedPDFName.value,
+          model: imageModel,
+          errorText1: "Profile picture is required",
+          iscomman: true,
+          shouldEnableButton: false);
+    }
+  }
+
+  clearpdf() {
+    selectedPDFName.value = '';
+    selectedPdfFile.value = null;
   }
 
   Widget setcityListDialog() {

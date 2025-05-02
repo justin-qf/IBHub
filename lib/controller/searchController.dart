@@ -826,8 +826,8 @@ class SearchScreenController extends GetxController {
         ),
         margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
         child: Padding(
-          padding:
-              EdgeInsets.only(left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+          padding: EdgeInsets.only(
+              left: 2.5.w, right: 2.5.w, top: 0.5.h, bottom: 0.5.h),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -874,10 +874,10 @@ class SearchScreenController extends GetxController {
                       children: [
                         SizedBox(
                           width: Device.screenType == sizer.ScreenType.mobile
-                              ? 61.w
-                              : 70.w,
+                              ? 58.w
+                              : 65.w,
                           child: Text(item.businessName,
-                              maxLines: 2,
+                              maxLines: 1,
                               style: TextStyle(
                                   fontFamily: dM_sans_semiBold,
                                   fontSize: 15.sp,
@@ -924,7 +924,7 @@ class SearchScreenController extends GetxController {
                           ? 64.w
                           : 70.w,
                       child: Text(item.name,
-                          maxLines: 2,
+                          maxLines: 1,
                           style: TextStyle(
                               fontFamily: dM_sans_semiBold,
                               fontSize: 14.sp,
