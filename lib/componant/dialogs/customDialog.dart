@@ -422,7 +422,7 @@ Future<Object?> pdfPopupDialogs(BuildContext context,
 }
 
 Future<Object?> sharefPopupDialogs(BuildContext context,
-    {required Function() function}) {
+    {required Function() function, bool? isFromEditProfile = false}) {
   return showGeneralDialog(
     barrierColor: black.withOpacity(0.6),
     transitionBuilder: (context, a1, a2, widget) {
@@ -440,9 +440,11 @@ Future<Object?> sharefPopupDialogs(BuildContext context,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            content: const Text(
-              "Do you want to share the PDF?",
-              style: TextStyle(
+            content: Text(
+              isFromEditProfile != null && isFromEditProfile == true
+                  ? "Do you want to share the File?"
+                  : "Do you want to share the PDF?",
+              style: const TextStyle(
                 fontSize: 13,
                 color: black,
                 fontFamily: fontMedium,

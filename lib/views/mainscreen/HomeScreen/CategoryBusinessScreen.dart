@@ -14,6 +14,7 @@ import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
@@ -134,30 +135,48 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
           }),
           getDynamicSizedBox(height: 1.h),
           Expanded(
-              child: Container(
-                  margin: EdgeInsets.only(left: 2.w, right: 2.w),
-                  child: Stack(children: [
-                    Obx(() {
+            child: SmartRefresher(
+              physics: const BouncingScrollPhysics(),
+              controller: controller.refreshController,
+              enablePullDown: true,
+              enablePullUp: false,
+              header: const WaterDropMaterialHeader(
+                  backgroundColor: primaryColor, color: white),
+              onRefresh: () async {
+                controller.currentPage = 1;
+                futureDelay(() {
+                  controller.getBusinessList(context, 1, false,
+                      keyword: controller.searchCtr.text.toString(),
+                      categoryId: widget.item.id.toString(),
+                      isFirstTime: true);
+                }, isOneSecond: false);
+                controller.refreshController.refreshCompleted();
+              },
+              child: CustomScrollView(
+                controller: controller.scrollController,
+                physics: const BouncingScrollPhysics(),
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Obx(() {
                       switch (controller.state.value) {
                         case ScreenState.apiLoading:
                         case ScreenState.noNetwork:
                         case ScreenState.noDataFound:
                         case ScreenState.apiError:
                           return SizedBox(
-                            height: Device.height / 1.5,
-                            child: apiOtherStates(controller.state.value,
-                                controller, controller.searchList, () {
-                              controller.currentPage = 1;
-                              setState(() {});
-                              futureDelay(() {
-                                controller.getBusinessList(context, 1, false,
-                                    keyword:
-                                        controller.searchCtr.text.toString(),
-                                    categoryId: widget.item.id.toString(),
-                                    isFirstTime: true);
-                              }, isOneSecond: false);
-                            }),
-                          );
+                              height: Device.height / 1.5,
+                              child: apiOtherStates(controller.state.value,
+                                  controller, controller.categoryList, () {
+                                controller.currentPage = 1;
+                                futureDelay(() {
+                                  controller.getBusinessList(context, 1, false,
+                                      keyword:
+                                          controller.searchCtr.text.toString(),
+                                      categoryId: widget.item.id.toString(),
+                                      isFirstTime: true);
+                                }, isOneSecond: false);
+                                controller.refreshController.refreshCompleted();
+                              }));
                         case ScreenState.apiSuccess:
                           return apiSuccess(controller.state.value);
                         default:
@@ -165,7 +184,44 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
                       }
                       return Container();
                     }),
-                  ]))),
+                  )
+                ],
+              ),
+            ),
+          ),
+          // Expanded(
+          //     child: Container(
+          //         margin: EdgeInsets.only(left: 2.w, right: 2.w),
+          //         child: Stack(children: [
+          //           Obx(() {
+          //             switch (controller.state.value) {
+          //               case ScreenState.apiLoading:
+          //               case ScreenState.noNetwork:
+          //               case ScreenState.noDataFound:
+          //               case ScreenState.apiError:
+          //                 return SizedBox(
+          //                   height: Device.height / 1.5,
+          //                   child: apiOtherStates(controller.state.value,
+          //                       controller, controller.searchList, () {
+          //                     controller.currentPage = 1;
+          //                     setState(() {});
+          //                     futureDelay(() {
+          //                       controller.getBusinessList(context, 1, false,
+          //                           keyword:
+          //                               controller.searchCtr.text.toString(),
+          //                           categoryId: widget.item.id.toString(),
+          //                           isFirstTime: true);
+          //                     }, isOneSecond: false);
+          //                   }),
+          //                 );
+          //               case ScreenState.apiSuccess:
+          //                 return apiSuccess(controller.state.value);
+          //               default:
+          //                 Container();
+          //             }
+          //             return Container();
+          //           }),
+          //         ]))),
         ]),
       ),
     );
