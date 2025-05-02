@@ -86,6 +86,7 @@ class EmailController extends GetxController {
         Get.to(() => OtpScreen(
               email: emailctr.text.toString(),
               otp: "1235",
+              isFromSingIn: false,
             ))?.then((value) {
           validateEmail(emailctr.text);
         });

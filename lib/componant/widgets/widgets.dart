@@ -772,10 +772,12 @@ getEmptyUi({isservice = false}) {
   );
 }
 
-void showUpdatePopup(BuildContext context, String appUrl, bool isForcefully) {
+void showUpdatePopup(BuildContext context, String appUrl, String description,
+    bool isForcefully) {
   Future.delayed(const Duration(seconds: 0), () {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -809,7 +811,7 @@ void showUpdatePopup(BuildContext context, String appUrl, bool isForcefully) {
                 Image.asset(Asset.applogo, height: 6.0.h),
                 SizedBox(height: 4.0.h), // Responsive spacing
                 Text(
-                  'Exciting Update Available!',
+                  'New Update is Here!',
                   style: TextStyle(
                     fontFamily: dM_sans_medium,
                     fontSize: 18.0.sp, // Responsive font size
@@ -820,7 +822,7 @@ void showUpdatePopup(BuildContext context, String appUrl, bool isForcefully) {
                 SizedBox(height: 1.5.h), // Responsive spacing
                 // Generic description
                 Text(
-                  'A new version is here!\nEnjoy fresh features and improvements.',
+                  description,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: dM_sans_medium,
@@ -851,10 +853,10 @@ void showUpdatePopup(BuildContext context, String appUrl, bool isForcefully) {
                     ),
                   ),
                   child: Text(
-                    'UPDATE APP',
+                    'Install & Explore',
                     style: TextStyle(
                       fontFamily: dM_sans_medium,
-                      fontSize: 14.0.sp, // Responsive font size
+                      fontSize: 16.0.sp, // Responsive font size
                       color: Colors.white,
                     ),
                   ),

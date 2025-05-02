@@ -30,7 +30,6 @@ import 'package:ibh/utils/log.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -122,12 +121,12 @@ class Updateprofilecontroller extends GetxController {
   RxBool isEmailVerifed = false.obs;
   RxBool isUserVerfied = false.obs;
 
-  getProfileData() async {
+  getProfileData(BuildContext context) async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
 
     if (retrievedObject == null) {
       // You could show an error, fallback, or early return
-      print("Retrieved user is null");
+      // print("Retrieved user is null");
       return;
     }
 
@@ -144,18 +143,23 @@ class Updateprofilecontroller extends GetxController {
     if (retrievedObject.city != null) {
       cityCtr.text = retrievedObject.city!.city ?? '';
       cityId.value = retrievedObject.city!.id?.toString() ?? '';
+      futureDelay(() {
+        getCityApi(context, stateId.value.toString(), false);
+      }, isOneSecond: false);
     }
 
-    selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
-    verificationCtr.text = retrievedObject.document?.documentType ?? '';
+    if (retrievedObject.document != null) {
+      selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
+      verificationCtr.text = retrievedObject.document?.documentType ?? '';
+    }
 
     isEmailVerifed.value = retrievedObject.isEmailVerified ?? false;
     isUserVerfied.value = retrievedObject.isVerified ?? false;
 
-    print('isUserVerified:${isUserVerfied.value}');
+    // print('isUserVerified:${isUserVerfied.value}');
 
     imageURl.value = retrievedObject.visitingCardUrl ?? '';
-    print('imageUrl is ::::$imageURl');
+    // print('imageUrl is ::::$imageURl');
 
     pincodeCtr.text = retrievedObject.pincode ?? '';
     addressCtr.text = retrievedObject.address ?? '';
@@ -535,7 +539,7 @@ class Updateprofilecontroller extends GetxController {
   // final ImagePicker _picker = ImagePicker();
   Rx<File?> imageFile = null.obs;
 
-  void updateProfile(context) async {
+  updateProfile(context) async {
     if (imageURl.value.isEmpty) {
       imageValidationPopupDialogs(context);
       return;
@@ -556,7 +560,6 @@ class Updateprofilecontroller extends GetxController {
       loadingIndicator.show(context, '');
 
       List<http.MultipartFile> files = [];
-
       // First file: visiting card
       if (imageFile.value != null) {
         files.add(http.MultipartFile(
@@ -594,22 +597,15 @@ class Updateprofilecontroller extends GetxController {
       loadingIndicator.hide(context);
 
       var result = String.fromCharCodes(responseData);
+
       var json = jsonDecode(result);
 
       if (response.statusCode == 200 && json['success'] == true) {
         LoginModel responseDetail = LoginModel.fromJson(json);
-        // responseDetail.data
-
-        UserPreferences().saveSignInInfo(responseDetail.data!.user);
-        // if (responseDetail.data?.user != null) {
-        //   responseDetail.data!.user!.document ??= Document();
-        //   responseDetail.data!.user!.document!.documentType =
-        //       verificationCtr.text;
-        //   responseDetail.data!.user!.document!.documentUrl =
-        //       selectedPDFName.value;
-
-        // }
-
+        if (responseDetail.data?.user != null) {
+          UserPreferences().saveSignInInfo(responseDetail.data!.user);
+          logcat("isUpdate", jsonEncode(responseDetail.data?.user));
+        }
         showDialogForScreen(context, "Update Profile Screen", json['message'],
             callback: () {
           Get.back(result: true);
@@ -723,10 +719,10 @@ class Updateprofilecontroller extends GetxController {
                   ? CachedNetworkImage(
                       fit: BoxFit.cover,
                       imageUrl: imageURl.value,
-                      placeholder: (context, url) => const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor),
-                          ),
+                      placeholder: (context, url) => ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(Asset.bussinessPlaceholder,
+                              fit: BoxFit.contain)),
                       imageBuilder: (context, imageProvider) => Image.network(
                             imageURl.value,
                             fit: BoxFit.cover,
@@ -965,15 +961,10 @@ class Updateprofilecontroller extends GetxController {
       context,
       onResponse: (data) {
         var responsDetails = StateModel.fromJson(data);
-        stateList.addAll(responsDetails.data);
         stateFilterList.clear();
+        stateList.clear();
+        stateList.addAll(responsDetails.data);
         stateFilterList.addAll(stateList);
-
-        // print(stateList);
-
-        for (var state in stateList) {
-          print('ID: ${state.id}, Name: ${state.name}');
-        }
       },
       apiEndPoint: ApiUrl.states,
       networkManager: networkManager,
@@ -1239,6 +1230,26 @@ class Updateprofilecontroller extends GetxController {
           errorText1: "Profile picture is required",
           iscomman: true,
           shouldEnableButton: false);
+    }
+  }
+
+  downloadDocument(BuildContext context, String url) async {
+    var loadingIndicator = LoadingProgressDialogs();
+    loadingIndicator.show(context, '');
+
+    String fileName = extractFileNameFromUrl(url);
+    final filePath = await downloadFile(url, fileName);
+
+    loadingIndicator.hide(context);
+
+    if (filePath != null) {
+      sharefPopupDialogs(
+        context,
+        isFromEditProfile: true,
+        function: () {
+          shareFile(filePath);
+        },
+      );
     }
   }
 

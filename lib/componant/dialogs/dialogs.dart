@@ -686,7 +686,7 @@ void showDropdownMessage(
                             Text(
                               title,
                               style: TextStyle(
-                                  fontFamily: fontMedium, fontSize: 20.sp),
+                                  fontFamily: fontMedium, fontSize: 19.sp),
                             ),
                             getDynamicSizedBox(width: 2.w),
                             if (isShowLoading!.isEmpty)

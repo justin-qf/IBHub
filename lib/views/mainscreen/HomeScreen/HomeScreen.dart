@@ -37,20 +37,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    controller.pageController =
-        PageController(initialPage: controller.currentPage);
-    controller.scrollController.addListener(scrollListener);
+    controller.state.value = ScreenState.apiLoading;
     futureDelay(() {
       controller.getCategoryList(context);
       controller.getBusinessList(context, 1, false, isFirstTime: true);
       controller.getUpdateApi(context, false);
-    }, isOneSecond: false);
+    }, isOneSecond: true);
+    controller.pageController =
+        PageController(initialPage: controller.currentPage);
+    controller.scrollController.addListener(scrollListener);
   }
 
   @override
   void dispose() {
     controller.currentPage = 1;
     controller.businessList.clear();
+    controller.categoryList.clear();
     super.dispose();
   }
 
@@ -179,9 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   // color: Colors.yellow,
                   height: 5.h,
                   width: 20.w,
-                  child: Image.asset(
-                    Asset.applogo,
-                  )),
+                  child: Image.asset(Asset.applogo)),
             ),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
@@ -198,22 +198,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 height:
                     Device.screenType == sizer.ScreenType.mobile ? 13.h : 13.h,
                 child: Obx(() {
-                  return controller.categoryList.isNotEmpty
-                      ? ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.only(
-                              left: 5.w, right: 1.w, top: 0.5.h),
-                          shrinkWrap: false,
-                          scrollDirection: Axis.horizontal,
-                          clipBehavior: Clip.antiAlias,
-                          itemBuilder: (context, index) {
-                            CategoryListData data =
-                                controller.categoryList[index];
-                            return controller.getCategoryListItem(
-                                context, data);
-                          },
-                          itemCount: controller.categoryList.length)
-                      : Container();
+                  return controller.isCategoryLoading.value
+                      ? SizedBox(
+                          height: 13.h,
+                          child: const Center(
+                              child: CircularProgressIndicator(
+                                  color: primaryColor)),
+                        )
+                      : controller.categoryList.isNotEmpty
+                          ? ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(
+                                  left: 5.w, right: 1.w, top: 0.5.h),
+                              shrinkWrap: false,
+                              scrollDirection: Axis.horizontal,
+                              clipBehavior: Clip.antiAlias,
+                              itemBuilder: (context, index) {
+                                CategoryListData data =
+                                    controller.categoryList[index];
+                                return controller.getCategoryListItem(
+                                    context, data);
+                              },
+                              itemCount: controller.categoryList.length)
+                          : Container();
                 })),
             if (controller.isUserVerified.value == true)
               getDynamicSizedBox(height: 3.h),

@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ibh/api_handle/CommonApiStructure.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/customDialog.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
@@ -18,20 +16,16 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/statusCheckModel.dart';
-import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/models/pdfModel.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:readmore/readmore.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
-import 'package:http/http.dart' as http;
 
 class ServiceDetailScreenController extends GetxController {
   Rx<ScreenState> state = ScreenState.apiLoading.obs;
@@ -162,6 +156,7 @@ class ServiceDetailScreenController extends GetxController {
           if (filePath != null) {
             sharefPopupDialogs(
               context,
+              isFromEditProfile: false,
               function: () {
                 sharePDF(filePath);
               },
@@ -169,7 +164,6 @@ class ServiceDetailScreenController extends GetxController {
           }
           update();
         } else {
-          logcat("SUccess-2", "NOT DONE");
           state.value = ScreenState.apiError;
           // ignore: use_build_context_synchronously
           showDialogForScreen(context, "Profile", data['message'],
@@ -189,61 +183,6 @@ class ServiceDetailScreenController extends GetxController {
       // ignore: use_build_context_synchronously
       loadingIndicator.hide(context);
       logcat("Error::", e.toString());
-    }
-  }
-
-  String extractPdfNameFromUrl(String url) {
-    // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
-    Uri uri = Uri.parse(url);
-    String path = uri.path;
-
-    // Split the path into segments
-    List<String> pathSegments = path.split('/');
-
-    // The PDF name should be the last segment (the filename)
-    String pdfFileName = pathSegments.last;
-
-    // Remove the file extension (.pdf)
-    String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
-
-    // Return the extracted PDF name
-    return pdfNameWithoutExtension;
-  }
-
-  Future<String?> downloadPDF(String url, String fileName) async {
-    try {
-      // Make HTTP request to download the PDF
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        // Get the temporary directory
-        final directory = await getTemporaryDirectory();
-        // Ensure the fileName has .pdf extension
-        final filePath =
-            '${directory.path}/${fileName.endsWith('.pdf') ? fileName : '$fileName.pdf'}';
-        // Write the PDF to a file
-        final file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-        return filePath;
-      } else {
-        print('Failed to download PDF: ${response.statusCode}');
-        return null;
-      }
-    } catch (e) {
-      print('Error downloading PDF: $e');
-      return null;
-    }
-  }
-
-  Future<void> sharePDF(String filePath) async {
-    try {
-      // ignore: deprecated_member_use
-      await Share.shareXFiles(
-        [XFile(filePath, mimeType: 'application/pdf')],
-        text: 'Check out my profile PDF!',
-        subject: 'Profile PDF',
-      );
-    } catch (e) {
-      print('Error sharing PDF: $e');
     }
   }
 

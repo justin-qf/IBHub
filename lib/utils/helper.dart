@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,9 +13,12 @@ import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/sigin_signup/signinScreen.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pinput/pinput.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 bool isDarkMode() {
   return false;
@@ -486,4 +491,110 @@ Future<String?> getFirebaseToken() async {
   var firebaseToken = openFirebaseTokenBox.get(AppConstants.storeFirebaseToken,
       defaultValue: '');
   return firebaseToken;
+}
+
+String extractPdfNameFromUrl(String url) {
+  // Assuming the URL structure is like: http://example.com/indian_business_hub/storage/visiting_card_pdfs/JohnDoe/visiting_card_1.pdf
+  Uri uri = Uri.parse(url);
+  String path = uri.path;
+
+  // Split the path into segments
+  List<String> pathSegments = path.split('/');
+
+  // The PDF name should be the last segment (the filename)
+  String pdfFileName = pathSegments.last;
+
+  // Remove the file extension (.pdf)
+  String pdfNameWithoutExtension = pdfFileName.replaceAll('.pdf', '');
+
+  // Return the extracted PDF name
+  return pdfNameWithoutExtension;
+}
+
+Future<String?> downloadPDF(String url, String fileName) async {
+  try {
+    // Make HTTP request to download the PDF
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Get the temporary directory
+      final directory = await getTemporaryDirectory();
+      // Ensure the fileName has .pdf extension
+      final filePath =
+          '${directory.path}/${fileName.endsWith('.pdf') ? fileName : '$fileName.pdf'}';
+      // Write the PDF to a file
+      final file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      return filePath;
+    } else {
+      print('Failed to download PDF: ${response.statusCode}');
+      return null;
+    }
+  } catch (e) {
+    print('Error downloading PDF: $e');
+    return null;
+  }
+}
+
+Future<String?> downloadFile(String url, String fileName) async {
+  try {
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final directory = await getTemporaryDirectory();
+
+      // Save with the original file name and extension
+      final filePath = '${directory.path}/$fileName';
+      final file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      return filePath;
+    } else {
+      print('Failed to download file: ${response.statusCode}');
+      return null;
+    }
+  } catch (e) {
+    print('Error downloading file: $e');
+    return null;
+  }
+}
+
+String extractFileNameFromUrl(String url) {
+  Uri uri = Uri.parse(url);
+  String path = uri.path;
+  return path.split('/').last; // e.g., visiting_card_1.pdf or image123.jpg
+}
+
+Future<void> shareFile(String filePath) async {
+  try {
+    String mimeType = '';
+
+    if (filePath.endsWith('.pdf')) {
+      mimeType = 'application/pdf';
+    } else if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+      mimeType = 'image/jpeg';
+    } else if (filePath.endsWith('.png')) {
+      mimeType = 'image/png';
+    } else {
+      mimeType = 'application/octet-stream'; // fallback
+    }
+
+    await Share.shareXFiles(
+      [XFile(filePath, mimeType: mimeType)],
+      text: '',
+      subject: 'Shared File',
+    );
+  } catch (e) {
+    print('Error sharing file: $e');
+  }
+}
+
+Future<void> sharePDF(String filePath) async {
+  try {
+    // ignore: deprecated_member_use
+    await Share.shareXFiles(
+      [XFile(filePath, mimeType: 'application/pdf')],
+      text: 'Check out my profile PDF!',
+      subject: 'Profile PDF',
+    );
+  } catch (e) {
+    print('Error sharing PDF: $e');
+  }
 }

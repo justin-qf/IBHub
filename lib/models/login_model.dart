@@ -144,7 +144,7 @@ class City {
 
   factory City.fromJson(Map<String, dynamic> json) => City(
         id: json["id"],
-        city: json["city"],
+        city: json["city"] ?? '',
         stateId: json["state_id"],
       );
 
@@ -168,7 +168,7 @@ class StateData {
 
   factory StateData.fromJson(Map<String, dynamic> json) => StateData(
         id: json["id"],
-        name: json["name"],
+        name: json["name"] ?? '',
         countryId: json["country_id"],
       );
 
@@ -186,8 +186,8 @@ class Document {
   Document({this.documentType, this.documentUrl});
 
   factory Document.fromJson(Map<String, dynamic> json) => Document(
-        documentType: json["document_type"],
-        documentUrl: json["document_url"],
+        documentType: json["document_type"] ?? '',
+        documentUrl: json["document_url"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -195,8 +195,6 @@ class Document {
         "document_url": documentUrl,
       };
 }
-
-
 
 // import 'dart:convert';
 

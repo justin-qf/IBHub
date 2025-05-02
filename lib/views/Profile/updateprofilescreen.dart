@@ -13,6 +13,7 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/updateProfileController.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:sizer/sizer.dart';
 
 class Updateprofilescreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
   void initState() {
     super.initState();
     ctr.getVerificationyApi(context); // this will call API on screen load
-    ctr.getProfileData();
+    ctr.getProfileData(context);
     ctr.getState(context);
   }
 
@@ -46,7 +47,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
   @override
   Widget build(BuildContext context) {
     Statusbar().trasparentStatusbar();
-
     return CustomParentScaffold(
       isExtendBodyScreen: true,
       onWillPop: () async {
@@ -154,11 +154,9 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         setState(() {});
                       },
                     ),
-                    // getDynamicSizedBox(height: 1.h),
                     getLable('Logo', isRequired: true),
                     getDynamicSizedBox(height: 2.h),
-
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Personal Details :-',
@@ -166,7 +164,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Divider(),
+                    const Divider(),
                     Obx(() {
                       return getTextField(
                           label: SignUpConstant.nameLabel,
@@ -182,7 +180,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                           hint: SignUpConstant.namehint,
                           isRequired: true);
                     }),
-
                     Obx(
                       () {
                         return getTextField(
@@ -205,7 +202,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       },
                     ),
                     getDynamicSizedBox(height: 2.h),
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Bussiness Details :-',
@@ -213,7 +210,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Divider(),
+                    const Divider(),
                     Obx(
                       () {
                         return getTextField(
@@ -251,27 +248,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                             isRequired: false);
                       },
                     ),
-
-                    // Obx(() {
-                    //   return getTextField(
-                    //     useOnChanged: false,
-                    //     label: SignUpConstant.logoLabel,
-                    //     ctr: ctr.visitingcardCtr,
-                    //     node: ctr.visitingcardNode,
-                    //     model: ctr.visitingCardModel.value,
-                    //     hint: SignUpConstant.pickHint,
-                    //     isenable: false,
-                    //     usegesture: true,
-                    //     isRequired: true,
-                    //     context: context,
-                    //     gestureFunction: () {
-                    //       ctr.unfocusAll();
-                    //       ctr.showOptionsCupertinoDialog(context: context);
-
-                    //       // ctr.showSubjectSelectionPopups(context);
-                    //     },
-                    //   );
-                    // }),
                     Obx(() {
                       return getTextField(
                         label: SignUpConstant.email,
@@ -292,7 +268,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         isRequired: ctr.isEmailVerifed.value ? false : true,
                       );
                     }),
-
                     Row(
                       children: [
                         Expanded(
@@ -347,20 +322,28 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                               context: context,
                               gestureFunction: () {
                                 ctr.searchCityctr.text = "";
-                                ctr.unfocusAll();
-                                showDropdownMessage(
-                                    context,
-                                    ctr.setcityListDialog(),
-                                    SignUpConstant.cityList,
-                                    isShowLoading: ctr.cityFilterList,
-                                    onClick: () {
-                                  ctr.applyFilter('', isState: false);
-                                }, refreshClick: () {
-                                  futureDelay(() {
-                                    ctr.getCityApi(context,
-                                        ctr.stateId.value.toString(), false);
-                                  }, isOneSecond: false);
-                                });
+                                if (ctr.stateCtr.text.toString().isEmpty) {
+                                  showDialogForScreen(
+                                      context,
+                                      SearchScreenConstant.stateLabel,
+                                      SearchScreenConstant.pleaseSelectState,
+                                      callback: () {});
+                                } else {
+                                  showDropdownMessage(
+                                      context,
+                                      ctr.setcityListDialog(),
+                                      SignUpConstant.cityList,
+                                      isShowLoading: ctr.cityFilterList,
+                                      onClick: () {
+                                    ctr.applyFilter('', isState: false);
+                                  }, refreshClick: () {
+                                    futureDelay(() {
+                                      ctr.getCityApi(context,
+                                          ctr.stateId.value.toString(), false);
+                                    }, isOneSecond: false);
+                                  });
+                                  ctr.unfocusAll();
+                                }
                               },
                             );
                           }),
@@ -407,7 +390,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       },
                     ),
                     getDynamicSizedBox(height: 2.h),
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Verification Details :-',
@@ -415,7 +398,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 1.h),
-                    Divider(),
+                    const Divider(),
                     getDynamicSizedBox(height: 1.h),
                     Obx(() {
                       return getTextField(
@@ -426,29 +409,33 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         model: ctr.verificationModel.value,
                         hint: 'Select Document Type',
                         wantsuffix: true,
-                        isenable: ctr.isUserVerfied.value ? false : true,
+                        isenable: false,
                         isVerified: ctr.isUserVerfied.value ? true : false,
                         isdropdown: true,
                         usegesture: true,
                         isRequired: ctr.isUserVerfied.value ? false : true,
                         context: context,
                         gestureFunction: () {
-                          ctr.unfocusAll();
-                          showDropdownMessage(
-                              context,
-                              ctr.setVerificationListDialog(),
-                              'Verification Type',
-                              isShowLoading: ctr.verificationList, onClick: () {
-                            ctr.applyFilter('', isState: false);
-                          }, refreshClick: () {
-                            futureDelay(() {
-                              ctr.getVerificationyApi(context);
-                            }, isOneSecond: false);
-                          });
+                          logcat("isUserVerfied::",
+                              ctr.isUserVerfied.value.toString());
+                          if (ctr.isUserVerfied.value == false) {
+                            ctr.unfocusAll();
+                            showDropdownMessage(
+                                context,
+                                ctr.setVerificationListDialog(),
+                                'Verification Type',
+                                isShowLoading: ctr.verificationList,
+                                onClick: () {
+                              ctr.applyFilter('', isState: false);
+                            }, refreshClick: () {
+                              futureDelay(() {
+                                ctr.getVerificationyApi(context);
+                              }, isOneSecond: false);
+                            });
+                          }
                         },
                       );
                     }),
-
                     Obx(
                       () => Align(
                         alignment: Alignment.centerLeft,
@@ -458,7 +445,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       ),
                     ),
                     getDynamicSizedBox(height: 0.5.h),
-
                     Obx(() {
                       return ctr.isUserVerfied.value == true
                           ? Container(
@@ -546,9 +532,39 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                   })),
                             );
                     }),
-
+                    Obx(() {
+                      return ctr.isUserVerfied.value == true
+                          ? Align(
+                              alignment: Alignment.topLeft,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        ctr.downloadDocument(
+                                            context, ctr.selectedPDFName.value);
+                                      },
+                                      child: const Text("Download Your Doc",
+                                          style: TextStyle(
+                                              color: primaryColor,
+                                              fontFamily: dM_sans_regular)),
+                                    ),
+                                    getDynamicSizedBox(width: 3.w),
+                                    Icon(
+                                      Icons.download_rounded,
+                                      size: 2.h,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Container();
+                    }),
                     getDynamicSizedBox(height: 3.h),
-
                     Obx(() {
                       return ctr.isloading == false
                           ? Container(
@@ -556,7 +572,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                               child: getFormButton(context, () async {
                                 if (ctr.isFormInvalidate.value == true) {
                                   ctr.updateProfile(context);
-                                  // ctr.validateLogin(context);
                                 }
                               }, ProfileScreenConst.save,
                                   validate: ctr.isFormInvalidate.value),

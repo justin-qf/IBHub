@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
@@ -60,12 +59,15 @@ class CategoryController extends GetxController {
           message.value = '';
           var categoryData = CategoryListModel.fromJson(responseData);
           if (isFirstTime == true && categoryList.isNotEmpty) {
+            currentPage = 1;
             categoryList.clear();
           }
           if (categoryData.data.data.isNotEmpty) {
             categoryList.addAll(categoryData.data.data);
             categoryList.refresh();
             update();
+          } else {
+            categoryList.clear();
           }
           // categoryData.data.nextPageUrl != 'null' ||
           if (categoryData.data.nextPageUrl != null) {
