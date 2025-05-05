@@ -222,20 +222,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemCount: controller.categoryList.length)
                           : Container();
                 })),
-            if (controller.isUserVerified.value == true)
-              getDynamicSizedBox(height: 3.h),
-            controller.isUserVerified.value
+            if (controller.isUserVerified.value == false)
+              getDynamicSizedBox(height: 1.h),
+            !controller.isUserVerified.value
                 ? Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: Text(
-                      'To Get your business listed and verified. Upload your docs now!',
+                      '* To Get your business listed and verified. Upload your docs now!',
                       style: TextStyle(
                         fontFamily: dM_sans_semiBold,
                       ),
                     ),
                   )
                 : SizedBox.shrink(),
-            getDynamicSizedBox(height: 2.h),
+            getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
@@ -243,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
               () {
                 return controller.isBusinessLoading.value
                     ? SizedBox(
-                        height: 20.h,
+                        height: 40.h,
                         child: const Center(
                             child:
                                 CircularProgressIndicator(color: primaryColor)),
@@ -253,48 +253,58 @@ class _HomeScreenState extends State<HomeScreen> {
                             // controller: controller.scrollController,
                             physics: const NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.only(bottom: 5.h),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(
-                                  left: 1.w, right: 1.w, top: 2.h),
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              clipBehavior: Clip.antiAlias,
-                              itemCount: controller.businessList.length +
-                                  (controller.nextPageURL.value.isNotEmpty
-                                      ? 1
-                                      : 0),
-                              itemBuilder: (context, index) {
-                                if (index < controller.businessList.length) {
-                                  BusinessData data =
-                                      controller.businessList[index];
-                                  return controller.getBusinessListItem(
-                                      context, data);
-                                } else if (controller.isFetchingMore) {
-                                  return Center(
-                                      child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 2.h),
-                                          child:
-                                              const CircularProgressIndicator(
-                                                  color: primaryColor)));
-                                } else {
-                                  return controller.isFetchingMore
-                                      ? Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 2.h),
-                                          child: const Center(
-                                            child: SizedBox(
-                                              height: 30,
-                                              width: 30,
-                                              child: CircularProgressIndicator(
-                                                  color: primaryColor),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 4.w),
+                              child: GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        mainAxisSpacing: 0.h,
+                                        childAspectRatio: 1.29,
+                                        crossAxisSpacing: 0.w),
+                                padding: EdgeInsets.only(
+                                    left: 0.5.w, right: 0.5.w, top: 1.h),
+                                physics: const NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                clipBehavior: Clip.antiAlias,
+                                itemCount: controller.businessList.length +
+                                    (controller.nextPageURL.value.isNotEmpty
+                                        ? 1
+                                        : 0),
+                                itemBuilder: (context, index) {
+                                  if (index < controller.businessList.length) {
+                                    BusinessData data =
+                                        controller.businessList[index];
+                                    return controller.getBusinessListItem(
+                                        context, data);
+                                  } else if (controller.isFetchingMore) {
+                                    return Center(
+                                        child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 2.h),
+                                            child:
+                                                const CircularProgressIndicator(
+                                                    color: primaryColor)));
+                                  } else {
+                                    return controller.isFetchingMore
+                                        ? Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 2.h),
+                                            child: const Center(
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color: primaryColor),
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      : Container();
-                                }
-                              },
+                                          )
+                                        : Container();
+                                  }
+                                },
+                              ),
                             ),
                           )
 

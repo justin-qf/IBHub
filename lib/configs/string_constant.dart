@@ -336,7 +336,7 @@ class ServicesScreenConstant {
   static const delete = 'Delete';
   static const update = 'Update';
 
-  static const service = 'Service';
+  static const service = 'Service / Product';
   static const servicetitle = 'Enter Title';
 
   static const String description = 'Description';

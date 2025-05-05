@@ -1228,7 +1228,7 @@ class FavouriteController extends GetxController {
             ),
             getDynamicSizedBox(width: 2.w),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: 11.h,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1237,8 +1237,8 @@ class FavouriteController extends GetxController {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        Container(
-                          color: Colors.yellow,
+                        SizedBox(
+                          // color: Colors.yellow,
                           // height: 4.h,
                           width: Device.screenType == sizer.ScreenType.mobile
                               ? 58.w
@@ -1258,7 +1258,7 @@ class FavouriteController extends GetxController {
                         ),
                         Positioned(
                             top: -1.h,
-                            right: 3.w,
+                            right: -3.w,
                             child: GestureDetector(
                                 onTap: () {
                                   item.isFavorite == true

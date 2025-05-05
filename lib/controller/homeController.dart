@@ -84,6 +84,8 @@ class HomeScreenController extends GetxController {
     if (retrievedObject != null) {
       isUserVerified.value = retrievedObject.isVerified ?? false;
     }
+
+    print('user verified status + ${isUserVerified.value}');
   }
 
   void hideKeyboard(context) {
@@ -500,6 +502,8 @@ class HomeScreenController extends GetxController {
         // ));
       },
       child: Container(
+        height: 14.h,
+        width: 3.w,
         decoration: BoxDecoration(
           color: white,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -509,12 +513,13 @@ class HomeScreenController extends GetxController {
                 color: black.withOpacity(0.2),
                 spreadRadius: 0.1,
                 blurRadius: 5,
-                offset: const Offset(0.5, 0.5)),
+                offset: const Offset(0, 3)),
           ],
         ),
-        margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
-        padding: EdgeInsets.only(left: 2.w, top: 1.h, bottom: 1.h, right: 2.w),
-        child: Row(
+        margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 1.h),
+        padding:
+            EdgeInsets.only(left: 1.2.w, top: 0.6.h, bottom: 1.h, right: 1.2.w),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
@@ -522,16 +527,16 @@ class HomeScreenController extends GetxController {
               children: [
                 Container(
                   // padding: const EdgeInsets.all(2),
-                  margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-                  width: 25.w,
-                  height: 11.h,
+                  margin: EdgeInsets.only(top: 0.h, bottom: 0.5.h),
+                  width: Device.width,
+                  height: 10.h,
                   decoration: BoxDecoration(
                     border: Border.all(
                         color: primaryColor,
                         width: 1), // border color and width
                     borderRadius: BorderRadius.circular(
                         Device.screenType == sizer.ScreenType.mobile
-                            ? 3.5.w
+                            ? 2.5.w
                             : 2.5.w),
                   ),
                   child: ClipRRect(
@@ -540,8 +545,8 @@ class HomeScreenController extends GetxController {
                             ? 3.5.w
                             : 2.5.w),
                     child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      height: 18.h,
+                      fit: BoxFit.contain,
+                      height: 15.h,
                       imageUrl: item.visitingCardUrl,
                       placeholder: (context, url) => Center(
                         child: Image.asset(Asset.itemPlaceholder,
@@ -555,7 +560,7 @@ class HomeScreenController extends GetxController {
                   ),
                 ),
                 Positioned(
-                    top: 0.2.h,
+                    top: 0.0001.h,
                     right: -2,
                     child: Container(
                       decoration: BoxDecoration(
@@ -573,12 +578,12 @@ class HomeScreenController extends GetxController {
                 // : SizedBox.shrink()
               ],
             ),
-            getDynamicSizedBox(width: 2.w),
+            getDynamicSizedBox(height: 1.w),
             Expanded(
-              child: Container(
-                height: 11.h,
+              child: SizedBox(
+                // height: 12.h,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
@@ -587,55 +592,55 @@ class HomeScreenController extends GetxController {
                           ? 58.w
                           : 65.w,
                       child: Text(
-                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
 
                           item.businessName,
                           maxLines: 2,
                           style: TextStyle(
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 15.sp,
-                              height: 1.1,
+                              fontFamily: dM_sans_medium,
+                              fontSize: 14.sp,
+                              height: 1,
                               overflow: TextOverflow.ellipsis,
                               color: black,
                               fontWeight: FontWeight.w900)),
                     ),
-                    getDynamicSizedBox(height: 1.h),
-                    SizedBox(
-                      // height: 2.h,
-                      width: Device.screenType == sizer.ScreenType.mobile
-                          ? 58.w
-                          : 70.w,
-                      child: Text(item.name,
-                          maxLines: 1,
-                          style: TextStyle(
-                              height: 1.1,
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 14.sp,
-                              color: black,
-                              fontWeight: FontWeight.w500)),
-                    ),
-                    getDynamicSizedBox(height: 1.h),
-                    SizedBox(
-                      // height: 4.h,
-                      width: Device.screenType == sizer.ScreenType.mobile
-                          ? 58.w
-                          : 65.w,
-                      child: Text(
-                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+                    // getDynamicSizedBox(height: 1.h),
+                    // SizedBox(
+                    //   // height: 2.h,
+                    //   width: Device.screenType == sizer.ScreenType.mobile
+                    //       ? 58.w
+                    //       : 70.w,
+                    //   child: Text(item.name,
+                    //       maxLines: 1,
+                    //       style: TextStyle(
+                    //           height: 1.1,
+                    //           fontFamily: dM_sans_semiBold,
+                    //           fontSize: 14.sp,
+                    //           color: black,
+                    //           fontWeight: FontWeight.w500)),
+                    // ),
+                    // getDynamicSizedBox(height: 1.h),
+                    // SizedBox(
+                    //   // height: 4.h,
+                    //   width: Device.screenType == sizer.ScreenType.mobile
+                    //       ? 58.w
+                    //       : 65.w,
+                    //   child: Text(
+                    //       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
 
-                          item.address.isNotEmpty
-                              ? item.address
-                              : item.city != null
-                                  ? item.city!.city
-                                  : item.phone,
-                          maxLines: 2,
-                          style: TextStyle(
-                              height: 1.1,
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 14.sp,
-                              color: black,
-                              fontWeight: FontWeight.w500)),
-                    ),
+                    //       item.address.isNotEmpty
+                    //           ? item.address
+                    //           : item.city != null
+                    //               ? item.city!.city
+                    //               : item.phone,
+                    //       maxLines: 2,
+                    //       style: TextStyle(
+                    //           height: 1.1,
+                    //           fontFamily: dM_sans_semiBold,
+                    //           fontSize: 14.sp,
+                    //           color: black,
+                    //           fontWeight: FontWeight.w500)),
+                    // ),
                   ],
                 ),
               ),
@@ -643,6 +648,154 @@ class HomeScreenController extends GetxController {
           ],
         ),
       ),
+
+      // Container(
+      //   // height: 25.h,
+      //   width: 3.w,
+      //   decoration: BoxDecoration(
+      //     color: white,
+      //     borderRadius: const BorderRadius.all(Radius.circular(10)),
+      //     boxShadow: [
+      //       BoxShadow(
+      //           // ignore: deprecated_member_use
+      //           color: black.withOpacity(0.2),
+      //           spreadRadius: 0.1,
+      //           blurRadius: 5,
+      //           offset: const Offset(0.5, 0.5)),
+      //     ],
+      //   ),
+      //   margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 1.h),
+      //   padding:
+      //       EdgeInsets.only(left: 1.2.w, top: 0.6.h, bottom: 1.h, right: 1.2.w),
+      //   child: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: [
+      //       Stack(
+      //         clipBehavior: Clip.none,
+      //         children: [
+      //           Container(
+      //             // padding: const EdgeInsets.all(2),
+      //             margin: EdgeInsets.only(top: 0.h, bottom: 0.5.h),
+      //             width: Device.width,
+      //             height: 9.h,
+      //             decoration: BoxDecoration(
+      //               border: Border.all(
+      //                   color: primaryColor,
+      //                   width: 1), // border color and width
+      //               borderRadius: BorderRadius.circular(
+      //                   Device.screenType == sizer.ScreenType.mobile
+      //                       ? 2.5.w
+      //                       : 2.5.w),
+      //             ),
+      //             child: ClipRRect(
+      //               borderRadius: BorderRadius.circular(
+      //                   Device.screenType == sizer.ScreenType.mobile
+      //                       ? 3.5.w
+      //                       : 2.5.w),
+      //               child: CachedNetworkImage(
+      //                 fit: BoxFit.contain,
+      //                 height: 15.h,
+      //                 imageUrl: item.visitingCardUrl,
+      //                 placeholder: (context, url) => Center(
+      //                   child: Image.asset(Asset.itemPlaceholder,
+      //                       height: 10.h, fit: BoxFit.cover),
+      //                 ),
+      //                 errorWidget: (context, url, error) => Image.asset(
+      //                     Asset.itemPlaceholder,
+      //                     height: 10.h,
+      //                     fit: BoxFit.cover),
+      //               ),
+      //             ),
+      //           ),
+      //           Positioned(
+      //               top: 0.0001.h,
+      //               right: -2,
+      //               child: Container(
+      //                 decoration: BoxDecoration(
+      //                   shape: BoxShape.circle,
+      //                   color: white,
+      //                 ),
+      //                 child: SvgPicture.asset(
+      //                   Asset.badge,
+      //                   color: blue,
+      //                 ),
+      //               )),
+      //           // item.isEmailVerified
+      //           //     ?
+
+      //           // : SizedBox.shrink()
+      //         ],
+      //       ),
+      //       getDynamicSizedBox(width: 2.w),
+      //       Expanded(
+      //         child: Container(
+      //           height: 15.h,
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.start,
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               SizedBox(
+      //                 // height: 4.h,
+      //                 width: Device.screenType == sizer.ScreenType.mobile
+      //                     ? 58.w
+      //                     : 65.w,
+      //                 child: Text(
+      //                     // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+      //                     item.businessName,
+      //                     maxLines: 2,
+      //                     style: TextStyle(
+      //                         fontFamily: dM_sans_medium,
+      //                         fontSize: 15.sp,
+      //                         height: 1.1,
+      //                         overflow: TextOverflow.ellipsis,
+      //                         color: black,
+      //                         fontWeight: FontWeight.w900)),
+      //               ),
+      //               // getDynamicSizedBox(height: 1.h),
+      //               // SizedBox(
+      //               //   // height: 2.h,
+      //               //   width: Device.screenType == sizer.ScreenType.mobile
+      //               //       ? 58.w
+      //               //       : 70.w,
+      //               //   child: Text(item.name,
+      //               //       maxLines: 1,
+      //               //       style: TextStyle(
+      //               //           height: 1.1,
+      //               //           fontFamily: dM_sans_semiBold,
+      //               //           fontSize: 14.sp,
+      //               //           color: black,
+      //               //           fontWeight: FontWeight.w500)),
+      //               // ),
+      //               // getDynamicSizedBox(height: 1.h),
+      //               // SizedBox(
+      //               //   // height: 4.h,
+      //               //   width: Device.screenType == sizer.ScreenType.mobile
+      //               //       ? 58.w
+      //               //       : 65.w,
+      //               //   child: Text(
+      //               //       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+      //               //       item.address.isNotEmpty
+      //               //           ? item.address
+      //               //           : item.city != null
+      //               //               ? item.city!.city
+      //               //               : item.phone,
+      //               //       maxLines: 2,
+      //               //       style: TextStyle(
+      //               //           height: 1.1,
+      //               //           fontFamily: dM_sans_semiBold,
+      //               //           fontSize: 14.sp,
+      //               //           color: black,
+      //               //           fontWeight: FontWeight.w500)),
+      //               // ),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 

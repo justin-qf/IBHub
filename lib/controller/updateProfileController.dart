@@ -540,10 +540,10 @@ class Updateprofilecontroller extends GetxController {
   Rx<File?> imageFile = null.obs;
 
   updateProfile(context) async {
-    if (imageURl.value.isEmpty) {
-      imageValidationPopupDialogs(context);
-      return;
-    }
+    // if (imageURl.value.isEmpty) {
+    //   imageValidationPopupDialogs(context);
+    //   return;
+    // }
 
     var loadingIndicator = LoadingProgressDialog();
 

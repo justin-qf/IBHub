@@ -182,7 +182,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
               () => Stack(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(top: 4.h),
+                    padding:
+                        EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
                     width: Device.width,
                     height: isSmallDevice(context) ? 31.h : 30.h,
                     decoration: BoxDecoration(
@@ -192,52 +193,52 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         bottomRight: Radius.circular(25),
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 4.w, top: 2.h),
-                          child: getleftsidebackbtn(
-                            isbussinessScreen: true,
-                            istitle: false,
-                            backFunction: () {
-                              Get.back(result: true);
-                            },
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                              left: 2.w, right: 2.w, bottom: 4.h),
-                          child: controller.isLoadingPalette.value
-                              ? SizedBox(
-                                  height: 14.h,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(
-                                        color: primaryColor),
-                                  ),
-                                )
-                              : CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  height: 14.h,
-                                  imageUrl: widget.item != null
-                                      ? widget.item!.visitingCardUrl
-                                      : thumbnail,
-                                  placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(
-                                        color: primaryColor),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Image.asset(
-                                    Asset.placeholder,
-                                    height: 9.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                        ),
-                      ],
+                    child: Container(
+                      width: 15.w,
+                      height: 15.h,
+                      padding:
+                          EdgeInsets.only(left: 2.w, right: 2.w, bottom: 4.h),
+                      child: controller.isLoadingPalette.value
+                          ? SizedBox(
+                              height: 14.h,
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                    color: primaryColor),
+                              ),
+                            )
+                          : CachedNetworkImage(
+                              fit: BoxFit.contain,
+                              height: 14.h,
+                              imageUrl: widget.item != null
+                                  ? widget.item!.visitingCardUrl
+                                  : thumbnail,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(
+                                    color: primaryColor),
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                Asset.placeholder,
+                                height: 9.h,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                   ),
                   Positioned(
-                    top: 11.h,
+                    top: 3.h,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 4.w, top: 2.h),
+                      child: getleftsidebackbtn(
+                        isbussinessScreen: true,
+                        istitle: false,
+                        backFunction: () {
+                          Get.back(result: true);
+                        },
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: widget.isFromProfile! ? 6.h : 11.h,
                     right: 5.w,
                     child: Column(
                       children: [
@@ -303,7 +304,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   ),
                   widget.isFromProfile == false
                       ? Positioned(
-                          top: 6.5.h,
+                          top: 5.5.h,
                           right: 6.w,
                           child: Obx(() {
                             return GestureDetector(

@@ -154,7 +154,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                         setState(() {});
                       },
                     ),
-                    getLable('Logo', isRequired: true),
+                    getLable('Logo', isRequired: false),
                     getDynamicSizedBox(height: 2.h),
                     const Align(
                       alignment: Alignment.centerLeft,

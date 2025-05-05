@@ -155,7 +155,7 @@ class _ServicescreenState extends State<AddServicescreen> {
                                     ServicesScreenConstant.enterDescription);
                           },
                           hint: ServicesScreenConstant.enterDescription,
-                          isRequired: true);
+                          isRequired: false);
                     }),
                     Obx(() {
                       return getTextField(

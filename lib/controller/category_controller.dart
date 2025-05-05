@@ -224,10 +224,9 @@ class CategoryController extends GetxController {
         child: Column(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10))),
+              decoration: BoxDecoration(
+                  border: Border.all(color: black),
+                  borderRadius: BorderRadius.circular(10)),
               height: 10.h,
               width: Device.width,
               child: ClipRRect(
