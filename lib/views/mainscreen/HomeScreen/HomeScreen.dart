@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
             getDynamicSizedBox(height: 2.h),
             SizedBox(
                 height:
-                    Device.screenType == sizer.ScreenType.mobile ? 13.h : 13.h,
+                    Device.screenType == sizer.ScreenType.mobile ? 17.h : 20.h,
                 child: Obx(() {
                   return controller.isCategoryLoading.value
                       ? SizedBox(

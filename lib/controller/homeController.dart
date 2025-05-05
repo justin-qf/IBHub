@@ -99,7 +99,9 @@ class HomeScreenController extends GetxController {
           Get.to(CategoryBusinessScreen(item))!.then((value) {});
         },
         child: Container(
-            width: 8.h,
+            // color: Colors.yellow,
+            width: 24.w,
+            height: 40.h,
             margin: EdgeInsets.only(
                 right:
                     Device.screenType == sizer.ScreenType.mobile ? 3.w : 2.w),
@@ -118,8 +120,8 @@ class HomeScreenController extends GetxController {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
-                        height: 7.7.h,
-                        width: 7.h,
+                        height: 11.h,
+                        width: 18.w,
                         imageUrl: item.thumbnail,
                         placeholder: (context, url) => Container(
                           padding: const EdgeInsets.all(4),
