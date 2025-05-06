@@ -147,6 +147,9 @@ class Updateprofilecontroller extends GetxController {
   RxBool isUserVerfied = false.obs;
 
   RxString profileDocId = "".obs;
+
+  RxBool isVerificationDataEmpty = false.obs;
+
   getProfileData(BuildContext context) async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
 
@@ -155,7 +158,7 @@ class Updateprofilecontroller extends GetxController {
       // print("Retrieved user is null");
       return;
     }
-    profileDocId.value = retrievedObject.document!.documentId.toString();
+
     nameCtr.text = retrievedObject.name ?? '';
     emailCtr.text = retrievedObject.email ?? '';
     phoneCtr.text = retrievedObject.phone ?? '';
@@ -177,19 +180,38 @@ class Updateprofilecontroller extends GetxController {
     if (retrievedObject.document != null) {
       selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
       verificationCtr.text = retrievedObject.document?.documentType ?? '';
+      profileDocId.value =
+          retrievedObject.document!.documentId.toString() ?? '';
     }
 
+    if (selectedPDFName.value.isEmpty &&
+        verificationCtr.text.isEmpty &&
+        profileDocId.value.isEmpty) {
+      isVerificationDataEmpty.value = true;
+    } else {
+      isVerificationDataEmpty.value = false;
+    }
+
+    print('isVerificationDataEmpty2233 :${isVerificationDataEmpty.value}');
     if (retrievedObject.category != null) {
       categoryId.value = retrievedObject.category?.id.toString() ?? '';
       categoryIDCtr.text = retrievedObject.category?.name.toString() ?? '';
     }
     // if(retrievedObject.category)
 
-    facebookCtr.text = retrievedObject.facebook?.toString() ?? '';
-    linkedinCtr.text = retrievedObject.linkedin?.toString() ?? '';
-    print(linkedinCtr.text);
-    whatsAppCr.text = retrievedObject.whatsappNo?.toString() ?? '';
-    print(websiteCtr.text);
+    if (retrievedObject.facebook != null) {
+      facebookCtr.text = retrievedObject.facebook?.toString() ?? '';
+    }
+
+    if (retrievedObject.linkedin != null) {
+      linkedinCtr.text = retrievedObject.linkedin?.toString() ?? '';
+      print(linkedinCtr.text);
+    }
+
+    if (retrievedObject.whatsappNo != null) {
+      whatsAppCr.text = retrievedObject.whatsappNo?.toString() ?? '';
+      print(websiteCtr.text);
+    }
 
     isEmailVerifed.value = retrievedObject.isEmailVerified ?? false;
     isUserVerfied.value = retrievedObject.isVerified ?? false;
