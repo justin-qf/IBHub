@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:http/http.dart' as http;
 
 commonPostApiCallFormate(context,
     {String? title,
@@ -60,8 +62,14 @@ commonPostApiCallFormate(context,
     }
   } catch (e) {
     logcat("Exception", e);
-    showDialogForScreen(context, title!, Connection.servererror,
-        callback: () {});
+    if (e is TimeoutException) {
+      showDialogForScreen(
+          context, title!, "Request timed out. Please try again.",
+          callback: () {});
+    } else {
+      showDialogForScreen(context, title!, Connection.servererror,
+          callback: () {});
+    }
     if (apisLoading != null) {
       apisLoading(false);
     } else {
@@ -104,6 +112,10 @@ void commonGetApiCallFormate(context,
               callback: () {})
           : Container();
     }
+  } on http.ClientException catch (e) {
+    logcat("ClientException", e.toString());
+    // showDialogForScreen(context, title!, "Connection error. Please try again.",
+    //     callback: () {});
   } catch (e) {
     apisLoading(false);
     logcat('Exception', e);

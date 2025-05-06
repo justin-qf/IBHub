@@ -194,18 +194,10 @@ class _SigninscreenState extends State<Signinscreen> {
                 );
               }),
               getDynamicSizedBox(height: isSmallDevice(context) ? 3.h : 6.h),
-
-              // getDynamicSizedBox(height: 2.h),
               GestureDetector(
                 onTap: () async {
-                  //  Get.to(ChangePasswordScreen(
-                  //       email: '',
-                  //       fromProfile: false,
-                  //     ));
                   final result = await Get.to(() => const Signupscreen());
-
                   if (result == true) {
-                    // ctr.init();
                     ctr.resetForm();
                     ctr.unfocusAll();
                   }
@@ -228,12 +220,11 @@ class _SigninscreenState extends State<Signinscreen> {
                                   fontWeight: FontWeight.bold,
                                   fontFamily: dM_sans_medium)),
                           Positioned(
-                            bottom: 1,
-                            child: Container(
-                                width: 35.w,
-                                height: 0.2.h,
-                                color: primaryColor),
-                          ),
+                              bottom: 1,
+                              child: Container(
+                                  width: 35.w,
+                                  height: 0.2.h,
+                                  color: primaryColor)),
                         ],
                       ),
                     ],

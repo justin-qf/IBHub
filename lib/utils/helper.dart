@@ -117,13 +117,29 @@ String getCurrentTime() {
   return DateFormat('HH:mm:ss').format(now);
 }
 
-futureDelay(Function onPerform, {bool? fromSplash, bool? isOneSecond}) async {
+// futureDelay(Function onPerform, {bool? fromSplash, bool? isOneSecond}) async {
+//   return Future.delayed(
+//     fromSplash == true
+//         ? const Duration(seconds: 3)
+//         : isOneSecond == true
+//             ? const Duration(seconds: 1)
+//             : Duration.zero,
+//     () => onPerform(),
+//   );
+// }
+
+futureDelay(Function onPerform,
+    {bool? fromSplash = false,
+    bool? isOneSecond = false,
+    bool? milliseconds = false}) async {
   return Future.delayed(
     fromSplash == true
         ? const Duration(seconds: 3)
         : isOneSecond == true
             ? const Duration(seconds: 1)
-            : Duration.zero,
+            : milliseconds == true
+                ? const Duration(milliseconds: 200)
+                : Duration.zero,
     () => onPerform(),
   );
 }

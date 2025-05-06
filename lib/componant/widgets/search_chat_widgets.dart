@@ -8,6 +8,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/categoryBusinessController.dart';
+import 'package:ibh/controller/category_controller.dart';
 import 'package:ibh/controller/searchController.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
@@ -120,7 +121,8 @@ setSearchBars(context, controller, String tag,
     Function? onFilterClick,
     bool? isCancle,
     String? categoryId = '',
-    bool? isFilterApplied}) {
+    bool? isFilterApplied,
+    bool? isFromCategoryList = false}) {
   return Row(
     children: [
       Expanded(
@@ -145,7 +147,9 @@ setSearchBars(context, controller, String tag,
                     ? 3.8.w
                     : 4.0.w,
                 vertical: Device.screenType == sizer.ScreenType.mobile
-                    ? 0.8.h
+                    ? isFromCategoryList == true
+                        ? 0.0.h
+                        : 0.8.h
                     : 1.5.h),
             child: Row(children: [
               Expanded(
@@ -166,7 +170,7 @@ setSearchBars(context, controller, String tag,
                                     keyword: controller.text.toString(),
                                     categoryId: categoryId,
                                     isFirstTime: true);
-                          }, isOneSecond: false);
+                          }, milliseconds: true);
                           // futureDelay(() {
                           //   controller.getBusinessList(context, 1, false,
                           //       isFirstTime: true,
@@ -174,13 +178,21 @@ setSearchBars(context, controller, String tag,
                           // }, isOneSecond: true);
                           Get.find<CategoryBusinessController>()
                               .hideKeyboard(context);
+                        } else if (tag == CategoryScreenViewConst.title) {
+                          futureDelay(() {
+                            Get.find<CategoryController>().getCategoryList(
+                                context, 1, false,
+                                search: controller.text.toString(),
+                                isFirstTime: true);
+                          }, milliseconds: true);
+                          hideKeyboard(context);
                         } else {
                           futureDelay(() {
                             Get.find<SearchScreenController>().getBusinessList(
                                 context, 1, false,
                                 keyword: controller.text.toString(),
                                 isFirstTime: true);
-                          }, isOneSecond: false);
+                          }, milliseconds: true);
                           Get.find<SearchScreenController>()
                               .hideKeyboard(context);
                         }
@@ -203,7 +215,6 @@ setSearchBars(context, controller, String tag,
                             // ),
                           ),
                         ),
-
                         //  Icon(
                         //   Icons.searc,
                         //   color: isDarkMode() ? black : black,
@@ -243,29 +254,31 @@ setSearchBars(context, controller, String tag,
                   },
                 ),
               ),
-              Container(
-                  height: 3.5.h,
-                  width: 1,
-                  color: primaryColor,
-                  margin: EdgeInsets.symmetric(horizontal: 2.w)),
-              Container(
-                margin: EdgeInsets.only(right: 3.w),
-                child: GestureDetector(
-                    onTap: () {
-                      if (onFilterClick != null) {
-                        onFilterClick();
-                      }
-                    },
-                    child: Icon(Icons.filter_list,
-                        color: isFilterApplied == true
-                            ? secondaryColor
-                            : isDarkMode()
-                                ? black
-                                : black,
-                        size: Device.screenType == sizer.ScreenType.mobile
-                            ? 24
-                            : 25)),
-              ),
+              if (isFromCategoryList == false)
+                Container(
+                    height: 3.5.h,
+                    width: 1,
+                    color: primaryColor,
+                    margin: EdgeInsets.symmetric(horizontal: 2.w)),
+              if (isFromCategoryList == false)
+                Container(
+                  margin: EdgeInsets.only(right: 3.w),
+                  child: GestureDetector(
+                      onTap: () {
+                        if (onFilterClick != null) {
+                          onFilterClick();
+                        }
+                      },
+                      child: Icon(Icons.filter_list,
+                          color: isFilterApplied == true
+                              ? secondaryColor
+                              : isDarkMode()
+                                  ? black
+                                  : black,
+                          size: Device.screenType == sizer.ScreenType.mobile
+                              ? 24
+                              : 25)),
+                ),
             ])),
       ),
       if (isCancle == true)

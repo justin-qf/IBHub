@@ -30,11 +30,12 @@ class CategoryController extends GetxController {
   bool isFetchingMore = false;
   final RefreshController refreshController =
       RefreshController(initialRefresh: false);
-
+  late TextEditingController searchCtr = TextEditingController();
   RxList categoryList = [].obs;
+  bool isSearch = false;
 
   getCategoryList(context, currentPage, bool hideloading,
-      {bool? isFirstTime = false}) async {
+      {bool? isFirstTime = false, String? search = ""}) async {
     if (hideloading == false) {
       state.value = ScreenState.apiLoading;
     }
@@ -49,7 +50,8 @@ class CategoryController extends GetxController {
       }
 
       var pageURL = '${ApiUrl.getCategorieList}?page=$currentPage';
-      var response = await Repository.get({}, pageURL, allowHeader: true);
+      var response =
+          await Repository.post({'search': search}, pageURL, allowHeader: true);
 
       logcat("RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);

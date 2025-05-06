@@ -94,10 +94,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     User? retrievedObject = await UserPreferences().getSignInInfo();
     if (retrievedObject == null) {
       // You could show an error, fallback, or early return
-      print("Retrieved user is null");
+      logcat("Retrieved user is null", "Done");
       return;
     }
-    businessName = retrievedObject!.businessName ?? '';
+    businessName = retrievedObject.businessName ?? '';
     thumbnail = retrievedObject.visitingCardUrl ?? '';
     email = retrievedObject.email ?? '';
     address = retrievedObject.address ?? '';
@@ -118,7 +118,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
             : widget.item!.id ?? 0)
         : retrievedObject.id ?? 0;
 
-    print('id used in ctr:${idUsedinCtr.toString()}');
+    logcat("id used in ctr:", idUsedinCtr.toString());
     controller.bussinessID(idUsedinCtr);
     controller.getImageColor(
         url: widget.item != null ? widget.item!.visitingCardUrl : thumbnail);

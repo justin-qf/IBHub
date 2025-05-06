@@ -229,10 +229,10 @@ class HomeScreenController extends GetxController {
     try {
       if (networkManager.connectionType.value == 0) {
         isCategoryLoading(false);
-        showDialogForScreen(context, 'Home Screen', Connection.noConnection,
-            callback: () {
-          Get.back();
-        });
+        // showDialogForScreen(context, 'Home Screen', Connection.noConnection,
+        //     callback: () {
+        //   Get.back();
+        // });
         return;
       }
       var response =
