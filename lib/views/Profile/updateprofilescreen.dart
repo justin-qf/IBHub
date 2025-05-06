@@ -169,14 +169,14 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                           child: Theme(
                             data: ThemeData(
                                 canvasColor: transparent,
-                                colorScheme: ColorScheme.light(
+                                colorScheme: const ColorScheme.light(
                                     primary: primaryColor, secondary: grey)),
                             child: Obx(() {
                               return Stepper(
                                 margin: EdgeInsets.zero,
                                 // connectorColor: WidgetStateProperty.all(Colors.black),
                                 elevation: 0,
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 type: StepperType.horizontal,
                                 currentStep: ctr.StepperValue,
                                 onStepContinue: () {
@@ -192,7 +192,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                     ctr.decerementstepper();
                                   }
                                 },
-                                stepIconHeight: 40,
+                                // stepIconHeight: 40,
                                 controlsBuilder: (context, details) {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -263,7 +263,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                                                 context,
                                                                 isempty: false);
                                                           }
-
                                                           // details.onStepContinue
                                                           //     ?.call();
                                                         }
