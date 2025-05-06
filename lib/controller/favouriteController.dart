@@ -1126,7 +1126,296 @@ class FavouriteController extends GetxController {
   //   );
   // }
 
-  getFavouriteListItem(BuildContext context, BusinessData item) {
+  getBusinessListItem(BuildContext context, BusinessData item) {
+    print('item;${item.isEmailVerified}');
+    return GestureDetector(
+      onTap: () async {
+        bool isEmpty = await isAnyFieldEmpty();
+        if (isEmpty) {
+          // ignore: use_build_context_synchronously
+          showBottomSheetPopup(context);
+        } else {
+          // Get.to(BusinessDetailScreen(
+          //   item: item,
+          //   isFromProfile: false,
+          // ));
+          Get.to(BusinessDetailScreen(
+            item: item,
+            isFromProfile: false,
+            isFromFav: true,
+          ))!
+              .then((value) {
+            currentPage = 1;
+            futureDelay(() {
+              getFavouriteList(context, currentPage, true, isFirstTime: true);
+            }, isOneSecond: false);
+          });
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: white,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+                // ignore: deprecated_member_use
+                color: black.withOpacity(0.2),
+                spreadRadius: 0.1,
+                blurRadius: 5,
+                offset: const Offset(0.5, 0.5)),
+          ],
+        ),
+        margin: EdgeInsets.only(left: 3.w, right: 3.w, bottom: 2.h),
+        padding: EdgeInsets.only(left: 2.w, top: 1.h, bottom: 1.h, right: 2.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  // padding: const EdgeInsets.all(2),
+                  margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                  width: 25.w,
+                  height: 11.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: primaryColor,
+                        width: 1), // border color and width
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 3.5.w
+                            : 2.5.w),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        Device.screenType == sizer.ScreenType.mobile
+                            ? 3.5.w
+                            : 2.5.w),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      height: 18.h,
+                      imageUrl: item.visitingCardUrl,
+                      placeholder: (context, url) => Center(
+                        child: Image.asset(Asset.itemPlaceholder,
+                            height: 10.h, fit: BoxFit.cover),
+                      ),
+                      errorWidget: (context, url, error) => Image.asset(
+                          Asset.itemPlaceholder,
+                          height: 10.h,
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
+                Positioned(
+                    top: 0.2.h,
+                    right: -2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: white,
+                      ),
+                      child: SvgPicture.asset(
+                        Asset.badge,
+                        color: blue,
+                      ),
+                    )),
+                // item.isEmailVerified
+                //     ?
+
+                // : SizedBox.shrink()
+              ],
+            ),
+            getDynamicSizedBox(width: 2.w),
+            Expanded(
+              child: SizedBox(
+                height: 11.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        SizedBox(
+                          // color: Colors.yellow,
+                          // height: 4.h,
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 58.w
+                              : 65.w,
+                          child: Text(
+                              // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+                              item.businessName,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 15.sp,
+                                  height: 1.1,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: black,
+                                  fontWeight: FontWeight.w900)),
+                        ),
+                        Positioned(
+                            top: -1.h,
+                            right: -3.w,
+                            child: GestureDetector(
+                                onTap: () {
+                                  item.isFavorite == true
+                                      ? removeFavouriteAPI(
+                                          context,
+                                          networkManager,
+                                          item.businessId.toString(),
+                                          "Favourite", onClick: () {
+                                          futureDelay(() {
+                                            currentPage = 1;
+                                            getFavouriteList(context, 1, false,
+                                                isFirstTime: true);
+                                          }, isOneSecond: false);
+                                        })
+                                      : addFavouriteAPI(
+                                          context,
+                                          networkManager,
+                                          item.businessId.toString(),
+                                          "Favourite", onClick: () {
+                                          futureDelay(() {
+                                            currentPage = 1;
+                                            getFavouriteList(context, 1, false,
+                                                isFirstTime: true);
+                                          }, isOneSecond: false);
+                                        });
+                                  // controller.getIsProductAddToFav(
+                                  //     controller.isFavourite.value);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: item.isFavorite == true
+                                      ? SvgPicture.asset(
+                                          Asset.heart2,
+                                          height: 2.5.h,
+                                        )
+                                      : SvgPicture.asset(Asset.heart),
+                                ))),
+                      ],
+                    )
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text(item.businessName,
+                    //         style: TextStyle(
+                    //             fontFamily: dM_sans_semiBold,
+                    //             fontSize: 15.sp,
+                    //             color: black,
+                    //             fontWeight: FontWeight.w900)),
+                    //     const Spacer(),
+                    // GestureDetector(
+                    //     onTap: () {
+                    //       item.isFavorite == true
+                    //           ? removeFavouriteAPI(
+                    //               context,
+                    //               networkManager,
+                    //               item.businessId.toString(),
+                    //               "Favourite", onClick: () {
+                    //               futureDelay(() {
+                    //                 currentPage = 1;
+                    //                 getFavouriteList(context, 1, false,
+                    //                     isFirstTime: true);
+                    //               }, isOneSecond: false);
+                    //             })
+                    //           : addFavouriteAPI(
+                    //               context,
+                    //               networkManager,
+                    //               item.businessId.toString(),
+                    //               "Favourite", onClick: () {
+                    //               futureDelay(() {
+                    //                 currentPage = 1;
+                    //                 getFavouriteList(context, 1, false,
+                    //                     isFirstTime: true);
+                    //               }, isOneSecond: false);
+                    //             });
+                    //       // controller.getIsProductAddToFav(
+                    //       //     controller.isFavourite.value);
+                    //     },
+                    //     child: Container(
+                    //       padding: const EdgeInsets.all(10),
+                    //       child: item.isFavorite == true
+                    //           ? SvgPicture.asset(
+                    //               Asset.heart2,
+                    //               height: 2.5.h,
+                    //             )
+                    //           : SvgPicture.asset(Asset.heart),
+                    //     ))
+                    //   ],
+                    // ),
+                    // SizedBox(
+                    //   // height: 4.h,
+                    //   width: Device.screenType == sizer.ScreenType.mobile
+                    //       ? 58.w
+                    //       : 65.w,
+                    //   child: Text(
+                    //       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+                    //       item.businessName,
+                    //       maxLines: 2,
+                    //       style: TextStyle(
+                    //           fontFamily: dM_sans_semiBold,
+                    //           fontSize: 15.sp,
+                    //           height: 1.1,
+                    //           overflow: TextOverflow.ellipsis,
+                    //           color: black,
+                    //           fontWeight: FontWeight.w900)),
+                    // ),
+                    ,
+                    getDynamicSizedBox(height: 1.h),
+                    SizedBox(
+                      // height: 2.h,
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 58.w
+                          : 70.w,
+                      child: Text(item.name,
+                          maxLines: 1,
+                          style: TextStyle(
+                              height: 1.1,
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
+                    getDynamicSizedBox(height: 1.h),
+                    SizedBox(
+                      // height: 4.h,
+                      width: Device.screenType == sizer.ScreenType.mobile
+                          ? 58.w
+                          : 65.w,
+                      child: Text(
+                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+
+                          item.address.isNotEmpty
+                              ? item.address
+                              : item.city != null
+                                  ? item.city!.city
+                                  : item.phone,
+                          maxLines: 2,
+                          style: TextStyle(
+                              height: 1.1,
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 14.sp,
+                              color: black,
+                              fontWeight: FontWeight.w500)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+//not used
+  oldgetBusinessListItem(BuildContext context, BusinessData item) {
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();
@@ -1259,20 +1548,6 @@ class FavouriteController extends GetxController {
                                     )
                                   : SvgPicture.asset(Asset.heart),
                             ))
-                        // getText(
-                        //   item.businessReviewsAvgRating != null
-                        //       ? (item.businessReviewsAvgRating ?? 0.0)
-                        //           .toStringAsFixed(1)
-                        //       : '0.0',
-                        //   TextStyle(
-                        //       fontFamily: fontSemiBold,
-                        //       color: lableColor,
-                        //       fontSize:
-                        //           Device.screenType == sizer.ScreenType.mobile
-                        //               ? 14.sp
-                        //               : 7.sp,
-                        //       height: 1.2),
-                        // ),
                       ],
                     ),
                     getDynamicSizedBox(height: 1.h),

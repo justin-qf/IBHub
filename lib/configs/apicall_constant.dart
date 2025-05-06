@@ -1,11 +1,14 @@
 class ApiUrl {
   // LOCAL
-  // static const baseUrl = "http://192.168.1.2/";
+  // static const baseUrl = "http://192.168.1.21/";
   // static const buildApiUrl = '${baseUrl}swooosh_admin/api/';
   // static const imageUrl = '${baseUrl}swooosh_admin/public/storage/';
 
   //LIVE
   static const liveUrl = "https://indianbusinesshub.in/";
+
+  //  "https://indianbusinesshub.in/";
+
   static const buildApiUrl = '${liveUrl}api/';
   static const imageUrl = '${liveUrl}public/storage';
 
@@ -45,4 +48,12 @@ class ApiUrl {
   static const emailVerificationVerifyOtp = 'email-verification-verify-otp';
   static const changeStatus = 'services/change-status';
   static const verification = 'document-upload/type/list';
+
+  //modified
+  static const updateLOgo = 'profile/update-logo';
+  static const updateBussiness = 'profile/update-business';
+  static const documentcreate = 'document-upload/create';
+  static const documentupdate = 'document-upload/edit/';
+
+  
 }

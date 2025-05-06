@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:ibh/models/categorylistdatamodel.dart';
+
 LoginModel loginModelFromJson(String str) =>
     LoginModel.fromJson(json.decode(str));
 
@@ -62,6 +64,10 @@ class User {
   String? token;
   double? businessReviewsAvgRating;
   Document? document;
+  String? facebook;
+  String? linkedin;
+  String? whatsappNo;
+  CatggoryData? category;
 
   User({
     this.id,
@@ -82,6 +88,10 @@ class User {
     this.token,
     this.businessReviewsAvgRating,
     this.document,
+    this.facebook,
+    this.linkedin,
+    this.whatsappNo,
+    this.category,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -107,6 +117,12 @@ class User {
         document: json["document"] != null
             ? Document.fromJson(json["document"])
             : null,
+        facebook: json["facebook"],
+        linkedin: json["linkedin"],
+        whatsappNo: json["whatsapp_no"],
+        category: json["category"] != null
+            ? CatggoryData.fromJson(json["category"])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -128,6 +144,10 @@ class User {
         "token": token,
         "business_reviews_avg_rating": businessReviewsAvgRating,
         "document": document?.toJson(),
+        "facebook": facebook,
+        "linkedin": linkedin,
+        "whatsapp_no": whatsappNo,
+        "category": category,
       };
 }
 
@@ -182,10 +202,12 @@ class StateData {
 class Document {
   String? documentType;
   String? documentUrl;
+  int? documentId;
 
-  Document({this.documentType, this.documentUrl});
+  Document({this.documentType, this.documentUrl, this.documentId});
 
   factory Document.fromJson(Map<String, dynamic> json) => Document(
+        documentId: json["id"] ?? '',
         documentType: json["document_type"] ?? '',
         documentUrl: json["document_url"] ?? '',
       );
@@ -193,6 +215,7 @@ class Document {
   Map<String, dynamic> toJson() => {
         "document_type": documentType,
         "document_url": documentUrl,
+        "id": documentId
       };
 }
 

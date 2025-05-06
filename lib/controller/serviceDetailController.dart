@@ -75,15 +75,6 @@ class ServiceDetailScreenController extends GetxController {
 
   Rx<Color> bgColor = Rx<Color>(Colors.white); // Background color
 
-// Function to calculate the contrast color (black or white)
-  // Color getContrastColor(Color color) {
-  //   double brightness =
-  //       (color.red * 299 + color.green * 587 + color.blue * 114) / 1000;
-  //   return brightness > 128 ? Colors.black : Colors.white;
-  // }
-
-// Function to get the dominant color from an image and set the contrast color
-
   RxBool isLoadingPalette = false.obs; // Add loading state
 
   Future<void> getImageColor({required String url}) async {
@@ -95,11 +86,60 @@ class ServiceDetailScreenController extends GetxController {
       );
 
       // Set the background color
-      bgColor.value = paletteGenerator.dominantColor?.color ?? Colors.white;
+      Color dominantColor =
+          paletteGenerator.dominantColor?.color ?? Colors.white;
+
+      Color contrastColor = _getComplementaryColor(dominantColor);
+
+      bgColor.value = contrastColor;
     } finally {
       isLoadingPalette.value = false; // Stop loading
     }
   }
+
+  Color _getComplementaryColor(Color color) {
+    // Convert RGB to HSL
+    HSLColor hslColor = HSLColor.fromColor(color);
+
+    // Shift hue by 180 degrees to get the complementary color
+    double complementaryHue = (hslColor.hue + 180) % 360;
+
+    // Create the complementary color with the same saturation and lightness initially
+    HSLColor complementaryColor = hslColor.withHue(complementaryHue);
+
+    // If the complementary color is too dark (lightness < 0.3), adjust it
+    if (complementaryColor.lightness < 0.3) {
+      complementaryColor =
+          complementaryColor.withLightness(0.5); // Set to a medium lightness
+    }
+
+    // Ensure the color is vibrant by boosting saturation if needed
+    complementaryColor = complementaryColor.withSaturation(
+      complementaryColor.saturation.clamp(0.7, 1.0), // Ensure vibrant color
+    );
+
+    return complementaryColor.toColor();
+  }
+  // Color _getComplementaryColor(Color color) {
+  //   // Convert RGB to HSL
+  //   HSLColor hslColor = HSLColor.fromColor(color);
+
+  //   // Shift hue by 180 degrees to get the complementary color
+  //   double complementaryHue = (hslColor.hue + 180) % 360;
+
+  //   // Keep saturation and lightness the same for vibrant contrast
+  //   return hslColor.withHue(complementaryHue).toColor();
+  // }
+  // Helper function to calculate a contrasting color
+  // Color _getContrastColor(Color color) {
+  //   // Calculate luminance (perceived brightness)
+  //   double luminance =
+  //       (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue) / 255;
+
+  //   // If the color is dark (low luminance), return a light color (e.g., white)
+  //   // If the color is light (high luminance), return a dark color (e.g., black)
+  //   return luminance > 0.5 ? Colors.black : Colors.white;
+  // }
 
   Widget getText(title, TextStyle? style) {
     return Padding(
@@ -188,7 +228,7 @@ class ServiceDetailScreenController extends GetxController {
 
   Widget getLableText(text, {isMainTitle}) {
     return Text(text,
-        //textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         style: TextStyle(
           color: black,
           fontFamily: isMainTitle == true ? dM_sans_bold : dM_sans_regular,
@@ -244,7 +284,7 @@ class ServiceDetailScreenController extends GetxController {
     return Expanded(
       child: Text(
         title,
-        textAlign: TextAlign.justify,
+        textAlign: TextAlign.left,
         style: TextStyle(
           fontFamily: dM_sans_regular,
           color: primaryColor,
@@ -372,9 +412,15 @@ class ServiceDetailScreenController extends GetxController {
         onSuccess: () {});
   }
 
-  void changeStatusAPI(context, InternetController networkManager,
-      String status, String serviceId, String screenName,
-      {Function? onSuccess, Function? onFailure}) async {
+  void changeStatusAPI(
+    context,
+    InternetController networkManager,
+    String status,
+    String serviceId,
+    String screenName, {
+    Function? onSuccess,
+    Function? onFailure,
+  }) async {
     var loadingIndicator = LoadingProgressDialogs();
     loadingIndicator.show(context, 'Changing status...');
     try {
@@ -387,46 +433,43 @@ class ServiceDetailScreenController extends GetxController {
         });
         return;
       }
-      print('status id' + status);
+
+      print('status id: $status');
+
       // Make the PUT request
       var response = await Repository.put(
         {
-          "status": status.toString().trim(),
+          "status": status.trim(),
         },
         '${ApiUrl.changeStatus}/$serviceId',
         allowHeader: true,
       );
 
-      // Decode the response
       loadingIndicator.hide(context);
       final decodedJson = jsonDecode(response.body);
       StatusCheck data = StatusCheck.fromJson(decodedJson);
       logcat("Change Status Response", data.toString());
 
-      // Handle the response based on status code
       if (response.statusCode == 200) {
         if (data.success == true) {
-          final isActive = data.data.isActive == '1';
+          final isActive = data.data?.isActive == '1';
 
           futureDelay(() {
             getServiceList(context, 1, true, bussinessID, isFirstTime: true);
           }, isOneSecond: false);
-          // Adjust this based on your API logic
 
           showCustomToast(
               context, isActive ? 'Service is Active' : 'Service is InActive');
         } else {
-          // If the API returned an error message, show it in a toast
-
-          showCustomToast(context, data.message);
+          showCustomToast(context, data.message ?? 'Something went wrong.');
         }
       } else {
-        // If the status code is not 200, show an error message in a dialog
-        showDialogForScreen(context, screenName, data.message, callback: () {});
+        showDialogForScreen(
+            context, screenName, data.message ?? 'Unknown error occurred.',
+            callback: () {});
       }
     } catch (e) {
-      logcat("Exception", e);
-      // Show a server error dialog in case of an exception
+      logcat("Exception", e.toString());
       showDialogForScreen(context, screenName, ServerError.servererror,
           callback: () {});
     } finally {
@@ -754,6 +797,7 @@ class ServiceDetailScreenController extends GetxController {
       isfromService: true,
       contain: Expanded(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (data.thumbnail.isNotEmpty)
               getImageView(

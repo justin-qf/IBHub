@@ -123,9 +123,12 @@ class AddServicescreencontroller extends GetxController {
   void enableSubmitButton() {
     if (serviceTitleModel.value.isValidate == false) {
       isFormInvalidate.value = false;
-    } else if (descriptionModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (keywords.isEmpty) {
+    }
+    //  else if (descriptionModel.value.isValidate == false) {
+    //   isFormInvalidate.value = false;
+    // }
+
+    else if (keywords.isEmpty) {
       isFormInvalidate.value = false;
     } else if (categoryModel.value.isValidate == false) {
       isFormInvalidate.value = false;
