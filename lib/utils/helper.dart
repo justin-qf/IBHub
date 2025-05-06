@@ -420,6 +420,144 @@ Future<bool> shareBusinessDetailsOnWhatsApp({
   }
 }
 
+Future<bool> openBusinessLinkedIn({
+  required BuildContext context,
+  required String linkedInProfileUrl,
+}) async {
+  // Validate LinkedIn URL
+  if (!linkedInProfileUrl.startsWith('https://www.linkedin.com/')) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid URL'),
+          content: const Text('Please provide a valid LinkedIn profile URL.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+
+  // Launch the LinkedIn profile
+  try {
+    final Uri uri = Uri.parse(linkedInProfileUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      return true;
+    } else {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Could not open LinkedIn profile.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      return false;
+    }
+  } catch (e) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content:
+              const Text('An error occurred while opening LinkedIn profile.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+}
+
+Future<bool> openBusinessFacebook({
+  required BuildContext context,
+  required String facebookProfileUrl,
+}) async {
+  // Validate Facebook URL
+  if (!facebookProfileUrl.startsWith('https://www.facebook.com/')) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid URL'),
+          content: const Text('Please provide a valid Facebook profile URL.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+
+  // Launch the Facebook profile
+  try {
+    final Uri uri = Uri.parse(facebookProfileUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      return true;
+    } else {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Could not open Facebook profile.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      return false;
+    }
+  } catch (e) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content:
+              const Text('An error occurred while opening Facebook profile.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+}
+
 String getStartDateOfCurrentMonth() {
   DateTime now = DateTime.now();
 

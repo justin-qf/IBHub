@@ -21,10 +21,10 @@ class Asset {
   static const history = '$assets${svgFolder}history_new.svg';
   static const home = '$assets${svgFolder}home.svg';
   static const whatsapp2 = '$assets${svgFolder}whatsapp.svg';
+  static const facebook = '$assets${svgFolder}facebook.svg';
+  static const linkedin = '$assets${svgFolder}linkedin.svg';
   static const search2 = '$assets${svgFolder}search2.svg';
   static const badge = '$assets${svgFolder}badge.svg';
-
-  
 
   static const intro = '$assets${svgFolder}intro.svg';
   static const logout = '$assets${svgFolder}logout.svg';
@@ -118,8 +118,7 @@ class Asset {
 
   //PNGS//
 
-  static const itemPlaceholder =
-      '$assets${pngFolder}bussinessPlaceholder.png';
+  static const itemPlaceholder = '$assets${pngFolder}bussinessPlaceholder.png';
   static const bussinessPlaceholder = '$assets${pngFolder}placeholder.png';
   static const appBarBg = '$assets${pngFolder}home_appbar_bg.png';
   static const loginBg = '$assets${pngFolder}bg_one.png';

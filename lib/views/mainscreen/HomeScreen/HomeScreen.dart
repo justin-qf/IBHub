@@ -17,6 +17,7 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
+import 'package:marquee/marquee.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -225,18 +226,40 @@ class _HomeScreenState extends State<HomeScreen> {
             if (controller.isUserVerified.value == false)
               getDynamicSizedBox(height: 1.h),
             !controller.isUserVerified.value
-                ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: Text(
-                      '*To Get your business listed and verified. Upload your docs now!',
+                ? SizedBox(
+                    height: 30, // Adjust height as needed
+                    child: Marquee(
+                      text:
+                          'To Get your business listed and verified. Upload your docs now!',
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontFamily: dM_sans_semiBold,
+                        color: secondaryColor,
                       ),
+                      scrollAxis: Axis.horizontal,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      blankSpace: 20.0,
+                      velocity: 50.0,
+                      pauseAfterRound: Duration.zero,
+                      startPadding: 10.0,
+                      accelerationDuration: Duration(milliseconds: 10),
+                      accelerationCurve: Curves.linear,
+                      decelerationDuration: Duration(milliseconds: 10),
+                      decelerationCurve: Curves.easeOut,
                     ),
                   )
+
+                // Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 5.w),
+                //     child: Text(
+                //       '*To Get your business listed and verified. Upload your docs now!',
+                //       style: TextStyle(
+                //         fontSize: 15.sp,
+                //         fontFamily: dM_sans_semiBold,
+                //       ),
+                //     ),
+                //   )
                 : SizedBox.shrink(),
-            getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),

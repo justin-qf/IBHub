@@ -97,45 +97,50 @@ class BusinessData {
   bool isEmailVerified;
   double? businessReviewsAvgRating;
   bool isFavorite;
-  String 
+  String facebook;
+  String linkedin;
+  String whatsapp;
 
-  BusinessData({
-    required this.id,
-    required this.businessId,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.businessName,
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.pincode,
-    required this.visitingCardUrl,
-    required this.isEmailVerified,
-    required this.businessReviewsAvgRating,
-    required this.isFavorite,
-  });
+  BusinessData(
+      {required this.id,
+      required this.businessId,
+      required this.name,
+      required this.email,
+      required this.phone,
+      required this.businessName,
+      required this.address,
+      required this.city,
+      required this.state,
+      required this.pincode,
+      required this.visitingCardUrl,
+      required this.isEmailVerified,
+      required this.businessReviewsAvgRating,
+      required this.isFavorite,
+      required this.facebook,
+      required this.whatsapp,
+      required this.linkedin});
 
   factory BusinessData.fromJson(Map<String, dynamic> json) => BusinessData(
-        id: json["id"],
-        businessId: json["business_id"].toString() ?? '',
-        name: json["name"] ?? '',
-        email: json["email"] ?? '',
-        phone: json["phone"] ?? '',
-        businessName: json["business_name"] ?? '',
-        address: json["address"] ?? '',
-        city: json["city"] != null ? City.fromJson(json["city"]) : null,
-        state: json["state"] != null
-            ? StateDataList.fromJson(json["state"])
-            : null,
-        pincode: json["pincode"] ?? '',
-        visitingCardUrl: json["visiting_card_url"] ?? '',
-        isEmailVerified: json["is_email_verified"] ?? false,
-        businessReviewsAvgRating: json["business_reviews_avg_rating"] != null
-            ? json["business_reviews_avg_rating"]?.toDouble()
-            : 0.0,
-        isFavorite: json["is_favorite"],
-      );
+      id: json["id"],
+      businessId: json["business_id"].toString() ?? '',
+      name: json["name"] ?? '',
+      email: json["email"] ?? '',
+      phone: json["phone"] ?? '',
+      businessName: json["business_name"] ?? '',
+      address: json["address"] ?? '',
+      city: json["city"] != null ? City.fromJson(json["city"]) : null,
+      state:
+          json["state"] != null ? StateDataList.fromJson(json["state"]) : null,
+      pincode: json["pincode"] ?? '',
+      visitingCardUrl: json["visiting_card_url"] ?? '',
+      isEmailVerified: json["is_email_verified"] ?? false,
+      businessReviewsAvgRating: json["business_reviews_avg_rating"] != null
+          ? json["business_reviews_avg_rating"]?.toDouble()
+          : 0.0,
+      isFavorite: json["is_favorite"],
+      facebook: json["facebook"] ?? '',
+      linkedin: json["linkedin"] ?? '',
+      whatsapp: json["whatsapp_no"] ?? '');
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -151,7 +156,10 @@ class BusinessData {
         "visiting_card_url": visitingCardUrl,
         "business_reviews_avg_rating": businessReviewsAvgRating,
         "is_favorite": isFavorite,
-        "is_email_verified": isEmailVerified
+        "is_email_verified": isEmailVerified,
+        "facebook": facebook,
+        "linkedin": linkedin,
+        "whatsapp_no": whatsapp
       };
 }
 
