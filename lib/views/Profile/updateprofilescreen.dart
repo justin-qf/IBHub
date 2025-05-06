@@ -50,7 +50,8 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
     Statusbar().trasparentStatusbar();
     return CustomParentScaffold(
       isExtendBodyScreen: true,
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
+      isNormalScreen: true,
       onWillPop: () async {
         return true;
       },
@@ -244,17 +245,18 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                                         } else if (ctr
                                                                 .StepperValue ==
                                                             1) {
-                                                          if (ctr
-                                                                  .verificationCtr
-                                                                  .text
-                                                                  .isEmpty &&
-                                                              ctr
-                                                                  .selectedPDFName
-                                                                  .value
-                                                                  .isEmpty) {
+                                                          print(
+                                                              'verification ctr value is:${ctr.verificationCtr.text}');
+                                                          print(
+                                                              'selectd pdfn ame is:${ctr.selectedPDFName.value}');
+
+                                                          if (ctr.isVerificationDataEmpty
+                                                                  .value ==
+                                                              true) {
                                                             print(
                                                                 'verification api called:create');
                                                             ctr.updateDocumentation(
+                                                                isempty: true,
                                                                 context);
                                                           } else {
                                                             print(
