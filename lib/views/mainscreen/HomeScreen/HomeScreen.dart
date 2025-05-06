@@ -194,10 +194,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 }, isOneSecond: false);
               });
             }),
-            getDynamicSizedBox(height: 2.h),
+            getDynamicSizedBox(height: 1.h),
             SizedBox(
                 height:
-                    Device.screenType == sizer.ScreenType.mobile ? 17.h : 20.h,
+                    Device.screenType == sizer.ScreenType.mobile ? 15.h : 20.h,
                 child: Obx(() {
                   return controller.isCategoryLoading.value
                       ? SizedBox(
@@ -224,30 +224,68 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Container();
                 })),
             if (controller.isUserVerified.value == false)
-              getDynamicSizedBox(height: 1.h),
+              getDynamicSizedBox(height: 2.h),
             !controller.isUserVerified.value
-                ? SizedBox(
-                    height: 30, // Adjust height as needed
-                    child: Marquee(
-                      text:
-                          'To Get your business listed and verified. Upload your docs now!',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontFamily: dM_sans_semiBold,
-                        color: secondaryColor,
-                      ),
-                      scrollAxis: Axis.horizontal,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      blankSpace: 20.0,
-                      velocity: 50.0,
-                      pauseAfterRound: Duration.zero,
-                      startPadding: 10.0,
-                      accelerationDuration: Duration(milliseconds: 10),
-                      accelerationCurve: Curves.linear,
-                      decelerationDuration: Duration(milliseconds: 10),
-                      decelerationCurve: Curves.easeOut,
+                ? Container(
+                    width: Device.width,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 0.h, horizontal: 5.w),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: black, width: 1),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: Colors.black12,
+                      //     blurRadius: 6,
+                      //     offset: Offset(0, 3),
+                      //   ),
+                      // ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.upload_file,
+                            color: secondaryColor, size: 24.sp),
+                        SizedBox(width: 3.w),
+                        Expanded(
+                          child: Text(
+                            'To get your business listed and verified,\nupload your docs now!',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: dM_sans_semiBold,
+                              color: secondaryColor,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   )
+
+                //  Container(
+                //     width: Device.width,
+                //     padding:
+                //         EdgeInsets.symmetric(vertical: 1.h, horizontal: 1.w),
+                //     decoration: BoxDecoration(
+                //         border: Border(
+                //             top: BorderSide(color: black),
+                //             bottom: BorderSide(color: black))),
+                //     // height: 3.h, // Adjust height as needed
+                //     child: Center(
+                //       child: Text(
+                //         textAlign: TextAlign.center,
+                //         'To Get your business listed and verified.\nUpload your docs now!',
+                //         style: TextStyle(
+                //           fontSize: 15.sp,
+                //           fontFamily: dM_sans_semiBold,
+                //           color: secondaryColor,
+                //         ),
+                //       ),
+                //     ),
+                //   )
 
                 // Padding(
                 //     padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -260,10 +298,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     ),
                 //   )
                 : SizedBox.shrink(),
+            getDynamicSizedBox(height: 1.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
-            getDynamicSizedBox(height: 2.h),
+            getDynamicSizedBox(height: 1.h),
             Obx(
               () {
                 return controller.isBusinessLoading.value

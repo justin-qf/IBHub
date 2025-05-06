@@ -247,13 +247,13 @@ class AddServicescreencontroller extends GetxController {
       shouldEnableButton: false,
     );
 
-    validateFields(
-      descriptionCtr.text,
-      iscomman: true,
-      model: descriptionModel,
-      errorText1: ServicesScreenConstant.enterDescription,
-      shouldEnableButton: false,
-    );
+    // validateFields(
+    //   descriptionCtr.text,
+    //   iscomman: true,
+    //   model: descriptionModel,
+    //   errorText1: ServicesScreenConstant.enterDescription,
+    //   shouldEnableButton: false,
+    // );
 
     validateFields(
       categoryCtr.text,

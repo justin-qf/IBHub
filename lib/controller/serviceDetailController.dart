@@ -542,7 +542,7 @@ class ServiceDetailScreenController extends GetxController {
                         left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
                     margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           // padding: const EdgeInsets.all(2),
@@ -564,7 +564,7 @@ class ServiceDetailScreenController extends GetxController {
                                     ? 3.5.w
                                     : 2.5.w),
                             child: CachedNetworkImage(
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                               height: 17.h,
                               imageUrl: item.thumbnail,
                               placeholder: (context, url) =>
@@ -600,91 +600,94 @@ class ServiceDetailScreenController extends GetxController {
                         ),
                         getDynamicSizedBox(width: 2.w),
                         Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
+                          child: SizedBox(
+                            height: 11.h,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    width: 50.w,
+                                    // height: 2.h,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Text(item.serviceTitle,
+                                          style: TextStyle(
+                                              fontFamily: dM_sans_medium,
+                                              fontSize: 15.8.sp,
+                                              color: black,
+                                              fontWeight: FontWeight.w900)),
+                                    )
+                                    //  Marquee(
+                                    //   velocity: 5,
+                                    //   text: item.serviceTitle,
+                                    //   style: TextStyle(
+                                    //     fontFamily: dM_sans_medium,
+                                    //     fontSize: 15.8.sp,
+                                    //     color: black,
+                                    //     fontWeight: FontWeight.w900,
+                                    //   ),
+                                    // ),
+                                    ),
+                                // Container(
+                                //   width: 30.w,
+                                //   child: Text(item.serviceTitle,
+                                //       style: TextStyle(
+                                //           fontFamily: dM_sans_medium,
+                                //           fontSize: 15.8.sp,
+                                //           color: black,
+                                //           fontWeight: FontWeight.w900)),
+                                // ),
+                                getDynamicSizedBox(height: 1.h),
+                                SizedBox(
                                   width: 50.w,
-                                  height: 2.h,
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(item.serviceTitle,
-                                        style: TextStyle(
-                                            fontFamily: dM_sans_medium,
-                                            fontSize: 15.8.sp,
-                                            color: black,
-                                            fontWeight: FontWeight.w900)),
-                                  )
-                                  //  Marquee(
-                                  //   velocity: 5,
-                                  //   text: item.serviceTitle,
-                                  //   style: TextStyle(
-                                  //     fontFamily: dM_sans_medium,
-                                  //     fontSize: 15.8.sp,
-                                  //     color: black,
-                                  //     fontWeight: FontWeight.w900,
-                                  //   ),
-                                  // ),
-                                  ),
-                              // Container(
-                              //   width: 30.w,
-                              //   child: Text(item.serviceTitle,
-                              //       style: TextStyle(
-                              //           fontFamily: dM_sans_medium,
-                              //           fontSize: 15.8.sp,
-                              //           color: black,
-                              //           fontWeight: FontWeight.w900)),
-                              // ),
-                              getDynamicSizedBox(height: 1.h),
-                              SizedBox(
-                                width: 50.w,
-                                child: Text(item.categoryName,
-                                    style: TextStyle(
-                                        fontFamily: dM_sans_medium,
-                                        fontSize: 15.sp,
-                                        color: black,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                              getDynamicSizedBox(height: 1.h),
-                              SizedBox(
-                                width: 50.w,
-                                child: AbsorbPointer(
-                                    absorbing: true,
-                                    child: ReadMoreText(item.description,
-                                        textAlign: TextAlign.start,
-                                        trimLines: 2, callback: (val) {
-                                      logcat("ONTAP", val.toString());
-                                    },
-                                        colorClickableText: primaryColor,
-                                        trimMode: TrimMode.Line,
-                                        trimCollapsedText: '...Show more',
-                                        trimExpandedText: '',
-                                        delimiter: ' ',
-                                        style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: Device.screenType ==
-                                                    sizer.ScreenType.mobile
-                                                ? 15.sp
-                                                : 12.sp,
-                                            fontWeight: FontWeight.w100,
-                                            fontFamily: dM_sans_medium,
-                                            color: primaryColor),
-                                        lessStyle: TextStyle(
-                                            fontFamily: dM_sans_medium,
-                                            fontSize: Device.screenType ==
-                                                    sizer.ScreenType.mobile
-                                                ? 15.sp
-                                                : 12.sp),
-                                        moreStyle: TextStyle(
-                                            fontFamily: dM_sans_medium,
-                                            fontSize: Device.screenType ==
-                                                    sizer.ScreenType.mobile
-                                                ? 15.sp
-                                                : 12.sp,
-                                            color: primaryColor))),
-                              ),
-                            ],
+                                  child: Text(item.categoryName,
+                                      style: TextStyle(
+                                          fontFamily: dM_sans_medium,
+                                          fontSize: 15.sp,
+                                          color: black,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                                getDynamicSizedBox(height: 1.h),
+                                SizedBox(
+                                  width: 50.w,
+                                  child: AbsorbPointer(
+                                      absorbing: true,
+                                      child: ReadMoreText(item.description,
+                                          textAlign: TextAlign.start,
+                                          trimLines: 2, callback: (val) {
+                                        logcat("ONTAP", val.toString());
+                                      },
+                                          colorClickableText: primaryColor,
+                                          trimMode: TrimMode.Line,
+                                          trimCollapsedText: '...Show more',
+                                          trimExpandedText: '',
+                                          delimiter: ' ',
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontSize: Device.screenType ==
+                                                      sizer.ScreenType.mobile
+                                                  ? 15.sp
+                                                  : 12.sp,
+                                              fontWeight: FontWeight.w100,
+                                              fontFamily: dM_sans_medium,
+                                              color: primaryColor),
+                                          lessStyle: TextStyle(
+                                              fontFamily: dM_sans_medium,
+                                              fontSize: Device.screenType ==
+                                                      sizer.ScreenType.mobile
+                                                  ? 15.sp
+                                                  : 12.sp),
+                                          moreStyle: TextStyle(
+                                              fontFamily: dM_sans_medium,
+                                              fontSize: Device.screenType ==
+                                                      sizer.ScreenType.mobile
+                                                  ? 15.sp
+                                                  : 12.sp,
+                                              color: primaryColor))),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
