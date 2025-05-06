@@ -11,6 +11,7 @@ class CustomParentScaffold extends StatelessWidget {
   final Widget body;
   Future<bool> Function()? onWillPop;
   bool isExtendBodyScreen;
+  bool isNormalScreen;
   final Widget? floatingActionBtn;
   Widget? bottomNavigationBar;
   bool isdraweruse;
@@ -32,6 +33,7 @@ class CustomParentScaffold extends StatelessWidget {
       this.isdraweruse = false,
       this.drower,
       this.isExtendBodyScreen = false,
+      this.isNormalScreen = false,
       this.drawerEnableOpenDragGesture = false,
       this.extendedbodybehindappbar = false});
 
@@ -75,8 +77,8 @@ class CustomParentScaffold extends StatelessWidget {
                   backgroundColor: bgColor,
                   extendBodyBehindAppBar: extendedbodybehindappbar,
                   // resizeToAvoidBottomInset: isSmallDevice(context),
-                  resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-
+                  resizeToAvoidBottomInset:
+                      isNormalScreen == true ? false : true,
                   body: body,
                 )
               : SafeArea(

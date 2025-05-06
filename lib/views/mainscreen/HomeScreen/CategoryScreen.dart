@@ -4,14 +4,15 @@ import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/componant/widgets/search_chat_widgets.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
+import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/category_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/utils/log.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -30,8 +31,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     futureDelay(() {
       controller.currentPage = 1;
-      controller.getCategoryList(context, 1, false, isFirstTime: true);
-    }, isOneSecond: true);
+      controller.getCategoryList(context, controller.currentPage, false,
+          isFirstTime: true);
+    }, milliseconds: true);
     controller.refreshController.refreshCompleted();
     controller.scrollController.addListener(scrollListener);
     super.initState();
@@ -48,7 +50,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
       Future.delayed(
         const Duration(seconds: 1),
         () {
-          logcat("scrollListener::", "DONE");
           controller
               // ignore: use_build_context_synchronously
               .getCategoryList(context, controller.currentPage, true,
@@ -90,13 +91,36 @@ class _CategoryScreenState extends State<CategoryScreen> {
           children: [
             getDynamicSizedBox(height: 4.h),
             Container(
-                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                margin: EdgeInsets.only(left: 5.w),
                 child: getleftsidebackbtn(
-                  title: 'Category',
+                  title: CategoryScreenViewConst.title,
                   backFunction: () {
                     Get.back(result: true);
                   },
                 )),
+            setSearchBars(
+                context, controller.searchCtr, CategoryScreenViewConst.title,
+                onCancleClick: () {
+              controller.isSearch = false;
+              controller.searchCtr.text = '';
+              setState(() {});
+            }, onClearClick: () {
+              if (controller.searchCtr.text.isNotEmpty) {
+                futureDelay(() {
+                  hideKeyboard(context);
+                  controller.currentPage = 1;
+                  futureDelay(() {
+                    controller.getCategoryList(
+                        context, controller.currentPage, false,
+                        search: controller.searchCtr.text.toString(),
+                        isFirstTime: true);
+                  }, milliseconds: true);
+                });
+              }
+              controller.searchCtr.text = '';
+              setState(() {});
+            }, isCancle: false, isFromCategoryList: true),
+            getDynamicSizedBox(height: 1.h),
             Expanded(
               child: SmartRefresher(
                 physics: const BouncingScrollPhysics(),
@@ -130,9 +154,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 child: apiOtherStates(controller.state.value,
                                     controller, controller.categoryList, () {
                                   controller.currentPage = 1;
-                                  controller.getCategoryList(
-                                      context, controller.currentPage, false,
-                                      isFirstTime: true);
+                                  futureDelay(() {
+                                    controller.getCategoryList(
+                                        context, controller.currentPage, false,
+                                        isFirstTime: true);
+                                  }, isOneSecond: false);
                                   controller.refreshController
                                       .refreshCompleted();
                                 }));

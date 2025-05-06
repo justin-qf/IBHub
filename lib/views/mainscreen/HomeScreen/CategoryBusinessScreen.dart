@@ -32,17 +32,30 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
   bool showText = false;
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => showText = true);
-    });
     controller.isSearch = false;
-    futureDelay(() {
+
+    // futureDelay(() {
+    //   controller.currentPage = 1;
+    //   controller.getStateApi(context, "");
+    //   controller.getBusinessList(context, 1, false,
+    //       isFirstTime: true, categoryId: widget.item.id.toString());
+    // }, isOneSecond: true);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       controller.currentPage = 1;
-      controller.getStateApi(context, "");
-      controller.getBusinessList(context, 1, false,
+      await controller.getStateApi(context, "");
+      // ignore: use_build_context_synchronously
+      await controller.getBusinessList(context, 1, false,
           isFirstTime: true, categoryId: widget.item.id.toString());
-    }, isOneSecond: true);
+    });
+
     controller.scrollController.addListener(scrollListener);
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() => showText = true);
+      }
+    });
     super.initState();
   }
 
@@ -111,15 +124,15 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
                 onClearClick: () {
                   if (controller.searchCtr.text.isNotEmpty) {
                     futureDelay(() {
+                      hideKeyboard(context);
                       controller.currentPage = 1;
-                      logcat("clear", "DONE");
                       futureDelay(() {
                         controller.getBusinessList(
                             context, controller.currentPage, false,
                             keyword: controller.searchCtr.text.toString(),
                             categoryId: widget.item.id.toString(),
                             isFirstTime: true);
-                      }, isOneSecond: false);
+                      }, milliseconds: true);
                     });
                   }
                   controller.searchCtr.text = '';
@@ -149,7 +162,7 @@ class _CategoryBusinessScreenState extends State<CategoryBusinessScreen> {
                       keyword: controller.searchCtr.text.toString(),
                       categoryId: widget.item.id.toString(),
                       isFirstTime: true);
-                }, isOneSecond: false);
+                }, milliseconds: true);
                 controller.refreshController.refreshCompleted();
               },
               child: CustomScrollView(

@@ -653,7 +653,7 @@ class SearchScreenController extends GetxController {
     }, networkManager: networkManager);
   }
 
-  void getStateApi(context, stateID) async {
+  getStateApi(context, stateID) async {
     logcat("getStateApi", stateID.toString());
     // var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
@@ -679,7 +679,7 @@ class SearchScreenController extends GetxController {
     }, networkManager: networkManager);
   }
 
-  void getCategoryApi(context) async {
+  getCategoryApi(context) async {
     // var loadingIndicator = LoadingProgressDialogs();
     commonGetApiCallFormate(context,
         title: SearchScreenConstant.titleScreen,
@@ -798,7 +798,6 @@ class SearchScreenController extends GetxController {
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {
-    print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();

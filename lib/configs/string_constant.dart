@@ -16,7 +16,7 @@ class AddServiceScreenViewConst {
 }
 
 class CategoryScreenViewConst {
-  static const category = 'Category';
+  static const title = 'Category';
 }
 
 class SubjectScreenViewConst {

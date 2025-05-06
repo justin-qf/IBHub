@@ -659,7 +659,7 @@ class CategoryBusinessController extends GetxController {
     }, networkManager: networkManager);
   }
 
-  void getStateApi(context, stateID) async {
+  getStateApi(context, stateID) async {
     commonGetApiCallFormate(context,
         title: SearchScreenConstant.stateList,
         apiEndPoint: ApiUrl.getState,
@@ -790,13 +790,12 @@ class CategoryBusinessController extends GetxController {
     }
   }
 
-
-  
-  getBusinessListItem(BuildContext context, BusinessData item,String categoryId) {
+  getBusinessListItem(
+      BuildContext context, BusinessData item, String categoryId) {
     print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
-       bool isEmpty = await isAnyFieldEmpty();
+        bool isEmpty = await isAnyFieldEmpty();
         if (isEmpty) {
           // ignore: use_build_context_synchronously
           showBottomSheetPopup(context);
@@ -966,7 +965,6 @@ class CategoryBusinessController extends GetxController {
       ),
     );
   }
-
 
   // getBusinessiteListItem(
   //     BuildContext context, BusinessData item, String categoryId) {

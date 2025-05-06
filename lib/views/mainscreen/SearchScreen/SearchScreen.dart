@@ -28,21 +28,48 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   var controller = Get.put(SearchScreenController());
   bool showText = false;
+
+  // @override
+  // void initState() {
+  //   Future.delayed(const Duration(seconds: 2), () {
+  //     setState(() => showText = true);
+  //   });
+  //   controller.isSearch = false;
+  //   futureDelay(() {
+  //     controller.currentPage = 1;
+  //     controller.getStateApi(context, "");
+  //     controller.getCategoryApi(context);
+  //     controller.getBusinessList(context, controller.currentPage, false,
+  //         isFirstTime: true);
+  //   }, isOneSecond: true);
+  //   controller.scrollController.addListener(scrollListener);
+
+  //   super.initState();
+  // }
+
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => showText = true);
-    });
+    super.initState();
+
     controller.isSearch = false;
-    futureDelay(() {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       controller.currentPage = 1;
-      controller.getStateApi(context, "");
-      controller.getCategoryApi(context);
-      controller.getBusinessList(context, 1, false, isFirstTime: true);
-    }, isOneSecond: true);
+      await controller.getStateApi(context, "");
+      // ignore: use_build_context_synchronously
+      await controller.getCategoryApi(context);
+      // ignore: use_build_context_synchronously
+      await controller.getBusinessList(context, controller.currentPage, false,
+          isFirstTime: true);
+    });
+
     controller.scrollController.addListener(scrollListener);
 
-    super.initState();
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() => showText = true);
+      }
+    });
   }
 
   void scrollListener() {
@@ -90,6 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
         controller.hideKeyboard(context);
       },
       isExtendBodyScreen: true,
+      isNormalScreen: true,
       body: Container(
         color: transparent,
         child: Stack(
@@ -108,13 +136,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     onClearClick: () {
                       if (controller.searchCtr.text.isNotEmpty) {
                         futureDelay(() {
+                          controller.hideKeyboard(context);
                           controller.currentPage = 1;
                           futureDelay(() {
                             controller.getBusinessList(
                                 context, controller.currentPage, false,
                                 keyword: controller.searchCtr.text.toString(),
                                 isFirstTime: true);
-                          }, isOneSecond: false);
+                          }, milliseconds: true);
                         });
                       }
                       controller.searchCtr.text = '';
@@ -126,7 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                     isFilterApplied: controller.isFilterApplied.value);
               }),
-              getDynamicSizedBox(height: 2.h),
+              getDynamicSizedBox(height: 1.h),
               Expanded(
                 child: SmartRefresher(
                   physics: const BouncingScrollPhysics(),
@@ -140,8 +169,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       controller.currentPage = 1;
                       controller.getBusinessList(context, 1, false,
                           isFirstTime: true);
-                    }, isOneSecond: false);
+                    }, milliseconds: true);
                     controller.refreshController.refreshCompleted();
+                    setState(() {
+                      controller.searchCtr.text = "";
+                    });
                   },
                   child: CustomScrollView(
                     controller: controller.scrollController,
@@ -162,6 +194,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                       controller.currentPage = 1;
                                       controller.getBusinessList(
                                           context, 1, false,
+                                          keyword: controller
+                                                  .searchCtr.text.isNotEmpty
+                                              ? controller.searchCtr.text
+                                                  .toString()
+                                              : '',
                                           isFirstTime: true);
                                     }, isOneSecond: false);
                                     controller.refreshController
@@ -217,8 +254,7 @@ class _SearchScreenState extends State<SearchScreen> {
       return ListView.builder(
         // controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
-        padding:
-            EdgeInsets.only(left: 1.w, right: 1.w, top: 0.5.h, bottom: 12.h),
+        padding: EdgeInsets.only(left: 1.w, right: 1.w, top: 1.h, bottom: 3.h),
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         clipBehavior: Clip.antiAlias,
