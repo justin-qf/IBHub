@@ -55,18 +55,17 @@ class _MyAppState extends State<MyApp> {
     Statusbar().trasparentStatusbar();
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
-        builder: (context, child) {
-          return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaler: const TextScaler.linear(1.0)),
-              child: child!);
-        },
-        enableLog: true,
-        title: AppConstant.name,
-        debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
-        defaultTransition: Transition.fadeIn,
-      );
+          builder: (context, child) {
+            return MediaQuery(
+                data: MediaQuery.of(context)
+                    .copyWith(textScaler: const TextScaler.linear(1.0)),
+                child: child!);
+          },
+          enableLog: true,
+          title: AppConstant.name,
+          debugShowCheckedModeBanner: false,
+          home: const SplashScreen(),
+          defaultTransition: Transition.fadeIn);
     });
   }
 }

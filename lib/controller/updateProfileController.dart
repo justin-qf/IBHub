@@ -1742,6 +1742,8 @@ class Updateprofilecontroller extends GetxController {
   clearpdf() {
     selectedPDFName.value = '';
     selectedPdfFile.value = null;
+    verificationDocModel.value.isValidate = false;
+    enable1Btn();
   }
 
   Widget setcityListDialog() {

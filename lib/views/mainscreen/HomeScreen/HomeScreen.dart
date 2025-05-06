@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }, isOneSecond: false);
               });
             }),
-            getDynamicSizedBox(height: 2.h),
+            getDynamicSizedBox(height: 0.5.h),
             SizedBox(
                 height:
                     Device.screenType == sizer.ScreenType.mobile ? 17.h : 20.h,
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Container();
                 })),
             if (controller.isUserVerified.value == false)
-              getDynamicSizedBox(height: 1.h),
+              getDynamicSizedBox(height: 0.5.h),
             !controller.isUserVerified.value
                 ? SizedBox(
                     height: 30, // Adjust height as needed
@@ -242,13 +242,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       velocity: 50.0,
                       pauseAfterRound: Duration.zero,
                       startPadding: 10.0,
-                      accelerationDuration: Duration(milliseconds: 10),
+                      accelerationDuration: const Duration(milliseconds: 10),
                       accelerationCurve: Curves.linear,
-                      decelerationDuration: Duration(milliseconds: 10),
+                      decelerationDuration: const Duration(milliseconds: 10),
                       decelerationCurve: Curves.easeOut,
                     ),
                   )
-
                 // Padding(
                 //     padding: EdgeInsets.symmetric(horizontal: 5.w),
                 //     child: Text(
@@ -259,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //       ),
                 //     ),
                 //   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
@@ -287,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         mainAxisSpacing: 1.h,
                                         childAspectRatio: 1.5,
                                         crossAxisSpacing: 1.w),
-                                padding: EdgeInsets.only(),
+                                padding: const EdgeInsets.only(),
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,

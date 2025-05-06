@@ -102,8 +102,8 @@ class HomeScreenController extends GetxController {
         },
         child: Container(
             // color: Colors.yellow,
-            width: 24.w,
-            height: 38.h,
+            width: 22.w,
+            height: 30.h,
             margin: EdgeInsets.only(
                 right:
                     Device.screenType == sizer.ScreenType.mobile ? 3.w : 2.w),
@@ -122,7 +122,7 @@ class HomeScreenController extends GetxController {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
-                        height: 11.h,
+                        height: 10.h,
                         width: 17.w,
                         imageUrl: item.thumbnail,
                         placeholder: (context, url) => Container(
@@ -512,8 +512,8 @@ class HomeScreenController extends GetxController {
                 // ignore: deprecated_member_use
                 color: black.withOpacity(0.2),
                 spreadRadius: 1,
-                blurRadius: 5,
-                offset: const Offset(0, 3)),
+                blurRadius: 1,
+                offset: const Offset(0, 0)),
           ],
         ),
         margin: EdgeInsets.only(left: 1.w, right: 1.w, bottom: 0.h),
@@ -532,7 +532,7 @@ class HomeScreenController extends GetxController {
                   height: 10.h,
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: primaryColor,
+                        color: primaryColor.withOpacity(0.8),
                         width: 1), // border color and width
                     borderRadius: BorderRadius.circular(
                         Device.screenType == sizer.ScreenType.mobile

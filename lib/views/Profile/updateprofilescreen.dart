@@ -245,10 +245,10 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                                                         } else if (ctr
                                                                 .StepperValue ==
                                                             1) {
-                                                          print(
-                                                              'verification ctr value is:${ctr.verificationCtr.text}');
-                                                          print(
-                                                              'selectd pdfn ame is:${ctr.selectedPDFName.value}');
+                                                          // print(
+                                                          //     'verification ctr value is:${ctr.verificationCtr.text}');
+                                                          // print(
+                                                          //     'selectd pdfn ame is:${ctr.selectedPDFName.value}');
 
                                                           if (ctr.isVerificationDataEmpty
                                                                   .value ==

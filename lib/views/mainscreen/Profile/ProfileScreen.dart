@@ -40,8 +40,10 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void initState() {
-    controller.getProfileData();
-    controller.getApiProfile(context);
+    futureDelay(() {
+      controller.getProfileData();
+      controller.getApiProfile(context);
+    }, milliseconds: true);
     controller.controllers = BottomSheet.createAnimationController(this);
     super.initState();
   }
