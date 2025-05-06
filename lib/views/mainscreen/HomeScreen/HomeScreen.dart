@@ -15,9 +15,9 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
-import 'package:marquee/marquee.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }, isOneSecond: false);
               });
             }),
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 2.h),
             SizedBox(
                 height:
                     Device.screenType == sizer.ScreenType.mobile ? 15.h : 20.h,
@@ -224,44 +224,49 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Container();
                 })),
             if (controller.isUserVerified.value == false)
-              getDynamicSizedBox(height: 2.h),
+              getDynamicSizedBox(height: 3.h),
             !controller.isUserVerified.value
-                ? Container(
-                    width: Device.width,
-                    margin:
-                        EdgeInsets.symmetric(vertical: 0.h, horizontal: 5.w),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: black, width: 1),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: Colors.black12,
-                      //     blurRadius: 6,
-                      //     offset: Offset(0, 3),
-                      //   ),
-                      // ],
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.upload_file,
-                            color: secondaryColor, size: 24.sp),
-                        SizedBox(width: 3.w),
-                        Expanded(
-                          child: Text(
-                            'To get your business listed and verified,\nupload your docs now!',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontFamily: dM_sans_semiBold,
-                              color: secondaryColor,
-                              height: 1.4,
+                ? GestureDetector(
+                    onTap: () {
+                      Get.to(UpdateProfile());
+                    },
+                    child: Container(
+                      width: Device.width,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 0.h, horizontal: 5.w),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: black, width: 1),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.black12,
+                        //     blurRadius: 6,
+                        //     offset: Offset(0, 3),
+                        //   ),
+                        // ],
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.upload_file,
+                              color: secondaryColor, size: 24.sp),
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: Text(
+                              'To get your business listed and verified,\nupload your docs now!',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontFamily: dM_sans_semiBold,
+                                color: secondaryColor,
+                                height: 1.4,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   )
 
@@ -298,11 +303,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     ),
                 //   )
                 : SizedBox.shrink(),
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 3.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
-            getDynamicSizedBox(height: 1.h),
+            getDynamicSizedBox(height: 3.h),
             Obx(
               () {
                 return controller.isBusinessLoading.value

@@ -732,7 +732,6 @@ Future<void> shareFile(String filePath) async {
 
     await Share.shareXFiles(
       [XFile(filePath, mimeType: mimeType)],
-      text: '',
       subject: 'Shared File',
     );
   } catch (e) {

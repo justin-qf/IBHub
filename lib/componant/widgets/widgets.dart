@@ -180,6 +180,47 @@ Future openDialogBox(context, {title, desc, function}) async {
   );
 }
 
+getProfileTabbar(
+    {isanalysisScreen = false, required controller, required tabs}) {
+  return Container(
+    height: 6.h,
+    margin: EdgeInsets.symmetric(horizontal: 1.w),
+    decoration: const BoxDecoration(color: transparent),
+    child: Container(
+      height: 7.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: black),
+      ),
+      child: SizedBox(
+        height: 7.h,
+        child: TabBar(
+          tabAlignment: isanalysisScreen ? TabAlignment.start : null,
+          indicatorPadding: EdgeInsets.zero,
+          isScrollable: isanalysisScreen ? true : false,
+          padding: EdgeInsets.all(0),
+          dividerColor: transparent,
+          controller: controller,
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: primaryColor,
+          ),
+          unselectedLabelColor: black,
+          labelColor: white,
+          labelStyle: TextStyle(fontSize: 17.sp, fontFamily: dM_sans_bold),
+          splashFactory: NoSplash.splashFactory,
+
+          // overlayColor: WidgetStatePropertyAll(transparent),
+          labelPadding: EdgeInsets.symmetric(horizontal: 3.w),
+          tabs: tabs,
+          // tabtitles.map((title) => Tab(text: title)).toList(),
+        ),
+      ),
+    ),
+  );
+}
+
 PreferredSizeWidget getTabbar(
     {isanalysisScreen = false, required controller, required tabs}) {
   return PreferredSize(
@@ -218,10 +259,11 @@ PreferredSizeWidget getTabbar(
                     color: tabBarColor,
                   ),
                   unselectedLabelColor: black,
-                  labelColor: tabBarTitle,
+                  labelColor: primaryColor,
                   labelStyle:
                       TextStyle(fontSize: 17.sp, fontFamily: dM_sans_bold),
                   splashFactory: NoSplash.splashFactory,
+
                   // overlayColor: WidgetStatePropertyAll(transparent),
                   labelPadding: EdgeInsets.symmetric(horizontal: 3.w),
                   tabs: tabs,
@@ -403,7 +445,7 @@ Widget getTextField(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      getLable(label, isRequired: isRequired,isVerified: isVerified),
+      getLable(label, isRequired: isRequired, isVerified: isVerified),
       usegesture
           ? GestureDetector(
               onTap: () {
@@ -419,7 +461,6 @@ Widget getTextField(
     ],
   );
 }
-
 
 Widget getUpperContainer({
   isbackbtnshow = true,

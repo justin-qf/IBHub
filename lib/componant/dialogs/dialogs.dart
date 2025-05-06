@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -533,7 +534,7 @@ void showBottomSheetPopup(BuildContext context) {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop(false);
-                      Get.to(const Updateprofilescreen());
+                      Get.to(const UpdateProfile());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor, // your custom green color
@@ -971,7 +972,7 @@ Future commonDetailsDialog(BuildContext context, String title,
                           Navigator.of(context).pop();
                         },
                         child: Container(
-                          color: Colors.yellow,
+                          // color: Colors.yellow,
                           padding: isSmallDevice(context)
                               ? EdgeInsets.only(
                                   left: 0.1.w, right: 0.1.w, top: 2.h)

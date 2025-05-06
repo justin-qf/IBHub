@@ -527,7 +527,7 @@ class Updateprofilecontroller extends GetxController {
     //  else if (imageModel.value.isValidate == false) {
     //   isFormInvalidate.value = false;
     // }
-    print("isForm00Invalidate: ${is0FormInvalidate.value}");
+    print("isFormInvalidate: ${is0FormInvalidate.value}");
     update();
   }
 
@@ -651,30 +651,21 @@ class Updateprofilecontroller extends GetxController {
     isloading = false;
   }
 
-  final List<String> tabtitles = ["Business", "Documents"];
-
-  late TabController tabController;
-
-  RxInt selectedTabIndexCtr = 0.obs;
-
-  validateFields(
-    val, {
-    model,
-    errorText1,
-    errorText2,
-    errorText3,
-    iscomman = false,
-    isselectionfield = false,
-    isotp = false,
-    isnumber = false,
-    ispassword = false,
-    isemail = false,
-    isconfirmpassword = false,
-    confirmpasswordctr,
-    isPincode = false,
-    shouldEnableButton = true,
-    validateIndex = 0,
-  }) {
+  validateFields(val,
+      {model,
+      errorText1,
+      errorText2,
+      errorText3,
+      iscomman = false,
+      isselectionfield = false,
+      isotp = false,
+      isnumber = false,
+      ispassword = false,
+      isemail = false,
+      isconfirmpassword = false,
+      confirmpasswordctr,
+      isPincode = false,
+      shouldEnableButton = true}) {
     return validateField(
         iscomman: iscomman,
         val: val,
@@ -695,13 +686,10 @@ class Updateprofilecontroller extends GetxController {
           update();
         },
         enableBtnFunction: () {
-          print('isValidateing:${selectedTabIndexCtr.value}');
-          if (validateIndex == 0) {
+          if (StepperValue == 0) {
             enableNextBtn();
           } else {
             enable1Btn();
-
-            print('isValidateing:${selectedTabIndexCtr.value}');
           }
         });
   }
@@ -868,7 +856,6 @@ class Updateprofilecontroller extends GetxController {
       showDialogForScreen(context, "Update Profile Screen", json['message'],
           callback: () {
         Get.back(result: true);
-        // Get.back(result: true);
       });
     } else {
       showDialogForScreen(context, "Update Profile Screen", json['message'],
@@ -1614,7 +1601,7 @@ class Updateprofilecontroller extends GetxController {
     });
   }
 
-  Widget setVerificationListDialog({validateIndex}) {
+  Widget setVerificationListDialog() {
     return Obx(
       () {
         if (isCityApiCallLoading.value == true) {
@@ -1647,8 +1634,7 @@ class Updateprofilecontroller extends GetxController {
                         model: verificationModel,
                         errorText1: "Verification Document is required",
                         iscomman: true,
-                        shouldEnableButton: true,
-                        validateIndex: validateIndex == null ? 0 : 1);
+                        shouldEnableButton: true);
                   }
                   update();
                 },
@@ -1668,7 +1654,7 @@ class Updateprofilecontroller extends GetxController {
   final selectedPdfFile = Rxn<File>();
   RxString selectedPDFName = "".obs;
 
-  void pickPdfFromFile(BuildContext context, {validateIndex}) async {
+  void pickPdfFromFile(BuildContext context) async {
     selectedPdfFile.value = null;
     selectedPDFName.value = '';
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -1686,8 +1672,7 @@ class Updateprofilecontroller extends GetxController {
           model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
-          shouldEnableButton: true,
-          validateIndex: validateIndex == null ? 0 : 1);
+          shouldEnableButton: true);
 
       // if (!context.mounted) return;
       // ScaffoldMessenger.of(context).showSnackBar(
@@ -1699,8 +1684,7 @@ class Updateprofilecontroller extends GetxController {
           model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
-          shouldEnableButton: false,
-          validateIndex: validateIndex);
+          shouldEnableButton: false);
     }
   }
 
@@ -1718,14 +1702,13 @@ class Updateprofilecontroller extends GetxController {
         context,
         isFromEditProfile: true,
         function: () {
-          print('file name:$filePath');
           shareFile(filePath);
         },
       );
     }
   }
 
-  void pickImageFromGallery(BuildContext context, {validateIndex}) async {
+  void pickImageFromGallery(BuildContext context) async {
     selectedPdfFile.value = null;
     selectedPDFName.value = '';
     final ImagePicker picker = ImagePicker();
@@ -1741,8 +1724,7 @@ class Updateprofilecontroller extends GetxController {
           model: verificationDocModel,
           errorText1: "Profile picture is required",
           iscomman: true,
-          shouldEnableButton: true,
-          validateIndex: validateIndex == null ? 0 : 1);
+          shouldEnableButton: true);
 
       // ScaffoldMessenger.of(context).showSnackBar(
       //   SnackBar(content: Text('Selected: ${imageFile.path.split('/').last}')),

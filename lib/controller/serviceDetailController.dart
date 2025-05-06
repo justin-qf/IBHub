@@ -479,222 +479,163 @@ class ServiceDetailScreenController extends GetxController {
 
   getServiceListItem(BuildContext context, ServiceDataList item,
       {isFromProfile = false}) {
-    return Column(
-      children: [
-        // isFromProfile
-        //     ? Align(
-        //         alignment: Alignment.centerRight,
-        //         child: SizedBox(
-        //           height: 3.h,
-        //           width: 35.w,
-        //           child: RichText(
-        //             text: TextSpan(
-        //               style: TextStyle(
-        //                 fontFamily: dM_sans_medium,
-        //                 fontSize: 16.sp, // Optional: set your desired font size
-        //               ),
-        //               children: [
-        //                 TextSpan(
-        //                   text: 'Status : ',
-        //                   style: TextStyle(
-        //                       fontFamily: dM_sans_medium,
-        //                       color: primaryColor), // Always black
-        //                 ),
-        //                 TextSpan(
-        //                   text:
-        //                       item.isActive.value == 1 ? 'Active' : 'InActive',
-        //                   style: TextStyle(
-        //                     fontFamily: dM_sans_medium,
-        //                     color: item.isActive.value == 1
-        //                         ? primaryColor
-        //                         : secondaryColor, // Change color
-        //                   ),
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //       )
-        //     : SizedBox.shrink(),
-        Stack(
+    return GestureDetector(
+        onTap: () {
+          getServiceDetails(context, item);
+          // Get.to(BusinessDetailScreen(item: item));
+        },
+        child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    getServiceDetails(context, item);
-                    // Get.to(BusinessDetailScreen(item: item));
-                  },
-                  child: Container(
+            Container(
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                      color: black.withOpacity(0.2),
+                      spreadRadius: 0.1,
+                      blurRadius: 5,
+                      offset: const Offset(0.5, 0.5)),
+                ],
+              ),
+              padding: EdgeInsets.only(
+                  left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
+              margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    // padding: const EdgeInsets.all(2),
+                    margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+                    width: 25.w,
+                    height: 12.h,
                     decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: black.withOpacity(0.2),
-                            spreadRadius: 0.1,
-                            blurRadius: 5,
-                            offset: const Offset(0.5, 0.5)),
-                      ],
+                      border: Border.all(
+                          color: primaryColor,
+                          width: 1), // border color and width
+                      borderRadius: BorderRadius.circular(
+                          Device.screenType == sizer.ScreenType.mobile
+                              ? 3.6.w
+                              : 2.5.w),
                     ),
-                    padding: EdgeInsets.only(
-                        left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
-                    margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          // padding: const EdgeInsets.all(2),
-                          margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-                          width: 25.w,
-                          height: 12.h,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: primaryColor,
-                                width: 1), // border color and width
-                            borderRadius: BorderRadius.circular(
-                                Device.screenType == sizer.ScreenType.mobile
-                                    ? 3.6.w
-                                    : 2.5.w),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                Device.screenType == sizer.ScreenType.mobile
-                                    ? 3.5.w
-                                    : 2.5.w),
-                            child: CachedNetworkImage(
-                              fit: BoxFit.contain,
-                              height: 17.h,
-                              imageUrl: item.thumbnail,
-                              placeholder: (context, url) =>
-                                  Image.asset(Asset.bussinessPlaceholder),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          Device.screenType == sizer.ScreenType.mobile
+                              ? 3.5.w
+                              : 2.5.w),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.contain,
+                        height: 17.h,
+                        imageUrl: item.thumbnail,
+                        placeholder: (context, url) =>
+                            Image.asset(Asset.bussinessPlaceholder),
 
-                              // Center(child: Icon(Icons.business_outlined)
+                        // Center(child: Icon(Icons.business_outlined)
 
-                              // CircularProgressIndicator(color: primaryColor),
-                              errorWidget: (context, url, error) => Image.asset(
-                                  Asset.placeholder,
-                                  height: 10.h,
-                                  fit: BoxFit.cover),
-                            ),
+                        // CircularProgressIndicator(color: primaryColor),
+                        errorWidget: (context, url, error) => Image.asset(
+                            Asset.placeholder,
+                            height: 10.h,
+                            fit: BoxFit.cover),
+                      ),
 
-                            //  Icon(Icons.business_outlined)
+                      //  Icon(Icons.business_outlined)
 
-                            //  CachedNetworkImage(
-                            //   fit: BoxFit.cover,
-                            //   height: 18.h,
-                            //   imageUrl: item.thumbnail,
-                            //   placeholder: (context, url) =>
-                            //       const Center(child: Icon(Icons.business_outlined)
+                      //  CachedNetworkImage(
+                      //   fit: BoxFit.cover,
+                      //   height: 18.h,
+                      //   imageUrl: item.thumbnail,
+                      //   placeholder: (context, url) =>
+                      //       const Center(child: Icon(Icons.business_outlined)
 
-                            //           // CircularProgressIndicator(color: primaryColor),
+                      //           // CircularProgressIndicator(color: primaryColor),
 
-                            //           ),
-                            //   errorWidget: (context, url, error) => Image.asset(
-                            //       Asset.placeholder,
-                            //       height: 10.h,
-                            //       fit: BoxFit.cover),
-                            // ),
-                          ),
-                        ),
-                        getDynamicSizedBox(width: 2.w),
-                        Expanded(
-                          child: SizedBox(
-                            height: 11.h,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                    width: 50.w,
-                                    // height: 2.h,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(item.serviceTitle,
-                                          style: TextStyle(
-                                              fontFamily: dM_sans_medium,
-                                              fontSize: 15.8.sp,
-                                              color: black,
-                                              fontWeight: FontWeight.w900)),
-                                    )
-                                    //  Marquee(
-                                    //   velocity: 5,
-                                    //   text: item.serviceTitle,
-                                    //   style: TextStyle(
-                                    //     fontFamily: dM_sans_medium,
-                                    //     fontSize: 15.8.sp,
-                                    //     color: black,
-                                    //     fontWeight: FontWeight.w900,
-                                    //   ),
-                                    // ),
-                                    ),
-                                // Container(
-                                //   width: 30.w,
-                                //   child: Text(item.serviceTitle,
-                                //       style: TextStyle(
-                                //           fontFamily: dM_sans_medium,
-                                //           fontSize: 15.8.sp,
-                                //           color: black,
-                                //           fontWeight: FontWeight.w900)),
-                                // ),
-                                getDynamicSizedBox(height: 1.h),
-                                SizedBox(
-                                  width: 50.w,
-                                  child: Text(item.categoryName,
-                                      style: TextStyle(
-                                          fontFamily: dM_sans_medium,
-                                          fontSize: 15.sp,
-                                          color: black,
-                                          fontWeight: FontWeight.w500)),
-                                ),
-                                getDynamicSizedBox(height: 1.h),
-                                SizedBox(
-                                  width: 50.w,
-                                  child: AbsorbPointer(
-                                      absorbing: true,
-                                      child: ReadMoreText(item.description,
-                                          textAlign: TextAlign.start,
-                                          trimLines: 2, callback: (val) {
-                                        logcat("ONTAP", val.toString());
-                                      },
-                                          colorClickableText: primaryColor,
-                                          trimMode: TrimMode.Line,
-                                          trimCollapsedText: '...Show more',
-                                          trimExpandedText: '',
-                                          delimiter: ' ',
-                                          style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              fontSize: Device.screenType ==
-                                                      sizer.ScreenType.mobile
-                                                  ? 15.sp
-                                                  : 12.sp,
-                                              fontWeight: FontWeight.w100,
-                                              fontFamily: dM_sans_medium,
-                                              color: primaryColor),
-                                          lessStyle: TextStyle(
-                                              fontFamily: dM_sans_medium,
-                                              fontSize: Device.screenType ==
-                                                      sizer.ScreenType.mobile
-                                                  ? 15.sp
-                                                  : 12.sp),
-                                          moreStyle: TextStyle(
-                                              fontFamily: dM_sans_medium,
-                                              fontSize: Device.screenType ==
-                                                      sizer.ScreenType.mobile
-                                                  ? 15.sp
-                                                  : 12.sp,
-                                              color: primaryColor))),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      //           ),
+                      //   errorWidget: (context, url, error) => Image.asset(
+                      //       Asset.placeholder,
+                      //       height: 10.h,
+                      //       fit: BoxFit.cover),
+                      // ),
                     ),
                   ),
-                ),
-              ],
+                  getDynamicSizedBox(width: 2.w),
+                  Expanded(
+                    child: SizedBox(
+                      // color: Colors.yellow,
+                      height: 13.h,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              width: 50.w,
+                              // height: 2.h,
+                              child: Text(
+                                  // 'dasgasdogasdhsad;asdhkadhasddastdlkjgagakldfgad',
+                                  maxLines: 1,
+                                  item.serviceTitle,
+                                  style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      fontFamily: dM_sans_medium,
+                                      fontSize: 15.8.sp,
+                                      color: black,
+                                      fontWeight: FontWeight.w900))),
+                          // getDynamicSizedBox(height: 1.h),
+                          SizedBox(
+                            width: 50.w,
+                            child: Text(item.categoryName,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontFamily: dM_sans_medium,
+                                    fontSize: 15.sp,
+                                    color: black,
+                                    fontWeight: FontWeight.w500)),
+                          ),
+                          // getDynamicSizedBox(height: 1.h),
+                          SizedBox(
+                            width: 50.w,
+                            child: AbsorbPointer(
+                                absorbing: true,
+                                child: ReadMoreText(item.description,
+                                    textAlign: TextAlign.start,
+                                    trimLines: 2, callback: (val) {
+                                  logcat("ONTAP", val.toString());
+                                },
+                                    colorClickableText: primaryColor,
+                                    trimMode: TrimMode.Line,
+                                    trimCollapsedText: '...Show more',
+                                    trimExpandedText: '',
+                                    delimiter: ' ',
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: Device.screenType ==
+                                                sizer.ScreenType.mobile
+                                            ? 15.sp
+                                            : 12.sp,
+                                        fontWeight: FontWeight.w100,
+                                        fontFamily: dM_sans_medium,
+                                        color: primaryColor),
+                                    lessStyle: TextStyle(
+                                        fontFamily: dM_sans_medium,
+                                        fontSize: Device.screenType ==
+                                                sizer.ScreenType.mobile
+                                            ? 15.sp
+                                            : 12.sp),
+                                    moreStyle: TextStyle(
+                                        fontFamily: dM_sans_medium,
+                                        fontSize: Device.screenType ==
+                                                sizer.ScreenType.mobile
+                                            ? 15.sp
+                                            : 12.sp,
+                                        color: primaryColor))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             isFromProfile
                 ? Positioned(
@@ -787,9 +728,7 @@ class ServiceDetailScreenController extends GetxController {
                   )
                 : SizedBox.shrink(),
           ],
-        ),
-      ],
-    );
+        ));
   }
 
   getServiceDetails(BuildContext context, ServiceDataList data) {
