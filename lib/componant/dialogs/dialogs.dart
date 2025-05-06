@@ -952,7 +952,7 @@ Future commonDetailsDialog(BuildContext context, String title,
           content:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             SizedBox(
-              height: 3.h,
+              height: 3.5.h,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -971,10 +971,10 @@ Future commonDetailsDialog(BuildContext context, String title,
                           Navigator.of(context).pop();
                         },
                         child: Container(
-                          // color: Colors.yellow,
+                          color: Colors.yellow,
                           padding: isSmallDevice(context)
                               ? EdgeInsets.only(
-                                  left: 0.1.w, right: 0.1.w, top: 0.2.h)
+                                  left: 0.1.w, right: 0.1.w, top: 2.h)
                               : EdgeInsets.only(
                                   left: 1.w, right: 1.w, top: 0.3.h),
                           // margin: EdgeInsets.only(

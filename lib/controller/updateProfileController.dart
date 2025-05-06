@@ -969,30 +969,30 @@ class Updateprofilecontroller extends GetxController {
     update();
   }
 
-  bool validateStep0Fields() {
-    // Validate all required fields for Step 0
-    bool isBusinessValid =
-        bussinessModel.value.isValidate || isUserVerfied.value;
-    bool isCategoryValid = categoryIdModel.value.isValidate;
-    bool isNameValid = nameModel.value.isValidate;
-    bool isPhoneValid = phoneModel.value.isValidate;
-    bool isEmailValid = emailModel.value.isValidate || isEmailVerifed.value;
-    bool isAddressValid = addressModel.value.isValidate;
-    bool isPincodeValid = pincodeModel.value.isValidate;
-    bool isStateValid = stateModel.value.isValidate;
-    bool isCityValid = cityModel.value.isValidate;
+  // bool validateStep0Fields() {
+  //   // Validate all required fields for Step 0
+  //   bool isBusinessValid =
+  //       bussinessModel.value.isValidate || isUserVerfied.value;
+  //   bool isCategoryValid = categoryIdModel.value.isValidate;
+  //   bool isNameValid = nameModel.value.isValidate;
+  //   bool isPhoneValid = phoneModel.value.isValidate;
+  //   bool isEmailValid = emailModel.value.isValidate || isEmailVerifed.value;
+  //   bool isAddressValid = addressModel.value.isValidate;
+  //   bool isPincodeValid = pincodeModel.value.isValidate;
+  //   bool isStateValid = stateModel.value.isValidate;
+  //   bool isCityValid = cityModel.value.isValidate;
 
-    // Return true only if all required fields are valid
-    return isBusinessValid &&
-        isCategoryValid &&
-        isNameValid &&
-        isPhoneValid &&
-        isEmailValid &&
-        isAddressValid &&
-        isPincodeValid &&
-        isStateValid &&
-        isCityValid;
-  }
+  //   // Return true only if all required fields are valid
+  //   return isBusinessValid &&
+  //       isCategoryValid &&
+  //       isNameValid &&
+  //       isPhoneValid &&
+  //       isEmailValid &&
+  //       isAddressValid &&
+  //       isPincodeValid &&
+  //       isStateValid &&
+  //       isCityValid;
+  // }
   // void updateProfile(context) async {
   //   if (imageURl.value.isEmpty) {
   //     imageValidationPopupDialogs(context);
@@ -1742,6 +1742,9 @@ class Updateprofilecontroller extends GetxController {
   clearpdf() {
     selectedPDFName.value = '';
     selectedPdfFile.value = null;
+    verificationDocModel.value.isValidate = false;
+    enable1Btn();
+    update();
   }
 
   Widget setcityListDialog() {
