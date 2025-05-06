@@ -3,51 +3,51 @@ import 'dart:convert';
 StatusCheck statusCheckFromJson(String str) =>
     StatusCheck.fromJson(json.decode(str));
 
-String statusCheckToJson(StatusCheck data) => json.encode(data.toJson());
+String statusCheckToJson(StatusCheck? data) => json.encode(data?.toJson());
 
 class StatusCheck {
-  bool success;
-  String message;
-  StatusData data;
+  bool? success;
+  String? message;
+  StatusData? data;
 
   StatusCheck({
-    required this.success,
-    required this.message,
-    required this.data,
+    this.success,
+    this.message,
+    this.data,
   });
 
   factory StatusCheck.fromJson(Map<String, dynamic> json) => StatusCheck(
         success: json["success"],
         message: json["message"],
-        data: StatusData.fromJson(json["data"]),
+        data: json["data"] != null ? StatusData.fromJson(json["data"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
-        "data": data.toJson(),
+        "data": data?.toJson(),
       };
 }
 
 class StatusData {
-  int id;
-  int userId;
-  String serviceTitle;
-  String description;
-  String keywords;
-  int categoryId;
-  String thumbnail;
-  String isActive;
+  int? id;
+  int? userId;
+  String? serviceTitle;
+  String? description;
+  String? keywords;
+  int? categoryId;
+  String? thumbnail;
+  String? isActive;
 
   StatusData({
-    required this.id,
-    required this.userId,
-    required this.serviceTitle,
-    required this.description,
-    required this.keywords,
-    required this.categoryId,
-    required this.thumbnail,
-    required this.isActive,
+    this.id,
+    this.userId,
+    this.serviceTitle,
+    this.description,
+    this.keywords,
+    this.categoryId,
+    this.thumbnail,
+    this.isActive,
   });
 
   factory StatusData.fromJson(Map<String, dynamic> json) => StatusData(

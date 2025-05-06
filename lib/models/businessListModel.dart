@@ -97,6 +97,7 @@ class BusinessData {
   bool isEmailVerified;
   double? businessReviewsAvgRating;
   bool isFavorite;
+  String 
 
   BusinessData({
     required this.id,

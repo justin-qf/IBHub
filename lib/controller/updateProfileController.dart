@@ -19,6 +19,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/VerificationModel.dart';
+import 'package:ibh/models/categorylistdatamodel.dart';
 import 'package:ibh/models/cityModel.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
@@ -51,7 +52,12 @@ class Updateprofilecontroller extends GetxController {
       websiteNode,
       verificationNode,
       // visitingcardNode,
-      addressNode;
+      addressNode,
+      facebookNode,
+      linkedInNode,
+      whatsappNo,
+      categoryIdNode;
+
   late TextEditingController nameCtr,
       emailCtr,
       phoneCtr,
@@ -62,7 +68,11 @@ class Updateprofilecontroller extends GetxController {
       pincodeCtr,
       websiteCtr,
       // visitingcardCtr,
-      addressCtr;
+      addressCtr,
+      facebookCtr,
+      linkedinCtr,
+      whatsAppCr,
+      categoryIDCtr;
 
   var nameModel = ValidationModel(null, null, isValidate: false).obs;
   var emailModel = ValidationModel(null, null, isValidate: false).obs;
@@ -77,7 +87,13 @@ class Updateprofilecontroller extends GetxController {
   var verificationModel = ValidationModel(null, null, isValidate: false).obs;
   var verificationDocModel = ValidationModel(null, null, isValidate: false).obs;
 
-  RxBool isFormInvalidate = false.obs;
+  var faceBookModel = ValidationModel(null, null, isValidate: false).obs;
+  var linkedinModel = ValidationModel(null, null, isValidate: false).obs;
+  var whatsappModel = ValidationModel(null, null, isValidate: false).obs;
+  var categoryIdModel = ValidationModel(null, null, isValidate: false).obs;
+
+  RxBool is0FormInvalidate = false.obs;
+  RxBool is1FormInvalidate = false.obs;
 
   var isLoading = false.obs;
   bool get isloading => isLoading.value;
@@ -93,12 +109,17 @@ class Updateprofilecontroller extends GetxController {
 
   late TextEditingController searchStatectr,
       searchCityctr,
-      searchVerificationctr;
-  late FocusNode searchStateNode, searchCityNode, searchVerificationNode;
+      searchVerificationctr,
+      searchCategoryCtr;
+  late FocusNode searchStateNode,
+      searchCityNode,
+      searchVerificationNode,
+      searchCategoryNode;
   var searchStateModel = ValidationModel(null, null, isValidate: false).obs;
   var searchCityModel = ValidationModel(null, null, isValidate: false).obs;
   var searchVerificationModel =
       ValidationModel(null, null, isValidate: false).obs;
+  var searchCategorynModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isStateApiCallLoading = false.obs;
   // RxList stateFilterList = [].obs;
@@ -106,6 +127,10 @@ class Updateprofilecontroller extends GetxController {
   RxList<StateListData> stateList = <StateListData>[].obs;
   RxString stateId = "".obs;
   // RxList stateList = [].obs;
+
+  RxList<CatggoryData> categoryFilterList = <CatggoryData>[].obs;
+  RxList<CatggoryData> categoryList = <CatggoryData>[].obs;
+  RxString categoryId = "".obs;
 
   RxBool isCityApiCallLoading = false.obs;
   RxList<CityListData> cityList = <CityListData>[].obs;
@@ -121,6 +146,7 @@ class Updateprofilecontroller extends GetxController {
   RxBool isEmailVerifed = false.obs;
   RxBool isUserVerfied = false.obs;
 
+  RxString profileDocId = "".obs;
   getProfileData(BuildContext context) async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
 
@@ -129,7 +155,7 @@ class Updateprofilecontroller extends GetxController {
       // print("Retrieved user is null");
       return;
     }
-
+    profileDocId.value = retrievedObject.document!.documentId.toString();
     nameCtr.text = retrievedObject.name ?? '';
     emailCtr.text = retrievedObject.email ?? '';
     phoneCtr.text = retrievedObject.phone ?? '';
@@ -152,6 +178,18 @@ class Updateprofilecontroller extends GetxController {
       selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
       verificationCtr.text = retrievedObject.document?.documentType ?? '';
     }
+
+    if (retrievedObject.category != null) {
+      categoryId.value = retrievedObject.category?.id.toString() ?? '';
+      categoryIDCtr.text = retrievedObject.category?.name.toString() ?? '';
+    }
+    // if(retrievedObject.category)
+
+    facebookCtr.text = retrievedObject.facebook?.toString() ?? '';
+    linkedinCtr.text = retrievedObject.linkedin?.toString() ?? '';
+    print(linkedinCtr.text);
+    whatsAppCr.text = retrievedObject.whatsappNo?.toString() ?? '';
+    print(websiteCtr.text);
 
     isEmailVerifed.value = retrievedObject.isEmailVerified ?? false;
     isUserVerfied.value = retrievedObject.isVerified ?? false;
@@ -191,6 +229,16 @@ class Updateprofilecontroller extends GetxController {
         nameCtr.text,
         model: nameModel,
         errorText1: "Name is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
+    }
+
+    if (categoryIDCtr.text.isNotEmpty) {
+      validateFields(
+        categoryIDCtr.text,
+        model: categoryIdModel,
+        errorText1: "Category is required",
         iscomman: true,
         shouldEnableButton: false,
       );
@@ -287,7 +335,8 @@ class Updateprofilecontroller extends GetxController {
       );
     }
 
-    enableSignUpButton();
+    enableNextBtn();
+    enable1Btn();
     update();
   }
 
@@ -304,8 +353,13 @@ class Updateprofilecontroller extends GetxController {
     searchStateNode = FocusNode();
     searchCityNode = FocusNode();
     searchVerificationNode = FocusNode();
+    searchCategoryNode = FocusNode();
     websiteNode = FocusNode();
     verificationNode = FocusNode();
+    facebookNode = FocusNode();
+    linkedInNode = FocusNode();
+    whatsappNo = FocusNode();
+    categoryIdNode = FocusNode();
 
     nameCtr = TextEditingController();
     emailCtr = TextEditingController();
@@ -319,8 +373,13 @@ class Updateprofilecontroller extends GetxController {
     searchStatectr = TextEditingController();
     searchCityctr = TextEditingController();
     searchVerificationctr = TextEditingController();
+    searchCategoryCtr = TextEditingController();
     websiteCtr = TextEditingController();
     verificationCtr = TextEditingController();
+    facebookCtr = TextEditingController();
+    linkedinCtr = TextEditingController();
+    whatsAppCr = TextEditingController();
+    categoryIDCtr = TextEditingController();
   }
 
   @override
@@ -344,7 +403,62 @@ class Updateprofilecontroller extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  void enableSignUpButton() {
+  // void enableSignUpButton() {
+  //   print('enableSignUpButton executed');
+  //   print('nameModel.isValidate: ${nameModel.value.isValidate}');
+  //   print('emailModel.isValidate: ${emailModel.value.isValidate}');
+  //   print('phoneModel.isValidate: ${phoneModel.value.isValidate}');
+  //   print('bussinessModel.isValidate: ${bussinessModel.value.isValidate}');
+  //   print('stateModel.isValidate: ${stateModel.value.isValidate}');
+  //   print('cityModel.isValidate: ${cityModel.value.isValidate}');
+  //   print('pincodeModel.isValidate: ${pincodeModel.value.isValidate}');
+  //   print('addressModel.isValidate: ${addressModel.value.isValidate}');
+  //   print('validateType.isValidate: ${verificationModel.value.isValidate}');
+  //   print('ValidateUrl.isValidate: ${verificationDocModel.value.isValidate}');
+  //   print('CategoryId.isValidate: ${categoryIdModel.value.isValidate}');
+
+  //   if (bussinessModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   } else if (categoryIdModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   } else if (nameModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   }
+
+  //   //  else if (emailModel.value.isValidate == false) {
+  //   //   is0FormInvalidate.value = false;
+  //   // }
+
+  //   else if (phoneModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   } else if (stateModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   } else if (cityModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   } else if (pincodeModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   } else if (addressModel.value.isValidate == false) {
+  //     is0FormInvalidate.value = false;
+  //   }
+  //   // else if (websiteModel.value.isValidate == false) {
+  //   //   isFormInvalidate.value = false;
+  //   // }
+
+  //   // else if (verificationModel.value.isValidate == false) {
+  //   //   is0FormInvalidate.value = false;
+  //   // } else if (verificationDocModel.value.isValidate == false) {
+  //   //   is0FormInvalidate.value = false;
+  //   // } else {
+  //   //   is0FormInvalidate.value = true;
+  //   // }
+  //   //  else if (imageModel.value.isValidate == false) {
+  //   //   isFormInvalidate.value = false;
+  //   // }
+  //   print("isFormInvalidate: ${is0FormInvalidate.value}");
+  //   update();
+  // }
+
+  void enableNextBtn() {
     print('enableSignUpButton executed');
     print('nameModel.isValidate: ${nameModel.value.isValidate}');
     print('emailModel.isValidate: ${emailModel.value.isValidate}');
@@ -359,38 +473,50 @@ class Updateprofilecontroller extends GetxController {
     print('ValidateUrl.isValidate: ${verificationDocModel.value.isValidate}');
 
     if (nameModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
+    } else if (categoryIdModel.value.isValidate == false) {
+      is0FormInvalidate.value = false;
     } else if (emailModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     } else if (phoneModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     } else if (bussinessModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     } else if (stateModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     } else if (cityModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     } else if (pincodeModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     } else if (addressModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
+      is0FormInvalidate.value = false;
     }
     // else if (websiteModel.value.isValidate == false) {
     //   isFormInvalidate.value = false;
     // }
 
-    else if (verificationModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else if (verificationDocModel.value.isValidate == false) {
-      isFormInvalidate.value = false;
-    } else {
-      isFormInvalidate.value = true;
+    // else if (verificationModel.value.isValidate == false) {
+    //   is1FormInvalidate.value = false;
+    // } else if (verificationDocModel.value.isValidate == false) {
+    //   is1FormInvalidate.value = false;
+    else {
+      is0FormInvalidate.value = true;
     }
     //  else if (imageModel.value.isValidate == false) {
     //   isFormInvalidate.value = false;
     // }
-    print("isFormInvalidate: ${isFormInvalidate.value}");
+    print("isFormInvalidate: ${is0FormInvalidate.value}");
     update();
+  }
+
+  enable1Btn() {
+    if (verificationModel.value.isValidate == false) {
+      is1FormInvalidate.value = false;
+    } else if (verificationDocModel.value.isValidate == false) {
+      is1FormInvalidate.value = false;
+    } else {
+      is1FormInvalidate.value = true;
+    }
   }
 
   @override
@@ -406,6 +532,10 @@ class Updateprofilecontroller extends GetxController {
     addressCtr.clear();
     websiteCtr.clear();
 
+    facebookCtr.clear();
+    linkedinCtr.clear();
+    whatsAppCr.clear();
+    categoryIDCtr.clear();
     selectedPdfFile.value = null;
 
     // Reset all validation models
@@ -419,9 +549,13 @@ class Updateprofilecontroller extends GetxController {
     websiteModel.value = ValidationModel(null, null, isValidate: false);
     addressModel.value = ValidationModel(null, null, isValidate: false);
     verificationModel.value = ValidationModel(null, null, isValidate: false);
+    faceBookModel.value = ValidationModel(null, null, isValidate: false);
+    linkedinModel.value = ValidationModel(null, null, isValidate: false);
+    whatsappModel.value = ValidationModel(null, null, isValidate: false);
+    categoryIdModel.value = ValidationModel(null, null, isValidate: false);
 
     // Reset reactive variables
-    isFormInvalidate.value = false;
+    is1FormInvalidate.value = false;
     isLoading.value = false;
     obsecureTextPass.value = true;
     obsecureTextConPass.value = true;
@@ -445,6 +579,12 @@ class Updateprofilecontroller extends GetxController {
     searchVerificationctr.clear();
     websiteCtr.clear();
     verificationCtr.clear();
+    categoryIDCtr.clear();
+
+    facebookCtr.clear();
+    linkedinCtr.clear();
+    whatsAppCr.clear();
+    categoryIDCtr.clear();
 
     nameNode.unfocus();
     emailNode.unfocus();
@@ -458,8 +598,14 @@ class Updateprofilecontroller extends GetxController {
     searchStateNode.unfocus();
     searchCityNode.unfocus();
     searchVerificationNode.unfocus();
+    searchCategoryNode.unfocus();
     websiteNode.unfocus();
     verificationNode.unfocus();
+
+    facebookNode.unfocus();
+    linkedInNode.unfocus();
+    whatsappNo.unfocus();
+    categoryIdNode.unfocus();
 
     // Reset validation models
     nameModel.value = ValidationModel(null, null, isValidate: false);
@@ -473,7 +619,13 @@ class Updateprofilecontroller extends GetxController {
     addressModel.value = ValidationModel(null, null, isValidate: false);
     websiteModel.value = ValidationModel(null, null, isValidate: false);
     verificationModel.value = ValidationModel(null, null, isValidate: false);
-    isFormInvalidate.value = false;
+
+    faceBookModel.value = ValidationModel(null, null, isValidate: false);
+    linkedinModel.value = ValidationModel(null, null, isValidate: false);
+    whatsappModel.value = ValidationModel(null, null, isValidate: false);
+    categoryIdModel.value = ValidationModel(null, null, isValidate: false);
+
+    is1FormInvalidate.value = false;
     isloading = false;
   }
 
@@ -512,7 +664,11 @@ class Updateprofilecontroller extends GetxController {
           update();
         },
         enableBtnFunction: () {
-          enableSignUpButton();
+          if (StepperValue == 0) {
+            enableNextBtn();
+          } else {
+            enable1Btn();
+          }
         });
   }
 
@@ -539,18 +695,14 @@ class Updateprofilecontroller extends GetxController {
   // final ImagePicker _picker = ImagePicker();
   Rx<File?> imageFile = null.obs;
 
-  updateProfile(context) async {
-    // if (imageURl.value.isEmpty) {
-    //   imageValidationPopupDialogs(context);
-    //   return;
-    // }
-
+  updateLogo(context) async {
+    print('updateLogo called');
     var loadingIndicator = LoadingProgressDialog();
 
     try {
       if (networkManager.connectionType.value == 0) {
         loadingIndicator.hide(context);
-        showDialogForScreen(context, "Signup Screen", Connection.noConnection,
+        showDialogForScreen(context, "Edit Profile", Connection.noConnection,
             callback: () {
           Get.back();
         });
@@ -560,7 +712,7 @@ class Updateprofilecontroller extends GetxController {
       loadingIndicator.show(context, '');
 
       List<http.MultipartFile> files = [];
-      // First file: visiting card
+      // Add visiting card file if available
       if (imageFile.value != null) {
         files.add(http.MultipartFile(
           'visiting_card',
@@ -570,28 +722,12 @@ class Updateprofilecontroller extends GetxController {
         ));
       }
 
-      // Second file: verification document (example)
-      if (selectedPdfFile.value != null) {
-        files.add(http.MultipartFile(
-          'document_url',
-          selectedPdfFile.value!.readAsBytes().asStream(),
-          selectedPdfFile.value!.lengthSync(),
-          filename: selectedPdfFile.value!.path.split('/').last,
-        ));
-      }
-
-      var response = await Repository.multiPartPost({
-        "name": nameCtr.text.trim(),
-        "email": emailCtr.text.trim(),
-        "phone": phoneCtr.text.trim(),
-        "business_name": bussinessCtr.text.trim(),
-        "city": cityId.toString(),
-        "state": stateId.toString(),
-        "address": addressCtr.text.trim(),
-        "website": websiteCtr.text.trim(),
-        "pincode": pincodeCtr.text.trim(),
-        "document_type": verificationCtr.text.trim()
-      }, ApiUrl.updateProfile, multiPartData: files, allowHeader: true);
+      var response = await Repository.multiPartPost(
+        <String, String>{},
+        ApiUrl.updateLOgo,
+        multiPartData: files,
+        allowHeader: true,
+      );
 
       var responseData = await response.stream.toBytes();
       loadingIndicator.hide(context);
@@ -601,14 +737,10 @@ class Updateprofilecontroller extends GetxController {
       var json = jsonDecode(result);
 
       if (response.statusCode == 200 && json['success'] == true) {
-        LoginModel responseDetail = LoginModel.fromJson(json);
-        if (responseDetail.data?.user != null) {
-          UserPreferences().saveSignInInfo(responseDetail.data!.user);
-          logcat("isUpdate", jsonEncode(responseDetail.data?.user));
-        }
-        showDialogForScreen(context, "Update Profile Screen", json['message'],
+        showDialogForScreen(
+            context, "Update Profile Screen", 'Logo Updated successfully',
             callback: () {
-          Get.back(result: true);
+          // Get.back(result: true);
         });
       } else {
         showDialogForScreen(context, "Update Profile Screen", json['message'],
@@ -620,6 +752,225 @@ class Updateprofilecontroller extends GetxController {
     }
   }
 
+  updateBussines(context) async {
+    commonPostApiCallFormate(
+      context,
+      title: 'Update Profile',
+      body: {
+        "name": nameCtr.text.trim(),
+        "email": emailCtr.text.trim(),
+        "phone": phoneCtr.text.trim(),
+        "business_name": bussinessCtr.text.trim(),
+        "category_id": categoryId.value.toString(),
+        "city": cityId.toString(),
+        "state": stateId.toString(),
+        "address": addressCtr.text.trim(),
+        "website": websiteCtr.text.trim(),
+        "pincode": pincodeCtr.text.trim(),
+        "facebook": facebookCtr.text.trim(),
+        "linkedin": linkedinCtr.text.trim(),
+        "whatsapp_no": whatsAppCr.text.trim()
+      },
+      allowHeader: true,
+      apiEndPoint: ApiUrl.updateBussiness,
+      isModelResponse: false,
+      onResponse: (data) {},
+      networkManager: networkManager,
+    );
+  }
+
+  updateDocumentation(context, {isempty = true}) async {
+    var loadingIndicator = LoadingProgressDialog();
+
+    if (networkManager.connectionType.value == 0) {
+      loadingIndicator.hide(context);
+      showDialogForScreen(context, "Edit Profile", Connection.noConnection,
+          callback: () {
+        Get.back();
+      });
+      return;
+    }
+
+    loadingIndicator.show(context, '');
+
+    List<http.MultipartFile> files = [];
+    // First file: visiting card
+
+    // Second file: verification document (example)
+    if (selectedPdfFile.value != null) {
+      files.add(http.MultipartFile(
+        'document_url',
+        selectedPdfFile.value!.readAsBytes().asStream(),
+        selectedPdfFile.value!.lengthSync(),
+        filename: selectedPdfFile.value!.path.split('/').last,
+      ));
+    }
+
+    var response = await Repository.multiPartPost(
+        multiPartData: files,
+        allowHeader: true,
+        {
+          "document_type": verificationCtr.text.trim(),
+        },
+        isempty
+            ? ApiUrl.documentcreate
+            : '${ApiUrl.documentupdate}${profileDocId.value}');
+
+    var responseData = await response.stream.toBytes();
+    loadingIndicator.hide(context);
+
+    var result = String.fromCharCodes(responseData);
+
+    var json = jsonDecode(result);
+
+    if (response.statusCode == 200 && json['success'] == true) {
+      LoginModel responseDetail = LoginModel.fromJson(json);
+
+      if (responseDetail.data?.user != null) {
+        UserPreferences().saveSignInInfo(responseDetail.data!.user);
+        logcat("isUpdate", jsonEncode(responseDetail.data?.user));
+      }
+
+      showDialogForScreen(context, "Update Profile Screen", json['message'],
+          callback: () {
+        Get.back(result: true);
+      });
+    } else {
+      showDialogForScreen(context, "Update Profile Screen", json['message'],
+          callback: () {});
+    }
+
+    //  catch (e) {
+    //   logcat("Exception", e);
+    //   loadingIndicator.hide(context);
+    // }
+  }
+
+  // updateProfile(context) async {
+  //   // if (imageURl.value.isEmpty) {
+  //   //   imageValidationPopupDialogs(context);
+  //   //   return;
+  //   // }
+
+  //   var loadingIndicator = LoadingProgressDialog();
+
+  //   try {
+  //     if (networkManager.connectionType.value == 0) {
+  //       loadingIndicator.hide(context);
+  //       showDialogForScreen(context, "Edit Profile", Connection.noConnection,
+  //           callback: () {
+  //         Get.back();
+  //       });
+  //       return;
+  //     }
+
+  //     loadingIndicator.show(context, '');
+
+  //     List<http.MultipartFile> files = [];
+  //     // First file: visiting card
+  //     if (imageFile.value != null) {
+  //       files.add(http.MultipartFile(
+  //         'visiting_card',
+  //         imageFile.value!.readAsBytes().asStream(),
+  //         imageFile.value!.lengthSync(),
+  //         filename: imageFile.value!.path.split('/').last,
+  //       ));
+  //     }
+
+  //     // Second file: verification document (example)
+  //     if (selectedPdfFile.value != null) {
+  //       files.add(http.MultipartFile(
+  //         'document_url',
+  //         selectedPdfFile.value!.readAsBytes().asStream(),
+  //         selectedPdfFile.value!.lengthSync(),
+  //         filename: selectedPdfFile.value!.path.split('/').last,
+  //       ));
+  //     }
+
+  //     var response = await Repository.multiPartPost({
+  //       "name": nameCtr.text.trim(),
+  //       "email": emailCtr.text.trim(),
+  //       "phone": phoneCtr.text.trim(),
+  //       "business_name": bussinessCtr.text.trim(),
+  //       "city": cityId.toString(),
+  //       "state": stateId.toString(),
+  //       "address": addressCtr.text.trim(),
+  //       "website": websiteCtr.text.trim(),
+  //       "pincode": pincodeCtr.text.trim(),
+  //       "document_type": verificationCtr.text.trim()
+  //     }, ApiUrl.updateProfile, multiPartData: files, allowHeader: true);
+
+  //     var responseData = await response.stream.toBytes();
+  //     loadingIndicator.hide(context);
+
+  //     var result = String.fromCharCodes(responseData);
+
+  //     var json = jsonDecode(result);
+
+  //     if (response.statusCode == 200 && json['success'] == true) {
+  //       LoginModel responseDetail = LoginModel.fromJson(json);
+  //       if (responseDetail.data?.user != null) {
+  //         UserPreferences().saveSignInInfo(responseDetail.data!.user);
+  //         logcat("isUpdate", jsonEncode(responseDetail.data?.user));
+  //       }
+  //       showDialogForScreen(context, "Update Profile Screen", json['message'],
+  //           callback: () {
+  //         Get.back(result: true);
+  //       });
+  //     } else {
+  //       showDialogForScreen(context, "Update Profile Screen", json['message'],
+  //           callback: () {});
+  //     }
+  //   } catch (e) {
+  //     logcat("Exception", e);
+  //     loadingIndicator.hide(context);
+  //   }
+  // }
+
+  //stepper
+
+  var _isMovingForward = true.obs;
+  bool get ismovingForward => _isMovingForward.value;
+  set ismovingForward(bool value) => _isMovingForward.value = value;
+
+  var _stepperValue = 0.obs;
+  int get StepperValue => _stepperValue.value;
+  set StepperValue(int value) => _stepperValue.value = value;
+
+  void incrementstepper() {
+    StepperValue += 1;
+    update();
+  }
+
+  void decerementstepper() {
+    StepperValue -= 1;
+    update();
+  }
+
+  bool validateStep0Fields() {
+    // Validate all required fields for Step 0
+    bool isBusinessValid =
+        bussinessModel.value.isValidate || isUserVerfied.value;
+    bool isCategoryValid = categoryIdModel.value.isValidate;
+    bool isNameValid = nameModel.value.isValidate;
+    bool isPhoneValid = phoneModel.value.isValidate;
+    bool isEmailValid = emailModel.value.isValidate || isEmailVerifed.value;
+    bool isAddressValid = addressModel.value.isValidate;
+    bool isPincodeValid = pincodeModel.value.isValidate;
+    bool isStateValid = stateModel.value.isValidate;
+    bool isCityValid = cityModel.value.isValidate;
+
+    // Return true only if all required fields are valid
+    return isBusinessValid &&
+        isCategoryValid &&
+        isNameValid &&
+        isPhoneValid &&
+        isEmailValid &&
+        isAddressValid &&
+        isPincodeValid &&
+        isStateValid &&
+        isCityValid;
+  }
   // void updateProfile(context) async {
   //   if (imageURl.value.isEmpty) {
   //     imageValidationPopupDialogs(context);
@@ -789,92 +1140,87 @@ class Updateprofilecontroller extends GetxController {
   }
 
   actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
-    await ImagePicker()
-        .pickImage(
-            source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
-            maxWidth: 1080,
-            maxHeight: 1080,
-            imageQuality: 100)
-        .then((file) async {
-      if (file != null) {
-        //Cropping the image
-        CroppedFile? croppedFile = await ImageCropper().cropImage(
-            sourcePath: file.path,
-            maxWidth: 1080,
-            maxHeight: 1080,
-            cropStyle: CropStyle.rectangle,
-            aspectRatioPresets: Platform.isAndroid
-                ? [
-                    CropAspectRatioPreset.square,
-                    CropAspectRatioPreset.ratio3x2,
-                    CropAspectRatioPreset.original,
-                    CropAspectRatioPreset.ratio4x3,
-                    CropAspectRatioPreset.ratio16x9
-                  ]
-                : [
-                    CropAspectRatioPreset.original,
-                    CropAspectRatioPreset.square,
-                    CropAspectRatioPreset.ratio3x2,
-                    CropAspectRatioPreset.ratio4x3,
-                    CropAspectRatioPreset.ratio5x3,
-                    CropAspectRatioPreset.ratio5x4,
-                    CropAspectRatioPreset.ratio7x5,
-                    CropAspectRatioPreset.ratio16x9
-                  ],
-            uiSettings: [
-              AndroidUiSettings(
-                  toolbarTitle: 'Crop Image',
-                  cropGridColor: primaryColor,
-                  toolbarColor: primaryColor,
-                  statusBarColor: primaryColor,
-                  toolbarWidgetColor: white,
-                  activeControlsWidgetColor: primaryColor,
-                  initAspectRatio: CropAspectRatioPreset.original,
-                  lockAspectRatio: false),
-              IOSUiSettings(
-                title: 'Crop Image',
-                cancelButtonTitle: 'Cancel',
-                doneButtonTitle: 'Done',
-                aspectRatioLockEnabled: false,
-              ),
-            ],
-            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
-        if (croppedFile != null) {
-          imageFile = File(croppedFile.path).obs;
-          imageURl.value = croppedFile.path;
+    print('image picker open is called');
+    try {
+      final file = await ImagePicker().pickImage(
+        source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+        maxWidth: 1080,
+        maxHeight: 1080,
+        imageQuality: 100,
+      );
 
-          validateFields(croppedFile.path,
-              model: imageModel,
-              errorText1: "Profile picture is required",
-              iscomman: true,
-              shouldEnableButton: true);
-
-          imageFile.refresh(); // Ensure Obx is notified
-          update();
-        }
-        //   } else {
-        //     imageFile.value = null;
-        //     imageURl.value = "";
-        //     validateFields("",
-        //         model: imageModel,
-        //         errorText1: "Profile picture is required",
-        //         iscomman: true,
-        //         shouldEnableButton: true);
-        //     update();
-        //   }
-        // } else {
-        //   imageFile.value = null;
-        //   imageURl.value = "";
-        //   validateFields("",
-        //       model: imageModel,
-        //       errorText1: "Profile picture is required",
-        //       iscomman: true,
-        //       shouldEnableButton: true);
-        //   update();
+      if (file == null) {
+        print('Image selection cancelled');
+        return;
       }
-    });
 
-    update();
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: file.path,
+        maxWidth: 1080,
+        maxHeight: 1080,
+        cropStyle: CropStyle.rectangle,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9
+              ]
+            : [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio3x2,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio5x3,
+                CropAspectRatioPreset.ratio5x4,
+                CropAspectRatioPreset.ratio7x5,
+                CropAspectRatioPreset.ratio16x9
+              ],
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            cropGridColor: primaryColor,
+            toolbarColor: primaryColor,
+            statusBarColor: primaryColor,
+            toolbarWidgetColor: white,
+            activeControlsWidgetColor: primaryColor,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: 'Crop Image',
+            cancelButtonTitle: 'Cancel',
+            doneButtonTitle: 'Done',
+            aspectRatioLockEnabled: false,
+          ),
+        ],
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      );
+
+      if (croppedFile == null) {
+        print('Image cropping cancelled');
+        return;
+      }
+
+      imageFile = File(croppedFile.path).obs;
+      imageURl.value = croppedFile.path;
+      print('About to call updateLogo');
+      await updateLogo(context);
+      print('updateLogo completed');
+      validateFields(
+        croppedFile.path,
+        model: imageModel,
+        errorText1: "Profile picture is required",
+        iscomman: true,
+        shouldEnableButton: true,
+      );
+
+      imageFile.refresh();
+      update();
+    } catch (e) {
+      print('Error in actionClickUploadImageFromCamera: $e');
+    }
   }
 
   // final ImagePicker _picker = ImagePicker();
@@ -967,6 +1313,28 @@ class Updateprofilecontroller extends GetxController {
         stateFilterList.addAll(stateList);
       },
       apiEndPoint: ApiUrl.states,
+      networkManager: networkManager,
+      apisLoading: (bool val) {
+        // isloading = val;
+      },
+    );
+  }
+
+  void getCategory(context) async {
+    commonGetApiCallFormate(
+      allowHeader: true,
+      title: 'Category',
+      context,
+      onResponse: (data) {
+        var responsDetails = CategoryData.fromJson(data);
+
+        categoryFilterList.clear();
+        categoryList.clear();
+
+        categoryList.addAll(responsDetails.data);
+        categoryFilterList.addAll(categoryList);
+      },
+      apiEndPoint: ApiUrl.getCategories,
       networkManager: networkManager,
       apisLoading: (bool val) {
         // isloading = val;
@@ -1143,6 +1511,71 @@ class Updateprofilecontroller extends GetxController {
               isSearch: true,
               inputType: TextInputType.text,
               errorText: searchStateModel.value.error));
+    });
+  }
+
+  Widget setCategoryListDialog() {
+    return Obx(() {
+      if (isStateApiCallLoading.value == true) {
+        return setDropDownContent([].obs, const Text("Loading"),
+            isApiIsLoading: isStateApiCallLoading.value);
+      }
+      return setDropDownContent(
+          categoryFilterList,
+          controller: searchCategoryCtr,
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            itemCount: categoryFilterList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+                contentPadding:
+                    const EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0),
+                horizontalTitleGap: null,
+                minLeadingWidth: 5,
+                onTap: () async {
+                  Get.back();
+                  categoryId.value = categoryFilterList[index].id.toString();
+                  categoryIDCtr.text = categoryFilterList[index].name;
+
+                  if (categoryIDCtr.text.toString().isNotEmpty) {
+                    categoryFilterList.clear();
+                    categoryFilterList.addAll(categoryList);
+                  }
+
+                  validateFields(categoryIDCtr.text,
+                      model: categoryIdModel,
+                      errorText1: "Category is required",
+                      iscomman: true,
+                      shouldEnableButton: true);
+                  update();
+                  futureDelay(() {
+                    getCityApi(context, stateId.value.toString(), true);
+                  }, isOneSecond: false);
+                  // validateFields(stateCtr.text);
+                },
+                title: showSelectedTextInDialog(
+                    name: categoryFilterList[index].name,
+                    modelId: categoryFilterList[index].id.toString(),
+                    storeId: categoryId.value),
+              );
+            },
+          ),
+          searchcontent: getReactiveFormField(
+              node: searchCategoryNode,
+              controller: searchCategoryCtr,
+              hintLabel: "Search Here",
+              onChanged: (val) {
+                applyCategoryFilter(
+                  val.toString(),
+                );
+                update();
+              },
+              isSearch: true,
+              inputType: TextInputType.text,
+              errorText: searchCategorynModel.value.error));
     });
   }
 
@@ -1348,6 +1781,21 @@ class Updateprofilecontroller extends GetxController {
                 errorText: searchCityModel.value.error));
       },
     );
+  }
+
+  void applyCategoryFilter(String keyword) {
+    categoryFilterList.clear();
+
+    for (CatggoryData categorylist in categoryList) {
+      if (categorylist.name
+          .toString()
+          .toLowerCase()
+          .contains(keyword.toLowerCase())) {
+        categoryFilterList.add(categorylist);
+      }
+    }
+    categoryFilterList.refresh();
+    categoryFilterList.call();
   }
 
   void applyFilter(String keyword, {isState = false}) {

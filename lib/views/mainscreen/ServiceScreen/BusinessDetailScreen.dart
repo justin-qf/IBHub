@@ -48,6 +48,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String thumbnail = '';
   String email = '';
   String phone = '';
+  String whatsapp = '';
+  String facebook = '';
+  String linkedIn = '';
   String address = '';
   String city = '';
   String state = '';
@@ -101,6 +104,12 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     thumbnail = retrievedObject.visitingCardUrl ?? '';
     email = retrievedObject.email ?? '';
     address = retrievedObject.address ?? '';
+
+    facebook = retrievedObject.facebook ?? '';
+    whatsapp = retrievedObject.whatsappNo ?? '';
+    linkedIn = retrievedObject.linkedin ?? '';
+
+    
     city = retrievedObject.city!.city.toString();
     state = retrievedObject.state!.name.toString();
     businessId = retrievedObject.id.toString();

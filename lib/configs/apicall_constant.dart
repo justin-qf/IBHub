@@ -48,4 +48,12 @@ class ApiUrl {
   static const emailVerificationVerifyOtp = 'email-verification-verify-otp';
   static const changeStatus = 'services/change-status';
   static const verification = 'document-upload/type/list';
+
+  //modified
+  static const updateLOgo = 'profile/update-logo';
+  static const updateBussiness = 'profile/update-business';
+  static const documentcreate = 'document-upload/create';
+  static const documentupdate = 'document-upload/edit/';
+
+  
 }

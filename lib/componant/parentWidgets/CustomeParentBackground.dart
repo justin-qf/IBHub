@@ -17,7 +17,7 @@ class CustomParentScaffold extends StatelessWidget {
   Drawer? drower;
   bool drawerEnableOpenDragGesture;
   bool extendedbodybehindappbar;
-
+  bool resizeToAvoidBottomInset;
   Function()? onTap;
 
   CustomParentScaffold(
@@ -27,6 +27,7 @@ class CustomParentScaffold extends StatelessWidget {
       required this.body,
       this.floatingActionBtn,
       this.onTap,
+      this.resizeToAvoidBottomInset = true,
       this.bottomNavigationBar,
       this.isdraweruse = false,
       this.drower,
@@ -74,7 +75,7 @@ class CustomParentScaffold extends StatelessWidget {
                   backgroundColor: bgColor,
                   extendBodyBehindAppBar: extendedbodybehindappbar,
                   // resizeToAvoidBottomInset: isSmallDevice(context),
-                  resizeToAvoidBottomInset: true,
+                  resizeToAvoidBottomInset: resizeToAvoidBottomInset,
 
                   body: body,
                 )
@@ -91,7 +92,7 @@ class CustomParentScaffold extends StatelessWidget {
                     bottomNavigationBar: bottomNavigationBar,
                     backgroundColor: bgColor,
                     body: body,
-                    resizeToAvoidBottomInset: true,
+                    resizeToAvoidBottomInset: resizeToAvoidBottomInset,
                   ),
                 ),
         );

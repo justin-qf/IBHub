@@ -402,7 +402,7 @@ class SignUpConstant {
   static const academicInfo = 'Academic Info';
   static const accounts = 'Account & Address';
 
-  static const nameLabel = 'Name';
+  static const nameLabel = 'Contact Name';
   static const bussinessLabel = 'Bussiness Name';
 
   static const schoolLabel = 'School';
@@ -661,6 +661,9 @@ class ProfileScreenConstant {
   static const salesPersonCode = 'Employee Id';
   static const role = 'Role';
   static const logo = 'Logo';
+  static const bussinessDetails = 'Bussiness Details';
+  static const verificationDetails = 'Verification Details';
+ 
 }
 
 class BottomConstant {

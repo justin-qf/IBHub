@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: SizedBox(
                   // color: Colors.yellow,
                   height: 5.h,
-                  width: 20.w,
+                  width: 18.w,
                   child: Image.asset(Asset.applogo)),
             ),
             getDynamicSizedBox(height: 2.h),
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Obx(() {
                   return controller.isCategoryLoading.value
                       ? SizedBox(
-                          height: 13.h,
+                          height: 12.h,
                           child: const Center(
                               child: CircularProgressIndicator(
                                   color: primaryColor)),
@@ -228,8 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: Text(
-                      '* To Get your business listed and verified. Upload your docs now!',
+                      '*To Get your business listed and verified. Upload your docs now!',
                       style: TextStyle(
+                        fontSize: 15.sp,
                         fontFamily: dM_sans_semiBold,
                       ),
                     ),
@@ -239,6 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
+            getDynamicSizedBox(height: 2.h),
             Obx(
               () {
                 return controller.isBusinessLoading.value
@@ -259,11 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 2,
-                                        mainAxisSpacing: 0.h,
-                                        childAspectRatio: 1.29,
-                                        crossAxisSpacing: 0.w),
-                                padding: EdgeInsets.only(
-                                    left: 0.5.w, right: 0.5.w, top: 1.h),
+                                        mainAxisSpacing: 1.h,
+                                        childAspectRatio: 1.5,
+                                        crossAxisSpacing: 1.w),
+                                padding: EdgeInsets.only(),
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,
