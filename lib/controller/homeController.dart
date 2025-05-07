@@ -75,7 +75,7 @@ class HomeScreenController extends GetxController {
     super.onInit();
   }
 
-  RxBool isUserVerified = false.obs;
+  RxBool isUserVerified = true.obs;
 
   getProfileData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
@@ -604,11 +604,11 @@ class HomeScreenController extends GetxController {
                       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
 
                       item.businessName,
-                      maxLines: 2,
+                      maxLines: 1,
                       style: TextStyle(
-                          fontFamily: dM_sans_medium,
+                          fontFamily: dM_sans_semiBold,
                           fontSize: 14.sp,
-                          height: 1,
+                          height: 1.2,
                           overflow: TextOverflow.ellipsis,
                           color: black,
                           fontWeight: FontWeight.w900)),

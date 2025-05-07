@@ -128,43 +128,45 @@ class _UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                         getDynamicSizedBox(height: 0.5.h),
                         Obx(() {
                           return ctr.isUserVerfied.value == true
-                              ? Container(
-                                  height: 7.h,
-                                  alignment: Alignment.centerLeft,
-                                  width: 100.w,
-                                  // margin: EdgeInsets.only(left: 2.w),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 1.h, horizontal: 5.w),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: inputBgColor),
-                                  child: Obx(() {
-                                    // ignore: unnecessary_null_comparison
-                                    return ctr.selectedPDFName.value != ''
-                                        ? Chip(
-                                            label: Text(
-                                                ctr.selectedPDFName.value,
-                                                style: const TextStyle(
-                                                    color: primaryColor,
-                                                    fontFamily:
-                                                        dM_sans_regular)),
-                                            backgroundColor: white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            deleteIcon:
-                                                Icon(Icons.close, size: 20.sp),
-                                            onDeleted: () {
-                                              // ctr.update();
-                                            },
-                                          )
-                                        : Text(
-                                            'Select Document',
-                                            style: styleTextHintFieldLabel(
-                                                isWhite: true),
-                                          );
-                                  }))
+                              ? SizedBox.shrink()
+
+                              // Container(
+                              //     height: 7.h,
+                              //     alignment: Alignment.centerLeft,
+                              //     width: 100.w,
+                              //     // margin: EdgeInsets.only(left: 2.w),
+                              //     padding: EdgeInsets.symmetric(
+                              //         vertical: 1.h, horizontal: 5.w),
+                              //     decoration: BoxDecoration(
+                              //         borderRadius: BorderRadius.circular(10),
+                              //         color: inputBgColor),
+                              //     child: Obx(() {
+                              //       // ignore: unnecessary_null_comparison
+                              //       return ctr.selectedPDFName.value != ''
+                              //           ? Chip(
+                              //               label: Text(
+                              //                   ctr.selectedPDFName.value,
+                              //                   style: const TextStyle(
+                              //                       color: primaryColor,
+                              //                       fontFamily:
+                              //                           dM_sans_regular)),
+                              //               backgroundColor: white,
+                              //               shape: RoundedRectangleBorder(
+                              //                 borderRadius:
+                              //                     BorderRadius.circular(10),
+                              //               ),
+                              //               deleteIcon:
+                              //                   Icon(Icons.close, size: 20.sp),
+                              //               onDeleted: () {
+                              //                 // ctr.update();
+                              //               },
+                              //             )
+                              //           : Text(
+                              //               'Select Document',
+                              //               style: styleTextHintFieldLabel(
+                              //                   isWhite: true),
+                              //             );
+                              //     }))
                               : GestureDetector(
                                   onTap: () {
                                     ctr.unfocusAll();
@@ -218,35 +220,36 @@ class _UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                                       })),
                                 );
                         }),
+                        if (ctr.isUserVerfied.value == true)
+                          getDynamicSizedBox(height: 1.h),
                         Obx(() {
                           return ctr.isUserVerfied.value == true
-                              ? Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 0.5.h, bottom: 0.5.h),
+                              ? GestureDetector(
+                                  onTap: () {
+                                    print(
+                                        'selected pdf:${ctr.selectedPDFName}');
+                                    ctr.downloadDocument(
+                                        context, ctr.selectedPDFName.value);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: black,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    padding: EdgeInsets.all(15),
                                     child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.center,
                                       children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            print(
-                                                'selected pdf:${ctr.selectedPDFName}');
-                                            ctr.downloadDocument(context,
-                                                ctr.selectedPDFName.value);
-                                          },
-                                          child: const Text("Download Your Doc",
-                                              style: TextStyle(
-                                                  color: primaryColor,
-                                                  fontFamily: dM_sans_regular)),
-                                        ),
+                                        const Text("Download Your Document",
+                                            style: TextStyle(
+                                                color: white,
+                                                fontFamily: dM_sans_semiBold)),
                                         getDynamicSizedBox(width: 3.w),
                                         Icon(
                                           Icons.download_rounded,
                                           size: 2.h,
+                                          color: white,
                                         )
                                       ],
                                     ),
@@ -256,45 +259,50 @@ class _UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                         }),
                         // getDynamicSizedBox(height: 4.h),
                         getDynamicSizedBox(height: 3.h),
-                        Obx(() {
-                          return getFormButton(context, () async {
-                            if (ctr.isUserVerfied.value == true
-                                ? false
-                                : ctr.is1FormInvalidate.value == true) {
-                              print('bussines api called');
 
-                              if (ctr.isVerificationDataEmpty.value == true) {
-                                print('verification api called:create');
-                                ctr.updateDocumentation(isempty: true, context);
-                              } else {
-                                print('verification api called:update');
-                                ctr.updateDocumentation(context,
-                                    isempty: false);
-                              }
-                            }
+                        ctr.isUserVerfied.value == true
+                            ? SizedBox.shrink()
+                            : Obx(() {
+                                return getFormButton(context, () async {
+                                  if (ctr.isUserVerfied.value == true
+                                      ? false
+                                      : ctr.is1FormInvalidate.value == true) {
+                                    print('bussines api called');
 
-                            //  else if (ctr.StepperValue == 1) {
-                            //   print(
-                            //       'verification ctr value is:${ctr.verificationCtr.text}');
-                            //   print(
-                            //       'selectd pdfn ame is:${ctr.selectedPDFName.value}');
+                                    if (ctr.isVerificationDataEmpty.value ==
+                                        true) {
+                                      print('verification api called:create');
+                                      ctr.updateDocumentation(
+                                          isempty: true, context);
+                                    } else {
+                                      print('verification api called:update');
+                                      ctr.updateDocumentation(context,
+                                          isempty: false);
+                                    }
+                                  }
 
-                            //   if (ctr.isVerificationDataEmpty.value == true) {
-                            //     print('verification api called:create');
-                            //     ctr.updateDocumentation(isempty: true, context);
-                            //   } else {
-                            //     print('verification api called:update');
-                            //     ctr.updateDocumentation(context, isempty: false);
-                            //   }
+                                  //  else if (ctr.StepperValue == 1) {
+                                  //   print(
+                                  //       'verification ctr value is:${ctr.verificationCtr.text}');
+                                  //   print(
+                                  //       'selectd pdfn ame is:${ctr.selectedPDFName.value}');
 
-                            //   // details.onStepContinue
-                            //   //     ?.call();
-                            // }
-                          }, 'Update',
-                              validate: ctr.isUserVerfied.value == true
-                                  ? false
-                                  : ctr.is1FormInvalidate.value);
-                        }),
+                                  //   if (ctr.isVerificationDataEmpty.value == true) {
+                                  //     print('verification api called:create');
+                                  //     ctr.updateDocumentation(isempty: true, context);
+                                  //   } else {
+                                  //     print('verification api called:update');
+                                  //     ctr.updateDocumentation(context, isempty: false);
+                                  //   }
+
+                                  //   // details.onStepContinue
+                                  //   //     ?.call();
+                                  // }
+                                }, 'Update',
+                                    validate: ctr.isUserVerfied.value == true
+                                        ? false
+                                        : ctr.is1FormInvalidate.value);
+                              }),
 
                         getDynamicSizedBox(height: 4.h),
                       ],

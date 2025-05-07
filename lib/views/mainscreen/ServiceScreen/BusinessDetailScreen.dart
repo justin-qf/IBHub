@@ -1,4 +1,4 @@
-  import 'dart:convert';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +47,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String businessId = '';
   String thumbnail = '';
   String email = '';
+  String name = '';
   String phone = '';
   String whatsapp = '';
   String facebook = '';
@@ -118,6 +119,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         : retrievedObject.linkedin ?? '';
 
     city = retrievedObject.city!.city.toString();
+    name = retrievedObject.name.toString();
     state = retrievedObject.state!.name.toString();
     businessId = retrievedObject.id.toString();
     phone = retrievedObject.phone.toString();
@@ -439,7 +441,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 children: [
                   getDynamicSizedBox(height: 1.h),
                   SizedBox(
-                    width: 70.w,
+                    // width: 70.w,
                     child: controller.getLableText(
                         widget.item != null
                             ? widget.item!.businessName
@@ -447,6 +449,26 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         isMainTitle: true),
                   ),
                   // controller.getCategoryLable(widget.item.businessName),
+                  getDynamicSizedBox(height: 1.h),
+                  Row(
+                    children: [
+                      Container(
+                          width: 6.w,
+                          height: 3.h,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: primaryColor),
+                          // padding: EdgeInsets.all(2),
+                          child: Icon(
+                            Icons.person,
+                            size: 15.sp,
+                            color: white,
+                          )),
+                      getDynamicSizedBox(width: 1.w),
+                      controller.getLableText(
+                          widget.item != null ? widget.item!.name : name,
+                          isMainTitle: false),
+                    ],
+                  ),
                   getDynamicSizedBox(height: 1.h),
                   GestureDetector(
                     onTap: () {
@@ -575,6 +597,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                 ],
               ),
             ),
+
             // Stack(
             //   children: [
             //     Container(
@@ -803,7 +826,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   () {
                     return controller.isServiceLoading.value
                         ? SizedBox(
-                            height: 22.h,
+                            height: 23.h,
                             child: const Center(
                                 child: CircularProgressIndicator(
                                     color: primaryColor)),

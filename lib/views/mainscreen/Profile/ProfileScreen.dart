@@ -146,23 +146,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       Obx(
                                         () {
                                           return Text(
-                                            controller.userName.value.isNotEmpty
-                                                ? controller
-                                                    .userName.value.capitalize!
-                                                : "Your Name",
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                fontSize: 16.sp,
-                                                color: white,
-                                                fontFamily: dM_sans_semiBold,
-                                                fontWeight: FontWeight.w800),
-                                          );
-                                        },
-                                      ),
-                                      Obx(
-                                        () {
-                                          return Text(
                                             controller
                                                     .bussiness.value.isNotEmpty
                                                 ? controller
@@ -175,6 +158,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 color: white,
                                                 fontFamily: dM_sans_semiBold,
                                                 fontWeight: FontWeight.w500),
+                                          );
+                                        },
+                                      ),
+                                      Obx(
+                                        () {
+                                          return Text(
+                                            controller.userName.value.isNotEmpty
+                                                ? controller
+                                                    .userName.value.capitalize!
+                                                : "Your Name",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                fontSize: 16.sp,
+                                                color: white,
+                                                fontFamily: dM_sans_semiBold,
+                                                fontWeight: FontWeight.w800),
                                           );
                                         },
                                       ),
@@ -273,16 +273,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                             // ),
                             getMenuListItem(
                                 callback: () {
+                                  callPopupDialogs(context, function: () {
+                                    launchPhoneCall('+91 80008 41620');
+                                    print('object');
+                                  });
+                                },
+                                title: 'Contact Us',
+                                icons: Icons.call),
+
+                            getMenuListItem(
+                                callback: () {
+                                  deletePopupDialogs(context, function: () {
+                                    controller.deleteAccountApi(context);
+                                  });
+                                },
+                                title: 'Delete Account',
+                                icons: Icons.delete),
+                            getMenuListItem(
+                                callback: () {
                                   logoutPopupDialogs(context);
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
-                            getMenuListItem(
-                                callback: () {
-                                  // logoutPopupDialogs(context);
-                                },
-                                title: 'Delete Account',
-                                icons: Icons.delete),
                             getDynamicSizedBox(height: 5.h),
                             GestureDetector(
                               onTap: () {
@@ -379,7 +391,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             icon.isEmpty
                 ? Icon(icons,
-                    color: fromVaccination == true ? null : secondaryColor,
+                    color: fromVaccination == true ? null : primaryColor,
                     size: 3.h)
                 : SvgPicture.asset(
                     // ignore: deprecated_member_use

@@ -256,7 +256,7 @@ class LoginConst {
   static const title = 'Sign In';
   static const mobileHint = 'Enter Phone Number';
   static const emailLabel = 'Email No';
-  static const signup = 'Sign up';
+  static const signup = 'Sign Up';
   static const subText = "Sign Into Your Account";
   static const buttonLabel = 'LOGIN';
   static const dontHaveAccount = 'Don’t have an account?';
@@ -402,7 +402,7 @@ class SignUpConstant {
   static const academicInfo = 'Academic Info';
   static const accounts = 'Account & Address';
 
-  static const nameLabel = 'Contact Name';
+  static const nameLabel = 'Contact Person Name';
   static const bussinessLabel = 'Bussiness Name';
 
   static const schoolLabel = 'School';
@@ -663,7 +663,6 @@ class ProfileScreenConstant {
   static const logo = 'Logo';
   static const bussinessDetails = 'Bussiness Details';
   static const verificationDetails = 'Verification Details';
- 
 }
 
 class BottomConstant {

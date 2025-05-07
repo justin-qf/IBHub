@@ -54,6 +54,5 @@ class ApiUrl {
   static const updateBussiness = 'profile/update-business';
   static const documentcreate = 'document-upload/create';
   static const documentupdate = 'document-upload/edit/';
-
-  
+  static const deleterequest = 'delete-request';
 }

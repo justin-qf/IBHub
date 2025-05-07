@@ -231,8 +231,8 @@ class ServiceDetailScreenController extends GetxController {
         textAlign: TextAlign.left,
         style: TextStyle(
           color: black,
-          fontFamily: isMainTitle == true ? dM_sans_bold : dM_sans_regular,
-          fontWeight: isMainTitle == true ? FontWeight.w900 : FontWeight.w500,
+          fontFamily: isMainTitle == true ? dM_sans_semiBold : dM_sans_semiBold,
+          // fontWeight: isMainTitle == true ? FontWeight.w500 : FontWeight.w500,
           fontSize: isMainTitle == true
               ? Device.screenType == sizer.ScreenType.mobile
                   ? 18.sp
@@ -286,7 +286,7 @@ class ServiceDetailScreenController extends GetxController {
         title,
         textAlign: TextAlign.left,
         style: TextStyle(
-          fontFamily: dM_sans_regular,
+          fontFamily: dM_sans_semiBold,
           color: primaryColor,
           height: 1.3,
           fontSize: Device.screenType == sizer.ScreenType.mobile ? 16.sp : 7.sp,
@@ -458,10 +458,13 @@ class ServiceDetailScreenController extends GetxController {
             getServiceList(context, 1, true, bussinessID, isFirstTime: true);
           }, isOneSecond: false);
 
-          showCustomToast(
-              context, isActive ? 'Service is Active' : 'Service is InActive');
+          // showCustomToast(
+          //     context, isActive ? 'Service is Active' : 'Service is InActive');
         } else {
-          showCustomToast(context, data.message ?? 'Something went wrong.');
+          showDialogForScreen(
+              context, screenName, data.message ?? 'Unknown error occurred.',
+              callback: () {});
+          // showCustomToast(context, data.message ?? 'Something went wrong.');
         }
       } else {
         showDialogForScreen(
@@ -479,256 +482,537 @@ class ServiceDetailScreenController extends GetxController {
 
   getServiceListItem(BuildContext context, ServiceDataList item,
       {isFromProfile = false}) {
-    return GestureDetector(
-        onTap: () {
-          getServiceDetails(context, item);
-          // Get.to(BusinessDetailScreen(item: item));
-        },
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
+    return Container(
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(
+              color: black.withOpacity(0.2),
+              spreadRadius: 0.1,
+              blurRadius: 5,
+              offset: const Offset(0.5, 0.5)),
+        ],
+      ),
+      padding: EdgeInsets.only(left: 2.w, right: 2.w, top: 1.h, bottom: 1.h),
+      margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              getServiceDetails(context, item);
+            },
+            child: Container(
+              // padding: const EdgeInsets.all(2),
+              margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+              width: 25.w,
+              height: 12.h,
               decoration: BoxDecoration(
-                color: white,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                boxShadow: [
-                  BoxShadow(
-                      color: black.withOpacity(0.2),
-                      spreadRadius: 0.1,
-                      blurRadius: 5,
-                      offset: const Offset(0.5, 0.5)),
-                ],
+                border: Border.all(
+                    color: primaryColor, width: 1), // border color and width
+                borderRadius: BorderRadius.circular(
+                    Device.screenType == sizer.ScreenType.mobile
+                        ? 3.6.w
+                        : 2.5.w),
               ),
-              padding: EdgeInsets.only(
-                  left: 2.w, right: 2.w, top: 0.2.h, bottom: 0.2.h),
-              margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
-              child: Row(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(
+                    Device.screenType == sizer.ScreenType.mobile
+                        ? 3.5.w
+                        : 2.5.w),
+                child: CachedNetworkImage(
+                  fit: BoxFit.contain,
+                  height: 17.h,
+                  imageUrl: item.thumbnail,
+                  placeholder: (context, url) =>
+                      Image.asset(Asset.bussinessPlaceholder),
+
+                  // Center(child: Icon(Icons.business_outlined)
+
+                  // CircularProgressIndicator(color: primaryColor),
+                  errorWidget: (context, url, error) => Image.asset(
+                      Asset.placeholder,
+                      height: 10.h,
+                      fit: BoxFit.cover),
+                ),
+
+                //  Icon(Icons.business_outlined)
+
+                //  CachedNetworkImage(
+                //   fit: BoxFit.cover,
+                //   height: 18.h,
+                //   imageUrl: item.thumbnail,
+                //   placeholder: (context, url) =>
+                //       const Center(child: Icon(Icons.business_outlined)
+
+                //           // CircularProgressIndicator(color: primaryColor),
+
+                //           ),
+                //   errorWidget: (context, url, error) => Image.asset(
+                //       Asset.placeholder,
+                //       height: 10.h,
+                //       fit: BoxFit.cover),
+                // ),
+              ),
+            ),
+          ),
+          getDynamicSizedBox(width: 2.w),
+          GestureDetector(
+            onTap: () {
+              getServiceDetails(context, item);
+            },
+            child: SizedBox(
+              // color: Colors.yellow,
+              height: 13.h,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    // padding: const EdgeInsets.all(2),
-                    margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
-                    width: 25.w,
-                    height: 12.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: primaryColor,
-                          width: 1), // border color and width
-                      borderRadius: BorderRadius.circular(
-                          Device.screenType == sizer.ScreenType.mobile
-                              ? 3.6.w
-                              : 2.5.w),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          Device.screenType == sizer.ScreenType.mobile
-                              ? 3.5.w
-                              : 2.5.w),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.contain,
-                        height: 17.h,
-                        imageUrl: item.thumbnail,
-                        placeholder: (context, url) =>
-                            Image.asset(Asset.bussinessPlaceholder),
-
-                        // Center(child: Icon(Icons.business_outlined)
-
-                        // CircularProgressIndicator(color: primaryColor),
-                        errorWidget: (context, url, error) => Image.asset(
-                            Asset.placeholder,
-                            height: 10.h,
-                            fit: BoxFit.cover),
+                  getDynamicSizedBox(height: 0.5.h),
+                  SizedBox(
+                      width: 45.w,
+                      // height: 2.h,
+                      child: Text(
+                          // 'dasgasdogasdhsad;asdhkadhasddastdlkjgagakldfgad',
+                          maxLines: 1,
+                          item.serviceTitle,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontFamily: dM_sans_semiBold,
+                              fontSize: 15.sp,
+                              color: black,
+                              fontWeight: FontWeight.w900))),
+                  getDynamicSizedBox(height: 0.2.h),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.folder,
+                        size: 18.sp,
                       ),
-
-                      //  Icon(Icons.business_outlined)
-
-                      //  CachedNetworkImage(
-                      //   fit: BoxFit.cover,
-                      //   height: 18.h,
-                      //   imageUrl: item.thumbnail,
-                      //   placeholder: (context, url) =>
-                      //       const Center(child: Icon(Icons.business_outlined)
-
-                      //           // CircularProgressIndicator(color: primaryColor),
-
-                      //           ),
-                      //   errorWidget: (context, url, error) => Image.asset(
-                      //       Asset.placeholder,
-                      //       height: 10.h,
-                      //       fit: BoxFit.cover),
-                      // ),
-                    ),
+                      getDynamicSizedBox(width: 0.5.w),
+                      SizedBox(
+                        width: 45.w,
+                        child: Text(item.categoryName,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: dM_sans_semiBold,
+                                fontSize: 14.sp,
+                                color: black,
+                                fontWeight: FontWeight.w500)),
+                      ),
+                    ],
                   ),
-                  getDynamicSizedBox(width: 2.w),
-                  Expanded(
-                    child: SizedBox(
-                      // color: Colors.yellow,
-                      height: 13.h,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                              width: 50.w,
-                              // height: 2.h,
-                              child: Text(
-                                  // 'dasgasdogasdhsad;asdhkadhasddastdlkjgagakldfgad',
-                                  maxLines: 1,
-                                  item.serviceTitle,
-                                  style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      fontFamily: dM_sans_medium,
-                                      fontSize: 15.8.sp,
-                                      color: black,
-                                      fontWeight: FontWeight.w900))),
-                          // getDynamicSizedBox(height: 1.h),
-                          SizedBox(
-                            width: 50.w,
-                            child: Text(item.categoryName,
-                                maxLines: 1,
+                  getDynamicSizedBox(height: 0.2.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // if (item.description.isNotEmpty)
+                      //   Icon(
+                      //     Icons.description,
+                      //     size: 18.sp,
+                      //   ),
+                      getDynamicSizedBox(width: 0.5.w),
+                      SizedBox(
+                        width: 45.w,
+                        child: AbsorbPointer(
+                            absorbing: true,
+                            child: ReadMoreText(item.description,
+                                textAlign: TextAlign.start,
+                                trimLines: 3, callback: (val) {
+                              logcat("ONTAP", val.toString());
+                            },
+                                colorClickableText: primaryColor,
+                                trimMode: TrimMode.Line,
+                                trimCollapsedText: '...Show more',
+                                trimExpandedText: '',
+                                delimiter: ' ',
                                 style: TextStyle(
-                                    fontFamily: dM_sans_medium,
-                                    fontSize: 15.sp,
-                                    color: black,
-                                    fontWeight: FontWeight.w500)),
-                          ),
-                          // getDynamicSizedBox(height: 1.h),
-                          SizedBox(
-                            width: 50.w,
-                            child: AbsorbPointer(
-                                absorbing: true,
-                                child: ReadMoreText(item.description,
-                                    textAlign: TextAlign.start,
-                                    trimLines: 2, callback: (val) {
-                                  logcat("ONTAP", val.toString());
-                                },
-                                    colorClickableText: primaryColor,
-                                    trimMode: TrimMode.Line,
-                                    trimCollapsedText: '...Show more',
-                                    trimExpandedText: '',
-                                    delimiter: ' ',
-                                    style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: Device.screenType ==
-                                                sizer.ScreenType.mobile
-                                            ? 15.sp
-                                            : 12.sp,
-                                        fontWeight: FontWeight.w100,
-                                        fontFamily: dM_sans_medium,
-                                        color: primaryColor),
-                                    lessStyle: TextStyle(
-                                        fontFamily: dM_sans_medium,
-                                        fontSize: Device.screenType ==
-                                                sizer.ScreenType.mobile
-                                            ? 15.sp
-                                            : 12.sp),
-                                    moreStyle: TextStyle(
-                                        fontFamily: dM_sans_medium,
-                                        fontSize: Device.screenType ==
-                                                sizer.ScreenType.mobile
-                                            ? 15.sp
-                                            : 12.sp,
-                                        color: primaryColor))),
-                          ),
-                        ],
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: Device.screenType ==
+                                            sizer.ScreenType.mobile
+                                        ? 14.sp
+                                        : 12.sp,
+                                    fontWeight: FontWeight.w100,
+                                    fontFamily: dM_sans_semiBold,
+                                    color: primaryColor),
+                                lessStyle: TextStyle(
+                                    fontFamily: dM_sans_semiBold,
+                                    fontSize: Device.screenType ==
+                                            sizer.ScreenType.mobile
+                                        ? 14.sp
+                                        : 12.sp),
+                                moreStyle: TextStyle(
+                                    fontFamily: dM_sans_semiBold,
+                                    fontSize: Device.screenType ==
+                                            sizer.ScreenType.mobile
+                                        ? 14.sp
+                                        : 12.sp,
+                                    color: primaryColor))),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
             ),
-            isFromProfile
-                ? Positioned(
-                    top: 0.2.h,
-                    right: 5.w,
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            print('goto add service screen');
-                            Get.to(AddServicescreen(
-                              item: item,
-                              isFromHomeScreen: true,
-                            ))?.then((value) {
-                              if (value == true) {
-                                if (!context.mounted) return;
-                                getServiceList(
-                                    context, 1, true, bussinessID.value,
-                                    isFirstTime: true);
-                              }
-                            });
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(3),
-                            child: Icon(
-                              Icons.edit,
-                              size: 20.sp,
-                            ),
-                          ),
+          ),
+          isFromProfile
+              ? Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        print('goto add service screen');
+                        Get.to(AddServicescreen(
+                          item: item,
+                          isFromHomeScreen: true,
+                        ))?.then((value) {
+                          if (value == true) {
+                            if (!context.mounted) return;
+                            getServiceList(context, 1, true, bussinessID.value,
+                                isFirstTime: true);
+                          }
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(3),
+                        child: Icon(
+                          Icons.edit,
+                          size: 18.sp,
                         ),
-                        getDynamicSizedBox(
-                            height: isSmallDevice(context) ? 0.2.h : 0.4.h),
-                        GestureDetector(
-                          onTap: () async {
-                            await deleteDialogs(
-                              context,
-                              function: () {
-                                deleteService(context, item.id);
-                              },
-                            );
-                            // if (isDeleted == true) {
-                            //   if (!context.mounted) return;
-
-                            // }
-                          },
-                          child: Container(
-                            margin: EdgeInsets.all(3),
-                            child: Icon(
-                              Icons.delete,
-                              size: 20.sp,
-                              color: red,
-                            ),
-                          ),
-                        ),
-                        Obx(() {
-                          return SizedBox(
-                            // color: Colors.yellow,
-                            width: 10.w,
-                            child: Transform.scale(
-                              scale: 3.5.sp,
-                              child: SwitchListTile(
-                                dense: true,
-                                value: item.isActive.value == 1,
-                                onChanged: (value) {
-                                  int newStatus =
-                                      item.isActive.value == 0 ? 1 : 0;
-
-                                  toggleActiveStatus(
-                                    context,
-                                    statusID: newStatus.toString(),
-                                    serviceId: item.id.toString(),
-                                  );
-                                  // update();
-                                },
-                              ),
-                            ),
-                          );
-                        })
-                      ],
+                      ),
                     ),
+                    getDynamicSizedBox(
+                        height: isSmallDevice(context) ? 0.h : 0.3.h),
+                    GestureDetector(
+                      onTap: () async {
+                        await deleteDialogs(
+                          context,
+                          function: () {
+                            deleteService(context, item.id);
+                          },
+                        );
+                        // if (isDeleted == true) {
+                        //   if (!context.mounted) return;
 
-                    // Text(
-                    //   'Edit',
-                    //   style: TextStyle(
-                    //       fontFamily: dM_sans_semiBold,
-                    //       fontSize: 15.8.sp,
-                    //       color: black,
-                    //       fontWeight: FontWeight.w900),
-                    // ),
-                  )
-                : const SizedBox.shrink(),
-          ],
-        ));
+                        // }
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(3),
+                        child: Icon(
+                          Icons.delete,
+                          size: 18.sp,
+                          color: red,
+                        ),
+                      ),
+                    ),
+                    Obx(() {
+                      return Container(
+                        height: 3.h,
+                        // color: Colors.yellow,
+                        width: 10.w,
+                        child: Transform.scale(
+                          scale: 3.sp,
+                          child: SwitchListTile(
+                            activeColor: primaryColor,
+                            dense: true,
+                            value: item.isActive.value == 1,
+                            onChanged: (value) {
+                              int newStatus = item.isActive.value == 0 ? 1 : 0;
+
+                              toggleActiveStatus(
+                                context,
+                                statusID: newStatus.toString(),
+                                serviceId: item.id.toString(),
+                              );
+                              // update();
+                            },
+                          ),
+                        ),
+                      );
+                    })
+                  ],
+                )
+              : SizedBox.shrink()
+        ],
+      ),
+    );
+
+    // GestureDetector(
+    //   onTap: () {
+    //     getServiceDetails(context, item);
+    //     // Get.to(BusinessDetailScreen(item: item));
+    //   },
+    //   child:
+
+    //   // Stack(
+    //   //   clipBehavior: Clip.none,
+    //   //   children: [
+    //   //     Container(
+    //   //       decoration: BoxDecoration(
+    //   //         color: white,
+    //   //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+    //   //         boxShadow: [
+    //   //           BoxShadow(
+    //   //               color: black.withOpacity(0.2),
+    //   //               spreadRadius: 0.1,
+    //   //               blurRadius: 5,
+    //   //               offset: const Offset(0.5, 0.5)),
+    //   //         ],
+    //   //       ),
+    //   //       padding:
+    //   //           EdgeInsets.only(left: 2.w, right: 2.w, top: 1.h, bottom: 1.h),
+    //   //       margin: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 2.h),
+    //   //       child: Row(
+    //   //         crossAxisAlignment: CrossAxisAlignment.start,
+    //   //         children: [
+    //   //           Container(
+    //   //             // padding: const EdgeInsets.all(2),
+    //   //             margin: EdgeInsets.only(top: 0.5.h, bottom: 0.5.h),
+    //   //             width: 25.w,
+    //   //             height: 12.h,
+    //   //             decoration: BoxDecoration(
+    //   //               border: Border.all(
+    //   //                   color: primaryColor,
+    //   //                   width: 1), // border color and width
+    //   //               borderRadius: BorderRadius.circular(
+    //   //                   Device.screenType == sizer.ScreenType.mobile
+    //   //                       ? 3.6.w
+    //   //                       : 2.5.w),
+    //   //             ),
+    //   //             child: ClipRRect(
+    //   //               borderRadius: BorderRadius.circular(
+    //   //                   Device.screenType == sizer.ScreenType.mobile
+    //   //                       ? 3.5.w
+    //   //                       : 2.5.w),
+    //   //               child: CachedNetworkImage(
+    //   //                 fit: BoxFit.contain,
+    //   //                 height: 17.h,
+    //   //                 imageUrl: item.thumbnail,
+    //   //                 placeholder: (context, url) =>
+    //   //                     Image.asset(Asset.bussinessPlaceholder),
+
+    //   //                 // Center(child: Icon(Icons.business_outlined)
+
+    //   //                 // CircularProgressIndicator(color: primaryColor),
+    //   //                 errorWidget: (context, url, error) => Image.asset(
+    //   //                     Asset.placeholder,
+    //   //                     height: 10.h,
+    //   //                     fit: BoxFit.cover),
+    //   //               ),
+
+    //   //               //  Icon(Icons.business_outlined)
+
+    //   //               //  CachedNetworkImage(
+    //   //               //   fit: BoxFit.cover,
+    //   //               //   height: 18.h,
+    //   //               //   imageUrl: item.thumbnail,
+    //   //               //   placeholder: (context, url) =>
+    //   //               //       const Center(child: Icon(Icons.business_outlined)
+
+    //   //               //           // CircularProgressIndicator(color: primaryColor),
+
+    //   //               //           ),
+    //   //               //   errorWidget: (context, url, error) => Image.asset(
+    //   //               //       Asset.placeholder,
+    //   //               //       height: 10.h,
+    //   //               //       fit: BoxFit.cover),
+    //   //               // ),
+    //   //             ),
+    //   //           ),
+    //   //           getDynamicSizedBox(width: 2.w),
+    //   //           Expanded(
+    //   //             child: SizedBox(
+    //   //               // color: Colors.yellow,
+    //   //               height: 13.h,
+    //   //               child: Column(
+    //   //                 mainAxisAlignment: MainAxisAlignment.start,
+    //   //                 crossAxisAlignment: CrossAxisAlignment.start,
+    //   //                 children: [
+    //   //                   getDynamicSizedBox(height: 0.5.h),
+    //   //                   SizedBox(
+    //   //                       width: 50.w,
+    //   //                       // height: 2.h,
+    //   //                       child: Text(
+    //   //                           // 'dasgasdogasdhsad;asdhkadhasddastdlkjgagakldfgad',
+    //   //                           maxLines: 1,
+    //   //                           item.serviceTitle,
+    //   //                           style: TextStyle(
+    //   //                               overflow: TextOverflow.ellipsis,
+    //   //                               fontFamily: dM_sans_semiBold,
+    //   //                               fontSize: 15.sp,
+    //   //                               color: black,
+    //   //                               fontWeight: FontWeight.w900))),
+    //   //                   getDynamicSizedBox(height: 0.2.h),
+    //   //                   Row(
+    //   //                     children: [
+    //   //                       Icon(
+    //   //                         Icons.folder,
+    //   //                         size: 18.sp,
+    //   //                       ),
+    //   //                       getDynamicSizedBox(width: 0.5.w),
+    //   //                       SizedBox(
+    //   //                         width: 50.w,
+    //   //                         child: Text(item.categoryName,
+    //   //                             maxLines: 1,
+    //   //                             style: TextStyle(
+    //   //                                 fontFamily: dM_sans_semiBold,
+    //   //                                 fontSize: 14.sp,
+    //   //                                 color: black,
+    //   //                                 fontWeight: FontWeight.w500)),
+    //   //                       ),
+    //   //                     ],
+    //   //                   ),
+    //   //                   getDynamicSizedBox(height: 0.2.h),
+    //   //                   Row(
+    //   //                     mainAxisAlignment: MainAxisAlignment.start,
+    //   //                     children: [
+    //   //                       // if (item.description.isNotEmpty)
+    //   //                       //   Icon(
+    //   //                       //     Icons.description,
+    //   //                       //     size: 18.sp,
+    //   //                       //   ),
+    //   //                       getDynamicSizedBox(width: 0.5.w),
+    //   //                       SizedBox(
+    //   //                         width: 50.w,
+    //   //                         child: AbsorbPointer(
+    //   //                             absorbing: true,
+    //   //                             child: ReadMoreText(item.description,
+    //   //                                 textAlign: TextAlign.start,
+    //   //                                 trimLines: 3, callback: (val) {
+    //   //                               logcat("ONTAP", val.toString());
+    //   //                             },
+    //   //                                 colorClickableText: primaryColor,
+    //   //                                 trimMode: TrimMode.Line,
+    //   //                                 trimCollapsedText: '...Show more',
+    //   //                                 trimExpandedText: '',
+    //   //                                 delimiter: ' ',
+    //   //                                 style: TextStyle(
+    //   //                                     overflow: TextOverflow.ellipsis,
+    //   //                                     fontSize: Device.screenType ==
+    //   //                                             sizer.ScreenType.mobile
+    //   //                                         ? 14.sp
+    //   //                                         : 12.sp,
+    //   //                                     fontWeight: FontWeight.w100,
+    //   //                                     fontFamily: dM_sans_semiBold,
+    //   //                                     color: primaryColor),
+    //   //                                 lessStyle: TextStyle(
+    //   //                                     fontFamily: dM_sans_semiBold,
+    //   //                                     fontSize: Device.screenType ==
+    //   //                                             sizer.ScreenType.mobile
+    //   //                                         ? 14.sp
+    //   //                                         : 12.sp),
+    //   //                                 moreStyle: TextStyle(
+    //   //                                     fontFamily: dM_sans_semiBold,
+    //   //                                     fontSize: Device.screenType ==
+    //   //                                             sizer.ScreenType.mobile
+    //   //                                         ? 14.sp
+    //   //                                         : 12.sp,
+    //   //                                     color: primaryColor))),
+    //   //                       ),
+    //   //                     ],
+    //   //                   ),
+    //   //                 ],
+    //   //               ),
+    //   //             ),
+    //   //           ),
+    //   //         ],
+    //   //       ),
+    //   //     ),
+    //   //     isFromProfile
+    //   //         ? Positioned(
+    //   //             top: 0.2.h,
+    //   //             right: 5.w,
+    //   //             child: Column(
+    //   //               children: [
+    //   //                 GestureDetector(
+    //   //                   onTap: () {
+    //   //                     print('goto add service screen');
+    //   //                     Get.to(AddServicescreen(
+    //   //                       item: item,
+    //   //                       isFromHomeScreen: true,
+    //   //                     ))?.then((value) {
+    //   //                       if (value == true) {
+    //   //                         if (!context.mounted) return;
+    //   //                         getServiceList(
+    //   //                             context, 1, true, bussinessID.value,
+    //   //                             isFirstTime: true);
+    //   //                       }
+    //   //                     });
+    //   //                   },
+    //   //                   child: Container(
+    //   //                     margin: EdgeInsets.all(3),
+    //   //                     child: Icon(
+    //   //                       Icons.edit,
+    //   //                       size: 18.sp,
+    //   //                     ),
+    //   //                   ),
+    //   //                 ),
+    //   //                 getDynamicSizedBox(
+    //   //                     height: isSmallDevice(context) ? 0.h : 0.3.h),
+    //   //                 GestureDetector(
+    //   //                   onTap: () async {
+    //   //                     await deleteDialogs(
+    //   //                       context,
+    //   //                       function: () {
+    //   //                         deleteService(context, item.id);
+    //   //                       },
+    //   //                     );
+    //   //                     // if (isDeleted == true) {
+    //   //                     //   if (!context.mounted) return;
+
+    //   //                     // }
+    //   //                   },
+    //   //                   child: Container(
+    //   //                     margin: EdgeInsets.all(3),
+    //   //                     child: Icon(
+    //   //                       Icons.delete,
+    //   //                       size: 18.sp,
+    //   //                       color: red,
+    //   //                     ),
+    //   //                   ),
+    //   //                 ),
+    //   //                 Obx(() {
+    //   //                   return Container(
+    //   //                     height: 3.h,
+    //   //                     // color: Colors.yellow,
+    //   //                     width: 10.w,
+    //   //                     child: Transform.scale(
+    //   //                       scale: 3.sp,
+    //   //                       child: SwitchListTile(
+    //   //                         activeColor: primaryColor,
+    //   //                         dense: true,
+    //   //                         value: item.isActive.value == 1,
+    //   //                         onChanged: (value) {
+    //   //                           int newStatus =
+    //   //                               item.isActive.value == 0 ? 1 : 0;
+
+    //   //                           toggleActiveStatus(
+    //   //                             context,
+    //   //                             statusID: newStatus.toString(),
+    //   //                             serviceId: item.id.toString(),
+    //   //                           );
+    //   //                           // update();
+    //   //                         },
+    //   //                       ),
+    //   //                     ),
+    //   //                   );
+    //   //                 })
+    //   //               ],
+    //   //             ),
+
+    //   //             // Text(
+    //   //             //   'Edit',
+    //   //             //   style: TextStyle(
+    //   //             //       fontFamily: dM_sans_semiBold,
+    //   //             //       fontSize: 15.8.sp,
+    //   //             //       color: black,
+    //   //             //       fontWeight: FontWeight.w900),
+    //   //             // ),
+    //   //           )
+    //   //         : SizedBox.shrink(),
+    //   //   ],
+    //   // )
+    // );
   }
 
   getServiceDetails(BuildContext context, ServiceDataList data) {

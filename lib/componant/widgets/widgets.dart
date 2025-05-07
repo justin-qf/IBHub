@@ -931,7 +931,7 @@ showLoader() {
 
 getFloatingActionButton({Function? onClick}) {
   return FloatingActionButton(
-      backgroundColor: isDarkMode() ? white : secondaryColor,
+      backgroundColor: isDarkMode() ? white : primaryColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       onPressed: () {
         onClick!();

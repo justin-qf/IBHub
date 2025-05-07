@@ -276,6 +276,7 @@ class _SignupscreenState extends State<Signupscreen> {
                         style:
                             TextStyle(color: grey, fontFamily: dM_sans_medium),
                       ),
+                      getDynamicSizedBox(width: 1.w),
                       Stack(
                         alignment: Alignment.center,
                         children: [

@@ -898,7 +898,7 @@ class CategoryBusinessController extends GetxController {
               child: Container(
                 height: 11.h,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
@@ -919,42 +919,60 @@ class CategoryBusinessController extends GetxController {
                               color: black,
                               fontWeight: FontWeight.w900)),
                     ),
-                    getDynamicSizedBox(height: 1.h),
-                    SizedBox(
-                      // height: 2.h,
-                      width: Device.screenType == sizer.ScreenType.mobile
-                          ? 58.w
-                          : 70.w,
-                      child: Text(item.name,
-                          maxLines: 1,
-                          style: TextStyle(
-                              height: 1.1,
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 14.sp,
-                              color: black,
-                              fontWeight: FontWeight.w500)),
+                    getDynamicSizedBox(height: 0.5.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          size: 18.sp,
+                        ),
+                        getDynamicSizedBox(width: 0.5.w),
+                        SizedBox(
+                          // height: 2.h,
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 50.w
+                              : 70.w,
+                          child: Text(item.name,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  height: 1.1,
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 14.sp,
+                                  color: black,
+                                  fontWeight: FontWeight.w500)),
+                        ),
+                      ],
                     ),
-                    getDynamicSizedBox(height: 1.h),
-                    SizedBox(
-                      // height: 4.h,
-                      width: Device.screenType == sizer.ScreenType.mobile
-                          ? 58.w
-                          : 65.w,
-                      child: Text(
-                          // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+                    getDynamicSizedBox(height: 0.5.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          size: 18.sp,
+                        ),
+                        getDynamicSizedBox(width: 0.5.w),
+                        SizedBox(
+                          // height: 4.h,
+                          width: Device.screenType == sizer.ScreenType.mobile
+                              ? 50.w
+                              : 65.w,
+                          child: Text(
+                              // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
 
-                          item.address.isNotEmpty
-                              ? item.address
-                              : item.city != null
-                                  ? item.city!.city
-                                  : item.phone,
-                          maxLines: 2,
-                          style: TextStyle(
-                              height: 1.1,
-                              fontFamily: dM_sans_semiBold,
-                              fontSize: 14.sp,
-                              color: black,
-                              fontWeight: FontWeight.w500)),
+                              item.address.isNotEmpty
+                                  ? item.address
+                                  : item.city != null
+                                      ? item.city!.city
+                                      : item.phone,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  height: 1.1,
+                                  fontFamily: dM_sans_semiBold,
+                                  fontSize: 14.sp,
+                                  color: black,
+                                  fontWeight: FontWeight.w500)),
+                        ),
+                      ],
                     ),
                   ],
                 ),
