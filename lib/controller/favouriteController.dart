@@ -1128,6 +1128,7 @@ class FavouriteController extends GetxController {
 
   getBusinessListItem(BuildContext context, BusinessData item) {
     // print('item;${item.isEmailVerified}');
+    // print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();

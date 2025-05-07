@@ -938,6 +938,7 @@ class SearchScreenController extends GetxController {
                     getDynamicSizedBox(height: 0.5.h),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                     
                       children: [
                         Icon(
                           Icons.location_on,

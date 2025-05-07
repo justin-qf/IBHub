@@ -793,6 +793,7 @@ class CategoryBusinessController extends GetxController {
   getBusinessListItem(
       BuildContext context, BusinessData item, String categoryId) {
     // print('item;${item.isEmailVerified}');
+    // print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();
