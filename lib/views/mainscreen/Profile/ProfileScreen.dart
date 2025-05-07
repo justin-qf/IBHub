@@ -200,7 +200,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   Get.to(const UpdateProfile())?.then((value) {
                                     if (value == true) {
                                       print('calledd');
-                                      controller.getProfileData();
                                       controller.getApiProfile(context);
                                       isAnyFieldEmpty();
                                     }

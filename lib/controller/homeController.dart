@@ -75,7 +75,7 @@ class HomeScreenController extends GetxController {
     super.onInit();
   }
 
-  RxBool isUserVerified = false.obs;
+  RxBool isUserVerified = true.obs;
 
   getProfileData() async {
     User? retrievedObject = await UserPreferences().getSignInInfo();
