@@ -808,7 +808,11 @@ class Updateprofilecontroller extends GetxController {
       allowHeader: true,
       apiEndPoint: ApiUrl.updateBussiness,
       isModelResponse: false,
-      onResponse: (data) {},
+      onResponse: (data) {
+        if (isUserVerfied.value == true) {
+          Get.back(result: true);
+        }
+      },
       networkManager: networkManager,
     );
   }

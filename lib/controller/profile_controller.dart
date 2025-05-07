@@ -71,6 +71,7 @@ class ProfileController extends GetxController {
       apkUrl.value = profileData.data!.user!.appUrl ?? '';
 
       UserPreferences().saveSignInInfo(profileData.data!.user);
+      getProfileData();
 
       update();
     }, networkManager: networkManager);
