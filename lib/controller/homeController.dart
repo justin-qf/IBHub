@@ -495,12 +495,15 @@ class HomeScreenController extends GetxController {
           Get.to(BusinessDetailScreen(
             item: item,
             isFromProfile: false,
-          ));
+          ))!
+              .then((value) {
+            currentPage = 1;
+            futureDelay(() {
+              logcat("isREfressh", "DONE");
+              getBusinessList(context, 1, false, isFirstTime: true);
+            }, milliseconds: true);
+          });
         }
-        // Get.to(BusinessDetailScreen(
-        //   item: item,
-        //   isFromProfile: false,
-        // ));
       },
       child: Container(
         height: 15.h,

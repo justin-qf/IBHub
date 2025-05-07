@@ -302,11 +302,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     ),
                 //   )
                 : SizedBox.shrink(),
-            getDynamicSizedBox(height: 3.h),
+            getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
-            getDynamicSizedBox(height: 3.h),
+            getDynamicSizedBox(height: 2.h),
             Obx(
               () {
                 return controller.isBusinessLoading.value
