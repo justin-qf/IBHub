@@ -92,7 +92,7 @@ class Signupscreencontroller extends GetxController {
     } else {
       isFormInvalidate.value = true;
     }
-    print("isFormInvalidate: ${isFormInvalidate.value}");
+    // print("isFormInvalidate: ${isFormInvalidate.value}");
     update();
   }
 

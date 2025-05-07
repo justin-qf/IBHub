@@ -226,7 +226,7 @@ class _SignupscreenState extends State<Signupscreen> {
                             Get.to(PrivacyPolicyScreen(
                               ispolicyScreen: true,
                             ));
-                            print('navigate to policy screen');
+                            // print('navigate to policy screen');
                           },
                           child: Container(
                             padding: const EdgeInsets.all(5),

@@ -902,7 +902,7 @@ class SearchScreenController extends GetxController {
                           // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
 
                           item.businessName,
-                          maxLines: 2,
+                          maxLines: 1,
                           style: TextStyle(
                               fontFamily: dM_sans_semiBold,
                               fontSize: 15.sp,
@@ -937,6 +937,7 @@ class SearchScreenController extends GetxController {
                     ),
                     getDynamicSizedBox(height: 0.5.h),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.location_on,
@@ -951,12 +952,8 @@ class SearchScreenController extends GetxController {
                           child: Text(
                               // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
 
-                              item.address.isNotEmpty
-                                  ? item.address
-                                  : item.city != null
-                                      ? item.city!.city
-                                      : item.phone,
-                              maxLines: 2,
+                              '${item.address}, ${item.city!.city}, ${item.state!.name} - ${item.pincode}',
+                              maxLines: 3,
                               style: TextStyle(
                                   height: 1.1,
                                   fontFamily: dM_sans_semiBold,

@@ -199,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 callback: () async {
                                   Get.to(const UpdateProfile())?.then((value) {
                                     if (value == true) {
-                                      print('calledd');
+                                      // print('calledd');
                                       controller.getApiProfile(context);
                                       isAnyFieldEmpty();
                                     }
@@ -272,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 callback: () {
                                   callPopupDialogs(context, function: () {
                                     launchPhoneCall('+91 80008 41620');
-                                    print('object');
+                                    // print('object');
                                   });
                                 },
                                 title: 'Contact Us',
@@ -292,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
-                            getDynamicSizedBox(height: 5.h),
+                            // getDynamicSizedBox(height: 1.h),
                             GestureDetector(
                               onTap: () {
                                 Get.to(PrivacyPolicyScreen(

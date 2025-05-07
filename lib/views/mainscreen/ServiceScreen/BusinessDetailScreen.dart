@@ -263,7 +263,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            print('Share pdf');
+                            // print('Share pdf');
 
                             pdfPopupDialogs(
                               // ignore: use_build_context_synchronously
@@ -293,7 +293,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         facebook.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
-                                  print('facebook pdf');
+                                  // print('facebook pdf');
 
                                   openBusinessFacebook(
                                       context: context,
@@ -331,7 +331,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   openBusinessLinkedIn(
                                       context: context,
                                       linkedInProfileUrl: linkedIn);
-                                  print('linkedin');
+                                  // print('linkedin');
 
                                   // pdfPopupDialogs(
                                   //   // ignore: use_build_context_synchronously
@@ -362,7 +362,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                         whatsapp.isNotEmpty
                             ? GestureDetector(
                                 onTap: () {
-                                  shareBusinessDetailsOnWhatsApp(
+                                  if (widget.isFromProfile == false) {
+                                    shareBusinessDetailsOnWhatsApp(
                                       context: context,
                                       businessName: widget.item != null
                                           ? widget.item!.businessName
@@ -373,7 +374,17 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                       email: widget.item != null
                                           ? widget.item!.email
                                           : email,
-                                      phoneNumber: whatsapp);
+                                      phoneNumber: whatsapp,
+                                    );
+                                  } else {
+                                    shareSelfBusinessDetailsOnWhatsApp(
+                                      context: context,
+                                      businessName: businessName,
+                                      address: address,
+                                      email: email,
+                                      phoneNumber: whatsapp,
+                                    );
+                                  }
                                 },
                                 child: Container(
                                     height: 4.h,

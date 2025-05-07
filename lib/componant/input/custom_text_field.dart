@@ -303,7 +303,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
                                             if (widget.obscureFunction !=
                                                 null) {
                                               widget.obscureFunction!();
-                                              print('call');
+                                              // print('call');
                                             }
                                           },
                                           alignment: Alignment.centerRight,
@@ -358,7 +358,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
                                         //     widget.fromObsecureText.toString());
                                         if (widget.obscureFunction != null) {
                                           widget.obscureFunction!();
-                                          print('call');
+                                          // print('call');
                                         }
                                       },
                                       child: Padding(

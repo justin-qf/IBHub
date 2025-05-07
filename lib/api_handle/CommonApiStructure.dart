@@ -89,7 +89,7 @@ void removeFavouriteAPI(context, InternetController networkManager,
       "business_id": businessId.toString().trim(),
     });
 
-    print('BusinessId + ${businessId}');
+    // print('BusinessId + ${businessId}');
     var response = await Repository.delete('${ApiUrl.removeToFav}/$businessId',
         allowHeader: true);
     loadingIndicator.hide(context);
