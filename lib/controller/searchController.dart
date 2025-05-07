@@ -937,6 +937,7 @@ class SearchScreenController extends GetxController {
                     ),
                     getDynamicSizedBox(height: 0.5.h),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.location_on,
@@ -956,7 +957,7 @@ class SearchScreenController extends GetxController {
                                   : item.city != null
                                       ? item.city!.city
                                       : item.phone,
-                              maxLines: 2,
+                              maxLines: 3,
                               style: TextStyle(
                                   height: 1.1,
                                   fontFamily: dM_sans_semiBold,

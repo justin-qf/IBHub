@@ -1127,7 +1127,7 @@ class FavouriteController extends GetxController {
   // }
 
   getBusinessListItem(BuildContext context, BusinessData item) {
-    print('item;${item.isEmailVerified}');
+    // print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();
@@ -1393,6 +1393,7 @@ class FavouriteController extends GetxController {
                     ),
                     getDynamicSizedBox(height: 0.5.h),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.location_on,
@@ -1412,7 +1413,7 @@ class FavouriteController extends GetxController {
                                   : item.city != null
                                       ? item.city!.city
                                       : item.phone,
-                              maxLines: 2,
+                              maxLines: 3,
                               style: TextStyle(
                                   height: 1.1,
                                   fontFamily: dM_sans_semiBold,

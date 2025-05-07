@@ -90,9 +90,9 @@ Widget getAppbar({
 }
 
 /*Debug*/
-void printing() {
-  print('print');
-}
+// void printing() {
+//   print('print');
+// }
 /*Debug*/
 
 // getDrawer({required isDrawerOpen, required toggleDrawer}) {

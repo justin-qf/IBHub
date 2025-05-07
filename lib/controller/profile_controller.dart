@@ -117,11 +117,11 @@ class ProfileController extends GetxController {
         await file.writeAsBytes(response.bodyBytes);
         return filePath;
       } else {
-        print('Failed to download PDF: ${response.statusCode}');
+        // print('Failed to download PDF: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Error downloading PDF: $e');
+      // print('Error downloading PDF: $e');
       return null;
     }
   }

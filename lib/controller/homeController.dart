@@ -84,7 +84,7 @@ class HomeScreenController extends GetxController {
       isUserVerified.value = retrievedObject.isVerified ?? false;
     }
 
-    print('user verified status + ${isUserVerified.value}');
+    // print('user verified status + ${isUserVerified.value}');
   }
 
   void hideKeyboard(context) {
@@ -485,7 +485,7 @@ class HomeScreenController extends GetxController {
   }
 
   getBusinessListItem(BuildContext context, BusinessData item) {
-    print('item;${item.isEmailVerified}');
+    // print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
         bool isEmpty = await isAnyFieldEmpty();

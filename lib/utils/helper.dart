@@ -436,6 +436,75 @@ Future<bool> shareBusinessDetailsOnWhatsApp({
   }
 }
 
+
+Future<bool> shareSelfBusinessDetailsOnWhatsApp({
+  required BuildContext context,
+  required String businessName,
+  required String email,
+  required String phoneNumber,
+  required String address,
+}) async {
+  // Construct the message
+  final String message = '''
+*Business Details:*
+*Name*: $businessName
+*Email*: $email
+*Phone*: $phoneNumber
+*Address*: $address
+'''.trim();
+
+  // Use wa.me without a number so user can choose a contact
+  final Uri whatsappUrl = Uri.parse(
+    'https://wa.me/?text=${Uri.encodeComponent(message)}',
+  );
+
+  try {
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(
+        whatsappUrl,
+        mode: LaunchMode.externalApplication,
+      );
+      return true;
+    } else {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text(
+                'WhatsApp is not installed. Please install it to continue.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      return false;
+    }
+  } catch (e) {
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Error opening WhatsApp: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+    return false;
+  }
+}
+
+
 Future<bool> openBusinessLinkedIn({
   required BuildContext context,
   required String linkedInProfileUrl,
@@ -680,11 +749,11 @@ Future<String?> downloadPDF(String url, String fileName) async {
       await file.writeAsBytes(response.bodyBytes);
       return filePath;
     } else {
-      print('Failed to download PDF: ${response.statusCode}');
+      // print('Failed to download PDF: ${response.statusCode}');
       return null;
     }
   } catch (e) {
-    print('Error downloading PDF: $e');
+    // print('Error downloading PDF: $e');
     return null;
   }
 }
@@ -701,11 +770,11 @@ Future<String?> downloadFile(String url, String fileName) async {
       await file.writeAsBytes(response.bodyBytes);
       return filePath;
     } else {
-      print('Failed to download file: ${response.statusCode}');
+      // print('Failed to download file: ${response.statusCode}');
       return null;
     }
   } catch (e) {
-    print('Error downloading file: $e');
+    // print('Error downloading file: $e');
     return null;
   }
 }
@@ -735,7 +804,7 @@ Future<void> shareFile(String filePath) async {
       subject: 'Shared File',
     );
   } catch (e) {
-    print('Error sharing file: $e');
+    // print('Error sharing file: $e');
   }
 }
 
@@ -748,6 +817,6 @@ Future<void> sharePDF(String filePath) async {
       subject: 'Profile PDF',
     );
   } catch (e) {
-    print('Error sharing PDF: $e');
+    // print('Error sharing PDF: $e');
   }
 }
