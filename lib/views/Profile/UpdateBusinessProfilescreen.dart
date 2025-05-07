@@ -90,9 +90,9 @@ class _UpdateBusinessProfileScreenState
                                 ctr.validateFields(val,
                                     iscomman: true,
                                     model: ctr.bussinessModel,
-                                    errorText1: SignUpConstant.namehint);
+                                    errorText1: 'Enter Bussiness Name');
                               },
-                              hint: SignUpConstant.namehint,
+                              hint: 'Enter Bussiness Name',
                               isRequired:
                                   ctr.isUserVerfied.value ? false : true,
                             );
@@ -140,9 +140,9 @@ class _UpdateBusinessProfileScreenState
                                 ctr.validateFields(val,
                                     iscomman: true,
                                     model: ctr.nameModel,
-                                    errorText1: SignUpConstant.namehint);
+                                    errorText1: 'Enter Contact Name');
                               },
-                              hint: SignUpConstant.namehint,
+                              hint: 'Enter Contact Name',
                               isRequired: true);
                         }),
                         Obx(
@@ -193,7 +193,7 @@ class _UpdateBusinessProfileScreenState
                         Obx(
                           () {
                             return getTextField(
-                                label: 'Website Link',
+                                label: 'Website',
                                 ctr: ctr.websiteCtr,
                                 node: ctr.websiteNode,
                                 model: ctr.websiteModel.value,
@@ -244,7 +244,7 @@ class _UpdateBusinessProfileScreenState
                         Obx(
                           () {
                             return getTextField(
-                                label: 'Whatsapp',
+                                label: 'Whatsapp No',
                                 ctr: ctr.whatsAppCr,
                                 node: ctr.whatsappNo,
                                 model: ctr.whatsappModel.value,

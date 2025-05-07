@@ -499,6 +499,148 @@ Future<Object?> sharefPopupDialogs(BuildContext context,
   );
 }
 
+  Future<Object?> deletePopupDialogs(BuildContext context, {required function}) {
+    return showGeneralDialog(
+        barrierColor: black.withOpacity(0.6),
+        transitionBuilder: (context, a1, a2, widget) {
+          return Transform.scale(
+            scale: a1.value,
+            child: Opacity(
+                opacity: a1.value,
+                child: CupertinoAlertDialog(
+                  title: const Text(
+                    "Delete Account",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: black,
+                      fontFamily: fontBold,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: const Text(
+                    "Are you sure?",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: black,
+                      fontFamily: fontMedium,
+                    ),
+                  ),
+                  actions: [
+                    CupertinoDialogAction(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      isDefaultAction: true,
+                      isDestructiveAction: true,
+                      child: const Text("No",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: black,
+                            fontFamily: fontBold,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    CupertinoDialogAction(
+                      onPressed: () {
+                        // Get.find<ProfileController>().logoutApi(context);
+                        Navigator.pop(context);
+                        function();
+                      },
+                      isDefaultAction: true,
+                      isDestructiveAction: true,
+                      child: const Text("Yes",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: black,
+                            fontFamily: fontBold,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                    // The "No" button
+                  ],
+                )),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 200),
+        barrierDismissible: true,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {
+          return Container();
+        });
+  }
+
+Future<Object?> callPopupDialogs(BuildContext context, {required function}) {
+  return showGeneralDialog(
+      barrierColor: black.withOpacity(0.6),
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+              opacity: a1.value,
+              child: CupertinoAlertDialog(
+                title: const Text(
+                  "Contact Us",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: black,
+                    fontFamily: fontBold,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: const Text(
+                  "If you have any questions or need help, feel free to contact us.",
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: black,
+                    fontFamily: fontMedium,
+                  ),
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    isDefaultAction: true,
+                    isDestructiveAction: true,
+                    child: const Text("No",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: black,
+                          fontFamily: fontBold,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      // Get.find<ProfileController>().logoutApi(context);
+                      Navigator.pop(context);
+                      function();
+                    },
+                    isDefaultAction: true,
+                    isDestructiveAction: true,
+                    child: const Text("Call",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: black,
+                          fontFamily: fontBold,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  // The "No" button
+                ],
+              )),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      });
+}
+
 Future<Object?> logoutPopupDialogs(BuildContext context) {
   return showGeneralDialog(
       barrierColor: black.withOpacity(0.6),

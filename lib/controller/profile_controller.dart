@@ -52,7 +52,7 @@ class ProfileController extends GetxController {
       number.value = retrievedObject.phone ?? '';
       bussiness.value = retrievedObject.businessName ?? '';
       profilePic.value = retrievedObject.visitingCardUrl ?? '';
-      apkUrl.value = "";
+      // apkUrl.value = "";
     }
     update();
     states.value = ScreenState.apiSuccess;
@@ -263,6 +263,49 @@ class ProfileController extends GetxController {
   //   // Return the extracted PDF name
   //   return pdfNameWithoutExtension;
   // }
+
+  void deleteAccountApi(context) async {
+    var loadingIndicator = LoadingProgressDialogs();
+    loadingIndicator.show(context, '');
+    try {
+      if (networkManager.connectionType.value == 0) {
+        showDialogForScreen(context, "Profile Screen", Connection.noConnection,
+            callback: () {
+          Get.back();
+        });
+        return;
+      }
+
+      var response = await Repository.post({}, ApiUrl.deleterequest);
+      loadingIndicator.hide(context);
+      var data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        if (data['success'] == true) {
+          // Navigator.pop(context);
+          showDialogForScreen(context, "Profile Screen", data['message'],
+              callback: () {
+            Get.back();
+          });
+        } else {
+          showDialogForScreen(context, "Profile Screen", data['message'],
+              callback: () {
+            Get.back();
+          });
+        }
+
+        update();
+      } else {
+        states.value = ScreenState.apiError;
+        showDialogForScreen(context, "Profile Screen", data['message'],
+            callback: () {});
+      }
+    } catch (e) {
+      states.value = ScreenState.apiError;
+      showDialogForScreen(
+          context, "Profile Screen", ServerError.retryServererror,
+          callback: () {});
+    }
+  }
 
   void logoutApi(context) async {
     var loadingIndicator = LoadingProgressDialog();

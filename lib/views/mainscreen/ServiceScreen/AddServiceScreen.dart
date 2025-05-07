@@ -134,10 +134,9 @@ class _ServicescreenState extends State<AddServicescreen> {
                             ctr.validateFields(val,
                                 iscomman: true,
                                 model: ctr.serviceTitleModel,
-                                errorText1:
-                                    ServicesScreenConstant.servicetitle);
+                                errorText1: 'Enter Service / Product');
                           },
-                          hint: ServicesScreenConstant.servicetitle,
+                          hint: 'Enter Service / Product',
                           isRequired: true);
                     }),
                     Obx(() {

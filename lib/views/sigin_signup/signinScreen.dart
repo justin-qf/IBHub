@@ -211,6 +211,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       const Text(LoginConst.dontHaveAccount,
                           style: TextStyle(
                               color: grey, fontFamily: dM_sans_medium)),
+                      getDynamicSizedBox(width: 1.w),
                       Stack(
                         alignment: Alignment.center,
                         children: [
