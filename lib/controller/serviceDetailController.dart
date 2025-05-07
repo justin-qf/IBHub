@@ -782,7 +782,7 @@ class ServiceDetailScreenController extends GetxController {
                     //       fontWeight: FontWeight.w900),
                     // ),
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
         ),
       ],
@@ -811,11 +811,8 @@ class ServiceDetailScreenController extends GetxController {
                     children: [
                       getDynamicSizedBox(
                           height: data.thumbnail.isNotEmpty ? 1.h : 0.0),
-                      getPartyDetailRow(
-                        context,
-                        'Category:',
-                        data.categoryName.capitalize.toString(),
-                      ),
+                      getPartyDetailRow(context, 'Category:',
+                          data.categoryName.capitalize.toString()),
                       // getDynamicSizedBox(height: data.serviceTitle.isNotEmpty ? 1.h : 0.0),
                       getPartyDetailRow(context, 'Service:',
                           data.serviceTitle.capitalize.toString()),

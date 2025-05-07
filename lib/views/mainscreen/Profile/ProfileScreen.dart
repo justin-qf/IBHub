@@ -17,6 +17,7 @@ import 'package:ibh/controller/profile_controller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
@@ -185,8 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ],
                       ),
                     ),
-                    // getDynamicSizedBox(height: commonHeight()),
-
+                    //getDynamicSizedBox(height: commonHeight()),
                     getDynamicSizedBox(height: 2.5.h),
                     Expanded(
                       child: SingleChildScrollView(
@@ -198,14 +198,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 title: ProfileScreenConst.updateProfile,
                                 icons: Icons.person,
                                 callback: () async {
-                                  Get.to(const Updateprofilescreen())
-                                      ?.then((value) {
-                                    if (value == true) {
-                                      controller.getProfileData();
-                                      controller.getApiProfile(context);
-                                      isAnyFieldEmpty();
-                                    }
-                                  });
+                                  Get.to((const UpdateProfile()));
+                                  // Get.to(const Updateprofilescreen())
+                                  //     ?.then((value) {
+                                  //   if (value == true) {
+                                  //     controller.getProfileData();
+                                  //     controller.getApiProfile(context);
+                                  //     isAnyFieldEmpty();
+                                  //   }
+                                  // });
                                 }),
                             getMenuListItem(
                                 title: ProfileScreenConst.mybusiness,

@@ -971,7 +971,7 @@ Future commonDetailsDialog(BuildContext context, String title,
                           Navigator.of(context).pop();
                         },
                         child: Container(
-                          color: Colors.yellow,
+                          // color: Colors.yellow,
                           padding: isSmallDevice(context)
                               ? EdgeInsets.only(
                                   left: 0.1.w, right: 0.1.w, top: 2.h)

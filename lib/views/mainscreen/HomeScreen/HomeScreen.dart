@@ -155,7 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-
                   //  SingleChildScrollView(
                   //   physics: const NeverScrollableScrollPhysics(),
                   //   child:

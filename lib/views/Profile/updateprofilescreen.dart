@@ -134,7 +134,6 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
           //     )
           //   ],
           // ),
-
           Expanded(
             child: Stack(
               children: [
@@ -1382,7 +1381,7 @@ class _UpdateprofilescreenState extends State<Updateprofilescreen> {
                       }
                       return Text(
                         stepText,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       );
                     }),
