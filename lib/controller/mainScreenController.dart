@@ -7,6 +7,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
+import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
@@ -224,7 +225,7 @@ class MainScreenController extends GetxController {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop(false);
-                        Get.to(Updateprofilescreen());
+                        Get.to(UpdateProfile());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:

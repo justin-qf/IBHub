@@ -860,7 +860,7 @@ class CategoryBusinessController extends GetxController {
                             ? 3.5.w
                             : 2.5.w),
                     child: CachedNetworkImage(
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       height: 18.h,
                       imageUrl: item.visitingCardUrl,
                       placeholder: (context, url) => Center(

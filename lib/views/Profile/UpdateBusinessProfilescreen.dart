@@ -1,6 +1,7 @@
 // import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -12,7 +13,8 @@ import 'package:ibh/utils/helper.dart';
 import 'package:sizer/sizer.dart';
 
 class UpdateBusinessProfileScreen extends StatefulWidget {
-  const UpdateBusinessProfileScreen({super.key});
+  final int index;
+  const UpdateBusinessProfileScreen({super.key, required this.index});
 
   @override
   State<UpdateBusinessProfileScreen> createState() =>
@@ -387,6 +389,45 @@ class _UpdateBusinessProfileScreenState
                             ),
                           ],
                         ),
+                        getDynamicSizedBox(height: 3.h),
+                        Obx(() {
+                          return getFormButton(context, () async {
+                            if (ctr.is0FormInvalidate.value == true) {
+                              print('bussines api called');
+
+                              await ctr.updateBussines(context);
+                              // futureDelay(() {
+                              //   details.onStepContinue?.call();
+                              // }, isOneSecond: true);
+
+                              // if (ctr
+                              //     .isFormInvalidate
+                              //     .value) {
+                              //   ctr.updateProfile(
+                              //       context);
+                              // }
+                            }
+
+                            //  else if (ctr.StepperValue == 1) {
+                            //   print(
+                            //       'verification ctr value is:${ctr.verificationCtr.text}');
+                            //   print(
+                            //       'selectd pdfn ame is:${ctr.selectedPDFName.value}');
+
+                            //   if (ctr.isVerificationDataEmpty.value == true) {
+                            //     print('verification api called:create');
+                            //     ctr.updateDocumentation(isempty: true, context);
+                            //   } else {
+                            //     print('verification api called:update');
+                            //     ctr.updateDocumentation(context, isempty: false);
+                            //   }
+
+                            //   // details.onStepContinue
+                            //   //     ?.call();
+                            // }
+                          }, 'Update', validate: ctr.is0FormInvalidate.value);
+                        }),
+
                         getDynamicSizedBox(height: 4.h),
                       ],
                     ),

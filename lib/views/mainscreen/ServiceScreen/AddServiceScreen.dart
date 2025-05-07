@@ -148,11 +148,11 @@ class _ServicescreenState extends State<AddServicescreen> {
                           node: ctr.descriptionNode,
                           model: ctr.descriptionModel.value,
                           function: (val) {
-                            ctr.validateFields(val,
-                                iscomman: true,
-                                model: ctr.descriptionModel,
-                                errorText1:
-                                    ServicesScreenConstant.enterDescription);
+                            // ctr.validateFields(val,
+                            //     iscomman: true,
+                            //     model: ctr.descriptionModel,
+                            //     errorText1:
+                            //         ServicesScreenConstant.enterDescription);
                           },
                           hint: ServicesScreenConstant.enterDescription,
                           isRequired: false);

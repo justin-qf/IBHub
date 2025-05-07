@@ -18,6 +18,7 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
+import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
@@ -198,15 +199,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 title: ProfileScreenConst.updateProfile,
                                 icons: Icons.person,
                                 callback: () async {
-                                  Get.to((const UpdateProfile()));
-                                  // Get.to(const Updateprofilescreen())
-                                  //     ?.then((value) {
-                                  //   if (value == true) {
-                                  //     controller.getProfileData();
-                                  //     controller.getApiProfile(context);
-                                  //     isAnyFieldEmpty();
-                                  //   }
-                                  // });
+                                 
+                                  Get.to(const UpdateProfile())?.then((value) {
+                                    if (value == true) {
+                                      print('calledd');
+                                      controller.getApiProfile(context);
+                                      isAnyFieldEmpty();
+                                    }
+                                  });
                                 }),
                             getMenuListItem(
                                 title: ProfileScreenConst.mybusiness,
@@ -277,7 +277,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
-                            getDynamicSizedBox(height: 12.h),
+                            getMenuListItem(
+                                callback: () {
+                                  // logoutPopupDialogs(context);
+                                },
+                                title: 'Delete Account',
+                                icons: Icons.delete),
+                            getDynamicSizedBox(height: 5.h),
                             GestureDetector(
                               onTap: () {
                                 Get.to(PrivacyPolicyScreen(
@@ -287,7 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               child: Container(
                                 // color: Colors.yellow,
                                 padding: EdgeInsets.only(
-                                    top: 3.h, bottom: 3.h, left: 2.w),
+                                    top: 2.h, bottom: 2.h, left: 2.w),
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [

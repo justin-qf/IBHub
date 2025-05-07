@@ -1,4 +1,4 @@
-import 'dart:convert';
+  import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -198,8 +198,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
               () => Stack(
                 children: [
                   Container(
-                    padding:
-                        EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
+                    padding: EdgeInsets.only(top: 7.h, left: 16.w, right: 16.w),
                     width: Device.width,
                     height: isSmallDevice(context) ? 31.h : 30.h,
                     decoration: BoxDecoration(
@@ -212,8 +211,10 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     child: Container(
                       width: 15.w,
                       height: 15.h,
-                      padding:
-                          EdgeInsets.only(left: 2.w, right: 2.w, bottom: 4.h),
+                      // color: Colors.yellow,
+                      margin: EdgeInsets.only(bottom: 3.h),
+                      padding: EdgeInsets.only(
+                          left: 2.w, right: 2.w, bottom: 4.h, top: 4.h),
                       child: controller.isLoadingPalette.value
                           ? SizedBox(
                               height: 14.h,
