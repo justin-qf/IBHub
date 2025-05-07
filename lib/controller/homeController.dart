@@ -73,7 +73,6 @@ class HomeScreenController extends GetxController {
   void onInit() {
     searchCtr = TextEditingController();
     super.onInit();
-    getProfileData();
   }
 
   RxBool isUserVerified = false.obs;
@@ -478,6 +477,9 @@ class HomeScreenController extends GetxController {
         showUpdatePopup(context, url ?? appUpdateModel.data.appUrl.toString(),
             appUpdateModel.data.description, isForcefully);
       }
+
+      UserPreferences().saveSignInInfo(appUpdateModel.users);
+      getProfileData();
       update();
     }, networkManager: networkManager);
   }

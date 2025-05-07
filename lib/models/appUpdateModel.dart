@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:ibh/models/login_model.dart';
+
 AppUpdateModel appUpdateModelFromJson(String str) =>
     AppUpdateModel.fromJson(json.decode(str));
 
@@ -9,23 +11,26 @@ class AppUpdateModel {
   bool success;
   String message;
   AppUpdateData data;
+  User users;
 
-  AppUpdateModel({
-    required this.success,
-    required this.message,
-    required this.data,
-  });
+  AppUpdateModel(
+      {required this.success,
+      required this.message,
+      required this.data,
+      required this.users});
 
   factory AppUpdateModel.fromJson(Map<String, dynamic> json) => AppUpdateModel(
         success: json["success"],
         message: json["message"],
         data: AppUpdateData.fromJson(json["data"]),
+        users: User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
         "data": data.toJson(),
+        "user":users.toJson(),
       };
 }
 
