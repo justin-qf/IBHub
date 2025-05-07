@@ -226,8 +226,8 @@ class _UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                           return ctr.isUserVerfied.value == true
                               ? GestureDetector(
                                   onTap: () {
-                                    print(
-                                        'selected pdf:${ctr.selectedPDFName}');
+                                    // print(
+                                    //     'selected pdf:${ctr.selectedPDFName}');
                                     ctr.downloadDocument(
                                         context, ctr.selectedPDFName.value);
                                   },
@@ -267,15 +267,15 @@ class _UpdateDocumentScreenState extends State<UpdateDocumentScreen> {
                                   if (ctr.isUserVerfied.value == true
                                       ? false
                                       : ctr.is1FormInvalidate.value == true) {
-                                    print('bussines api called');
+                                    // print('bussines api called');
 
                                     if (ctr.isVerificationDataEmpty.value ==
                                         true) {
-                                      print('verification api called:create');
+                                      // print('verification api called:create');
                                       ctr.updateDocumentation(
                                           isempty: true, context);
                                     } else {
-                                      print('verification api called:update');
+                                      // print('verification api called:update');
                                       ctr.updateDocumentation(context,
                                           isempty: false);
                                     }

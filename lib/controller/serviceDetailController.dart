@@ -434,7 +434,7 @@ class ServiceDetailScreenController extends GetxController {
         return;
       }
 
-      print('status id: $status');
+      // print('status id: $status');
 
       // Make the PUT request
       var response = await Repository.put(
@@ -562,8 +562,9 @@ class ServiceDetailScreenController extends GetxController {
             onTap: () {
               getServiceDetails(context, item);
             },
-            child: SizedBox(
-              // color: Colors.yellow,
+            child: Container(
+              padding: EdgeInsets.all(0),
+              color: white,
               height: 13.h,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -661,7 +662,7 @@ class ServiceDetailScreenController extends GetxController {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        print('goto add service screen');
+                        // print('goto add service screen');
                         Get.to(AddServicescreen(
                           item: item,
                           isFromHomeScreen: true,
@@ -1071,7 +1072,7 @@ class ServiceDetailScreenController extends GetxController {
         });
         return;
       }
-      print('my category id + ${id}');
+      // print('my category id + ${id}');
       var response = await Repository.delete('${ApiUrl.deleteService}$id',
           allowHeader: true);
 

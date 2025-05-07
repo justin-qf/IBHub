@@ -207,7 +207,7 @@ class AddServicescreencontroller extends GetxController {
     keyword.value = editServiceItems!.keywords.toString();
 
     categoryId.value = editServiceItems!.categoryId.toString();
-    print('category id:$categoryId');
+    // print('category id:$categoryId');
 
     thumbnailCtr.text = editServiceItems!.thumbnail.toString();
     serviceTitleCtr.text = editServiceItems!.serviceTitle.toString();
@@ -272,7 +272,7 @@ class AddServicescreencontroller extends GetxController {
       shouldEnableButton: false,
     );
 
-    print('enable btn execute');
+    // print('enable btn execute');
 
     // Enable submit button after all validations
     enableSubmitButton();

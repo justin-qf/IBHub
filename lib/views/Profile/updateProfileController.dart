@@ -192,7 +192,7 @@ class Updateprofilecontroller extends GetxController {
       isVerificationDataEmpty.value = false;
     }
 
-    print('isVerificationDataEmpty2233 :${isVerificationDataEmpty.value}');
+    // print('isVerificationDataEmpty2233 :${isVerificationDataEmpty.value}');
     if (retrievedObject.category != null) {
       categoryId.value = retrievedObject.category?.id.toString() ?? '';
       categoryIDCtr.text = retrievedObject.category?.name.toString() ?? '';
@@ -205,12 +205,12 @@ class Updateprofilecontroller extends GetxController {
 
     if (retrievedObject.linkedin != null) {
       linkedinCtr.text = retrievedObject.linkedin?.toString() ?? '';
-      print(linkedinCtr.text);
+      // print(linkedinCtr.text);
     }
 
     if (retrievedObject.whatsappNo != null) {
       whatsAppCr.text = retrievedObject.whatsappNo?.toString() ?? '';
-      print(websiteCtr.text);
+      // print(websiteCtr.text);
     }
 
     isEmailVerifed.value = retrievedObject.isEmailVerified ?? false;
@@ -481,18 +481,18 @@ class Updateprofilecontroller extends GetxController {
   // }
 
   void enableNextBtn() {
-    print('enableSignUpButton executed');
-    print('nameModel.isValidate: ${nameModel.value.isValidate}');
-    print('emailModel.isValidate: ${emailModel.value.isValidate}');
-    print('phoneModel.isValidate: ${phoneModel.value.isValidate}');
-    print('imageModel.isValidate: ${imageModel.value.isValidate}');
-    print('bussinessModel.isValidate: ${bussinessModel.value.isValidate}');
-    print('stateModel.isValidate: ${stateModel.value.isValidate}');
-    print('cityModel.isValidate: ${cityModel.value.isValidate}');
-    print('pincodeModel.isValidate: ${pincodeModel.value.isValidate}');
-    print('addressModel.isValidate: ${addressModel.value.isValidate}');
-    print('validateType.isValidate: ${verificationModel.value.isValidate}');
-    print('ValidateUrl.isValidate: ${verificationDocModel.value.isValidate}');
+    // print('enableSignUpButton executed');
+    // print('nameModel.isValidate: ${nameModel.value.isValidate}');
+    // print('emailModel.isValidate: ${emailModel.value.isValidate}');
+    // print('phoneModel.isValidate: ${phoneModel.value.isValidate}');
+    // print('imageModel.isValidate: ${imageModel.value.isValidate}');
+    // print('bussinessModel.isValidate: ${bussinessModel.value.isValidate}');
+    // print('stateModel.isValidate: ${stateModel.value.isValidate}');
+    // print('cityModel.isValidate: ${cityModel.value.isValidate}');
+    // print('pincodeModel.isValidate: ${pincodeModel.value.isValidate}');
+    // print('addressModel.isValidate: ${addressModel.value.isValidate}');
+    // print('validateType.isValidate: ${verificationModel.value.isValidate}');
+    // print('ValidateUrl.isValidate: ${verificationDocModel.value.isValidate}');
 
     if (nameModel.value.isValidate == false) {
       is0FormInvalidate.value = false;
@@ -527,7 +527,7 @@ class Updateprofilecontroller extends GetxController {
     //  else if (imageModel.value.isValidate == false) {
     //   isFormInvalidate.value = false;
     // }
-    print("isFormInvalidate: ${is0FormInvalidate.value}");
+    // print("isFormInvalidate: ${is0FormInvalidate.value}");
     update();
   }
 
@@ -1162,7 +1162,7 @@ class Updateprofilecontroller extends GetxController {
   }
 
   actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
-    print('image picker open is called');
+    // print('image picker open is called');
     try {
       final file = await ImagePicker().pickImage(
         source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
@@ -1172,7 +1172,7 @@ class Updateprofilecontroller extends GetxController {
       );
 
       if (file == null) {
-        print('Image selection cancelled');
+        // print('Image selection cancelled');
         return;
       }
 
@@ -1221,15 +1221,15 @@ class Updateprofilecontroller extends GetxController {
       );
 
       if (croppedFile == null) {
-        print('Image cropping cancelled');
+        // print('Image cropping cancelled');
         return;
       }
 
       imageFile = File(croppedFile.path).obs;
       imageURl.value = croppedFile.path;
-      print('About to call updateLogo');
+      // print('About to call updateLogo');
       await updateLogo(context);
-      print('updateLogo completed');
+      // print('updateLogo completed');
       validateFields(
         croppedFile.path,
         model: imageModel,
@@ -1241,7 +1241,7 @@ class Updateprofilecontroller extends GetxController {
       imageFile.refresh();
       update();
     } catch (e) {
-      print('Error in actionClickUploadImageFromCamera: $e');
+      // print('Error in actionClickUploadImageFromCamera: $e');
     }
   }
 
@@ -1418,7 +1418,7 @@ class Updateprofilecontroller extends GetxController {
   }
 
   void getVerificationyApi(context) async {
-    print('calllinggg');
+    // print('calllinggg');
 
     commonGetApiCallFormate(
       allowHeader: true,
@@ -1432,9 +1432,9 @@ class Updateprofilecontroller extends GetxController {
         logcat("VERIFICATION_RESPONSE", jsonEncode(verificationList));
         // print(stateList);
 
-        for (var state in stateList) {
-          print('ID: ${state.id}, Name: ${state.name}');
-        }
+        // for (var state in stateList) {
+        //   print('ID: ${state.id}, Name: ${state.name}');
+        // }
       },
       apiEndPoint: ApiUrl.verification,
       networkManager: networkManager,
@@ -1666,7 +1666,7 @@ class Updateprofilecontroller extends GetxController {
       File file = File(result.files.single.path!);
       selectedPdfFile.value = file;
       selectedPDFName.value = selectedPdfFile.value!.path.split('/').last;
-      print(selectedPdfFile.value);
+      // print(selectedPdfFile.value);
 
       validateFields(selectedPDFName.value,
           model: verificationDocModel,
@@ -1719,7 +1719,7 @@ class Updateprofilecontroller extends GetxController {
       File imageFile = File(pickedImage.path);
       selectedPdfFile.value = imageFile;
       selectedPDFName.value = selectedPdfFile.value!.path.split('/').last;
-      print(selectedPdfFile.value);
+      // print(selectedPdfFile.value);
       validateFields(selectedPDFName.value,
           model: verificationDocModel,
           errorText1: "Profile picture is required",
