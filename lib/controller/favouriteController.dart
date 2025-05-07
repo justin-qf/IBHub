@@ -1412,6 +1412,7 @@ class FavouriteController extends GetxController {
                                   height: 1.1,
                                   fontFamily: dM_sans_semiBold,
                                   fontSize: 14.sp,
+                                  overflow: TextOverflow.ellipsis,
                                   color: black,
                                   fontWeight: FontWeight.w500)),
                         ),

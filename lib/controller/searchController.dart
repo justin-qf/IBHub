@@ -887,7 +887,7 @@ class SearchScreenController extends GetxController {
             ),
             getDynamicSizedBox(width: 2.w),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: 11.h,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -900,7 +900,6 @@ class SearchScreenController extends GetxController {
                           : 65.w,
                       child: Text(
                           // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
-
                           item.businessName,
                           maxLines: 1,
                           style: TextStyle(
@@ -938,7 +937,6 @@ class SearchScreenController extends GetxController {
                     getDynamicSizedBox(height: 0.5.h),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                     
                       children: [
                         Icon(
                           Icons.location_on,
@@ -952,13 +950,13 @@ class SearchScreenController extends GetxController {
                               : 65.w,
                           child: Text(
                               // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
-
                               '${item.address}, ${item.city!.city}, ${item.state!.name} - ${item.pincode}',
                               maxLines: 3,
                               style: TextStyle(
                                   height: 1.1,
                                   fontFamily: dM_sans_semiBold,
                                   fontSize: 14.sp,
+                                  overflow: TextOverflow.ellipsis,
                                   color: black,
                                   fontWeight: FontWeight.w500)),
                         ),

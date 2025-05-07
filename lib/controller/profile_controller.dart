@@ -68,7 +68,8 @@ class ProfileController extends GetxController {
     }, onResponse: (response) {
       var profileData = LoginModel.fromJson(response);
       profilePic.value = profileData.data!.user!.visitingCardUrl ?? '';
-      apkUrl.value = profileData.data!.user!.appUrl ?? '';
+      apkUrl.value = profileData.data!.user!.appUrl ??
+          'https://play.google.com/store/apps/details?id=com.app.indianbusinesshub';
 
       UserPreferences().saveSignInInfo(profileData.data!.user);
       getProfileData();

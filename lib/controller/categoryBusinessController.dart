@@ -959,8 +959,6 @@ class CategoryBusinessController extends GetxController {
                               ? 50.w
                               : 65.w,
                           child: Text(
-                              // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
-
                               '${item.address}, ${item.city!.city}, ${item.state!.name} - ${item.pincode}',
                               maxLines: 3,
                               style: TextStyle(
@@ -968,6 +966,7 @@ class CategoryBusinessController extends GetxController {
                                   fontFamily: dM_sans_semiBold,
                                   fontSize: 14.sp,
                                   color: black,
+                                  overflow: TextOverflow.ellipsis,
                                   fontWeight: FontWeight.w500)),
                         ),
                       ],

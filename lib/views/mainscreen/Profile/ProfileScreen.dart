@@ -18,8 +18,6 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
-import 'package:ibh/views/Profile/UpdateProfile.dart';
-import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:ibh/views/privacypolicy/PrivacyPolicyScreen.dart';
@@ -188,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ),
                     //getDynamicSizedBox(height: commonHeight()),
-                    getDynamicSizedBox(height: 2.5.h),
+                    getDynamicSizedBox(height: 1.5.h),
                     Expanded(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.only(bottom: 2.h),
@@ -199,7 +197,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 title: ProfileScreenConst.updateProfile,
                                 icons: Icons.person,
                                 callback: () async {
-                                 
                                   Get.to(const UpdateProfile())?.then((value) {
                                     if (value == true) {
                                       // print('calledd');
@@ -296,59 +293,103 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 title: ProfileScreenConst.logout,
                                 icons: Icons.logout),
                             // getDynamicSizedBox(height: 1.h),
-                            GestureDetector(
-                              onTap: () {
-                                Get.to(PrivacyPolicyScreen(
-                                  ispolicyScreen: false,
-                                ));
-                              },
-                              child: Container(
-                                // color: Colors.yellow,
-                                padding: EdgeInsets.only(
-                                    top: 2.h, bottom: 2.h, left: 2.w),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Terms & Conditions',
-                                          style: TextStyle(
-                                            color: primaryColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: dM_sans_regular,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Positioned(
-                                        bottom: 1,
-                                        child: Container(
-                                            width: 37.w,
-                                            height: 0.2.h,
-                                            color: primaryColor)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            // getDynamicSizedBox(height: 2.h),
-                            Text(
-                              'Powered by IBH',
-                              style: TextStyle(
-                                fontSize: 15.sp,
-                                color: Colors.grey,
-                                fontFamily: dM_sans_medium,
-                              ),
-                            ),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     Get.to(PrivacyPolicyScreen(
+                            //       ispolicyScreen: false,
+                            //     ));
+                            //   },
+                            //   child: Container(
+                            //     // color: Colors.yellow,
+                            //     padding: EdgeInsets.only(
+                            //         top: 2.h, bottom: 2.h, left: 2.w),
+                            //     child: Stack(
+                            //       alignment: Alignment.center,
+                            //       children: [
+                            //         const Row(
+                            //           mainAxisAlignment:
+                            //               MainAxisAlignment.center,
+                            //           children: [
+                            //             Text(
+                            //               'Terms & Conditions',
+                            //               style: TextStyle(
+                            //                 color: primaryColor,
+                            //                 fontWeight: FontWeight.bold,
+                            //                 fontFamily: dM_sans_regular,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //         Positioned(
+                            //             bottom: 1,
+                            //             child: Container(
+                            //                 width: 37.w,
+                            //                 height: 0.2.h,
+                            //                 color: primaryColor)),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            // // getDynamicSizedBox(height: 2.h),
+                            // Text(
+                            //   'Powered by IBH',
+                            //   style: TextStyle(
+                            //     fontSize: 15.sp,
+                            //     color: Colors.grey,
+                            //     fontFamily: dM_sans_medium,
+                            //   ),
+                            // ),
                             // getFormButton(context, () {
                             //   Get.to(AddServicescreen());
                             // }, 'add services', validate: true),
                           ],
                         ),
                       ),
-                    )
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(PrivacyPolicyScreen(
+                          ispolicyScreen: false,
+                        ));
+                      },
+                      child: Container(
+                        // color: Colors.yellow,
+                        padding: EdgeInsets.only(
+                            top: 0.5.h, bottom: 1.5.h, left: 2.w),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Terms & Conditions',
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: dM_sans_regular,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                                bottom: 1,
+                                child: Container(
+                                    width: 37.w,
+                                    height: 0.2.h,
+                                    color: primaryColor)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Powered by IBH',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.grey,
+                        fontFamily: dM_sans_medium,
+                      ),
+                    ),
                   ],
                 );
               // ignore: unreachable_switch_default
