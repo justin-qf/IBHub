@@ -272,6 +272,16 @@ void lanchEmail(String email) async {
   }
 }
 
+void launchInBrowser(String url) async {
+  final Uri uri = Uri.parse(url);
+
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
 Future<void> launchWhatsApp(BuildContext context, String phoneNumber) async {
   // Sanitize phone number: remove spaces, dashes, parentheses, and '+' symbol
   String sanitizedNumber = phoneNumber.replaceAll(RegExp(r'[\s-+()]+'), '');
@@ -372,7 +382,8 @@ Future<bool> shareBusinessDetailsOnWhatsApp({
   }
 
   // Your static message
-  final String message = "Hi, I'm interested in your business and would like to learn more about your products/services. Please let me know how I can get in touch or proceed further.";
+  final String message =
+      "Hi, I'm interested in your business and would like to learn more about your products/services. Please let me know how I can get in touch or proceed further.";
 
   final Uri whatsappUrl = Uri.parse(
     'https://wa.me/$sanitizedNumber?text=${Uri.encodeComponent(message)}',
@@ -424,7 +435,6 @@ Future<bool> shareBusinessDetailsOnWhatsApp({
     return false;
   }
 }
- 
 
 // Future<bool> shareBusinessDetailsOnWhatsApp({
 //   required BuildContext context,
@@ -524,7 +534,6 @@ Future<bool> shareBusinessDetailsOnWhatsApp({
 //   }
 // }
 
-
 Future<bool> shareSelfBusinessDetailsOnWhatsApp({
   required BuildContext context,
   required String businessName,
@@ -539,7 +548,8 @@ Future<bool> shareSelfBusinessDetailsOnWhatsApp({
 *Email*: $email
 *Phone*: $phoneNumber
 *Address*: $address
-'''.trim();
+'''
+      .trim();
 
   // Use wa.me without a number so user can choose a contact
   final Uri whatsappUrl = Uri.parse(
@@ -591,7 +601,6 @@ Future<bool> shareSelfBusinessDetailsOnWhatsApp({
     return false;
   }
 }
-
 
 Future<bool> openBusinessLinkedIn({
   required BuildContext context,

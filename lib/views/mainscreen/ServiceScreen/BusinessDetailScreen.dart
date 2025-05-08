@@ -119,7 +119,9 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
         ? widget.item!.linkedin
         : retrievedObject.linkedin ?? '';
 
-    // website = widget.item != null?widget.item!.
+    website = widget.item != null
+        ? widget.item!.website
+        : retrievedObject.website ?? '';
 
     city = retrievedObject.city!.city.toString();
     name = retrievedObject.name.toString();
@@ -260,7 +262,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     ),
                   ),
                   Positioned(
-                    top: widget.isFromProfile! ? 6.h : 10.h,
+                    top: widget.isFromProfile! ? 7.h : 10.h,
                     right: 5.w,
                     child: Column(
                       children: [
@@ -501,6 +503,45 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                     ),
                   ),
                   getDynamicSizedBox(height: 1.h),
+
+                  website.isNotEmpty
+                      ? GestureDetector(
+                          onTap: () {
+                            launchInBrowser(website);
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 6.w,
+                                height: 3.h,
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: primaryColor),
+                                // padding: EdgeInsets.all(2),
+                                child: SvgPicture.asset(
+                                  Asset.browser,
+                                  height: 1.h,
+                                  width: 1.w,
+                                  color: white,
+                                ),
+                                //  Icon(
+                                //   Icons.storefront,
+                                //   size: 15.sp,
+                                //   color: white,
+                                // )
+                              ),
+                              getDynamicSizedBox(width: 1.w),
+                              SizedBox(
+                                width: 85.w,
+                                child: controller.getLableText(website,
+                                    iswebsite: true, isMainTitle: false),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                  if (website.isNotEmpty) getDynamicSizedBox(height: 1.h),
                   GestureDetector(
                     onTap: () {
                       launchPhoneCall(

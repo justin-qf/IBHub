@@ -26,6 +26,8 @@ class Asset {
   static const search2 = '$assets${svgFolder}search2.svg';
   static const badge = '$assets${svgFolder}badge.svg';
   static const google = '$assets${svgFolder}google.svg';
+  static const browser = '$assets${svgFolder}browser.svg';
+  
 
   static const intro = '$assets${svgFolder}intro.svg';
   static const logout = '$assets${svgFolder}logout.svg';

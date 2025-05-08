@@ -58,7 +58,7 @@ Future<bool?> getpopup(BuildContext context,
                 child: Text(
                   'Cancel',
                   style: TextStyle(
-                      color: grey,
+                      color: primaryColor,
                       fontFamily: dM_sans_extraBold,
                       fontSize: 18.sp),
                 ),

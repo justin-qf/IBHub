@@ -101,7 +101,7 @@ class HomeScreenController extends GetxController {
         },
         child: Container(
             // color: Colors.yellow,
-            width: 22.w,
+            width: isSmallDevice(context) ? 18.w : 22.w,
             height: 30.h,
             margin: EdgeInsets.only(
                 right:
@@ -122,7 +122,7 @@ class HomeScreenController extends GetxController {
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
                         height: 10.h,
-                        width: 12.w,
+                        width: isSmallDevice(context) ? 8.w : 12.w,
                         imageUrl: item.thumbnail,
                         placeholder: (context, url) => Container(
                           padding: const EdgeInsets.all(4),
