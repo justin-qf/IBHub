@@ -231,7 +231,22 @@ class _SigninscreenState extends State<Signinscreen> {
                     ],
                   ),
                 ),
-              )
+              ),
+
+              // Container(
+              //   width: 5.w,
+              //   child: Row(
+              //     children: [
+              //       Container(
+              //         height: 1.h,
+              //         width: 1.w,
+              //         color: primaryColor,
+              //       ),
+              //       Text('Or'),
+              //       Divider(),
+              //     ],
+              //   ),
+              // )
             ],
           ),
         ),

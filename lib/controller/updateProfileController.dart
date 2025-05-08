@@ -179,9 +179,33 @@ class Updateprofilecontroller extends GetxController {
 
     if (retrievedObject.document != null) {
       selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
-      verificationCtr.text = retrievedObject.document?.documentType ?? '';
-      profileDocId.value =
-          retrievedObject.document!.documentId.toString() ?? '';
+
+      // Format document type
+      final docType =
+          (retrievedObject.document?.documentType ?? '').toLowerCase();
+
+      switch (docType) {
+        case 'gst':
+          verificationCtr.text = 'GST';
+          break;
+        case 'msme':
+          verificationCtr.text = 'MSME';
+          break;
+        case 'udhyog aadhar':
+          verificationCtr.text = 'Udhyog Aadhar';
+          break;
+        default:
+          // Capitalize first letter of each word for unknown types
+          verificationCtr.text = docType
+              .split(' ')
+              .map((word) => word.isNotEmpty
+                  ? word[0].toUpperCase() + word.substring(1)
+                  : '')
+              .join(' ');
+          break;
+      }
+
+      profileDocId.value = retrievedObject.document!.documentId.toString();
     }
 
     if (selectedPDFName.value.isEmpty &&

@@ -365,15 +365,6 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   if (widget.isFromProfile == false) {
                                     shareBusinessDetailsOnWhatsApp(
                                       context: context,
-                                      businessName: widget.item != null
-                                          ? widget.item!.businessName
-                                          : businessName,
-                                      address: widget.item != null
-                                          ? widget.item!.address.toString()
-                                          : address,
-                                      email: widget.item != null
-                                          ? widget.item!.email
-                                          : email,
                                       phoneNumber: whatsapp,
                                     );
                                   } else {
