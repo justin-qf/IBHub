@@ -50,6 +50,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   String name = '';
   String phone = '';
   String whatsapp = '';
+  String website = '';
   String facebook = '';
   String linkedIn = '';
   String address = '';
@@ -117,6 +118,8 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
     linkedIn = widget.item != null
         ? widget.item!.linkedin
         : retrievedObject.linkedin ?? '';
+
+    // website = widget.item != null?widget.item!.
 
     city = retrievedObject.city!.city.toString();
     name = retrievedObject.name.toString();
