@@ -110,7 +110,8 @@ class _UpdateBusinessProfileScreenState
                             isenable: false,
                             isdropdown: true,
                             usegesture: true,
-                            isRequired: true,
+                            isRequired: ctr.isUserVerfied.value ? false : true,
+                            isVerified: ctr.isUserVerfied.value ? true : false,
                             context: context,
                             gestureFunction: () {
                               ctr.searchCategoryCtr.text = "";

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
@@ -15,6 +16,8 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -154,22 +157,51 @@ class Signinscreencontroller extends GetxController {
     }, networkManager: networkManager, isModelResponse: true);
   }
 
-  // getRegiaterOtp(context, String emailId) async {
-  //   commonPostApiCallFormate(
-  //     context,
-  //     title: EmailScreenConstant.title,
-  //     body: {"email": emailId.toString().trim()},
-  //     apiEndPoint: ApiUrl.emailVerificationOtp,
-  //     onResponse: (data) {
-  //       Get.to(() => OtpScreen(
-  //             email: emailId.toString().trim(),
-  //             otp: "1235",
-  //             isFromSingIn: true,
-  //           ))?.then((value) {});
-  //     },
-  //     networkManager: networkManager,
-  //   );
+// google
+// google
+
+//   Future<void> _handleSignIn() async {
+//     try {
+//       await _googleSignIn.signIn();
+//     } catch (error) {
+//       print(error);
+//     }
+//   }
+
+  //  Future<bool> signinWithGmail() async {
+  //   final user = await GoogleSignIn().signIn();
+
+  //   GoogleSignInAuthentication userAuth = await user!.authentication;
+
+  //   var credential = GoogleAuthProvider.credential(
+  //       idToken: userAuth.idToken, accessToken: userAuth.accessToken);
+
+  //   await FirebaseAuth.instance.signInWithCredential(credential);
+
+  //   return  FirebaseAuth.instance.currentUser != null;
   // }
+
+Future<firebase.User?> signinWithGmail() async {
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  await googleSignIn.signOut();
+
+  final user = await googleSignIn.signIn();
+
+  if (user == null) return null; // User canceled
+
+  final GoogleSignInAuthentication userAuth = await user.authentication;
+
+  final credential = GoogleAuthProvider.credential(
+    idToken: userAuth.idToken,
+    accessToken: userAuth.accessToken,
+  );
+
+  final userCredential =
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+  return userCredential.user;
+}
 
   validateFields(
     val, {

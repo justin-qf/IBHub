@@ -134,6 +134,18 @@ class Signupscreencontroller extends GetxController {
     isloading = false;
   }
 
+  validateEmailFields() {
+    if (emailCtr.text.isNotEmpty) {
+      validateFields(
+        emailCtr.text,
+        model: emailModel,
+        errorText1: "Email is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
+    }
+  }
+
   validateFields(val,
       {model,
       errorText1,
@@ -173,7 +185,11 @@ class Signupscreencontroller extends GetxController {
         });
   }
 
-  void registerAPI(context) async {
+  RxBool isEmailLogin = false.obs;
+
+  void registerAPI(
+    context,
+  ) async {
     // var loadingIndicator = LoadingProgressDialog();
     String? firebaseToken = await getFirebaseToken();
     logcat("firebaseToken::", firebaseToken.toString());
@@ -194,11 +210,17 @@ class Signupscreencontroller extends GetxController {
         Get.offAll(const MainScreen());
       } else {
         logcat("EMAILID", responseDetail.data!.user!.email.toString().trim());
-        Get.to(() => OtpScreen(
-              email: responseDetail.data!.user!.email.toString().trim(),
-              otp: "1235",
-              isFromSingIn: true,
-            ))?.then((value) {});
+
+        if (isEmailLogin.value == true) {
+          Get.to(() => MainScreen());
+        } else {
+          Get.to(() => OtpScreen(
+                email: responseDetail.data!.user!.email.toString().trim(),
+                otp: "1235",
+                isFromSingIn: true,
+              ))?.then((value) {});
+        }
+
         // getRegiaterOtp(context, responseDetail.data.user.email.toString());
       }
     }, networkManager: networkManager, isModelResponse: true);

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -139,7 +140,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       });
                 },
               ),
-              getDynamicSizedBox(height: 1.h),
+              getDynamicSizedBox(height: isSmallDevice(context) ? 0.h : 1.h),
               Container(
                 margin: EdgeInsets.only(left: 55.w),
                 child: GestureDetector(
@@ -181,7 +182,7 @@ class _SigninscreenState extends State<Signinscreen> {
                   ),
                 ),
               ),
-              getDynamicSizedBox(height: 3.h),
+              getDynamicSizedBox(height: isSmallDevice(context) ? 2.h : 3.h),
               Obx(() {
                 return Container(
                   margin: EdgeInsets.symmetric(horizontal: 5.w),
@@ -193,10 +194,10 @@ class _SigninscreenState extends State<Signinscreen> {
                       validate: ctr.isFormInvalidate.value, isdelete: false),
                 );
               }),
-              getDynamicSizedBox(height: isSmallDevice(context) ? 3.h : 6.h),
+              getDynamicSizedBox(height: isSmallDevice(context) ? 2.h : 6.h),
               GestureDetector(
                 onTap: () async {
-                  final result = await Get.to(() => const Signupscreen());
+                  final result = await Get.to(() => Signupscreen());
                   if (result == true) {
                     ctr.resetForm();
                     ctr.unfocusAll();
@@ -232,21 +233,67 @@ class _SigninscreenState extends State<Signinscreen> {
                   ),
                 ),
               ),
+              getDynamicSizedBox(height: 1.h),
+              Container(
+                // color: Colors.yellow,
+                height: isSmallDevice(context) ? 3.h : 2.h,
+                // width: 10.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 0.2.h,
+                      width: 20.w,
+                      color: grey,
+                    ),
+                    getDynamicSizedBox(width: 1.w),
+                    Text(
+                      'Or',
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: dM_sans_medium),
+                    ),
+                    getDynamicSizedBox(width: 1.w),
+                    Container(
+                      height: 0.2.h,
+                      width: 20.w,
+                      color: grey,
+                    ),
+                  ],
+                ),
+              ),
 
-              // Container(
-              //   width: 5.w,
-              //   child: Row(
-              //     children: [
-              //       Container(
-              //         height: 1.h,
-              //         width: 1.w,
-              //         color: primaryColor,
-              //       ),
-              //       Text('Or'),
-              //       Divider(),
-              //     ],
-              //   ),
-              // )
+              getDynamicSizedBox(height: 2.h),
+
+              OutlinedButton(
+                  onPressed: () async {
+                    final user = await ctr.signinWithGmail();
+
+                    if (user != null) {
+                      final result = await Get.to(() => Signupscreen(
+                            emailId: user.email,
+                          ));
+                      if (result == true) {
+                        ctr.resetForm();
+                        ctr.unfocusAll();
+                      }
+                    } else {
+                      print('Login cancelled.');
+                    }
+                  },
+                  style: ButtonStyle(
+                      minimumSize: const WidgetStatePropertyAll(Size(50, 50)),
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15))),
+                      side: const WidgetStatePropertyAll(BorderSide(
+                          color: const Color.fromARGB(255, 219, 219, 219),
+                          width: 1))),
+                  child: SvgPicture.asset(
+                    Asset.google,
+                    height: 4.h,
+                    width: 4.w,
+                  )),
             ],
           ),
         ),

@@ -14,8 +14,10 @@ import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/privacypolicy/PrivacyPolicyScreen.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class Signupscreen extends StatefulWidget {
-  const Signupscreen({super.key});
+  String? emailId;
+  Signupscreen({super.key, this.emailId});
 
   @override
   State<Signupscreen> createState() => _SignupscreenState();
@@ -23,6 +25,17 @@ class Signupscreen extends StatefulWidget {
 
 class _SignupscreenState extends State<Signupscreen> {
   final Signupscreencontroller ctr = Get.put(Signupscreencontroller());
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.emailId != null) {
+      ctr.emailCtr.text = widget.emailId!;
+      ctr.isEmailLogin.value = true;
+    }
+    ctr.validateEmailFields();
+  }
+
   @override
   Widget build(BuildContext context) {
     Statusbar().trasparentStatusbar();
