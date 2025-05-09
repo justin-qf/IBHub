@@ -35,7 +35,6 @@ import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:sizer/sizer.dart';
-import 'package:sizer/sizer.dart' as sizer;
 
 class Updateprofilecontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
