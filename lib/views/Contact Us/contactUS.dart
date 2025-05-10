@@ -54,6 +54,7 @@ class _ContactusState extends State<Contactus> {
                 top: 1.h),
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   getDynamicSizedBox(height: 2.h),
                   Container(
@@ -65,26 +66,6 @@ class _ContactusState extends State<Contactus> {
                       },
                     ),
                   ),
-                  getDynamicSizedBox(height: 2.h),
-                  Center(
-                    child: GestureDetector(
-                      child: Obx(() {
-                        return ctr.getImage();
-                      }),
-                      onTap: () async {
-                        selectImageFromCameraOrGallery(context,
-                            cameraClick: () {
-                          ctr.actionClickUploadImageFromCamera(context,
-                              isCamera: true);
-                        }, galleryClick: () {
-                          ctr.actionClickUploadImageFromCamera(context,
-                              isCamera: false);
-                        });
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  getLable('Upload Image', isRequired: false),
                   Obx(() {
                     return getTextField(
                         label: SignUpConstant.nameLabel,
@@ -157,11 +138,30 @@ class _ContactusState extends State<Contactus> {
                           isRequired: true);
                     },
                   ),
+                  getLable('Upload Image', isRequired: false),
+                  getDynamicSizedBox(height: 0.5.h),
+                  GestureDetector(
+                    child: Obx(() {
+                      return ctr.getContactusImage();
+                    }),
+                    onTap: () async {
+                      selectImageFromCameraOrGallery(context, cameraClick: () {
+                        ctr.actionClickUploadImageFromCamera(context,
+                            isCamera: true);
+                      }, galleryClick: () {
+                        ctr.actionClickUploadImageFromCamera(context,
+                            isCamera: false);
+                      });
+                      setState(() {});
+                    },
+                  ),
                   getDynamicSizedBox(height: 4.h),
                   Obx(() {
                     return getFormButton(context, () async {
                       if (ctr.isFormInvalidate.value == true) {
                         logcat('Priniting', 'Submit');
+
+                        ctr.contactUsApiCall(context);
                       }
                     }, 'Submit', validate: ctr.isFormInvalidate.value);
                   }),

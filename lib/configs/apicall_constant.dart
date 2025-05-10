@@ -59,4 +59,11 @@ class ApiUrl {
   //notification
   static const notification = 'notification/list';
   static const notificationDelete = 'notification/delete/';
+
+  //google auth
+  static const authCallback = 'auth/google/callback';
+
+  static const contactUS = 'customer-care/create';
+
+  // /auth/google/callback
 }

@@ -114,20 +114,22 @@ class _UpdateBusinessProfileScreenState
                             isVerified: ctr.isUserVerfied.value ? true : false,
                             context: context,
                             gestureFunction: () {
-                              ctr.searchCategoryCtr.text = "";
-                              showDropdownMessage(context,
-                                  ctr.setCategoryListDialog(), 'Category',
-                                  isShowLoading: ctr.categoryFilterList,
-                                  onClick: () {
-                                ctr.applyCategoryFilter(
-                                  '',
-                                );
-                              }, refreshClick: () {
-                                futureDelay(() {
-                                  ctr.getCategory(context);
-                                }, isOneSecond: false);
-                              });
-                              ctr.unfocusAll();
+                              if (ctr.isUserVerfied.value == false) {
+                                ctr.searchCategoryCtr.text = "";
+                                showDropdownMessage(context,
+                                    ctr.setCategoryListDialog(), 'Category',
+                                    isShowLoading: ctr.categoryFilterList,
+                                    onClick: () {
+                                  ctr.applyCategoryFilter(
+                                    '',
+                                  );
+                                }, refreshClick: () {
+                                  futureDelay(() {
+                                    ctr.getCategory(context);
+                                  }, isOneSecond: false);
+                                });
+                                ctr.unfocusAll();
+                              }
                             },
                           );
                         }),

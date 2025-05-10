@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/button/form_button.dart';
@@ -268,19 +267,23 @@ class _SigninscreenState extends State<Signinscreen> {
 
               OutlinedButton(
                   onPressed: () async {
-                    final user = await ctr.signinWithGmail();
+                    final user = await ctr.signinWithGmail(context);
 
-                    if (user != null) {
-                      final result = await Get.to(() => Signupscreen(
-                            emailId: user.email,
-                          ));
-                      if (result == true) {
-                        ctr.resetForm();
-                        ctr.unfocusAll();
-                      }
-                    } else {
-                      print('Login cancelled.');
-                    }
+                    var id = user!.uid;
+
+                    print('user id:$id');
+
+                    // if (user != null) {
+                    //   final result = await Get.to(() => Signupscreen(
+                    //         emailId: user.email,
+                    //       ));
+                    //   if (result == true) {
+                    //     ctr.resetForm();
+                    //     ctr.unfocusAll();
+                    //   }
+                    // } else {
+                    //   print('Login cancelled.');
+                    // }
                   },
                   style: ButtonStyle(
                       minimumSize: const WidgetStatePropertyAll(Size(50, 50)),

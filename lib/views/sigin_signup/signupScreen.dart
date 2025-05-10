@@ -31,7 +31,7 @@ class _SignupscreenState extends State<Signupscreen> {
     super.initState();
     if (widget.emailId != null) {
       ctr.emailCtr.text = widget.emailId!;
-      ctr.isEmailLogin.value = true;
+      ctr.isGmailLogin.value = true;
     }
     ctr.validateEmailFields();
   }
@@ -94,6 +94,7 @@ class _SignupscreenState extends State<Signupscreen> {
                   ctr: ctr.emailCtr,
                   node: ctr.emailNode,
                   model: ctr.emailModel.value,
+                  isenable: ctr.isGmailLogin.value == true ? false : true,
                   function: (val) {
                     ctr.validateFields(val,
                         isemail: true,
