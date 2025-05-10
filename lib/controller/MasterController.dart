@@ -16,6 +16,7 @@ void validateField({
   bool ispincode = false,
   String? confirmpasswordctr,
   bool isconfirmpassword = false,
+  bool skipEmptyCheck = false,
   String? mediumgroupvalue,
   String? rolegroupvalue,
   bool? formvalidate,
@@ -93,18 +94,56 @@ void validateField({
         models.value = ValidationModel(val, null, isValidate: true);
       }
     } else if (isnumber) {
-      if (val.isEmpty) {
-        models.value = ValidationModel(val, errorText1, isValidate: false);
-      } else if (val.length != 10) {
-        models.value = ValidationModel(val, errorText2, isValidate: false);
-      } else if (val.startsWith(' ')) {
-        models.value = ValidationModel(
-            val, "Please remove the space at the beginning.",
-            isValidate: false);
+      // Check if we should skip empty validation
+      if (skipEmptyCheck) {
+        // Skip empty validation if skipEmptyCheck is true
+        if (val.isEmpty) {
+          models.value = ValidationModel(val, null,
+              isValidate: true); // Skip empty validation
+        } else if (val.length != 10) {
+          models.value = ValidationModel(val, errorText2,
+              isValidate: false); // Length validation
+        } else if (val.startsWith(' ')) {
+          models.value = ValidationModel(
+              val, "Please remove the space at the beginning.",
+              isValidate: false); // Space validation
+        } else {
+          models.value = ValidationModel(val, null,
+              isValidate: true); // If all validations pass
+        }
       } else {
-        models.value = ValidationModel(val, null, isValidate: true);
+        // If skipEmptyCheck is false, we perform empty validation and then other checks
+        if (val.isEmpty) {
+          models.value = ValidationModel(val, errorText1,
+              isValidate: false); // Empty validation
+        } else if (val.length != 10) {
+          models.value = ValidationModel(val, errorText2,
+              isValidate: false); // Length validation
+        } else if (val.startsWith(' ')) {
+          models.value = ValidationModel(
+              val, "Please remove the space at the beginning.",
+              isValidate: false); // Space validation
+        } else {
+          models.value = ValidationModel(val, null,
+              isValidate: true); // If all validations pass
+        }
       }
-    } else if (ispassword) {
+    }
+    //  else if (isnumber) {
+    //   if (!skipEmptyCheck && val.isEmpty) {
+    //     models.value = ValidationModel(val, errorText1, isValidate: false);
+    //   } else if (val.length != 10) {
+    //     models.value = ValidationModel(val, errorText2, isValidate: false);
+    //   } else if (val.startsWith(' ')) {
+    //     models.value = ValidationModel(
+    //         val, "Please remove the space at the beginning.",
+    //         isValidate: false);
+    //   } else {
+    //     models.value = ValidationModel(val, null, isValidate: true);
+    //   }
+    // }
+
+    else if (ispassword) {
       if (val.isEmpty) {
         models.value = ValidationModel(val, errorText1, isValidate: false);
       } else if (val.contains(' ')) {
