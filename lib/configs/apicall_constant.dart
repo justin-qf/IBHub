@@ -1,6 +1,6 @@
 class ApiUrl {
   // LOCAL
-  static const baseUrl = "http://192.168.1.19/indian_business_hub/";
+  static const baseUrl = "http://192.168.1.30/indian_business_hub/";
   // static const buildApiUrl = '${baseUrl}swooosh_admin/api/';
   // static const imageUrl = '${baseUrl}swooosh_admin/public/storage/';
 

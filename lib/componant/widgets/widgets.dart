@@ -278,6 +278,59 @@ PreferredSizeWidget getTabbar(
   );
 }
 
+getSeeAll({title, onCLick}) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 3.w),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(title,
+            style: TextStyle(
+              color: isDarkMode() ? white : black,
+              fontFamily: fontBold,
+              fontWeight: FontWeight.w800,
+              fontSize: Device.screenType == ScreenType.mobile ? 18.sp : 13.sp,
+            )),
+        const Spacer(),
+        GestureDetector(
+          onTap: () {
+            onCLick();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(DashboardText.seeAll,
+                  style: TextStyle(
+                    color: isDarkMode() ? white : primaryColor,
+                    fontFamily: dM_sans_medium,
+                    fontWeight: FontWeight.w500,
+                    fontSize:
+                        Device.screenType == ScreenType.mobile ? 16.sp : 14.sp,
+                  )),
+              getDynamicSizedBox(width: 1.w),
+              Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: primaryColor),
+                  child: Padding(
+                      padding: EdgeInsets.all(2),
+                      child: Icon(Icons.arrow_forward, color: white, size: 2.h)
+
+                      // SvgPicture.asset(
+                      //   Asset.arrowBack,
+                      //   colorFilter: ColorFilter.mode(white, BlendMode.srcIn),
+                      //   fit: BoxFit.contain,
+                      // ),
+                      )),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
+
 Widget getHomeLable(String title, Function onCLick,
     {bool? isShowSeeMore = true, bool? isFromDetailScreen = false}) {
   return Container(
