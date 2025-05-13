@@ -50,8 +50,8 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                 ),
                 getDynamicSizedBox(height: 5.h),
                 Container(
-                  height: 25.h,
-                  width: 60.w,
+                  height: 35.h,
+                  width: 70.w,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: white,
@@ -64,14 +64,15 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                       border: Border.all(color: grey),
                       shape: BoxShape.rectangle),
                   child: Container(
-                      height: 20.h,
-                      width: 55.w,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: grey),
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Image.asset(Asset.bussinessPlaceholder,
-                          fit: BoxFit.contain)),
+                    // height: 20.h,
+                    // width: 55.w,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: grey),
+                      shape: BoxShape.rectangle,
+                    ),
+                    child: Image.asset(Asset.bussinessPlaceholder,
+                        fit: BoxFit.contain),
+                  ),
                 ),
 
                 // Expanded(

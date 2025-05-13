@@ -91,6 +91,16 @@ class Brandingscreencontroller extends GetxController {
     Asset.b1,
     Asset.b2,
   ].obs;
+
+  var bussinessNames = [
+    "Elite Branding Solutions",
+    "Innovate Digital Studio",
+    "Prime Visual Agency",
+    "Bold Impact Media",
+    "Elite Branding Solutions", // Repeated
+    "Innovate Digital Studio", // Repeated
+  ];
+
   getDailyListItem(BuildContext context, BusinessData item,
       {dailyImg, dailyName}) {
     return GestureDetector(
@@ -461,7 +471,8 @@ class Brandingscreencontroller extends GetxController {
     );
   }
 
-  getBusinessListItem(BuildContext context, BusinessData item) {
+  getBusinessListItem(BuildContext context, BusinessData item,
+      {bussinessImg, businessName}) {
     // print('item;${item.isEmailVerified}');
     return GestureDetector(
       onTap: () async {
@@ -532,19 +543,24 @@ class Brandingscreencontroller extends GetxController {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.contain,
-                      height: 1.h,
-                      imageUrl: item.visitingCardUrl,
-                      placeholder: (context, url) => Center(
-                        child: Image.asset(Asset.itemPlaceholder,
-                            height: 12.h, width: 25.w, fit: BoxFit.cover),
-                      ),
-                      errorWidget: (context, url, error) => Image.asset(
-                          Asset.itemPlaceholder,
-                          height: 12.h,
-                          fit: BoxFit.cover),
+                    child: Image.asset(
+                      bussinessImg, // Your local asset path
+                      fit: BoxFit.cover,
                     ),
+
+                    //  CachedNetworkImage(
+                    //   fit: BoxFit.contain,
+                    //   height: 1.h,
+                    //   imageUrl: item.visitingCardUrl,
+                    //   placeholder: (context, url) => Center(
+                    //     child: Image.asset(Asset.itemPlaceholder,
+                    //         height: 12.h, width: 25.w, fit: BoxFit.cover),
+                    //   ),
+                    //   errorWidget: (context, url, error) => Image.asset(
+                    //       Asset.itemPlaceholder,
+                    //       height: 12.h,
+                    //       fit: BoxFit.cover),
+                    // ),
                   ),
                 ),
                 Positioned(
@@ -581,8 +597,8 @@ class Brandingscreencontroller extends GetxController {
                       : 65.w,
                   child: Text(
                       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
-
-                      item.businessName,
+                      businessName,
+                      // item.businessName,
                       maxLines: 1,
                       style: TextStyle(
                           fontFamily: dM_sans_semiBold,

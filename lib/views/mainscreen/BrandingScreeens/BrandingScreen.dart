@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -282,13 +281,14 @@ class _BrandingScreenState extends State<BrandingScreen> {
           }),
           getDynamicSizedBox(height: 2.h),
           Container(
-              color: transparent,
-              height: Device.screenType == sizer.ScreenType.mobile
-                  ? isSmallDevice(context)
-                      ? 15.h
-                      : 18.h
-                  : 25.h,
-              child: Obx(() {
+            color: transparent,
+            height: Device.screenType == sizer.ScreenType.mobile
+                ? isSmallDevice(context)
+                    ? 15.h
+                    : 18.h
+                : 25.h,
+            child: Obx(
+              () {
                 final items = controller.businessList.take(6).toList();
                 return controller.isBusinessLoading.value
                     ? SizedBox(
@@ -313,7 +313,12 @@ class _BrandingScreenState extends State<BrandingScreen> {
                                 BusinessData data =
                                     controller.businessList[index];
                                 return controller.getBusinessListItem(
-                                    context, data);
+                                    businessName:
+                                        controller.bussinessNames[index],
+                                    bussinessImg:
+                                        controller.bussinessList[index],
+                                    context,
+                                    data);
                               } else if (controller.isFetchingfestivalMore) {
                                 return Center(
                                   child: Padding(
@@ -329,7 +334,9 @@ class _BrandingScreenState extends State<BrandingScreen> {
                             },
                           )
                         : Container();
-              })),
+              },
+            ),
+          ),
         ],
       );
 
