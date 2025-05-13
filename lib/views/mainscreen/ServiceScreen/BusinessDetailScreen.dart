@@ -41,6 +41,8 @@ class BusinessDetailScreen extends StatefulWidget {
 
 class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
   var controller = Get.put(ServiceDetailScreenController());
+
+  
   bool showTitle = false;
   double? percentage;
   String businessName = '';
@@ -75,6 +77,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
       if (!mounted) return;
       setState(() => controller.isFetchingMore.value = true);
       controller.currentPage++;
+
       Future.delayed(
         Duration.zero,
         () {

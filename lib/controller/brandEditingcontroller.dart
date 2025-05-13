@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
+import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:sizer/sizer.dart';
@@ -17,11 +19,14 @@ class Brandeditingcontroller extends GetxController {
             margin: EdgeInsets.symmetric(horizontal: 4.w),
             child: getimageGridView()),
         Container(child: Text("Frames Page")),
-        Container(child: Text("Backgrounds Page")),
+        Container(
+            margin: EdgeInsets.symmetric(horizontal: 4.w),
+            child: getFrameGridView()),
         Container(
             // margin: EdgeInsets.symmetric(horizontal: 4.w),
             child: bgcolorPic(context: context)),
-        Container(child: Text("Text Page")),
+        Container(
+            margin: EdgeInsets.all(10), child: gettextEditingWidget(context)),
       ];
 
   void hideKeyboard(context) {
@@ -31,8 +36,7 @@ class Brandeditingcontroller extends GetxController {
     }
   }
 
-//image page
-  static Widget getimageGridView() {
+  Widget getFrameGridView() {
     return SizedBox(
       height: 20.h,
       child: GridView.builder(
@@ -65,6 +69,175 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
+//image page
+  Widget getimageGridView() {
+    return SizedBox(
+      height: 20.h,
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: 10,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () {
+              logcat('Print', 'Pressing');
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(Asset.bussinessPlaceholder,
+                      fit: BoxFit.contain)),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  RxDouble fontSize = 16.sp.obs;
+  gettextEditingWidget(context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                logcat('Print', 'Pressing');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: white, borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.all(5),
+                child: Icon(Icons.add),
+              ),
+            ),
+            getDynamicSizedBox(width: 2.w),
+            GestureDetector(
+              onTap: () {
+                logcat('Print', 'Pressing');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: white, borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.all(5),
+                child: Icon(Icons.format_bold),
+              ),
+            ),
+            getDynamicSizedBox(width: 2.w),
+            GestureDetector(
+              onTap: () {
+                logcat('Print', 'Pressing');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: white, borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.all(5),
+                child: Icon(Icons.format_italic),
+              ),
+            ),
+            getDynamicSizedBox(width: 2.w),
+            GestureDetector(
+              onTap: () {
+                logcat('Print', 'Pressing');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: white, borderRadius: BorderRadius.circular(10)),
+                padding: EdgeInsets.all(5),
+                child: Icon(Icons.delete),
+              ),
+            ),
+            getDynamicSizedBox(width: 10.w),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: 40.w,
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Hax Code',
+                        style: TextStyle(fontFamily: dM_sans_medium),
+                      )
+                    ],
+                  ),
+                ),
+                getDynamicSizedBox(height: 2.h),
+                Container(
+                  width: 40.w,
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: white, borderRadius: BorderRadius.circular(10)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            print('Tap');
+                          },
+                          child: Icon(
+                            Icons.format_align_left,
+                          )),
+                      GestureDetector(
+                          onTap: () {
+                            print('Tap');
+                          },
+                          child: Icon(
+                            Icons.format_align_center,
+                          )),
+                      GestureDetector(
+                          onTap: () {
+                            print('Tap');
+                          },
+                          child: Icon(
+                            Icons.format_align_right,
+                          )),
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+        getDynamicSizedBox(height: 1.h),
+        Container(
+          margin: EdgeInsets.only(left: 6.w),
+          child: Text(
+            'Font Size',
+            style: TextStyle(
+                fontSize: 18.sp, color: white, fontFamily: dM_sans_semiBold),
+          ),
+        ),
+        Obx(() => Slider(
+              value: fontSize.value,
+              min: 8,
+              max: 32,
+              activeColor: primaryColor,
+              inactiveColor: white,
+              onChanged: (value) {
+                fontSize.value = value;
+              },
+            ))
+      ],
+    );
+  }
 //background page
 
   bool _showBorder = true;
@@ -109,8 +282,8 @@ class Brandeditingcontroller extends GetxController {
               );
             },
             child: Container(
-              width: 40.w,
-              height: 30.h,
+              width: 20.w,
+              height: 10.h,
               margin:
                   EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
               decoration: BoxDecoration(
