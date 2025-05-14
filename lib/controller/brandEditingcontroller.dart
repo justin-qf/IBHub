@@ -104,7 +104,91 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
-  RxDouble fontSize = 16.sp.obs;
+  RxDouble textfontSize = 16.sp.obs;
+
+  RxBool isTextBold = false.obs;
+  RxBool isTextItalic = false.obs;
+
+  RxDouble textPosX = 0.0.obs;
+  RxDouble textPosY = 0.0.obs;
+
+  void toggleBold() {
+    isTextBold.value = !isTextBold.value;
+  }
+
+  void toggleItalic() {
+    isTextItalic.value = !isTextItalic.value;
+  }
+
+  var currentTextColor = Rx<Color>(Colors.red);
+  var hexTextCode = "".obs;
+  Color get hexTextColor => hexBgToColor(hexTextCode.value);
+
+  Color hexTextToColor(String hex) {
+    hex = hex.replaceAll('#', '');
+    if (hex.length == 6) {
+      hex = 'FF$hex'; // Add alpha if missing
+    }
+    return Color(int.parse(hex, radix: 16));
+  }
+
+  void pickTextColor(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.color_lens, color: currentTextColor.value),
+            SizedBox(width: 10),
+            Text(
+              'Pick Text Color',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: currentTextColor.value,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Divider(),
+            ColorPicker(
+              pickerColor: currentTextColor.value,
+              onColorChanged: (color) {
+                currentTextColor.value = color;
+                hexTextCode.value = '';
+              },
+              showLabel: true,
+              pickerAreaHeightPercent: 0.7,
+              enableAlpha: false,
+              labelTypes: const [
+                ColorLabelType.hex,
+                ColorLabelType.rgb,
+                ColorLabelType.hsv,
+                ColorLabelType.hsl
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton.icon(
+            icon: Icon(Icons.check, color: currentTextColor.value),
+            label: Text(
+              'Apply',
+              style: TextStyle(color: currentTextColor.value),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
   gettextEditingWidget(context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,11 +211,13 @@ class Brandeditingcontroller extends GetxController {
             getDynamicSizedBox(width: 2.w),
             GestureDetector(
               onTap: () {
+                toggleBold();
                 logcat('Print', 'Pressing');
               },
               child: Container(
                 decoration: BoxDecoration(
-                    color: white, borderRadius: BorderRadius.circular(10)),
+                    color: isTextBold.value ? lightGrey : white,
+                    borderRadius: BorderRadius.circular(10)),
                 padding: EdgeInsets.all(5),
                 child: Icon(Icons.format_bold),
               ),
@@ -139,11 +225,13 @@ class Brandeditingcontroller extends GetxController {
             getDynamicSizedBox(width: 2.w),
             GestureDetector(
               onTap: () {
+                toggleItalic();
                 logcat('Print', 'Pressing');
               },
               child: Container(
                 decoration: BoxDecoration(
-                    color: white, borderRadius: BorderRadius.circular(10)),
+                    color: isTextItalic.value ? lightGrey : white,
+                    borderRadius: BorderRadius.circular(10)),
                 padding: EdgeInsets.all(5),
                 child: Icon(Icons.format_italic),
               ),
@@ -166,21 +254,152 @@ class Brandeditingcontroller extends GetxController {
               children: [
                 Container(
                   width: 40.w,
-                  padding: EdgeInsets.all(8),
+                  padding: EdgeInsets.all(0),
                   decoration: BoxDecoration(
                     color: white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Hax Code',
-                        style: TextStyle(fontFamily: dM_sans_medium),
-                      )
-                    ],
+                  child: TextField(
+                    onSubmitted: (value) {
+                      try {
+                        String hex = value.replaceAll('#', '');
+                        if (hex.length == 6 || hex.length == 8) {
+                          hexTextCode.value = '#${hex.toUpperCase()}';
+                        } else {
+                          Get.snackbar(
+                            "Invalid Hex",
+                            backgroundColor: primaryColor,
+                            colorText: white,
+                            "Please enter a 6 or 8 character hex code (e.g. #FF5733)",
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        }
+                      } catch (e) {
+                        Get.snackbar(
+                          "Error",
+                          backgroundColor: primaryColor,
+                          colorText: white,
+                          "Invalid hex format. Please use #RRGGBB or #AARRGGBB",
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      }
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Hex Code',
+                      filled: true,
+                      isDense: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10)),
+
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 1.h, horizontal: 1.w),
+
+                      // 👇 This puts your custom GestureDetector inside the textfield at the end
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          pickTextColor(context);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              right: 1.w, top: 0.5.h, bottom: 0.5.h),
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2),
+                              border: Border.all(color: primaryColor)),
+                          child: CustomPaint(
+                            size: Size(3.w, 2.h),
+                            painter: GradientPainter(),
+                          ),
+                        ),
+                      ),
+                      //  GestureDetector(
+                      //   onTap: () {
+                      //     logcat('Print', 'Pressed inside textfield');
+                      //     // Optionally update text here
+                      //   },
+                      //   child: Container(
+                      //     padding: EdgeInsets.all(8),
+                      //     margin: EdgeInsets.only(
+                      //         right: 8), // optional for spacing
+                      //     child: CustomPaint(
+                      //       size: Size(4.w, 2.h),
+                      //       painter: GradientPainter(),
+                      //     ),
+                      //   ),
+                      // ),
+                    ),
                   ),
+
+                  //  Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     // Text(
+                  //     //   'Hax Code',
+                  //     //   style: TextStyle(fontFamily: dM_sans_medium),
+                  //     // ),
+                  //     TextField(
+                  //       controller: hexCodeController,
+                  //       decoration: InputDecoration(
+                  //         labelText: 'Hex Code',
+                  //         filled: true,
+                  //         fillColor: Colors.white,
+                  //         border: OutlineInputBorder(),
+
+                  //         // 👇 This puts your custom GestureDetector inside the textfield at the end
+                  //         suffixIcon: GestureDetector(
+                  //           onTap: () {
+                  //             logcat('Print', 'Pressing');
+                  //           },
+                  //           child: Container(
+                  //             padding: EdgeInsets.all(2),
+                  //             decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(2),
+                  //                 border: Border.all(color: primaryColor)),
+                  //             child: CustomPaint(
+                  //               size: Size(4.w, 2.h),
+                  //               painter: GradientPainter(),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         //  GestureDetector(
+                  //         //   onTap: () {
+                  //         //     logcat('Print', 'Pressed inside textfield');
+                  //         //     // Optionally update text here
+                  //         //   },
+                  //         //   child: Container(
+                  //         //     padding: EdgeInsets.all(8),
+                  //         //     margin: EdgeInsets.only(
+                  //         //         right: 8), // optional for spacing
+                  //         //     child: CustomPaint(
+                  //         //       size: Size(4.w, 2.h),
+                  //         //       painter: GradientPainter(),
+                  //         //     ),
+                  //         //   ),
+                  //         // ),
+                  //       ),
+                  //     ),
+
+                  //     // GestureDetector(
+                  //     //   onTap: () {
+                  //     //     logcat('Print', 'Pressing');
+                  //     //   },
+                  //     //   child: Container(
+                  //     //     padding: EdgeInsets.all(2),
+                  //     //     decoration: BoxDecoration(
+                  //     //         borderRadius: BorderRadius.circular(2),
+                  //     //         border: Border.all(color: primaryColor)),
+                  //     //     child: CustomPaint(
+                  //     //       size: Size(4.w, 2.h),
+                  //     //       painter: GradientPainter(),
+                  //     //     ),
+                  //     //   ),
+                  //     // ),
+                  //   ],
+                  // ),
                 ),
-                getDynamicSizedBox(height: 2.h),
+                getDynamicSizedBox(height: 1.h),
                 Container(
                   width: 40.w,
                   padding: EdgeInsets.all(5),
@@ -227,13 +446,13 @@ class Brandeditingcontroller extends GetxController {
           ),
         ),
         Obx(() => Slider(
-              value: fontSize.value,
+              value: textfontSize.value,
               min: 8,
               max: 32,
               activeColor: primaryColor,
               inactiveColor: white,
               onChanged: (value) {
-                fontSize.value = value;
+                textfontSize.value = value;
               },
             ))
       ],
@@ -251,11 +470,11 @@ class Brandeditingcontroller extends GetxController {
 //background page
 
   var showBorder = false.obs;
-  var hexCode = "#00FF00".obs;
+  var hexBgCode = "#00FF00".obs;
 
-  Color get hexColor => hexToColor(hexCode.value);
+  Color get hexBgColor => hexBgToColor(hexBgCode.value);
 
-  Color hexToColor(String hex) {
+  Color hexBgToColor(String hex) {
     hex = hex.replaceAll('#', '');
     if (hex.length == 6) {
       hex = 'FF$hex'; // Add alpha if missing
@@ -263,7 +482,7 @@ class Brandeditingcontroller extends GetxController {
     return Color(int.parse(hex, radix: 16));
   }
 
-  var currentColor = Rx<Color>(Colors.red);
+  var currentBGColor = Rx<Color>(Colors.red);
 
   Widget bgcolorPic({context}) {
     return Container(
@@ -320,7 +539,7 @@ class Brandeditingcontroller extends GetxController {
                       try {
                         String hex = value.replaceAll('#', '');
                         if (hex.length == 6 || hex.length == 8) {
-                          hexCode.value = '#${hex.toUpperCase()}';
+                          hexBgCode.value = '#${hex.toUpperCase()}';
                         } else {
                           Get.snackbar(
                             "Invalid Hex",

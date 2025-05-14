@@ -61,7 +61,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
           height: pickerHeight.h,
           margin: EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
           decoration: BoxDecoration(
-              color: controller.currentColor.value,
+              color: controller.currentBGColor.value,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: white, width: 1.w)),
           child: ClipRRect(
@@ -83,37 +83,39 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
 
                   Color selectedColor =
                       _getColorAtPosition(normalizedX, normalizedY);
-                  controller.currentColor.value = selectedColor;
+                  controller.currentBGColor.value = selectedColor;
                   // controller.hexCode.value =
                   //     '#${selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
                 });
               },
               onPanUpdate: (details) {
-                setState(() {
-                  // Update cursor position with proper clamping, accounting for cursor size
-                  _cursorX = (_cursorX + details.delta.dx)
-                      .clamp(cursorSize / 2, pickerWidth.w - cursorSize / 2);
-                  _cursorY = (_cursorY + details.delta.dy)
-                      .clamp(cursorSize / 2, pickerHeight.h - cursorSize / 2);
+                setState(
+                  () {
+                    // Update cursor position with proper clamping, accounting for cursor size
+                    _cursorX = (_cursorX + details.delta.dx)
+                        .clamp(cursorSize / 2, pickerWidth.w - cursorSize / 2);
+                    _cursorY = (_cursorY + details.delta.dy)
+                        .clamp(cursorSize / 2, pickerHeight.h - cursorSize / 2);
 
-                  // Normalize the position for color calculation
-                  double normalizedX = (_cursorX - cursorSize / 2) /
-                      (pickerWidth.w - cursorSize);
-                  double normalizedY = (_cursorY - cursorSize / 2) /
-                      (pickerHeight.h - cursorSize);
+                    // Normalize the position for color calculation
+                    double normalizedX = (_cursorX - cursorSize / 2) /
+                        (pickerWidth.w - cursorSize);
+                    double normalizedY = (_cursorY - cursorSize / 2) /
+                        (pickerHeight.h - cursorSize);
 
-                  Color selectedColor =
-                      _getColorAtPosition(normalizedX, normalizedY);
-                  controller.currentColor.value = selectedColor;
-                  // controller.hexCode.value =
-                  //     '#${selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
-                });
+                    Color selectedColor =
+                        _getColorAtPosition(normalizedX, normalizedY);
+                    controller.currentBGColor.value = selectedColor;
+                    // controller.hexCode.value =
+                    //     '#${selectedColor.value.toRadixString(16).substring(2).toUpperCase()}';
+                  },
+                );
               },
               child: Stack(
                 children: [
                   CustomPaint(
                     size: Size(pickerWidth.w, pickerHeight.h),
-                    painter: _GradientPainter(),
+                    painter: GradientPainter(),
                   ),
                   Positioned(
                     left: _cursorX - cursorSize / 2,
@@ -141,7 +143,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
   }
 }
 
-class _GradientPainter extends CustomPainter {
+class GradientPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final gradient = LinearGradient(
