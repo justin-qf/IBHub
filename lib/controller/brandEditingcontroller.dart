@@ -7,6 +7,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
 import 'package:sizer/sizer.dart';
 
 class Brandeditingcontroller extends GetxController {
@@ -249,9 +250,20 @@ class Brandeditingcontroller extends GetxController {
 
 //background page
 
-  bool _showBorder = true;
-  String _hexCode = "#FFFFFF";
-  Color _currentColor = Colors.red;
+  var showBorder = false.obs;
+  var hexCode = "#00FF00".obs;
+
+  Color get hexColor => hexToColor(hexCode.value);
+
+  Color hexToColor(String hex) {
+    hex = hex.replaceAll('#', '');
+    if (hex.length == 6) {
+      hex = 'FF$hex'; // Add alpha if missing
+    }
+    return Color(int.parse(hex, radix: 16));
+  }
+
+  var currentColor = Rx<Color>(Colors.red);
 
   Widget bgcolorPic({context}) {
     return Container(
@@ -259,6 +271,8 @@ class Brandeditingcontroller extends GetxController {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          const ColorPickerWidget(),
+
           // Color Picker Inline (Direct)
           // Container(
           //   width: 40.w,
@@ -293,18 +307,37 @@ class Brandeditingcontroller extends GetxController {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                getDynamicSizedBox(height: 2.h),
                 Container(
                   height: 6.h,
                   width: 35.w,
                   padding: EdgeInsets.only(top: 0.h, right: 2.w, left: 2.w),
                   child: TextField(
-                    onChanged: (value) {
-                      _hexCode = value;
+                    // onChanged: (value) {
+
+                    // },
+                    onSubmitted: (value) {
                       try {
-                        _currentColor =
-                            Color(int.parse(value, radix: 16) + 0xFF000000);
-                      } catch (_) {
-                        // Invalid hex code input
+                        String hex = value.replaceAll('#', '');
+                        if (hex.length == 6 || hex.length == 8) {
+                          hexCode.value = '#${hex.toUpperCase()}';
+                        } else {
+                          Get.snackbar(
+                            "Invalid Hex",
+                            backgroundColor: primaryColor,
+                            colorText: white,
+                            "Please enter a 6 or 8 character hex code (e.g. #FF5733)",
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        }
+                      } catch (e) {
+                        Get.snackbar(
+                          "Error",
+                          backgroundColor: primaryColor,
+                          colorText: white,
+                          "Invalid hex format. Please use #RRGGBB or #AARRGGBB",
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
                       }
                     },
                     decoration: InputDecoration(
@@ -317,19 +350,29 @@ class Brandeditingcontroller extends GetxController {
                 ),
                 SizedBox(height: 2.h),
                 Container(
+                  // color: Colors.yellow,
                   height: 7.h,
-                  width: 40.w,
-                  child: CheckboxListTile(
-                    value: _showBorder,
-                    onChanged: (value) {
-                      _showBorder = value!;
-                    },
-                    title: Text(
-                      'Image Border',
-                      style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                    ),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    visualDensity: VisualDensity(horizontal: -4),
+                  width: 45.w,
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: showBorder.value,
+                        onChanged: (value) {
+                          showBorder.value = value!;
+                        },
+                        activeColor: primaryColor,
+                        checkColor: white,
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Image Border',
+                          style:
+                              TextStyle(fontSize: 16.sp, color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],
@@ -391,7 +434,6 @@ class Brandeditingcontroller extends GetxController {
                 index: 4,
                 onTap: () {
                   _updateTab(4);
-                  // Replace with actual TextEditor call
                   print("Open Text Editor");
                 },
               ),

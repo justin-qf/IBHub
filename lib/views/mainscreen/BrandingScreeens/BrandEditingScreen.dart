@@ -18,8 +18,7 @@ class Brandeditingscreen extends StatefulWidget {
 
 class _BrandeditingscreenState extends State<Brandeditingscreen> {
   var controller = Get.put(Brandeditingcontroller());
-  Color _currentColor = Colors.red;
-  bool _showBorder = true;
+
   @override
   Widget build(BuildContext context) {
     Statusbar().transparentStatusbarIsNormalScreen();
@@ -31,7 +30,9 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
       onTap: () {
         controller.hideKeyboard(context);
       },
+      isNormalScreen: true,
       isExtendBodyScreen: true,
+      // resizeToAvoidBottomInset: true,
       body: Column(
         children: [
           Container(
@@ -88,18 +89,44 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                       ],
                       border: Border.all(color: grey),
                       shape: BoxShape.rectangle),
-                  child: Container(
-                    // height: 20.h,
-                    // width: 55.w,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: grey),
-                      shape: BoxShape.rectangle,
+                  child: Obx(
+                    () => Container(
+                      // height: 20.h,
+                      // width: 55.w,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: controller.showBorder.value
+                                ? primaryColor
+                                : white),
+                        shape: BoxShape.rectangle,
+                      ),
+                      child: Image.asset(Asset.bussinessPlaceholder,
+                          fit: BoxFit.contain),
                     ),
-                    child: Image.asset(Asset.bussinessPlaceholder,
-                        fit: BoxFit.contain),
                   ),
                 ),
 
+                getDynamicSizedBox(height: 2.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Obx(
+                      () => Container(
+                        width: 10.w,
+                        height: 5.h,
+                        color: controller.currentColor.value,
+                      ),
+                    ),
+                    getDynamicSizedBox(width: 2.w),
+                    Obx(
+                      () => Container(
+                        width: 10.w,
+                        height: 5.h,
+                        color: Color(controller.hexColor.value),
+                      ),
+                    ),
+                  ],
+                )
                 // Expanded(
                 //     child:
                 //         Obx(() => controller.screens[controller.activeTab.value])),
