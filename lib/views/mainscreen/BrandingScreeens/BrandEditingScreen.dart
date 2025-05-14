@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -17,7 +18,8 @@ class Brandeditingscreen extends StatefulWidget {
 
 class _BrandeditingscreenState extends State<Brandeditingscreen> {
   var controller = Get.put(Brandeditingcontroller());
-
+  Color _currentColor = Colors.red;
+  bool _showBorder = true;
   @override
   Widget build(BuildContext context) {
     Statusbar().transparentStatusbarIsNormalScreen();
@@ -48,6 +50,30 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                   ),
                 ),
                 getDynamicSizedBox(height: 5.h),
+                // Container(
+                //   width: 40.w,
+                //   height: 40.h, // Increased height to fit color picker
+                //   margin: EdgeInsets.only(
+                //       left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
+                //   decoration: BoxDecoration(
+                //     color: _currentColor,
+                //     borderRadius: BorderRadius.circular(10),
+                //     border: _showBorder
+                //         ? Border.all(color: Colors.pink, width: 1.w)
+                //         : null,
+                //   ),
+                //   child: SingleChildScrollView(
+                //     child: ColorPicker(
+                //       pickerColor: _currentColor,
+                //       onColorChanged: (color) {
+                //         _currentColor = color;
+                //       },
+                //       pickerAreaHeightPercent: 0.5,
+                //       displayThumbColor: true,
+                //       enableAlpha: false,
+                //     ),
+                //   ),
+                // ),
                 Container(
                   height: 35.h,
                   width: 70.w,

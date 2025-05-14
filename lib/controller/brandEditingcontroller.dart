@@ -238,6 +238,15 @@ class Brandeditingcontroller extends GetxController {
       ],
     );
   }
+
+//footer page
+
+  Widget footerWidget() {
+    return Container(
+      child: Text('data'),
+    );
+  }
+
 //background page
 
   bool _showBorder = true;
@@ -250,55 +259,34 @@ class Brandeditingcontroller extends GetxController {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Color Preview Box
+          // Color Picker Inline (Direct)
+          // Container(
+          //   width: 40.w,
+          //   height: 50.h, // Increased height to fit color picker
+          //   margin:
+          //       EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
+          //   decoration: BoxDecoration(
+          //     color: _currentColor,
+          //     borderRadius: BorderRadius.circular(10),
+          //     border: _showBorder
+          //         ? Border.all(color: Colors.pink, width: 1.w)
+          //         : null,
+          //   ),
+          //   child: SingleChildScrollView(
+          //     child: ColorPicker(
+          //       pickerColor: _currentColor,
+          //       onColorChanged: (color) {
+          //         _currentColor = color;
+          //       },
+          //       pickerAreaHeightPercent: 0.5,
+          //       displayThumbColor: true,
+          //       enableAlpha: false,
+          //     ),
+          //   ),
+          // ),
 
-          GestureDetector(
-            onTap: () {
-              // Show color picker dialog
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Pick a color'),
-                    content: SingleChildScrollView(
-                      child: ColorPicker(
-                        pickerColor: _currentColor,
-                        onColorChanged: (color) {
-                          _currentColor = color;
-                        },
-                        pickerAreaHeightPercent: 0.8,
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text('Got it'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-            child: Container(
-              width: 20.w,
-              height: 10.h,
-              margin:
-                  EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
-              decoration: BoxDecoration(
-                color: _currentColor,
-                borderRadius: BorderRadius.circular(10),
-                border: _showBorder
-                    ? Border.all(color: Colors.pink, width: 1.w)
-                    : null,
-              ),
-              child: const Center(
-                child: Icon(Icons.color_lens, color: Colors.white),
-              ),
-            ),
-          ),
           SizedBox(width: 3.w),
+
           // Control Panel
           Flexible(
             child: Column(
@@ -316,7 +304,7 @@ class Brandeditingcontroller extends GetxController {
                         _currentColor =
                             Color(int.parse(value, radix: 16) + 0xFF000000);
                       } catch (_) {
-                        // Invalid hex
+                        // Invalid hex code input
                       }
                     },
                     decoration: InputDecoration(
@@ -329,8 +317,8 @@ class Brandeditingcontroller extends GetxController {
                 ),
                 SizedBox(height: 2.h),
                 Container(
-                  color: Colors.yellow,
                   height: 7.h,
+                  width: 40.w,
                   child: CheckboxListTile(
                     value: _showBorder,
                     onChanged: (value) {
@@ -338,13 +326,10 @@ class Brandeditingcontroller extends GetxController {
                     },
                     title: Text(
                       'Image Border',
-                      style: TextStyle(fontSize: 16.sp),
+                      style: TextStyle(fontSize: 16.sp, color: Colors.white),
                     ),
-
                     controlAffinity: ListTileControlAffinity.leading,
-
                     visualDensity: VisualDensity(horizontal: -4),
-                    // Adjust the padding of title and subtitle
                   ),
                 )
               ],
