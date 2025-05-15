@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -19,6 +18,14 @@ class Brandeditingscreen extends StatefulWidget {
 
 class _BrandeditingscreenState extends State<Brandeditingscreen> {
   var controller = Get.put(Brandeditingcontroller());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    controller.fetchGalleryAlbums();
+  }
 
   @override
   Widget build(BuildContext context) {

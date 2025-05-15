@@ -8,65 +8,77 @@
 -keep class io.flutter.plugin.editing.** { *; }
 -dontwarn io.flutter.**
 
-# Keep Dart entry point
+# Dart entry point
 -keep class io.flutter.plugins.GeneratedPluginRegistrant { *; }
+
+############## FLUTTER ENGINE & CHANNELS ##############
+-keep class io.flutter.embedding.engine.FlutterEngine { *; }
+-keep class io.flutter.embedding.engine.dart.DartExecutor { *; }
+-keep class io.flutter.plugin.common.MethodChannel { *; }
+-keep class io.flutter.plugin.common.EventChannel { *; }
+
+############## SMART AUTH ##############
+-keep class fman.ge.smart_auth.** { *; }
+-dontwarn fman.ge.smart_auth.**
+
+############## PLAY CORE ##############
+-keep class com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**
+
+############## MAIN ACTIVITY ##############
+-keep class com.example.ibh.MainActivity { *; }
 
 ############## FIREBASE ##############
 -keep class com.google.firebase.** { *; }
 -keep class com.firebase.** { *; }
 -dontwarn com.google.firebase.**
-
-# Keep lifecycle (for FirebaseMessaging, etc.)
--keep class androidx.lifecycle.DefaultLifecycleObserver
--keep class androidx.lifecycle.LifecycleObserver
--keep class androidx.lifecycle.LifecycleOwner
--keep class androidx.lifecycle.ProcessLifecycleOwner
-
-# Firebase annotations/reflection usage
--keepattributes *Annotation*
--keepattributes EnclosingMethod
--keepattributes InnerClasses
-
-# Keep Firebase internal models using Gson
--keep class com.google.gson.** { *; }
--keep class com.google.gson.stream.** { *; }
--dontwarn com.google.gson.**
-
-# Used in Firebase + Crashlytics
 -keepnames class com.google.firebase.crashlytics.** { *; }
 -dontwarn com.google.firebase.crashlytics.**
+-keep class com.google.firebase.components.ComponentRegistrar { *; }
 
 ############## GOOGLE SERVICES ##############
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
 
--keep class com.google.android.play.** { *; }
--dontwarn com.google.android.play.**
+############## LIFECYCLE ##############
+-keep class androidx.lifecycle.DefaultLifecycleObserver
+-keep class androidx.lifecycle.LifecycleObserver
+-keep class androidx.lifecycle.LifecycleOwner
+-keep class androidx.lifecycle.ProcessLifecycleOwner
 
-############## COMMON ANNOTATIONS ##############
--keepattributes Signature
--keepattributes *Annotation*
--keepattributes InnerClasses
--keepattributes EnclosingMethod
-
-############## REFLECTION SAFETY ##############
+############## JSON / GSON ##############
+-keep class com.google.gson.** { *; }
+-keep class com.google.gson.stream.** { *; }
+-dontwarn com.google.gson.**
 -keepnames class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
 
-############## OTHER COMMON ISSUES ##############
-# Support for dynamic method invocation (reflection)
+############## COMMON ANNOTATIONS ##############
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes InnerClasses
+-keepattributes EnclosingMethod
+
+############## KEEP CONSTRUCTORS ##############
 -keepclassmembers class * {
     public <init>(...);
 }
 
-# Fix for Crashlytics initialization
--keep class com.google.firebase.components.ComponentRegistrar { *; }
+############## ANDROIDX KEEP ##############
+-keep class androidx.** { *; }
+-dontwarn androidx.**
 
-# Workaround for R8 errors with some plugins
+############## REFLECTION SAFETY FOR MODELS ##############
+-keep class **.model.** { *; }  # Optional - only if you use models for parsing
+
+############## KOTLIN REFLECTION ##############
+-keep class kotlin.Metadata { *; }
+-dontwarn kotlin.**
+
+############## MISC ##############
 -dontwarn javax.annotation.**
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn org.checkerframework.**
 -dontwarn com.squareup.okhttp.**
 -dontwarn retrofit2.Platform$Java8
-

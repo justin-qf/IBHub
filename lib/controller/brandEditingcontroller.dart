@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
@@ -7,7 +9,9 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/AlbumImagesScreen.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:sizer/sizer.dart';
 
 class Brandeditingcontroller extends GetxController {
@@ -71,38 +75,222 @@ class Brandeditingcontroller extends GetxController {
   }
 
 //image page
-  Widget getimageGridView() {
-    return SizedBox(
-      height: 20.h,
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+  final RxList<AssetPathEntity> albums = <AssetPathEntity>[].obs;
+  final RxMap<AssetPathEntity, List<AssetEntity>> albumImages =
+      <AssetPathEntity, List<AssetEntity>>{}.obs;
+  final RxBool isLoading = true.obs;
+  final RxList<AssetEntity> selectedImages = <AssetEntity>[].obs;
+
+  Future<void> fetchGalleryAlbums() async {
+    isLoading.value = true;
+
+    final PermissionState ps = await PhotoManager.requestPermissionExtend();
+    if (!ps.hasAccess) {
+      isLoading.value = false;
+      String message = 'Gallery access permission denied';
+      if (ps == PermissionState.limited) {
+        message =
+            'Limited gallery access granted. Some albums may not be available.';
+      }
+      logcat('Error', message);
+      Get.snackbar('Error', message);
+      return;
+    }
+
+    logcat('Info', 'Permission granted, fetching albums...');
+
+    final List<AssetPathEntity> paths;
+    try {
+      paths = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+        filterOption: FilterOptionGroup(
+          imageOption: const FilterOption(
+            sizeConstraint: SizeConstraint(ignoreSize: true),
+          ),
         ),
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              logcat('Print', 'Pressing');
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(Asset.bussinessPlaceholder,
-                      fit: BoxFit.contain)),
-            ),
-          );
-        },
-      ),
+      ).timeout(const Duration(seconds: 10), onTimeout: () {
+        logcat('Error', 'Timeout fetching albums');
+        throw Exception('Timeout fetching albums');
+      });
+    } catch (e) {
+      isLoading.value = false;
+      logcat('Error', 'Failed to fetch albums: $e');
+      Get.snackbar('Error', 'Failed to fetch albums: $e');
+      return;
+    }
+
+    if (paths.isEmpty) {
+      isLoading.value = false;
+      logcat('Error', 'No albums found');
+      Get.snackbar('Error', 'No albums found');
+      return;
+    }
+
+    logcat('Info', 'Found ${paths.length} albums');
+
+    Map<AssetPathEntity, List<AssetEntity>> tempAlbumImages = {};
+    for (var path in paths) {
+      try {
+        final List<AssetEntity> entities = await path
+            .getAssetListPaged(
+          page: 0,
+          size: 10,
+        )
+            .timeout(const Duration(seconds: 5), onTimeout: () {
+          logcat('Error', 'Timeout fetching images for album: ${path.name}');
+          return [];
+        });
+        if (entities.isNotEmpty) {
+          tempAlbumImages[path] = entities;
+          logcat('Info',
+              'Fetched ${entities.length} images for album: ${path.name}');
+        }
+      } catch (e) {
+        logcat('Error', 'Error fetching images for album ${path.name}: $e');
+      }
+    }
+
+    albums.assignAll(tempAlbumImages.keys.toList());
+    albumImages.assignAll(tempAlbumImages);
+    isLoading.value = false;
+    logcat('Info', 'Total albums fetched: ${albums.length}');
+  }
+
+  void toggleImageSelection(AssetEntity image) {
+    if (selectedImages.contains(image)) {
+      selectedImages.remove(image);
+    } else {
+      selectedImages.add(image);
+    }
+  }
+
+  Widget getimageGridView() {
+    return Obx(
+      () => isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : albums.isEmpty
+              ? const Center(child: Text('No albums found'))
+              : SizedBox(
+                  height: 50
+                      .h, // Increased height to accommodate more items and larger containers
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio:
+                          0.7, // Adjusted aspect ratio for better layout with text
+                    ),
+                    itemCount: albums.length, // Show all albums, not just 10
+                    itemBuilder: (BuildContext context, int index) {
+                      final album = albums[index];
+                      final images = albumImages[album] ?? [];
+
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => AlbumImagesScreen(album: album));
+                        },
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 30
+                                    .h, // Increased height for better visibility
+                                width: 25
+                                    .w, // Increased width for better visibility
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: images.isNotEmpty
+                                      ? FutureBuilder<Uint8List?>(
+                                          future: images.first.thumbnailData,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                    ConnectionState.done &&
+                                                snapshot.data != null) {
+                                              return Image.memory(
+                                                snapshot.data!,
+                                                fit: BoxFit.cover,
+                                              );
+                                            }
+                                            return const Icon(Icons.photo,
+                                                color: Colors.grey);
+                                          },
+                                        )
+                                      : const Icon(Icons.photo,
+                                          color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              album.name,
+                              style: TextStyle(
+                                fontSize: 12
+                                    .sp, // Slightly increased font size for readability
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${images.length} images',
+                              style: TextStyle(
+                                fontSize: 10
+                                    .sp, // Slightly increased font size for readability
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
     );
   }
+  // Widget getimageGridView() {
+  //   return SizedBox(
+  //     height: 20.h,
+  //     child: GridView.builder(
+  //       shrinkWrap: true,
+  //       physics: const NeverScrollableScrollPhysics(),
+  //       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //         crossAxisCount: 5,
+  //         crossAxisSpacing: 10,
+  //         mainAxisSpacing: 10,
+  //       ),
+  //       itemCount: 10,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return GestureDetector(
+  //           onTap: () {
+  //             logcat('Print', 'Pressing');
+  //           },
+  //           child: Container(
+  //             height: 5.h,
+  //             width: 5.w,
+  //             decoration: BoxDecoration(
+  //               color: white,
+  //               borderRadius: BorderRadius.circular(10),
+  //             ),
+  //             child: ClipRRect(
+  //                 borderRadius: BorderRadius.circular(10),
+  //                 child: Image.asset(Asset.bussinessPlaceholder,
+  //                     fit: BoxFit.contain)),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   RxDouble textfontSize = 16.sp.obs;
 
