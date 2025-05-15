@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: Brandeditingscreen(),
         defaultTransition: Transition.fadeIn,
       );
     });
