@@ -79,7 +79,7 @@ class Brandeditingcontroller extends GetxController {
   final RxMap<AssetPathEntity, List<AssetEntity>> albumImages =
       <AssetPathEntity, List<AssetEntity>>{}.obs;
   final RxBool isLoading = true.obs;
-  final RxList<AssetEntity> selectedImages = <AssetEntity>[].obs;
+  final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
 
   Future<void> fetchGalleryAlbums() async {
     isLoading.value = true;
@@ -157,106 +157,190 @@ class Brandeditingcontroller extends GetxController {
   }
 
   void toggleImageSelection(AssetEntity image) {
-    if (selectedImages.contains(image)) {
-      selectedImages.remove(image);
+    if (selectedImage.value == image) {
+      selectedImage.value = null; // deselect if tapped again
     } else {
-      selectedImages.add(image);
+      selectedImage.value = image; // select new image
     }
   }
 
-  Widget getimageGridView() {
-    return Obx(
-      () => isLoading.value
-          ? const Center(child: CircularProgressIndicator())
-          : albums.isEmpty
-              ? const Center(child: Text('No albums found'))
-              : SizedBox(
-                  height: 50
-                      .h, // Increased height to accommodate more items and larger containers
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const BouncingScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio:
-                          0.7, // Adjusted aspect ratio for better layout with text
-                    ),
-                    itemCount: albums.length, // Show all albums, not just 10
-                    itemBuilder: (BuildContext context, int index) {
-                      final album = albums[index];
-                      final images = albumImages[album] ?? [];
-
-                      return GestureDetector(
-                        onTap: () {
-                          Get.to(() => AlbumImagesScreen(album: album));
-                        },
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: 30
-                                    .h, // Increased height for better visibility
-                                width: 25
-                                    .w, // Increased width for better visibility
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: images.isNotEmpty
-                                      ? FutureBuilder<Uint8List?>(
-                                          future: images.first.thumbnailData,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                    ConnectionState.done &&
-                                                snapshot.data != null) {
-                                              return Image.memory(
-                                                snapshot.data!,
-                                                fit: BoxFit.cover,
-                                              );
-                                            }
-                                            return const Icon(Icons.photo,
-                                                color: Colors.grey);
-                                          },
-                                        )
-                                      : const Icon(Icons.photo,
-                                          color: Colors.grey),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              album.name,
-                              style: TextStyle(
-                                fontSize: 12
-                                    .sp, // Slightly increased font size for readability
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              '${images.length} images',
-                              style: TextStyle(
-                                fontSize: 10
-                                    .sp, // Slightly increased font size for readability
-                                color: Colors.grey,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+  Widget buildGalleryItem({
+    required Widget child,
+    VoidCallback? onTap,
+    String? title,
+    String? subtitle,
+    bool isSelected = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 5.w, // full width of grid cell
+            height: 8.h, // fixed height for all items
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected ? Colors.blue : Colors.grey.shade300,
+                width: isSelected ? 2 : 1,
+              ),
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.grey.shade200,
+              //     blurRadius: 4,
+              //     offset: const Offset(2, 2),
+              //   ),
+              // ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: child,
+            ),
+          ),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          if (subtitle != null)
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          if (isSelected)
+            Positioned(
+              top: 2.h,
+              right: 2.h,
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.blueAccent,
+                size: 20,
+              ),
+            ),
+        ],
+      ),
     );
   }
+
+  final Rx<AssetPathEntity?> selectedAlbum = Rx<AssetPathEntity?>(null);
+
+  Widget getimageGridView() {
+    return Obx(
+      () {
+        if (isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (selectedAlbum.value != null) {
+          final images = albumImages[selectedAlbum.value!] ?? [];
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    selectedAlbum.value = null;
+                  },
+                ),
+              ),
+              Expanded(
+                child: GridView.builder(
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 5,
+                            childAspectRatio: 0.8),
+                    itemCount: images.length,
+                    itemBuilder: (context, index) {
+                      final image = images[index];
+                      return Obx(() {
+                        final isSelected = selectedImage.value == image;
+
+                        return buildGalleryItem(
+                          isSelected: isSelected,
+                          onTap: () {
+                            toggleImageSelection(image);
+                          },
+                          child: FutureBuilder<Uint8List?>(
+                            future: image.thumbnailData,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  snapshot.data != null) {
+                                return Image.memory(snapshot.data!,
+                                    fit: BoxFit.cover);
+                              }
+                              return const Center(child: Icon(Icons.image));
+                            },
+                          ),
+                        );
+                      });
+                    }),
+              ),
+            ],
+          );
+        }
+
+        if (albums.isEmpty) {
+          return const Center(child: Text('No albums found'));
+        }
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(10),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 5,
+            childAspectRatio: 0.5,
+          ),
+          itemCount: albums.length,
+          itemBuilder: (BuildContext context, int index) {
+            final album = albums[index];
+            final images = albumImages[album] ?? [];
+
+            return buildGalleryItem(
+              title: album.name,
+              subtitle: '${images.length} images',
+              onTap: () {
+                selectedAlbum.value = album;
+              },
+              child: images.isNotEmpty
+                  ? FutureBuilder<Uint8List?>(
+                      future: images.first.thumbnailData,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.data != null) {
+                          return Image.memory(snapshot.data!,
+                              fit: BoxFit.cover);
+                        }
+                        return const Center(
+                            child: Icon(Icons.photo, color: Colors.grey));
+                      },
+                    )
+                  : const Center(child: Icon(Icons.photo, color: Colors.grey)),
+            );
+          },
+        );
+      },
+    );
+  }
+
   // Widget getimageGridView() {
   //   return SizedBox(
   //     height: 20.h,
