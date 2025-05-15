@@ -173,55 +173,54 @@ class Brandeditingcontroller extends GetxController {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Stack(
         children: [
-          Container(
-            width: 5.w, // full width of grid cell
-            height: 8.h, // fixed height for all items
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected ? Colors.blue : Colors.grey.shade300,
-                width: isSelected ? 2 : 1,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // getDynamicSizedBox(height: 2.h),
+              Container(
+                margin: EdgeInsets.only(top: 1.h),
+                width: 5.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isSelected ? Colors.blue : Colors.grey.shade300,
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: child,
+                ),
               ),
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.grey.shade200,
-              //     blurRadius: 4,
-              //     offset: const Offset(2, 2),
-              //   ),
-              // ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: child,
-            ),
+              if (title != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 12),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              if (subtitle != null)
+                Text(
+                  subtitle,
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+            ],
           ),
-          if (title != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4.0),
-              child: Text(
-                title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          if (subtitle != null)
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
           if (isSelected)
             Positioned(
-              top: 2.h,
-              right: 2.h,
+              top: 1.2.h,
+              right: 0.3.w,
               child: Icon(
                 Icons.check_circle,
                 color: Colors.blueAccent,
@@ -304,10 +303,10 @@ class Brandeditingcontroller extends GetxController {
         return GridView.builder(
           padding: const EdgeInsets.all(10),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            crossAxisSpacing: 10,
+            crossAxisCount: 4,
+            crossAxisSpacing: 5,
             mainAxisSpacing: 5,
-            childAspectRatio: 0.5,
+            childAspectRatio: 0.7,
           ),
           itemCount: albums.length,
           itemBuilder: (BuildContext context, int index) {

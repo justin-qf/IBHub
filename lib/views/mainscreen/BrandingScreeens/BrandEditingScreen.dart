@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -7,6 +9,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/brandEditingcontroller.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:sizer/sizer.dart';
 
 class Brandeditingscreen extends StatefulWidget {
@@ -100,19 +103,57 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                         border: Border.all(color: grey),
                         shape: BoxShape.rectangle,
                       ),
-                      child: Obx(
-                        () => Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
+                      child: Obx(() {
+                        final selectedImage = controller.selectedImage.value;
+                        if (selectedImage == null) {
+                          // No image selected, show placeholder
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
                                 color: controller.showBorder.value
                                     ? primaryColor
-                                    : white),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Image.asset(Asset.bussinessPlaceholder,
-                              fit: BoxFit.contain),
-                        ),
-                      ),
+                                    : Colors.white,
+                              ),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Image.asset(
+                              Asset.bussinessPlaceholder,
+                              fit: BoxFit.contain,
+                            ),
+                          );
+                        } else {
+                          // Image selected, show thumbnail from selected image
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: controller.showBorder.value
+                                    ? primaryColor
+                                    : Colors.white,
+                              ),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: FutureBuilder<Uint8List?>(
+                              future: selectedImage.thumbnailDataWithSize(
+                                  ThumbnailSize(600, 600)),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                        ConnectionState.done &&
+                                    snapshot.hasData &&
+                                    snapshot.data != null) {
+                                  return Image.memory(
+                                    snapshot.data!,
+                                    fit: BoxFit.contain,
+                                  );
+                                } else {
+                                  // While loading thumbnail, you can show a placeholder or loader
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              },
+                            ),
+                          );
+                        }
+                      }),
                     ),
                     Obx(() => Positioned(
                           left: controller.textPosX.value,
