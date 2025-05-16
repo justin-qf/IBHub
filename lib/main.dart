@@ -32,6 +32,7 @@ void main() async {
   await NotificationService.initialize();
   screenOrientations();
   Get.lazyPut<InternetController>(() => InternetController());
+  
   runApp(const MyApp());
 }
 
