@@ -11,9 +11,11 @@ class ImageFilters {
 
   // Getter for the current filter name
   String get currentFilter => _currentFilter;
+  Uint8List? _originalBytes;
 
   // Load image from Uint8List (e.g., from gallery)
   Future<void> loadImageFromBytes(Uint8List bytes) async {
+    _originalBytes = bytes;
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
     _originalImage = frame.image;
@@ -22,6 +24,7 @@ class ImageFilters {
 
   // Apply filter to the image
   Future<void> applyFilter(String filterType) async {
+    if (_originalBytes == null) return;
     if (_originalImage == null) return;
 
     final byteData = await _originalImage!.toByteData();
@@ -51,9 +54,12 @@ class ImageFilters {
           break;
         case 'Sepia':
           // Apply sepia tone
-          newPixels[i] = (r * 0.393 + g * 0.769 + b * 0.189).round().clamp(0, 255);
-          newPixels[i + 1] = (r * 0.349 + g * 0.686 + b * 0.168).round().clamp(0, 255);
-          newPixels[i + 2] = (r * 0.272 + g * 0.534 + b * 0.131).round().clamp(0, 255);
+          newPixels[i] =
+              (r * 0.393 + g * 0.769 + b * 0.189).round().clamp(0, 255);
+          newPixels[i + 1] =
+              (r * 0.349 + g * 0.686 + b * 0.168).round().clamp(0, 255);
+          newPixels[i + 2] =
+              (r * 0.272 + g * 0.534 + b * 0.131).round().clamp(0, 255);
           newPixels[i + 3] = a;
           break;
         case 'Brightness':
@@ -81,7 +87,8 @@ class ImageFilters {
     }
 
     // Create a new image from the modified pixels
-    final codec = await ui.instantiateImageCodec(newPixels, targetWidth: width, targetHeight: height);
+    final codec = await ui.instantiateImageCodec(newPixels,
+        targetWidth: width, targetHeight: height);
     final frame = await codec.getNextFrame();
     _filteredImage = frame.image;
     _currentFilter = filterType;

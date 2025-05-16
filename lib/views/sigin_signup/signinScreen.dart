@@ -15,6 +15,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/signinScreenController.dart';
 import 'package:ibh/services/firebaseNoticationsHandler.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/EmailScreen.dart';
 import 'package:ibh/views/sigin_signup/signupScreen.dart';
 import 'package:sizer/sizer.dart';
@@ -233,10 +234,8 @@ class _SigninscreenState extends State<Signinscreen> {
                 ),
               ),
               getDynamicSizedBox(height: 1.h),
-              Container(
-                // color: Colors.yellow,
+              SizedBox(
                 height: isSmallDevice(context) ? 3.h : 2.h,
-                // width: 10.w,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -246,7 +245,7 @@ class _SigninscreenState extends State<Signinscreen> {
                       color: grey,
                     ),
                     getDynamicSizedBox(width: 1.w),
-                    Text(
+                    const Text(
                       'Or',
                       style: TextStyle(
                           color: primaryColor,
@@ -262,17 +261,12 @@ class _SigninscreenState extends State<Signinscreen> {
                   ],
                 ),
               ),
-
               getDynamicSizedBox(height: 2.h),
-
               // OutlinedButton(
               //     onPressed: () async {
               //       final user = await ctr.signinWithGmail(context);
-
               //       var id = user!.uid;
-
               //       print('user id:$id');
-
               //       // if (user != null) {
               //       //   final result = await Get.to(() => Signupscreen(
               //       //         emailId: user.email,
@@ -301,8 +295,7 @@ class _SigninscreenState extends State<Signinscreen> {
                 onPressed: () async {
                   final user = await ctr.signinWithGmail(context);
                   var id = user!.uid;
-                  print('user id:$id');
-
+                  logcat("userId", id);
                   // if (user != null) {
                   //   final result = await Get.to(() => Signupscreen(
                   //         emailId: user.email,
@@ -316,20 +309,15 @@ class _SigninscreenState extends State<Signinscreen> {
                   // }
                 },
                 style: ButtonStyle(
-                  minimumSize: const MaterialStatePropertyAll(Size(50, 50)),
-                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  )),
-                  side: const MaterialStatePropertyAll(BorderSide(
-                    color: Color.fromARGB(255, 219, 219, 219),
-                    width: 1,
-                  )),
-                ),
-                child: SvgPicture.asset(
-                  Asset.google,
-                  height: 4.h,
-                  width: 4.w,
-                ),
+                    minimumSize: const MaterialStatePropertyAll(Size(50, 50)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    )),
+                    side: const MaterialStatePropertyAll(BorderSide(
+                      color: Color.fromARGB(255, 219, 219, 219),
+                      width: 1,
+                    ))),
+                child: SvgPicture.asset(Asset.google, height: 4.h, width: 4.w),
               )
             ],
           ),

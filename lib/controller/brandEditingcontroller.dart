@@ -11,8 +11,10 @@ import 'package:ibh/models/TextItemModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/FilteringClass.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sizer/sizer.dart';
+import 'package:sizer/sizer.dart' as sizer;
 
 class Brandeditingcontroller extends GetxController {
   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
@@ -41,8 +43,81 @@ class Brandeditingcontroller extends GetxController {
   }
 
   //filter related logic
-  filterLogic() {
-    return ;
+
+  final ImageFilters imageFilters = ImageFilters();
+  Widget filterLogic() {
+    return Column(
+      children: [
+        Container(
+          height: 15.h,
+          width: double.infinity,
+          margin: EdgeInsets.all(2.w),
+          decoration: BoxDecoration(
+            border: Border.all(color: grey, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child:
+              imageFilters.filteredImage == null || selectedImage.value == null
+                  ? Center(
+                      child: Text(
+                        'Select an image to apply filters',
+                        style: TextStyle(color: white, fontSize: 12.sp),
+                      ),
+                    )
+                  : RawImage(
+                      image: imageFilters.filteredImage,
+                      fit: BoxFit.contain,
+                    ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildFilterButton('None', 'Original'),
+            _buildFilterButton('Grayscale', 'Grayscale'),
+            _buildFilterButton('Sepia', 'Sepia'),
+            _buildFilterButton('Brightness', 'Brightness'),
+            _buildFilterButton('Contrast', 'Contrast'),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(2.w),
+          child: Text(
+            'Current Filter: ${imageFilters.currentFilter}',
+            style: TextStyle(color: white, fontSize: 12.sp),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilterButton(String filterType, String label) {
+    return ElevatedButton(
+      onPressed: () async {
+        if (selectedImage.value != null && thumbnailFuture.value != null) {
+          final bytes = await thumbnailFuture.value;
+          if (bytes != null) {
+            await imageFilters.loadImageFromBytes(bytes);
+            await imageFilters.applyFilter(filterType);
+            update(); // Trigger UI update
+          }
+        } else {
+          Get.snackbar(
+            'Error',
+            'Please select an image first',
+            backgroundColor: primaryColor,
+            colorText: white,
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: white,
+        foregroundColor: primaryColor,
+        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: Text(label, style: TextStyle(fontSize: 10.sp)),
+    );
   }
 
   // Image-related code (unchanged)
@@ -56,12 +131,20 @@ class Brandeditingcontroller extends GetxController {
   void toggleImageSelection(AssetEntity image) {
     if (selectedImage.value == image) {
       selectedImage.value = null;
-      thumbnailFuture.value = null; // Clear thumbnail when deselecting
+      thumbnailFuture.value = null;
+      imageFilters.dispose(); // Clear filter image
     } else {
       selectedImage.value = image;
-      thumbnailFuture.value = image.thumbnailDataWithSize(
-          ThumbnailSize(600, 600)); // Cache thumbnail Future
+      thumbnailFuture.value =
+          image.thumbnailDataWithSize(ThumbnailSize(600, 600));
+      thumbnailFuture.value!.then((bytes) {
+        if (bytes != null) {
+          imageFilters.loadImageFromBytes(bytes); // Load into ImageFilters
+          imageFilters.applyFilter('None'); // Reset to original
+        }
+      });
     }
+    update(); // Trigger UI update
   }
 
   Future<void> fetchGalleryAlbums() async {
@@ -136,7 +219,6 @@ class Brandeditingcontroller extends GetxController {
     String? subtitle,
     bool isSelected = false,
   }) {
-    // ... (unchanged)
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -145,7 +227,7 @@ class Brandeditingcontroller extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                margin: EdgeInsets.only(top: 1.h),
+                margin: EdgeInsets.only(top: 0.h),
                 width: 5.w,
                 height: 8.h,
                 decoration: BoxDecoration(
@@ -165,10 +247,13 @@ class Brandeditingcontroller extends GetxController {
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Text(
                     title,
-                    style: const TextStyle(
-                        color: white,
+                    style: TextStyle(
+                        color: black,
+                        fontFamily: fontBold,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                        fontSize: Device.screenType == sizer.ScreenType.mobile
+                            ? 14.sp
+                            : 4.sp),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -180,8 +265,8 @@ class Brandeditingcontroller extends GetxController {
             Positioned(
               top: 1.2.h,
               right: 0.3.w,
-              child:
-                  Icon(Icons.check_circle, color: Colors.blueAccent, size: 20),
+              child: const Icon(Icons.check_circle,
+                  color: Colors.blueAccent, size: 20),
             ),
         ],
       ),
@@ -191,7 +276,6 @@ class Brandeditingcontroller extends GetxController {
   final Rx<AssetPathEntity?> selectedAlbum = Rx<AssetPathEntity?>(null);
 
   Widget getimageGridView() {
-    // ... (unchanged)
     return Obx(() {
       if (isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -212,6 +296,7 @@ class Brandeditingcontroller extends GetxController {
             ),
             Expanded(
               child: GridView.builder(
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(10),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
@@ -221,8 +306,8 @@ class Brandeditingcontroller extends GetxController {
                 itemCount: images.length,
                 itemBuilder: (context, index) {
                   final image = images[index];
-                  final thumbnailFuture =
-                      image.thumbnailDataWithSize(ThumbnailSize(400, 400));
+                  final thumbnailFuture = image
+                      .thumbnailDataWithSize(const ThumbnailSize(400, 400));
                   return FutureBuilder<Uint8List?>(
                     future: thumbnailFuture,
                     builder: (context, snapshot) {
@@ -259,9 +344,9 @@ class Brandeditingcontroller extends GetxController {
         padding: const EdgeInsets.all(10),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          crossAxisSpacing: 5,
+          crossAxisSpacing: 10,
           mainAxisSpacing: 5,
-          childAspectRatio: 0.7,
+          childAspectRatio: 0.8,
         ),
         itemCount: albums.length,
         itemBuilder: (BuildContext context, int index) {
@@ -282,10 +367,10 @@ class Brandeditingcontroller extends GetxController {
                         return Image.memory(snapshot.data!, fit: BoxFit.cover);
                       }
                       return const Center(
-                          child: Icon(Icons.photo, color: Colors.grey));
+                          child: Icon(Icons.photo, color: primaryColor));
                     },
                   )
-                : const Center(child: Icon(Icons.photo, color: Colors.grey)),
+                : const Center(child: Icon(Icons.photo, color: primaryColor)),
           );
         },
       );
@@ -765,6 +850,12 @@ class Brandeditingcontroller extends GetxController {
   var currentBGColor = Rx<Color>(Colors.red);
   RxDouble borderSize = 2.sp.obs;
 
+  @override
+  void onClose() {
+    imageFilters.dispose(); // Clean up ImageFilters
+    super.onClose();
+  }
+
   Widget bgcolorPic({context}) {
     return Container(
       padding: const EdgeInsets.all(2),
@@ -880,41 +971,53 @@ class Brandeditingcontroller extends GetxController {
     return Column(
       children: [
         Obx(() => Container(
-              height: 25.h,
+              height: 27.h,
               width: Device.width,
-              decoration: BoxDecoration(color: grey),
+              decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.5),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: white, // Grey shadow
+                      blurRadius: 6.0, // Softness of the shadow
+                      spreadRadius: 1.0, // How much the shadow spreads
+                      offset: Offset(0, -3), // Position of the shadow (above)
+                    ),
+                  ]),
               child: screens(context)[activeTab.value],
             )),
         Container(
           width: double.infinity,
           color: primaryColor,
-          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.w),
+          padding: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 2.w),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildNavButton(
+                buildNavButton(
                     icon: Icons.image,
                     label: "Images",
                     index: 0,
                     onTap: () => _updateTab(0)),
-                _buildNavButton(
+                buildNavButton(
                     icon: Icons.border_bottom,
                     label: "Footer",
                     index: 1,
                     onTap: () => _updateTab(1)),
-                _buildNavButton(
+                buildNavButton(
                     icon: Icons.image,
                     label: "Frames",
                     index: 2,
                     onTap: () => _updateTab(2)),
-                _buildNavButton(
+                buildNavButton(
                     icon: Icons.wallpaper,
                     label: "Backgrounds",
                     index: 3,
                     onTap: () => _updateTab(3)),
-                _buildNavButton(
+                buildNavButton(
                     icon: Icons.text_fields,
                     label: "Text",
                     index: 4,
@@ -922,7 +1025,7 @@ class Brandeditingcontroller extends GetxController {
                       _updateTab(4);
                       print("Open Text Editor");
                     }),
-                _buildNavButton(
+                buildNavButton(
                     icon: Icons.edit,
                     label: "Edit",
                     index: 5,
@@ -938,7 +1041,7 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
-  Widget _buildNavButton({
+  Widget buildNavButton({
     required IconData icon,
     required String label,
     required int index,
@@ -948,7 +1051,7 @@ class Brandeditingcontroller extends GetxController {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
