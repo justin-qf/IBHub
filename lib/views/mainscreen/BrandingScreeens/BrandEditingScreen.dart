@@ -1,5 +1,5 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -8,6 +8,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/brandEditingcontroller.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:sizer/sizer.dart';
 
 class Brandeditingscreen extends StatefulWidget {
@@ -21,8 +22,19 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
   var controller = Get.put(Brandeditingcontroller());
 
   @override
+  void initState() {
+    super.initState();
+    controller.fetchGalleryAlbums();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Statusbar().transparentStatusbarIsNormalScreen();
+    // Stack dimensions for clamping
+    final stackWidth = 70.w;
+    final stackHeight = 35.h;
+    final imagePadding = 5.0; // Padding inside the image Container
+
     return CustomParentScaffold(
       onWillPop: () async {
         Get.back(result: true);
@@ -30,15 +42,15 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
       },
       onTap: () {
         controller.hideKeyboard(context);
+        controller.selectedTextIndex.value = -1; // Deselect text on tap outside
       },
       isNormalScreen: true,
       isExtendBodyScreen: true,
-      // resizeToAvoidBottomInset: true,
       body: Column(
         children: [
           Container(
             height: 63.5.h,
-            color: transparent,
+            color: Colors.transparent,
             child: Column(
               children: [
                 getDynamicSizedBox(height: 4.h),
@@ -52,162 +64,172 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                   ),
                 ),
                 getDynamicSizedBox(height: 5.h),
-                // Container(
-                //   width: 40.w,
-                //   height: 40.h, // Increased height to fit color picker
-                //   margin: EdgeInsets.only(
-                //       left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
-                //   decoration: BoxDecoration(
-                //     color: _currentColor,
-                //     borderRadius: BorderRadius.circular(10),
-                //     border: _showBorder
-                //         ? Border.all(color: Colors.pink, width: 1.w)
-                //         : null,
-                //   ),
-                //   child: SingleChildScrollView(
-                //     child: ColorPicker(
-                //       pickerColor: _currentColor,
-                //       onColorChanged: (color) {
-                //         _currentColor = color;
-                //       },
-                //       pickerAreaHeightPercent: 0.5,
-                //       displayThumbColor: true,
-                //       enableAlpha: false,
-                //     ),
-                //   ),
-                // ),
-                Stack(
-                  children: [
-                    Container(
-                      height: 35.h,
-                      width: 70.w,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: black.withOpacity(0.1),
-                              blurRadius: 5.0,
-                              offset: Offset(0, 0))
-                        ],
-                        border: Border.all(color: grey),
-                        shape: BoxShape.rectangle,
-                      ),
-                      child: Obx(
-                        () => Container(
+                SizedBox(
+                  width: stackWidth,
+                  height: stackHeight,
+                  child: Stack(
+                    clipBehavior: Clip.hardEdge, // Prevent overflow
+                    children: [
+                      Obx(() {
+                        final borderWidth = controller.borderSize.value;
+                        return Container(
+                          padding: EdgeInsets.all(imagePadding),
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                color: controller.showBorder.value
-                                    ? primaryColor
-                                    : white),
+                            color: white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: black.withOpacity(0.1),
+                                  blurRadius: 5.0,
+                                  offset: Offset(0, 0))
+                            ],
+                            border: Border.all(color: grey, width: 1),
                             shape: BoxShape.rectangle,
                           ),
-                          child: Image.asset(Asset.bussinessPlaceholder,
-                              fit: BoxFit.contain),
-                        ),
-                      ),
-                    ),
-                    Obx(() => Positioned(
-                          left: controller.textPosX.value,
-                          top: controller.textPosY.value,
-                          child: GestureDetector(
-                            onPanUpdate: (details) {
-                              controller.textPosX.value += details.delta.dx;
-                              controller.textPosY.value += details.delta.dy;
-                            },
-                            child: Text(
-                              'Sample Text',
-                              style: TextStyle(
-                                fontStyle: controller.isTextItalic.value
-                                    ? FontStyle.italic
-                                    : null,
-                                fontWeight: controller.isTextBold.value
-                                    ? FontWeight.bold
-                                    : null,
-                                color: controller.hexTextCode.value.isNotEmpty
-                                    ? Color(controller.hexTextColor
-                                        .value) // Use hex color if available
-                                    : controller.currentTextColor.value,
-                                fontFamily: dM_sans_regular,
-                                fontSize: controller.textfontSize.value,
+                          child: Container(
+                            width:
+                                stackWidth - 2 * imagePadding + 2 * borderWidth,
+                            height: stackHeight -
+                                2 * imagePadding +
+                                2 * borderWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: borderWidth,
+                                color: controller.showBorder.value
+                                    ? controller.hexBgCode.value.isNotEmpty
+                                        ? Color(controller.hexBgColor.value)
+                                        : controller.currentBGColor.value
+                                    : Colors.white,
                               ),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(0),
+                              child: controller.selectedImage.value == null
+                                  ? Image.asset(
+                                      Asset.bussinessPlaceholder,
+                                      fit: BoxFit.fill,
+                                      width: stackWidth - 2 * imagePadding,
+                                      height: stackHeight - 2 * imagePadding,
+                                    )
+                                  : FutureBuilder<Uint8List?>(
+                                      future: controller.selectedImage.value!
+                                          .thumbnailDataWithSize(
+                                              ThumbnailSize(600, 600)),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData &&
+                                            snapshot.data != null) {
+                                          return Image.memory(
+                                            snapshot.data!,
+                                            fit: BoxFit.fill,
+                                            width:
+                                                stackWidth - 2 * imagePadding,
+                                            height:
+                                                stackHeight - 2 * imagePadding,
+                                          );
+                                        } else {
+                                          return Image.asset(
+                                            Asset.bussinessPlaceholder,
+                                            fit: BoxFit.fill,
+                                            width:
+                                                stackWidth - 2 * imagePadding,
+                                            height:
+                                                stackHeight - 2 * imagePadding,
+                                          );
+                                        }
+                                      },
+                                    ),
                             ),
                           ),
-                        )),
-                  ],
+                        );
+                      }),
+                      Obx(() => Stack(
+                            clipBehavior: Clip.hardEdge,
+                            children: controller.textItems
+                                .asMap()
+                                .entries
+                                .map((entry) {
+                              final index = entry.key;
+                              final item = entry.value;
+                              final maxWidth =
+                                  stackWidth - item.posX.value - 10;
+                              return Positioned(
+                                left: item.posX.value,
+                                top: item.posY.value,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    controller.selectedTextIndex.value = index;
+                                    controller.textfontSize.value =
+                                        item.fontSize.value;
+                                    controller.isTextBold.value =
+                                        item.isBold.value;
+                                    controller.isTextItalic.value =
+                                        item.isItalic.value;
+                                    controller.currentTextColor.value =
+                                        item.textColor.value;
+                                    controller.isTextAlignLeft.value =
+                                        item.alignment.value ==
+                                            Alignment.centerLeft;
+                                    controller.isTextAlignCenter.value =
+                                        item.alignment.value ==
+                                            Alignment.center;
+                                    controller.isTextAlignRight.value =
+                                        item.alignment.value ==
+                                            Alignment.centerRight;
+                                  },
+                                  onPanUpdate: (details) {
+                                    item.posX.value += details.delta.dx;
+                                    item.posY.value += details.delta.dy;
+                                    controller.clampTextPosition(
+                                        item, stackWidth, stackHeight);
+                                  },
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      maxWidth: maxWidth > 10 ? maxWidth : 10,
+                                      minWidth: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          controller.selectedTextIndex.value ==
+                                                  index
+                                              ? Border.all(
+                                                  color: Colors.blue, width: 2)
+                                              : null,
+                                    ),
+                                    padding: EdgeInsets.all(2),
+                                    child: Text(
+                                      item.content.value,
+                                      textAlign:
+                                          controller.getTextAlignFromAlignment(
+                                              item.alignment.value),
+                                      softWrap: true,
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                        fontStyle: item.isItalic.value
+                                            ? FontStyle.italic
+                                            : FontStyle.normal,
+                                        fontWeight: item.isBold.value
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: item.textColor.value,
+                                        fontFamily: dM_sans_regular,
+                                        fontSize: item.fontSize.value,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          )),
+                    ],
+                  ),
                 ),
-
                 getDynamicSizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Obx(
-                      () => Container(
-                        width: 10.w,
-                        height: 5.h,
-                        color: controller.currentBGColor.value,
-                      ),
-                    ),
-                    getDynamicSizedBox(width: 2.w),
-                    Obx(
-                      () => Container(
-                        width: 10.w,
-                        height: 5.h,
-                        color: Color(controller.hexBgColor.value),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Obx(
-                //   () => Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Container(
-                //         margin: EdgeInsets.only(top: 1.h),
-                //         padding: EdgeInsets.all(2),
-                //         decoration: BoxDecoration(
-                //             borderRadius: BorderRadius.circular(10),
-                //             border: Border.all(color: black)),
-                //         child: Text(
-                //           'TextRGBColor',
-                //           style: TextStyle(
-                //               fontStyle: controller.isTextItalic.value
-                //                   ? FontStyle.italic
-                //                   : null,
-                //               fontWeight: controller.isTextBold.value
-                //                   ? FontWeight.bold
-                //                   : null,
-                //               // fontWeight: FontWeight.bold,
-                //               color: controller.currentTextColor.value),
-                //         ),
-                //       ),
-                //       getDynamicSizedBox(width: 1.w),
-                //       Container(
-                //         margin: EdgeInsets.only(top: 1.h),
-                //         padding: EdgeInsets.all(2),
-                //         decoration: BoxDecoration(
-                //             borderRadius: BorderRadius.circular(10),
-                //             border: Border.all(color: black)),
-                //         child: Text(
-                //           'TextHexColor',
-                //           style: TextStyle(
-                //               fontWeight: FontWeight.bold,
-                //               color: Color(controller.hexTextColor.value)),
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // ),
-                // Expanded(
-                //     child:
-                //         Obx(() => controller.screens[controller.activeTab.value])),
               ],
             ),
           ),
-          Obx(() {
-            return controller.buildNavBar(context);
-          })
+          Obx(() => controller.buildNavBar(context)),
         ],
       ),
     );

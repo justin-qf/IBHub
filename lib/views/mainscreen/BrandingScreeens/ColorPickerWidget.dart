@@ -4,8 +4,10 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/controller/brandEditingcontroller.dart';
 import 'package:sizer/sizer.dart';
 
+// ignore: must_be_immutable
 class ColorPickerWidget extends StatefulWidget {
-  const ColorPickerWidget({super.key});
+  var hexBgCode = "".obs;
+  ColorPickerWidget({super.key, required this.hexBgCode});
 
   @override
   _ColorPickerWidgetState createState() => _ColorPickerWidgetState();
@@ -52,14 +54,14 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    const double pickerWidth = 40;
-    const double pickerHeight = 20;
+    double pickerWidth = 9.w;
+    double pickerHeight = 2.h;
     const double cursorSize = 10;
 
     return Obx(() => Container(
           width: pickerWidth.w,
           height: pickerHeight.h,
-          margin: EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
+          margin: EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 0.h),
           decoration: BoxDecoration(
               color: controller.currentBGColor.value,
               borderRadius: BorderRadius.circular(10),
@@ -68,6 +70,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
             borderRadius: BorderRadius.circular(10),
             child: GestureDetector(
               onPanStart: (details) {
+                widget.hexBgCode.value = '';
                 setState(() {
                   // Ensure cursor stays within the container bounds, accounting for cursor size
                   _cursorX = details.localPosition.dx
