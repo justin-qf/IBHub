@@ -258,39 +258,48 @@ class Brandeditingcontroller extends GetxController {
               ),
               Expanded(
                 child: GridView.builder(
-                    padding: const EdgeInsets.all(10),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 5,
-                            childAspectRatio: 0.8),
-                    itemCount: images.length,
-                    itemBuilder: (context, index) {
-                      final image = images[index];
-                      return Obx(() {
-                        final isSelected = selectedImage.value == image;
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 5,
+                      childAspectRatio: 0.8),
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    final image = images[index];
 
-                        return buildGalleryItem(
-                          isSelected: isSelected,
-                          onTap: () {
-                            toggleImageSelection(image);
-                          },
-                          child: FutureBuilder<Uint8List?>(
-                            future: image.thumbnailData,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                      ConnectionState.done &&
-                                  snapshot.data != null) {
-                                return Image.memory(snapshot.data!,
-                                    fit: BoxFit.cover);
-                              }
-                              return const Center(child: Icon(Icons.image));
+                    // Keep the FutureBuilder outside Obx so it doesn't rebuild
+                    final thumbnailFuture = image.thumbnailDataWithSize(
+                        ThumbnailSize(400, 400)); // or originBytes if needed
+
+                    return FutureBuilder<Uint8List?>(
+                      future: thumbnailFuture,
+                      builder: (context, snapshot) {
+                        Widget thumbnail;
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData) {
+                          thumbnail =
+                              Image.memory(snapshot.data!, fit: BoxFit.cover);
+                        } else {
+                          thumbnail = const Center(child: Icon(Icons.image));
+                        }
+
+                        // Only this part listens to Rx
+                        return Obx(() {
+                          final isSelected = selectedImage.value == image;
+
+                          return buildGalleryItem(
+                            isSelected: isSelected,
+                            onTap: () {
+                              toggleImageSelection(image);
                             },
-                          ),
-                        );
-                      });
-                    }),
+                            child: thumbnail, // Reuses built thumbnail
+                          );
+                        });
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           );
@@ -382,6 +391,10 @@ class Brandeditingcontroller extends GetxController {
 
   RxDouble textPosX = 0.0.obs;
   RxDouble textPosY = 0.0.obs;
+
+  RxBool isTextAlignLeft = false.obs;
+  RxBool isTextAlignCenter = false.obs;
+  RxBool isTextAlignRight = false.obs;
 
   void toggleBold() {
     isTextBold.value = !isTextBold.value;
@@ -682,23 +695,59 @@ class Brandeditingcontroller extends GetxController {
                       GestureDetector(
                           onTap: () {
                             print('Tap');
+
+                            isTextAlignLeft.value = true;
+                            isTextAlignRight.value = false;
+                            isTextAlignCenter.value = false;
                           },
-                          child: Icon(
-                            Icons.format_align_left,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2),
+                              color: isTextAlignLeft.value == true
+                                  ? lightGrey
+                                  : white,
+                            ),
+                            padding: EdgeInsets.all(2),
+                            child: Icon(
+                              Icons.format_align_left,
+                            ),
                           )),
                       GestureDetector(
                           onTap: () {
                             print('Tap');
+
+                            isTextAlignLeft.value = false;
+                            isTextAlignRight.value = false;
+                            isTextAlignCenter.value = true;
                           },
-                          child: Icon(
-                            Icons.format_align_center,
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2),
+                                color: isTextAlignCenter.value == true
+                                    ? lightGrey
+                                    : white),
+                            child: Icon(
+                              Icons.format_align_center,
+                            ),
                           )),
                       GestureDetector(
                           onTap: () {
                             print('Tap');
+                            isTextAlignLeft.value = false;
+                            isTextAlignRight.value = true;
+                            isTextAlignCenter.value = false;
                           },
-                          child: Icon(
-                            Icons.format_align_right,
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2),
+                                color: isTextAlignRight.value == true
+                                    ? lightGrey
+                                    : white),
+                            child: Icon(
+                              Icons.format_align_right,
+                            ),
                           )),
                     ],
                   ),

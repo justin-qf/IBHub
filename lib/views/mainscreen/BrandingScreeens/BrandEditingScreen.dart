@@ -164,7 +164,16 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                               controller.textPosY.value += details.delta.dy;
                             },
                             child: Text(
-                              'Sample Text',
+                              'Sample Text \nasdsaddsaddds \ndasdasdasds\ndsdadsds',
+                              textAlign: controller.isTextAlignLeft.value ==
+                                      true
+                                  ? TextAlign.left
+                                  : controller.isTextAlignCenter.value == true
+                                      ? TextAlign.center
+                                      : controller.isTextAlignRight.value ==
+                                              true
+                                          ? TextAlign.right
+                                          : null,
                               style: TextStyle(
                                 fontStyle: controller.isTextItalic.value
                                     ? FontStyle.italic
