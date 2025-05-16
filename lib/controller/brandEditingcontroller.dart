@@ -773,7 +773,7 @@ class Brandeditingcontroller extends GetxController {
 
   @override
   void onClose() {
-    imageFilters.dispose(); // Clean up ImageFilters
+    // imageFilters.dispose(); // Clean up ImageFilters
     super.onClose();
   }
 
