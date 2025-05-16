@@ -20,6 +20,15 @@ class Brandeditingcontroller extends GetxController {
   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
   RxInt activeTab = 0.obs;
 
+  // Image-related properties
+  final RxList<AssetPathEntity> albums = <AssetPathEntity>[].obs;
+  final RxMap<AssetPathEntity, List<AssetEntity>> albumImages =
+      <AssetPathEntity, List<AssetEntity>>{}.obs;
+  final RxBool isLoading = true.obs;
+  final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
+  final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
+  final Rx<Uint8List?> cachedThumbnail = Rx<Uint8List?>(null);
+
   List<Widget> screens(BuildContext context) => [
         Container(margin: EdgeInsets.all(10), child: getimageGridView()),
         Container(margin: EdgeInsets.all(10), child: footerWidget()),
@@ -42,113 +51,27 @@ class Brandeditingcontroller extends GetxController {
     }
   }
 
-  //filter related logic
-
-  final ImageFilters imageFilters = ImageFilters();
+  // Filter-related logic
   Widget filterLogic() {
-    return Column(
-      children: [
-        Container(
-          height: 15.h,
-          width: double.infinity,
-          margin: EdgeInsets.all(2.w),
-          decoration: BoxDecoration(
-            border: Border.all(color: grey, width: 1),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child:
-              imageFilters.filteredImage == null || selectedImage.value == null
-                  ? Center(
-                      child: Text(
-                        'Select an image to apply filters',
-                        style: TextStyle(color: white, fontSize: 12.sp),
-                      ),
-                    )
-                  : RawImage(
-                      image: imageFilters.filteredImage,
-                      fit: BoxFit.contain,
-                    ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildFilterButton('None', 'Original'),
-            _buildFilterButton('Grayscale', 'Grayscale'),
-            _buildFilterButton('Sepia', 'Sepia'),
-            _buildFilterButton('Brightness', 'Brightness'),
-            _buildFilterButton('Contrast', 'Contrast'),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.all(2.w),
-          child: Text(
-            'Current Filter: ${imageFilters.currentFilter}',
-            style: TextStyle(color: white, fontSize: 12.sp),
-          ),
-        ),
-      ],
-    );
+    return SizedBox.shrink(); // Placeholder as per original code
   }
 
-  Widget _buildFilterButton(String filterType, String label) {
-    return ElevatedButton(
-      onPressed: () async {
-        if (selectedImage.value != null && thumbnailFuture.value != null) {
-          final bytes = await thumbnailFuture.value;
-          if (bytes != null) {
-            await imageFilters.loadImageFromBytes(bytes);
-            await imageFilters.applyFilter(filterType);
-            update(); // Trigger UI update
-          }
-        } else {
-          Get.snackbar(
-            'Error',
-            'Please select an image first',
-            backgroundColor: primaryColor,
-            colorText: white,
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: white,
-        foregroundColor: primaryColor,
-        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      child: Text(label, style: TextStyle(fontSize: 10.sp)),
-    );
-  }
-
-  // Image-related code (unchanged)
-  final RxList<AssetPathEntity> albums = <AssetPathEntity>[].obs;
-  final RxMap<AssetPathEntity, List<AssetEntity>> albumImages =
-      <AssetPathEntity, List<AssetEntity>>{}.obs;
-  final RxBool isLoading = true.obs;
-  final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
-  final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
-
-  void toggleImageSelection(AssetEntity image) {
+  void toggleImageSelection(AssetEntity image) async {
     if (selectedImage.value == image) {
       selectedImage.value = null;
       thumbnailFuture.value = null;
-      imageFilters.dispose(); // Clear filter image
+      cachedThumbnail.value = null;
     } else {
       selectedImage.value = image;
       thumbnailFuture.value =
           image.thumbnailDataWithSize(ThumbnailSize(600, 600));
-      thumbnailFuture.value!.then((bytes) {
-        if (bytes != null) {
-          imageFilters.loadImageFromBytes(bytes); // Load into ImageFilters
-          imageFilters.applyFilter('None'); // Reset to original
-        }
-      });
+      final Uint8List? data = await thumbnailFuture.value;
+      cachedThumbnail.value = data;
     }
     update(); // Trigger UI update
   }
 
   Future<void> fetchGalleryAlbums() async {
-    // ... (unchanged)
     isLoading.value = true;
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
     if (!ps.hasAccess) {
@@ -378,7 +301,6 @@ class Brandeditingcontroller extends GetxController {
   }
 
   Widget getFrameGridView() {
-    // ... (unchanged)
     return SizedBox(
       height: 20.h,
       child: GridView.builder(
@@ -397,7 +319,8 @@ class Brandeditingcontroller extends GetxController {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: white, borderRadius: BorderRadius.circular(10)),
+                color: white,
+              ),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(Asset.bussinessPlaceholder,
@@ -410,7 +333,6 @@ class Brandeditingcontroller extends GetxController {
   }
 
   Widget footerWidget() {
-    // ... (unchanged)
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 1.h),
@@ -450,8 +372,7 @@ class Brandeditingcontroller extends GetxController {
   var currentTextColor = Rx<Color>(Colors.black);
   var hexTextCode = "".obs;
 
-  Color get hexTextColor =>
-      hexTextToColor(hexTextCode.value); // Fixed to use correct method
+  Color get hexTextColor => hexTextToColor(hexTextCode.value);
 
   Color hexTextToColor(String hex) {
     hex = hex.replaceAll('#', '');
@@ -949,7 +870,7 @@ class Brandeditingcontroller extends GetxController {
                 ? Slider(
                     value: borderSize.value,
                     min: 2.sp,
-                    max: 32.sp, // Clamped to prevent excessive borders
+                    max: 32.sp,
                     activeColor: primaryColor,
                     inactiveColor: white,
                     onChanged: (value) {
@@ -1071,10 +992,9 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
-  // New method to clamp text position within Stack bounds
   void clampTextPosition(TextItem item, double stackWidth, double stackHeight) {
-    const minWidth = 10.0; // Matches TextItem minWidth
-    const extraPadding = 10.0; // Matches extra padding in maxWidth
+    const minWidth = 10.0;
+    const extraPadding = 10.0;
     item.posX.value =
         item.posX.value.clamp(0.0, stackWidth - minWidth - extraPadding);
     item.posY.value = item.posY.value.clamp(0.0, stackHeight - minWidth);
