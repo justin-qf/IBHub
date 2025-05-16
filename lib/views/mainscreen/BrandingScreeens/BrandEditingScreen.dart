@@ -110,8 +110,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                           return Container(
                             decoration: BoxDecoration(
                               border: Border.all(
+                                width: controller.borderSize.value,
                                 color: controller.showBorder.value
-                                    ? primaryColor
+                                    ? controller.hexBgCode.value.isNotEmpty
+                                        ? Color(controller.hexBgColor.value)
+                                        : controller.currentBGColor.value
                                     : Colors.white,
                               ),
                               shape: BoxShape.rectangle,
@@ -126,8 +129,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                           return Container(
                             decoration: BoxDecoration(
                               border: Border.all(
+                                width: controller.borderSize.value,
                                 color: controller.showBorder.value
-                                    ? primaryColor
+                                    ? controller.hexBgCode.value.isNotEmpty
+                                        ? Color(controller.hexBgColor.value)
+                                        : controller.currentBGColor.value
                                     : Colors.white,
                               ),
                               shape: BoxShape.rectangle,
@@ -155,66 +161,112 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                         }
                       }),
                     ),
-                    Obx(() => Positioned(
-                          left: controller.textPosX.value,
-                          top: controller.textPosY.value,
-                          child: GestureDetector(
-                            onPanUpdate: (details) {
-                              controller.textPosX.value += details.delta.dx;
-                              controller.textPosY.value += details.delta.dy;
-                            },
-                            child: Text(
-                              'Sample Text \nasdsaddsaddds \ndasdasdasds\ndsdadsds',
-                              textAlign: controller.isTextAlignLeft.value ==
-                                      true
-                                  ? TextAlign.left
-                                  : controller.isTextAlignCenter.value == true
-                                      ? TextAlign.center
-                                      : controller.isTextAlignRight.value ==
-                                              true
-                                          ? TextAlign.right
-                                          : null,
-                              style: TextStyle(
-                                fontStyle: controller.isTextItalic.value
-                                    ? FontStyle.italic
-                                    : null,
-                                fontWeight: controller.isTextBold.value
-                                    ? FontWeight.bold
-                                    : null,
-                                color: controller.hexTextCode.value.isNotEmpty
-                                    ? Color(controller.hexTextColor
-                                        .value) // Use hex color if available
-                                    : controller.currentTextColor.value,
-                                fontFamily: dM_sans_regular,
-                                fontSize: controller.textfontSize.value,
+                    ...controller.textItems.map((item) {
+                      return Obx(() => Positioned(
+                            left: item.posX.value,
+                            top: item.posY.value,
+                            child: GestureDetector(
+                              onPanUpdate: (details) {
+                                item.posX.value += details.delta.dx;
+                                item.posY.value += details.delta.dy;
+                              },
+                              child: Text(
+                                item.content.value,
+                                textAlign: controller.getTextAlignFromAlignment(
+                                    item.alignment.value),
+
+                                // controller.isTextAlignLeft.value ==
+                                //         true
+                                //     ? TextAlign.left
+                                //     : controller.isTextAlignCenter.value == true
+                                //         ? TextAlign.center
+                                //         : controller.isTextAlignRight.value ==
+                                //                 true
+                                //             ? TextAlign.right
+                                //             : null,
+                                // Optional if alignment varies
+
+                                style: TextStyle(
+                                  fontStyle: controller.isTextItalic.value
+                                      ? FontStyle.italic
+                                      : FontStyle.normal,
+                                  fontWeight: controller.isTextBold.value
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: controller.hexTextCode.value.isNotEmpty
+                                      ? Color(controller.hexTextColor.value)
+                                      : controller.currentTextColor.value,
+                                  fontFamily: dM_sans_regular,
+                                  fontSize: item.fontSize.value,
+                                ),
                               ),
                             ),
-                          ),
-                        )),
+                          ));
+                    }).toList(),
+                    // ...controller.textItems.map((item) {
+                    //   return Obx(
+                    //     () => Positioned(
+                    //       left: item.textPosX.value,
+                    //       top: controller.textPosY.value,
+                    //       child: GestureDetector(
+                    //         onPanUpdate: (details) {
+                    //           controller.textPosX.value += details.delta.dx;
+                    //           controller.textPosY.value += details.delta.dy;
+                    //         },
+                    //         child: Text(
+                    //           item.content.value,
+                    //           textAlign: controller.isTextAlignLeft.value ==
+                    //                   true
+                    //               ? TextAlign.left
+                    //               : controller.isTextAlignCenter.value == true
+                    //                   ? TextAlign.center
+                    //                   : controller.isTextAlignRight.value ==
+                    //                           true
+                    //                       ? TextAlign.right
+                    //                       : null,
+                    //           style: TextStyle(
+                    //             fontStyle: controller.isTextItalic.value
+                    //                 ? FontStyle.italic
+                    //                 : null,
+                    //             fontWeight: controller.isTextBold.value
+                    //                 ? FontWeight.bold
+                    //                 : null,
+                    //             color: controller.hexTextCode.value.isNotEmpty
+                    //                 ? Color(controller.hexTextColor
+                    //                     .value) // Use hex color if available
+                    //                 : controller.currentTextColor.value,
+                    //             fontFamily: dM_sans_regular,
+                    //             fontSize: controller.textfontSize.value,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   );
+                    // }),
                   ],
                 ),
 
                 getDynamicSizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Obx(
-                      () => Container(
-                        width: 10.w,
-                        height: 5.h,
-                        color: controller.currentBGColor.value,
-                      ),
-                    ),
-                    getDynamicSizedBox(width: 2.w),
-                    Obx(
-                      () => Container(
-                        width: 10.w,
-                        height: 5.h,
-                        color: Color(controller.hexBgColor.value),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Obx(
+                //       () => Container(
+                //         width: 10.w,
+                //         height: 5.h,
+                //         color: controller.currentBGColor.value,
+                //       ),
+                //     ),
+                //     getDynamicSizedBox(width: 2.w),
+                //     Obx(
+                //       () => Container(
+                //         width: 10.w,
+                //         height: 5.h,
+                //         color: Color(controller.hexBgColor.value),
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 // Obx(
                 //   () => Row(

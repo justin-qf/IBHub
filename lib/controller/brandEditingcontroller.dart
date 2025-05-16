@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -7,9 +8,9 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
+import 'package:ibh/models/TextItemModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
-import 'package:ibh/views/mainscreen/BrandingScreeens/AlbumImagesScreen.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sizer/sizer.dart';
@@ -21,9 +22,13 @@ class Brandeditingcontroller extends GetxController {
   // Optional: Define screens for each tab
   List<Widget> screens(BuildContext context) => [
         Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.w),
+            // color: Colors.yellow,
+            margin: EdgeInsets.all(10),
             child: getimageGridView()),
-        Container(child: Text("Frames Page")),
+        Container(
+          margin: EdgeInsets.all(10),
+          child: footerWidget(),
+        ),
         Container(
             margin: EdgeInsets.symmetric(horizontal: 4.w),
             child: getFrameGridView()),
@@ -201,20 +206,24 @@ class Brandeditingcontroller extends GetxController {
                   child: Text(
                     title,
                     style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 12),
+                        color: white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
                 ),
-              if (subtitle != null)
-                Text(
-                  subtitle,
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
+
+              //uncomment if you want to show the subtitle
+              // if (subtitle != null)
+              //   Text(
+              //     subtitle,
+              //     style: const TextStyle(fontSize: 10, color: Colors.grey),
+              //     maxLines: 1,
+              //     overflow: TextOverflow.ellipsis,
+              //     textAlign: TextAlign.center,
+              //   ),
             ],
           ),
           if (isSelected)
@@ -473,6 +482,89 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
+  var textItems = <TextItem>[].obs;
+
+  void addTextItem(String content) {
+    textItems.add(TextItem(
+      x: 50,
+      y: 100,
+      text: content,
+      size: 20,
+    ));
+  }
+
+  TextAlign getTextAlignFromAlignment(Alignment alignment) {
+    if (alignment == Alignment.centerLeft) return TextAlign.left;
+    if (alignment == Alignment.center) return TextAlign.center;
+    if (alignment == Alignment.centerRight) return TextAlign.right;
+    return TextAlign.left; // default fallback
+  }
+
+  void showTextEditor(BuildContext context) {
+    String newText = "";
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    onChanged: (val) => newText = val,
+                    maxLines: null,
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    decoration: const InputDecoration(
+                      hintText: "Type your text...",
+                      hintStyle: TextStyle(color: Colors.white54),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (newText.trim().isNotEmpty) {
+                        addTextItem(newText.trim());
+                      }
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: white, // Background color
+                      foregroundColor: primaryColor, // Text (and icon) color
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(12), // Rounded corners
+                      ),
+                      elevation: 5, // Shadow depth
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: const Text("Add Text"),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   gettextEditingWidget(context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -484,6 +576,7 @@ class Brandeditingcontroller extends GetxController {
             GestureDetector(
               onTap: () {
                 logcat('Print', 'Pressing');
+                showTextEditor(context);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -756,7 +849,7 @@ class Brandeditingcontroller extends GetxController {
             )
           ],
         ),
-        getDynamicSizedBox(height: 1.h),
+        // getDynamicSizedBox(height: 1.h),
         Container(
           margin: EdgeInsets.only(left: 6.w),
           child: Text(
@@ -767,8 +860,8 @@ class Brandeditingcontroller extends GetxController {
         ),
         Obx(() => Slider(
               value: textfontSize.value,
-              min: 8,
-              max: 32,
+              min: 8.sp,
+              max: 32.sp,
               activeColor: primaryColor,
               inactiveColor: white,
               onChanged: (value) {
@@ -782,15 +875,41 @@ class Brandeditingcontroller extends GetxController {
 //footer page
 
   Widget footerWidget() {
-    return Container(
-      child: Text('data'),
+    return GridView.builder(
+      shrinkWrap: true,
+      padding: EdgeInsets.only(top: 1.h),
+      physics: const BouncingScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+      ),
+      itemCount: 10,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () {
+            logcat('Print', 'Pressing');
+          },
+          child: Container(
+            margin: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(Asset.bussinessPlaceholder,
+                    fit: BoxFit.contain)),
+          ),
+        );
+      },
     );
   }
 
 //background page
 
   var showBorder = false.obs;
-  var hexBgCode = "#00FF00".obs;
+  var hexBgCode = "".obs;
 
   Color get hexBgColor => hexBgToColor(hexBgCode.value);
 
@@ -803,112 +922,128 @@ class Brandeditingcontroller extends GetxController {
   }
 
   var currentBGColor = Rx<Color>(Colors.red);
+  RxDouble borderSize = 2.sp.obs;
 
   Widget bgcolorPic({context}) {
     return Container(
       padding: const EdgeInsets.all(2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const ColorPickerWidget(),
-
-          // Color Picker Inline (Direct)
-          // Container(
-          //   width: 40.w,
-          //   height: 50.h, // Increased height to fit color picker
-          //   margin:
-          //       EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
-          //   decoration: BoxDecoration(
-          //     color: _currentColor,
-          //     borderRadius: BorderRadius.circular(10),
-          //     border: _showBorder
-          //         ? Border.all(color: Colors.pink, width: 1.w)
-          //         : null,
-          //   ),
-          //   child: SingleChildScrollView(
-          //     child: ColorPicker(
-          //       pickerColor: _currentColor,
-          //       onColorChanged: (color) {
-          //         _currentColor = color;
-          //       },
-          //       pickerAreaHeightPercent: 0.5,
-          //       displayThumbColor: true,
-          //       enableAlpha: false,
-          //     ),
-          //   ),
-          // ),
-
-          SizedBox(width: 3.w),
-
-          // Control Panel
-          Flexible(
-            child: Column(
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              // crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                getDynamicSizedBox(height: 2.h),
-                Container(
-                  height: 6.h,
-                  width: 35.w,
-                  padding: EdgeInsets.only(top: 0.h, right: 2.w, left: 2.w),
-                  child: TextField(
-                    // onChanged: (value) {
-
-                    // },
-                    onSubmitted: (value) {
-                      try {
-                        String hex = value.replaceAll('#', '');
-                        if (hex.length == 6 || hex.length == 8) {
-                          hexBgCode.value = '#${hex.toUpperCase()}';
-                        } else {
-                          Get.snackbar(
-                            "Invalid Hex",
-                            backgroundColor: primaryColor,
-                            colorText: white,
-                            "Please enter a 6 or 8 character hex code (e.g. #FF5733)",
-                            snackPosition: SnackPosition.BOTTOM,
-                          );
-                        }
-                      } catch (e) {
-                        Get.snackbar(
-                          "Error",
-                          backgroundColor: primaryColor,
-                          colorText: white,
-                          "Invalid hex format. Please use #RRGGBB or #AARRGGBB",
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Hex Code',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                ColorPickerWidget(
+                  hexBgCode: hexBgCode,
                 ),
-                SizedBox(height: 2.h),
-                Container(
-                  // color: Colors.yellow,
-                  height: 7.h,
-                  width: 45.w,
-                  padding: EdgeInsets.symmetric(horizontal: 2.w),
-                  child: Row(
+
+                // Color Picker Inline (Direct)
+                // Container(
+                //   width: 40.w,
+                //   height: 50.h, // Increased height to fit color picker
+                //   margin:
+                //       EdgeInsets.only(left: 5.w, right: 3.w, top: 3.h, bottom: 3.h),
+                //   decoration: BoxDecoration(
+                //     color: _currentColor,
+                //     borderRadius: BorderRadius.circular(10),
+                //     border: _showBorder
+                //         ? Border.all(color: Colors.pink, width: 1.w)
+                //         : null,
+                //   ),
+                //   child: SingleChildScrollView(
+                //     child: ColorPicker(
+                //       pickerColor: _currentColor,
+                //       onColorChanged: (color) {
+                //         _currentColor = color;
+                //       },
+                //       pickerAreaHeightPercent: 0.5,
+                //       displayThumbColor: true,
+                //       enableAlpha: false,
+                //     ),
+                //   ),
+                // ),
+
+                SizedBox(width: 3.w),
+
+                // Control Panel
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Checkbox(
-                        value: showBorder.value,
-                        onChanged: (value) {
-                          showBorder.value = value!;
-                        },
-                        activeColor: primaryColor,
-                        checkColor: white,
+                      // getDynamicSizedBox(height: 2.h),
+                      Container(
+                        height: 6.h,
+                        width: 35.w,
+                        padding:
+                            EdgeInsets.only(top: 0.h, right: 2.w, left: 2.w),
+                        child: TextField(
+                          // onChanged: (value) {
+
+                          // },
+                          onSubmitted: (value) {
+                            try {
+                              String hex = value.replaceAll('#', '');
+                              if (hex.length == 6 || hex.length == 8) {
+                                hexBgCode.value = '#${hex.toUpperCase()}';
+                              } else {
+                                Get.snackbar(
+                                  "Invalid Hex",
+                                  backgroundColor: primaryColor,
+                                  colorText: white,
+                                  "Please enter a 6 or 8 character hex code (e.g. #FF5733)",
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              }
+                            } catch (e) {
+                              Get.snackbar(
+                                "Error",
+                                backgroundColor: primaryColor,
+                                colorText: white,
+                                "Invalid hex format. Please use #RRGGBB or #AARRGGBB",
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Hex Code',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
                       ),
-                      Expanded(
-                        child: Text(
-                          'Image Border',
-                          style:
-                              TextStyle(fontSize: 16.sp, color: Colors.white),
-                          overflow: TextOverflow.ellipsis,
+                      // SizedBox(height: 2.h),
+                      Container(
+                        // color: Colors.yellow,
+                        height: 7.h,
+                        width: 45.w,
+                        padding: EdgeInsets.symmetric(horizontal: 2.w),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: showBorder.value,
+                              onChanged: (value) {
+                                showBorder.value = value!;
+                                if (showBorder.value == false) {
+                                  borderSize.value = 2.sp;
+                                }
+                              },
+                              activeColor: primaryColor,
+                              checkColor: white,
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Image Border',
+                                style: TextStyle(
+                                    fontSize: 16.sp, color: Colors.white),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
                         ),
                       )
                     ],
@@ -916,8 +1051,20 @@ class Brandeditingcontroller extends GetxController {
                 )
               ],
             ),
-          )
-        ],
+            Obx(() => showBorder.value == true
+                ? Slider(
+                    value: borderSize.value,
+                    min: 2.sp,
+                    max: 32.sp,
+                    activeColor: primaryColor,
+                    inactiveColor: white,
+                    onChanged: (value) {
+                      borderSize.value = value;
+                    },
+                  )
+                : SizedBox.shrink())
+          ],
+        ),
       ),
     );
   }
