@@ -27,6 +27,10 @@ class Brandeditingcontroller extends GetxController {
         Container(child: bgcolorPic(context: context)),
         Container(
             margin: EdgeInsets.all(10), child: gettextEditingWidget(context)),
+        Container(
+          margin: EdgeInsets.all(10),
+          child: filterLogic(),
+        )
       ];
 
   void hideKeyboard(context) {
@@ -34,6 +38,11 @@ class Brandeditingcontroller extends GetxController {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+  }
+
+  //filter related logic
+  filterLogic() {
+    return ;
   }
 
   // Image-related code (unchanged)
@@ -880,38 +889,49 @@ class Brandeditingcontroller extends GetxController {
           width: double.infinity,
           color: primaryColor,
           padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildNavButton(
-                  icon: Icons.image,
-                  label: "Images",
-                  index: 0,
-                  onTap: () => _updateTab(0)),
-              _buildNavButton(
-                  icon: Icons.border_bottom,
-                  label: "Footer",
-                  index: 1,
-                  onTap: () => _updateTab(1)),
-              _buildNavButton(
-                  icon: Icons.image,
-                  label: "Frames",
-                  index: 2,
-                  onTap: () => _updateTab(2)),
-              _buildNavButton(
-                  icon: Icons.wallpaper,
-                  label: "Backgrounds",
-                  index: 3,
-                  onTap: () => _updateTab(3)),
-              _buildNavButton(
-                  icon: Icons.text_fields,
-                  label: "Text",
-                  index: 4,
-                  onTap: () {
-                    _updateTab(4);
-                    print("Open Text Editor");
-                  }),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildNavButton(
+                    icon: Icons.image,
+                    label: "Images",
+                    index: 0,
+                    onTap: () => _updateTab(0)),
+                _buildNavButton(
+                    icon: Icons.border_bottom,
+                    label: "Footer",
+                    index: 1,
+                    onTap: () => _updateTab(1)),
+                _buildNavButton(
+                    icon: Icons.image,
+                    label: "Frames",
+                    index: 2,
+                    onTap: () => _updateTab(2)),
+                _buildNavButton(
+                    icon: Icons.wallpaper,
+                    label: "Backgrounds",
+                    index: 3,
+                    onTap: () => _updateTab(3)),
+                _buildNavButton(
+                    icon: Icons.text_fields,
+                    label: "Text",
+                    index: 4,
+                    onTap: () {
+                      _updateTab(4);
+                      print("Open Text Editor");
+                    }),
+                _buildNavButton(
+                    icon: Icons.edit,
+                    label: "Edit",
+                    index: 5,
+                    onTap: () {
+                      _updateTab(5);
+                      print("Open Text Editor");
+                    }),
+              ],
+            ),
           ),
         ),
       ],

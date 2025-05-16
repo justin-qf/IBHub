@@ -86,8 +86,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                             shape: BoxShape.rectangle,
                           ),
                           child: Container(
-                            width: stackWidth - 2 * imagePadding + 2 * borderWidth,
-                            height: stackHeight - 2 * imagePadding + 2 * borderWidth,
+                            width:
+                                stackWidth - 2 * imagePadding + 2 * borderWidth,
+                            height: stackHeight -
+                                2 * imagePadding +
+                                2 * borderWidth,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: borderWidth,
@@ -101,8 +104,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(0),
-                              child: controller.selectedImage.value == null ||
-                                      controller.thumbnailFuture.value == null
+                              child: controller.selectedImage.value == null
                                   ? Image.asset(
                                       Asset.bussinessPlaceholder,
                                       fit: BoxFit.fill,
@@ -110,7 +112,9 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                       height: stackHeight - 2 * imagePadding,
                                     )
                                   : FutureBuilder<Uint8List?>(
-                                      future: controller.thumbnailFuture.value,
+                                      future: controller.selectedImage.value!
+                                          .thumbnailDataWithSize(
+                                              ThumbnailSize(600, 600)),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                                 ConnectionState.done &&
@@ -119,16 +123,19 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                           return Image.memory(
                                             snapshot.data!,
                                             fit: BoxFit.fill,
-                                            width: stackWidth - 2 * imagePadding,
-                                            height: stackHeight - 2 * imagePadding,
+                                            width:
+                                                stackWidth - 2 * imagePadding,
+                                            height:
+                                                stackHeight - 2 * imagePadding,
                                           );
                                         } else {
-                                          // Use cached image or placeholder
                                           return Image.asset(
                                             Asset.bussinessPlaceholder,
                                             fit: BoxFit.fill,
-                                            width: stackWidth - 2 * imagePadding,
-                                            height: stackHeight - 2 * imagePadding,
+                                            width:
+                                                stackWidth - 2 * imagePadding,
+                                            height:
+                                                stackHeight - 2 * imagePadding,
                                           );
                                         }
                                       },
@@ -145,7 +152,8 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                 .map((entry) {
                               final index = entry.key;
                               final item = entry.value;
-                              final maxWidth = stackWidth - item.posX.value - 10;
+                              final maxWidth =
+                                  stackWidth - item.posX.value - 10;
                               return Positioned(
                                 left: item.posX.value,
                                 top: item.posY.value,
