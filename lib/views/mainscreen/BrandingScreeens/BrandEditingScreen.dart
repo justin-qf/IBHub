@@ -86,11 +86,8 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                             shape: BoxShape.rectangle,
                           ),
                           child: Container(
-                            width:
-                                stackWidth - 2 * imagePadding + 2 * borderWidth,
-                            height: stackHeight -
-                                2 * imagePadding +
-                                2 * borderWidth,
+                            width: stackWidth - 2 * imagePadding + 2 * borderWidth,
+                            height: stackHeight - 2 * imagePadding + 2 * borderWidth,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: borderWidth,
@@ -104,42 +101,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(0),
-                              child: controller.selectedImage.value == null
-                                  ? Image.asset(
-                                      Asset.bussinessPlaceholder,
-                                      fit: BoxFit.fill,
-                                      width: stackWidth - 2 * imagePadding,
-                                      height: stackHeight - 2 * imagePadding,
-                                    )
-                                  : FutureBuilder<Uint8List?>(
-                                      future: controller.selectedImage.value!
-                                          .thumbnailDataWithSize(
-                                              ThumbnailSize(600, 600)),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                                ConnectionState.done &&
-                                            snapshot.hasData &&
-                                            snapshot.data != null) {
-                                          return Image.memory(
-                                            snapshot.data!,
-                                            fit: BoxFit.fill,
-                                            width:
-                                                stackWidth - 2 * imagePadding,
-                                            height:
-                                                stackHeight - 2 * imagePadding,
-                                          );
-                                        } else {
-                                          return Image.asset(
-                                            Asset.bussinessPlaceholder,
-                                            fit: BoxFit.fill,
-                                            width:
-                                                stackWidth - 2 * imagePadding,
-                                            height:
-                                                stackHeight - 2 * imagePadding,
-                                          );
-                                        }
-                                      },
-                                    ),
+                              child: _buildImageWidget(
+                                controller,
+                                stackWidth - 2 * imagePadding,
+                                stackHeight - 2 * imagePadding,
+                              ),
                             ),
                           ),
                         );
@@ -152,8 +118,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                 .map((entry) {
                               final index = entry.key;
                               final item = entry.value;
-                              final maxWidth =
-                                  stackWidth - item.posX.value - 10;
+                              final maxWidth = stackWidth - item.posX.value - 10;
                               return Positioned(
                                 left: item.posX.value,
                                 top: item.posY.value,
@@ -172,8 +137,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                         item.alignment.value ==
                                             Alignment.centerLeft;
                                     controller.isTextAlignCenter.value =
-                                        item.alignment.value ==
-                                            Alignment.center;
+                                        item.alignment.value == Alignment.center;
                                     controller.isTextAlignRight.value =
                                         item.alignment.value ==
                                             Alignment.centerRight;
@@ -233,5 +197,47 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildImageWidget(
+      Brandeditingcontroller controller, double width, double height) {
+    return Obx(() {
+      if (controller.cachedThumbnail.value != null) {
+        return Image.memory(
+          controller.cachedThumbnail.value!,
+          fit: BoxFit.fill,
+          width: width,
+          height: height,
+        );
+      } else if (controller.thumbnailFuture.value == null) {
+        return Image.asset(
+          Asset.bussinessPlaceholder,
+          fit: BoxFit.fill,
+          width: width,
+          height: height,
+        );
+      } else {
+        return FutureBuilder<Uint8List?>(
+          future: controller.thumbnailFuture.value,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData &&
+                snapshot.data != null) {
+              controller.cachedThumbnail.value = snapshot.data; // Cache the result
+              return Image.memory(
+                snapshot.data!,
+                fit: BoxFit.fill,
+                width: width,
+                height: height,
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        );
+      }
+    });
   }
 }

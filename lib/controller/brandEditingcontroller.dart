@@ -18,6 +18,15 @@ class Brandeditingcontroller extends GetxController {
   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
   RxInt activeTab = 0.obs;
 
+  // Image-related properties
+  final RxList<AssetPathEntity> albums = <AssetPathEntity>[].obs;
+  final RxMap<AssetPathEntity, List<AssetEntity>> albumImages =
+      <AssetPathEntity, List<AssetEntity>>{}.obs;
+  final RxBool isLoading = true.obs;
+  final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
+  final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
+  final Rx<Uint8List?> cachedThumbnail = Rx<Uint8List?>(null);
+
   List<Widget> screens(BuildContext context) => [
         Container(margin: EdgeInsets.all(10), child: getimageGridView()),
         Container(margin: EdgeInsets.all(10), child: footerWidget()),
@@ -40,32 +49,26 @@ class Brandeditingcontroller extends GetxController {
     }
   }
 
-  //filter related logic
-  filterLogic() {
-    return ;
+  // Filter-related logic
+  Widget filterLogic() {
+    return SizedBox.shrink(); // Placeholder as per original code
   }
 
-  // Image-related code (unchanged)
-  final RxList<AssetPathEntity> albums = <AssetPathEntity>[].obs;
-  final RxMap<AssetPathEntity, List<AssetEntity>> albumImages =
-      <AssetPathEntity, List<AssetEntity>>{}.obs;
-  final RxBool isLoading = true.obs;
-  final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
-  final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
-
-  void toggleImageSelection(AssetEntity image) {
+  void toggleImageSelection(AssetEntity image) async {
     if (selectedImage.value == image) {
       selectedImage.value = null;
-      thumbnailFuture.value = null; // Clear thumbnail when deselecting
+      thumbnailFuture.value = null;
+      cachedThumbnail.value = null;
     } else {
       selectedImage.value = image;
-      thumbnailFuture.value = image.thumbnailDataWithSize(
-          ThumbnailSize(600, 600)); // Cache thumbnail Future
+      thumbnailFuture.value =
+          image.thumbnailDataWithSize(ThumbnailSize(600, 600));
+      final Uint8List? data = await thumbnailFuture.value;
+      cachedThumbnail.value = data;
     }
   }
 
   Future<void> fetchGalleryAlbums() async {
-    // ... (unchanged)
     isLoading.value = true;
     final PermissionState ps = await PhotoManager.requestPermissionExtend();
     if (!ps.hasAccess) {
@@ -136,7 +139,6 @@ class Brandeditingcontroller extends GetxController {
     String? subtitle,
     bool isSelected = false,
   }) {
-    // ... (unchanged)
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -191,7 +193,6 @@ class Brandeditingcontroller extends GetxController {
   final Rx<AssetPathEntity?> selectedAlbum = Rx<AssetPathEntity?>(null);
 
   Widget getimageGridView() {
-    // ... (unchanged)
     return Obx(() {
       if (isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -293,7 +294,6 @@ class Brandeditingcontroller extends GetxController {
   }
 
   Widget getFrameGridView() {
-    // ... (unchanged)
     return SizedBox(
       height: 20.h,
       child: GridView.builder(
@@ -312,7 +312,8 @@ class Brandeditingcontroller extends GetxController {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: white, borderRadius: BorderRadius.circular(10)),
+                color: white,
+              ),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(Asset.bussinessPlaceholder,
@@ -325,7 +326,6 @@ class Brandeditingcontroller extends GetxController {
   }
 
   Widget footerWidget() {
-    // ... (unchanged)
     return GridView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(top: 1.h),
@@ -365,8 +365,7 @@ class Brandeditingcontroller extends GetxController {
   var currentTextColor = Rx<Color>(Colors.black);
   var hexTextCode = "".obs;
 
-  Color get hexTextColor =>
-      hexTextToColor(hexTextCode.value); // Fixed to use correct method
+  Color get hexTextColor => hexTextToColor(hexTextCode.value);
 
   Color hexTextToColor(String hex) {
     hex = hex.replaceAll('#', '');
@@ -858,7 +857,7 @@ class Brandeditingcontroller extends GetxController {
                 ? Slider(
                     value: borderSize.value,
                     min: 2.sp,
-                    max: 32.sp, // Clamped to prevent excessive borders
+                    max: 32.sp,
                     activeColor: primaryColor,
                     inactiveColor: white,
                     onChanged: (value) {
@@ -968,10 +967,9 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
-  // New method to clamp text position within Stack bounds
   void clampTextPosition(TextItem item, double stackWidth, double stackHeight) {
-    const minWidth = 10.0; // Matches TextItem minWidth
-    const extraPadding = 10.0; // Matches extra padding in maxWidth
+    const minWidth = 10.0;
+    const extraPadding = 10.0;
     item.posX.value =
         item.posX.value.clamp(0.0, stackWidth - minWidth - extraPadding);
     item.posY.value = item.posY.value.clamp(0.0, stackHeight - minWidth);
