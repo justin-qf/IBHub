@@ -8,7 +8,6 @@ import 'package:ibh/componant/input/form_inputs.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
-import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sizer/sizer.dart';
 import '../../configs/colors_constant.dart';
