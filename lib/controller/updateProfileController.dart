@@ -34,8 +34,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
-import 'package:sizer/sizer.dart';
-import 'package:sizer/sizer.dart' as sizer;
 
 class Updateprofilecontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -179,9 +177,33 @@ class Updateprofilecontroller extends GetxController {
 
     if (retrievedObject.document != null) {
       selectedPDFName.value = retrievedObject.document?.documentUrl ?? '';
-      verificationCtr.text = retrievedObject.document?.documentType ?? '';
-      profileDocId.value =
-          retrievedObject.document!.documentId.toString() ?? '';
+
+      // Format document type
+      final docType =
+          (retrievedObject.document?.documentType ?? '').toLowerCase();
+
+      switch (docType) {
+        case 'gst':
+          verificationCtr.text = 'GST';
+          break;
+        case 'msme':
+          verificationCtr.text = 'MSME';
+          break;
+        case 'udhyog aadhar':
+          verificationCtr.text = 'Udhyog Aadhar';
+          break;
+        default:
+          // Capitalize first letter of each word for unknown types
+          verificationCtr.text = docType
+              .split(' ')
+              .map((word) => word.isNotEmpty
+                  ? word[0].toUpperCase() + word.substring(1)
+                  : '')
+              .join(' ');
+          break;
+      }
+
+      profileDocId.value = retrievedObject.document!.documentId.toString();
     }
 
     if (selectedPDFName.value.isEmpty &&
@@ -199,14 +221,17 @@ class Updateprofilecontroller extends GetxController {
     }
     // if(retrievedObject.category)
 
-    if (retrievedObject.facebook != null) {
-      facebookCtr.text = retrievedObject.facebook?.toString() ?? '';
-    }
+    websiteCtr.text = (retrievedObject.website?.isNotEmpty == true)
+        ? retrievedObject.website!
+        : 'https://';
 
-    if (retrievedObject.linkedin != null) {
-      linkedinCtr.text = retrievedObject.linkedin?.toString() ?? '';
-      // print(linkedinCtr.text);
-    }
+    facebookCtr.text = (retrievedObject.facebook?.isNotEmpty == true)
+        ? retrievedObject.facebook!
+        : 'https://';
+
+    linkedinCtr.text = (retrievedObject.linkedin?.isNotEmpty == true)
+        ? retrievedObject.linkedin!
+        : 'https://';
 
     if (retrievedObject.whatsappNo != null) {
       whatsAppCr.text = retrievedObject.whatsappNo?.toString() ?? '';
@@ -223,7 +248,6 @@ class Updateprofilecontroller extends GetxController {
 
     pincodeCtr.text = retrievedObject.pincode ?? '';
     addressCtr.text = retrievedObject.address ?? '';
-    websiteCtr.text = retrievedObject.website ?? '';
 
     // Start validation logic
     if (imageURl.value.isNotEmpty) {
@@ -657,24 +681,23 @@ class Updateprofilecontroller extends GetxController {
 
   RxInt selectedTabIndexCtr = 0.obs;
 
-  validateFields(
-    val, {
-    model,
-    errorText1,
-    errorText2,
-    errorText3,
-    iscomman = false,
-    isselectionfield = false,
-    isotp = false,
-    isnumber = false,
-    ispassword = false,
-    isemail = false,
-    isconfirmpassword = false,
-    confirmpasswordctr,
-    isPincode = false,
-    shouldEnableButton = true,
-    validateIndex = 0,
-  }) {
+  validateFields(val,
+      {model,
+      errorText1,
+      errorText2,
+      errorText3,
+      iscomman = false,
+      isselectionfield = false,
+      isotp = false,
+      isnumber = false,
+      ispassword = false,
+      isemail = false,
+      isconfirmpassword = false,
+      confirmpasswordctr,
+      isPincode = false,
+      shouldEnableButton = true,
+      validateIndex = 0,
+      skipEmptyCheck = false}) {
     return validateField(
         iscomman: iscomman,
         val: val,
@@ -691,6 +714,7 @@ class Updateprofilecontroller extends GetxController {
         isconfirmpassword: isconfirmpassword,
         confirmpasswordctr: confirmpasswordctr,
         shouldEnableButton: shouldEnableButton,
+        skipEmptyCheck: skipEmptyCheck,
         notifyListeners: () {
           update();
         },
@@ -787,24 +811,34 @@ class Updateprofilecontroller extends GetxController {
   }
 
   updateBussines(context) async {
+    final body = {
+      "name": nameCtr.text.trim(),
+      "email": emailCtr.text.trim(),
+      "phone": phoneCtr.text.trim(),
+      "business_name": bussinessCtr.text.trim(),
+      "category_id": categoryId.value.toString(),
+      "city": cityId.toString(),
+      "state": stateId.toString(),
+      "address": addressCtr.text.trim(),
+      "pincode": pincodeCtr.text.trim(),
+      "whatsapp_no": whatsAppCr.text.trim(),
+    };
+
+    // Conditionally add social links only if not just 'https://'
+    if (websiteCtr.text.trim() != 'https://') {
+      body["website"] = websiteCtr.text.trim();
+    }
+    if (facebookCtr.text.trim() != 'https://') {
+      body["facebook"] = facebookCtr.text.trim();
+    }
+    if (linkedinCtr.text.trim() != 'https://') {
+      body["linkedin"] = linkedinCtr.text.trim();
+    }
+
     commonPostApiCallFormate(
       context,
       title: 'Update Profile',
-      body: {
-        "name": nameCtr.text.trim(),
-        "email": emailCtr.text.trim(),
-        "phone": phoneCtr.text.trim(),
-        "business_name": bussinessCtr.text.trim(),
-        "category_id": categoryId.value.toString(),
-        "city": cityId.toString(),
-        "state": stateId.toString(),
-        "address": addressCtr.text.trim(),
-        "website": websiteCtr.text.trim(),
-        "pincode": pincodeCtr.text.trim(),
-        "facebook": facebookCtr.text.trim(),
-        "linkedin": linkedinCtr.text.trim(),
-        "whatsapp_no": whatsAppCr.text.trim()
-      },
+      body: body,
       allowHeader: true,
       apiEndPoint: ApiUrl.updateBussiness,
       isModelResponse: false,
@@ -1197,44 +1231,27 @@ class Updateprofilecontroller extends GetxController {
         sourcePath: file.path,
         maxWidth: 1080,
         maxHeight: 1080,
-        cropStyle: CropStyle.rectangle,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
-              ]
-            : [
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio5x3,
-                CropAspectRatioPreset.ratio5x4,
-                CropAspectRatioPreset.ratio7x5,
-                CropAspectRatioPreset.ratio16x9
-              ],
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Crop Image',
-            cropGridColor: primaryColor,
-            toolbarColor: primaryColor,
-            statusBarColor: primaryColor,
-            toolbarWidgetColor: white,
-            activeControlsWidgetColor: primaryColor,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
-          ),
-          IOSUiSettings(
-            title: 'Crop Image',
-            cancelButtonTitle: 'Cancel',
-            doneButtonTitle: 'Done',
-            aspectRatioLockEnabled: false,
-          ),
-        ],
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        uiSettings: [
+          if (Platform.isAndroid)
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: primaryColor,
+              statusBarColor: primaryColor,
+              backgroundColor: Colors.white,
+              toolbarWidgetColor: white,
+              activeControlsWidgetColor: primaryColor,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+            ),
+          if (Platform.isIOS)
+            IOSUiSettings(
+              title: 'Crop Image',
+              cancelButtonTitle: 'Cancel',
+              doneButtonTitle: 'Done',
+              aspectRatioLockEnabled: false,
+            ),
+        ],
       );
 
       if (croppedFile == null) {

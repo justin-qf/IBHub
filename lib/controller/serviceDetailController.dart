@@ -226,11 +226,13 @@ class ServiceDetailScreenController extends GetxController {
     }
   }
 
-  Widget getLableText(text, {isMainTitle}) {
+  Widget getLableText(text, {isMainTitle, iswebsite = false}) {
     return Text(text,
+        maxLines: iswebsite ? 1 : null,
         textAlign: TextAlign.left,
         style: TextStyle(
           color: black,
+          overflow: iswebsite ? TextOverflow.ellipsis : TextOverflow.visible,
           fontFamily: isMainTitle == true ? dM_sans_semiBold : dM_sans_semiBold,
           // fontWeight: isMainTitle == true ? FontWeight.w500 : FontWeight.w500,
           fontSize: isMainTitle == true

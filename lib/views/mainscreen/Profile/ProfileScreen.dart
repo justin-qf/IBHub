@@ -17,6 +17,7 @@ import 'package:ibh/controller/profile_controller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/Contact%20Us/contactUS.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
@@ -270,10 +271,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                             // ),
                             getMenuListItem(
                                 callback: () {
-                                  callPopupDialogs(context, function: () {
-                                    launchPhoneCall('+91 80008 41620');
-                                    // print('object');
-                                  });
+                                  Get.to(Contactus());
+
+                                  // callPopupDialogs(context, function: () {
+                                  //   launchPhoneCall('+91 80008 41620');
+                                  //   // print('object');
+                                  // });
                                 },
                                 title: 'Contact Us',
                                 icons: Icons.call),

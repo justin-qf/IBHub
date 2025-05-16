@@ -1,20 +1,28 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
+import 'package:ibh/componant/dialogs/dialogs.dart';
+import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
 
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/login_model.dart';
+import 'package:ibh/models/googleAuthResponse.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:ibh/views/sigin_signup/signupScreen.dart';
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -129,47 +137,201 @@ class Signinscreencontroller extends GetxController {
   }
 
   void loginAPI(context) async {
-    commonPostApiCallFormate(context,
-        title: LoginConst.title,
-        body: {
-          "email": emailCtr.text.toString().trim(),
-          "password": passCtr.text.toString().trim()
-        },
-        apiEndPoint: ApiUrl.login, onResponse: (data) async {
-      var responseDetail = LoginModel.fromJson(data);
-      UserPreferences().saveSignInInfo(responseDetail.data!.user);
-      UserPreferences().setToken(responseDetail.data!.user!.token.toString());
-      logcat("LoginResponse::", jsonEncode(responseDetail));
-      // User? retrievedObject = await UserPreferences().getSignInInfo();
-      if (responseDetail.data!.user!.isEmailVerified == true) {
-        Get.offAll(const MainScreen());
-      } else {
-        Get.to(() => OtpScreen(
-              email: responseDetail.data!.user!.email.toString().trim(),
-              otp: "1235",
-              isFromSingIn: true,
-            ))?.then((value) {});
-        // getRegiaterOtp(context, responseDetail.data.user.email.toString());
-      }
-    }, networkManager: networkManager, isModelResponse: true);
+    commonPostApiCallFormate(
+      context,
+      title: LoginConst.title,
+      body: {
+        "email": emailCtr.text.toString().trim(),
+        "password": passCtr.text.toString().trim()
+      },
+      apiEndPoint: ApiUrl.login,
+      onResponse: (data) async {
+        var responseDetail = LoginModel.fromJson(data);
+        UserPreferences().saveSignInInfo(responseDetail.data!.user);
+        UserPreferences().setToken(responseDetail.data!.user!.token.toString());
+        logcat("LoginResponse::", jsonEncode(responseDetail));
+        // User? retrievedObject = await UserPreferences().getSignInInfo();
+        if (responseDetail.data!.user!.isEmailVerified == true) {
+          Get.offAll(const MainScreen());
+        } else {
+          Get.to(() => OtpScreen(
+                email: responseDetail.data!.user!.email.toString().trim(),
+                otp: "1235",
+                isFromSingIn: true,
+              ))?.then((value) {});
+          // getRegiaterOtp(context, responseDetail.data.user.email.toString());
+        }
+      },
+      networkManager: networkManager,
+      isModelResponse: true,
+    );
   }
 
-  // getRegiaterOtp(context, String emailId) async {
-  //   commonPostApiCallFormate(
-  //     context,
-  //     title: EmailScreenConstant.title,
-  //     body: {"email": emailId.toString().trim()},
-  //     apiEndPoint: ApiUrl.emailVerificationOtp,
-  //     onResponse: (data) {
-  //       Get.to(() => OtpScreen(
-  //             email: emailId.toString().trim(),
-  //             otp: "1235",
-  //             isFromSingIn: true,
-  //           ))?.then((value) {});
-  //     },
-  //     networkManager: networkManager,
-  //   );
+// google
+// google
+
+//   Future<void> _handleSignIn() async {
+//     try {
+//       await _googleSignIn.signIn();
+//     } catch (error) {
+//       print(error);
+//     }
+//   }
+
+  //  Future<bool> signinWithGmail() async {
+  //   final user = await GoogleSignIn().signIn();
+
+  //   GoogleSignInAuthentication userAuth = await user!.authentication;
+
+  //   var credential = GoogleAuthProvider.credential(
+  //       idToken: userAuth.idToken, accessToken: userAuth.accessToken);
+
+  //   await FirebaseAuth.instance.signInWithCredential(credential);
+
+  //   return  FirebaseAuth.instance.currentUser != null;
   // }
+
+  Future<firebase.User?> signinWithGmail(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    await googleSignIn.signOut(); // optional: to force fresh sign-in
+
+    final user = await googleSignIn.signIn();
+
+    if (user == null) return null; // User canceled
+
+    final GoogleSignInAuthentication userAuth = await user.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      idToken: userAuth.idToken,
+      accessToken: userAuth.accessToken,
+    );
+
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    firebase.User? firebaseUser = userCredential.user;
+
+    if (firebaseUser != null) {
+      await callingAuthApi(context, user: firebaseUser);
+    }
+
+    return firebaseUser;
+  }
+
+  Future<void> callingAuthApi(BuildContext context,
+      {required firebase.User user}) async {
+    // Construct user data map with all relevant fields
+    // logcat("PARAM", {
+    //   "uid": user.uid,
+    //   "email": user.email,
+    //   "displayName": user.displayName,
+    //   "email Verified": user.emailVerified,
+    //   "phoneNumber": user.phoneNumber
+    // });
+
+    // final Map<String, dynamic> userData = {
+    //   "uid": user.uid,
+    //   "email": user.email,
+    //   "displayName": user.displayName,
+    //   "emailVerified": user.emailVerified,
+    //   "phoneNumber": user.phoneNumber,
+    // };
+
+    var loadingIndicator = LoadingProgressDialogs();
+
+    try {
+      if (networkManager.connectionType.value == 0) {
+        loadingIndicator.hide(context);
+        showDialogForScreen(context, AddServiceScreenViewConst.serviceScr,
+            Connection.noConnection, callback: () {
+          Get.back();
+        });
+        return;
+      }
+      print("SHOW LOADING...");
+      await loadingIndicator.show(context, '');
+      print("LOADING SHOWN...");
+
+      logcat("PARAM", {
+        "uid": user.uid,
+        "email": user.email,
+        "displayName": user.displayName,
+        "email Verified": user.emailVerified,
+        "phoneNumber": user.phoneNumber
+      });
+
+      var response = await Repository.post({
+        "uid": user.uid,
+        "email": user.email ?? '',
+        "displayName": user.displayName ?? '',
+        "emailVerified": user.emailVerified,
+        "phoneNumber": user.phoneNumber ?? '',
+      }, ApiUrl.authCallback, allowHeader: true);
+
+      loadingIndicator.hide(context);
+
+      var json = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        if (json['success'] == true) {
+          final res = GoogleAuth.fromJson(json);
+
+          UserPreferences().saveSignInInfo(res.data.user);
+          UserPreferences().setToken(res.data.user.token.toString());
+
+          showDialogForScreen(context, 'Authentication', json['message'],
+              callback: () {
+            if (res.data.user.isEmailVerified == true) {
+              Get.offAll(MainScreen());
+              print('user is verified and goto dashboard');
+            } else {
+              Get.to(Signupscreen(
+                emailId: user.email,
+              ));
+            }
+          });
+        } else {
+          showDialogForScreen(context, 'Authentication', json['message'],
+              callback: () {});
+        }
+      } else {
+        showDialogForScreen(context, 'Authentication', json['message'],
+            callback: () {});
+      }
+    } catch (e) {
+      logcat("Service Creation Exception", e.toString());
+      showDialogForScreen(context, 'Authentication', Connection.servererror,
+          callback: () {});
+      loadingIndicator.hide(context);
+
+      // Call your API
+      // commonPostApiCallFormate(
+      //   context,
+      //   onResponse: (response) async {
+      //     final res = GoogleAuth.fromJson(response);
+
+      //     UserPreferences().saveSignInInfo(res.data.user);
+      //     UserPreferences().setToken(res.data.user.token.toString());
+
+      //     if (res.data.user.isEmailVerified == true) {
+      //       Get.offAll(MainScreen());
+      //       print('user is verified and goto dashboard');
+      //     } else {
+      //       Get.to(Signupscreen(
+      //         emailId: user.email,
+      //       ));
+      //     }
+      //   },
+      //   body: userData,
+      //   networkManager: networkManager,
+      //   allowHeader: true,
+      //   apiEndPoint: ApiUrl.authCallback,
+      //   title: 'Authentication',
+      //   isModelResponse: true,
+      // );
+    }
+  }
 
   validateFields(
     val, {

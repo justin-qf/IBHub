@@ -183,7 +183,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget apiSuccess(ScreenState state) {
     if (controller.state.value == ScreenState.apiSuccess &&
         controller.categoryList.isNotEmpty) {
-      return MasonryGridView.count(
+      return 
+      
+      
+      MasonryGridView.count(
         // controller: controller.scrollController,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(bottom: 5.h, left: 5.w, right: 5.w, top: 1.h),

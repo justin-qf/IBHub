@@ -134,6 +134,18 @@ class Signupscreencontroller extends GetxController {
     isloading = false;
   }
 
+  validateEmailFields() {
+    if (emailCtr.text.isNotEmpty) {
+      validateFields(
+        emailCtr.text,
+        model: emailModel,
+        errorText1: "Email is required",
+        iscomman: true,
+        shouldEnableButton: false,
+      );
+    }
+  }
+
   validateFields(val,
       {model,
       errorText1,
@@ -173,7 +185,11 @@ class Signupscreencontroller extends GetxController {
         });
   }
 
-  void registerAPI(context) async {
+  RxBool isGmailLogin = false.obs;
+
+  void registerAPI(
+    context,
+  ) async {
     // var loadingIndicator = LoadingProgressDialog();
     String? firebaseToken = await getFirebaseToken();
     logcat("firebaseToken::", firebaseToken.toString());
@@ -183,7 +199,8 @@ class Signupscreencontroller extends GetxController {
           "email": emailCtr.text.toString().trim(),
           "password": passCtr.text.toString().trim(),
           "password_confirmation": confpassCtr.text.toString(),
-          "device_token": firebaseToken ?? ''
+          "device_token": firebaseToken ?? '',
+          "login_type": isGmailLogin.value == true ? 'gmail' : 'email'
         },
         apiEndPoint: ApiUrl.register, onResponse: (data) {
       var responseDetail = LoginModel.fromJson(data);
@@ -194,11 +211,17 @@ class Signupscreencontroller extends GetxController {
         Get.offAll(const MainScreen());
       } else {
         logcat("EMAILID", responseDetail.data!.user!.email.toString().trim());
-        Get.to(() => OtpScreen(
-              email: responseDetail.data!.user!.email.toString().trim(),
-              otp: "1235",
-              isFromSingIn: true,
-            ))?.then((value) {});
+
+        if (isGmailLogin.value == true) {
+          Get.to(() => MainScreen());
+        } else {
+          Get.to(() => OtpScreen(
+                email: responseDetail.data!.user!.email.toString().trim(),
+                otp: "1235",
+                isFromSingIn: true,
+              ))?.then((value) {});
+        }
+
         // getRegiaterOtp(context, responseDetail.data.user.email.toString());
       }
     }, networkManager: networkManager, isModelResponse: true);

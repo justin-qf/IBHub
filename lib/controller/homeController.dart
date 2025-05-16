@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:ibh/api_handle/Repository.dart';
 import 'package:ibh/api_handle/apiCallingFormate.dart';
 import 'package:ibh/componant/dialogs/dialogs.dart';
-import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/apicall_constant.dart';
@@ -17,7 +16,6 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/appUpdateModel.dart';
 import 'package:ibh/models/businessListModel.dart';
-import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/models/login_model.dart';
@@ -26,8 +24,6 @@ import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
-import 'package:ibh/views/sigin_signup/signinScreen.dart';
-import 'package:marquee/marquee.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
@@ -101,7 +97,7 @@ class HomeScreenController extends GetxController {
         },
         child: Container(
             // color: Colors.yellow,
-            width: 22.w,
+            width: isSmallDevice(context) ? 18.w : 22.w,
             height: 30.h,
             margin: EdgeInsets.only(
                 right:
@@ -122,7 +118,7 @@ class HomeScreenController extends GetxController {
                       child: CachedNetworkImage(
                         fit: BoxFit.cover,
                         height: 10.h,
-                        width: 12.w,
+                        width: isSmallDevice(context) ? 8.w : 12.w,
                         imageUrl: item.thumbnail,
                         placeholder: (context, url) => Container(
                           padding: const EdgeInsets.all(4),
@@ -469,6 +465,7 @@ class HomeScreenController extends GetxController {
       logcat("AppVersion", serverVersion.toString());
       logcat("currentVersion", currentVersion.toString());
       logcat("isForcefully", appUpdateModel.data.isForcefullyUpdate.toString());
+
       if (isNewVersionAvailable(currentVersion, serverVersion)) {
         const url =
             'https://play.google.com/store/apps/details?id=com.app.medicalhistory';

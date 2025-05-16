@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
@@ -15,6 +14,8 @@ import 'package:ibh/models/businessListModel.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/Notification/notificationScreen.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/AddServiceScreen.dart';
@@ -175,16 +176,34 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getDynamicSizedBox(height: 2.h),
-            Container(
-              margin: EdgeInsets.only(left: 5.w),
-              child: SizedBox(
-                  // color: Colors.yellow,
-                  height: 5.h,
-                  width: 18.w,
-                  child: Image.asset(Asset.applogo)),
+            SizedBox(
+              // color: Colors.yellow,
+              width: 95.w,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 5.w),
+                    child: SizedBox(
+                        // color: Colors.yellow,
+                        height: 5.h,
+                        width: 18.w,
+                        child: Image.asset(Asset.applogo)),
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        logcat('printing', 'notification');
+
+                        Get.to(NotificationScreen());
+                      },
+                      child: Icon(Icons.notifications))
+                ],
+              ),
             ),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
+
+
               Get.to(const CategoryScreen())!.then((value) {
                 futureDelay(() {
                   controller.currentPage = 1;
@@ -192,11 +211,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       isFirstTime: true);
                 }, isOneSecond: false);
               });
+
+              
             }),
             getDynamicSizedBox(height: 0.5.h),
             SizedBox(
-                height:
-                    Device.screenType == sizer.ScreenType.mobile ? 15.h : 20.h,
+                height: Device.screenType == sizer.ScreenType.mobile
+                    ? isSmallDevice(context)
+                        ? 16.h
+                        : 15.h
+                    : 20.h,
                 child: Obx(() {
                   return controller.isCategoryLoading.value
                       ? SizedBox(

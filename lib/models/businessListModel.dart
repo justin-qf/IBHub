@@ -100,25 +100,28 @@ class BusinessData {
   String facebook;
   String linkedin;
   String whatsapp;
+  String website;
 
-  BusinessData(
-      {required this.id,
-      required this.businessId,
-      required this.name,
-      required this.email,
-      required this.phone,
-      required this.businessName,
-      required this.address,
-      required this.city,
-      required this.state,
-      required this.pincode,
-      required this.visitingCardUrl,
-      required this.isEmailVerified,
-      required this.businessReviewsAvgRating,
-      required this.isFavorite,
-      required this.facebook,
-      required this.whatsapp,
-      required this.linkedin});
+  BusinessData({
+    required this.id,
+    required this.businessId,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.businessName,
+    required this.address,
+    required this.city,
+    required this.state,
+    required this.pincode,
+    required this.visitingCardUrl,
+    required this.isEmailVerified,
+    required this.businessReviewsAvgRating,
+    required this.isFavorite,
+    required this.facebook,
+    required this.whatsapp,
+    required this.linkedin,
+    required this.website,
+  });
 
   factory BusinessData.fromJson(Map<String, dynamic> json) => BusinessData(
       id: json["id"],
@@ -140,7 +143,8 @@ class BusinessData {
       isFavorite: json["is_favorite"],
       facebook: json["facebook"] ?? '',
       linkedin: json["linkedin"] ?? '',
-      whatsapp: json["whatsapp_no"] ?? '');
+      whatsapp: json["whatsapp_no"] ?? '',
+      website: json["website"] ?? '');
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -159,7 +163,8 @@ class BusinessData {
         "is_email_verified": isEmailVerified,
         "facebook": facebook,
         "linkedin": linkedin,
-        "whatsapp_no": whatsapp
+        "whatsapp_no": whatsapp,
+        "website": website
       };
 }
 

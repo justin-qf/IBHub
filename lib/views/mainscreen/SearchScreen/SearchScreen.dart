@@ -251,7 +251,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget apiSuccess(ScreenState state) {
     if (state == ScreenState.apiSuccess && controller.businessList.isNotEmpty) {
-      return ListView.builder(
+      return 
+      
+      ListView.builder(
         // controller: controller.scrollController,
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.only(left: 1.w, right: 1.w, top: 1.h, bottom: 3.h),
