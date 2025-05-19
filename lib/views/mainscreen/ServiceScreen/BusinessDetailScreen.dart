@@ -315,17 +315,20 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                                   // );
                                 },
                                 child: Container(
-                                    height: 4.h,
-                                    width: 10.w,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: primaryColor),
-                                    padding: EdgeInsets.all(1),
-                                    child: SvgPicture.asset(Asset.facebook,
-                                        height: 2.h,
-                                        width: 2.w,
-                                        colorFilter: ColorFilter.mode(
-                                            white, BlendMode.srcIn))),
+                                  height: 4.h,
+                                  width: 10.w,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: primaryColor),
+                                  padding: EdgeInsets.all(1),
+                                  child: SvgPicture.asset(
+                                    Asset.facebook,
+                                    height: 2.h,
+                                    width: 2.w,
+                                    colorFilter: ColorFilter.mode(
+                                        white, BlendMode.srcIn),
+                                  ),
+                                ),
                               )
                             : SizedBox.shrink(),
                         if (linkedIn.isNotEmpty)

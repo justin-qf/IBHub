@@ -16,7 +16,6 @@ import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 
 class Signinscreencontroller extends GetxController {

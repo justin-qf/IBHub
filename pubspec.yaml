@@ -21,15 +21,15 @@ dependencies:
   image_picker: ^1.1.2
   google_nav_bar: ^5.0.7
   connectivity_plus: ^6.1.4
-  animate_do: ^4.2.0
+  # animate_do: ^4.2.0
   cached_network_image: ^3.2.3
   loading_animation_widget: ^1.2.0+4
   intl: ^0.18.0
   pinput: ^2.2.31
-  marquee: ^2.2.3
-  flutter_staggered_grid_view: ^0.7.0
+  # marquee: ^2.2.3
+  # flutter_staggered_grid_view: ^0.7.0
   readmore: ^2.2.0
-  flutter_rating_bar: ^4.0.1
+  # flutter_rating_bar: ^4.0.1
   url_launcher: ^6.3.1
   path_provider: ^2.1.5
   share_plus: ^11.0.0
@@ -47,7 +47,7 @@ dependencies:
   firebase_crashlytics: ^4.3.5
   firebase_messaging: ^15.2.5
   flutter_local_notifications: ^19.1.0
-  google_sign_in: ^6.3.0
+  # google_sign_in: ^6.3.0
  
 
 dev_dependencies:
@@ -112,39 +112,39 @@ flutter:
     - family: DM_Sans_Medium
       fonts:
         - asset: assets/fonts/DM_Sans/DMSans-Medium.ttf
-    - family: Poppins-Black
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-Black.ttf
-    - family: Poppins-Bold
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
-    - family: Poppins-ExtraBold
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
-    - family: Poppins-ExtraLight
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-ExtraLight.ttf
-    - family: Poppins-Light
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-Light.ttf
-    - family: Poppins-Regular
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
-    - family: Poppins-SemiBold
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
-    - family: Poppins-Medium
-      fonts:
-        - asset: assets/fonts/Poppins/Poppins-Medium.ttf    
-    - family: Geologica-Regular
-      fonts:
-        - asset: assets/fonts/Geologica/Geologica-Regular.ttf 
-    - family: Geologica-SemiBold
-      fonts:
-        - asset: assets/fonts/Geologica/Geologica-SemiBold.ttf 
-    - family: Geologica-Medium
-      fonts:
-        - asset: assets/fonts/Geologica/Geologica-Medium.ttf 
-    - family: Cooper-Black-Regular
-      fonts:
-        - asset: assets/fonts/CooperBlack/Cooper-Black-Regular.ttf 
+    # - family: Poppins-Black
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-Black.ttf
+    # - family: Poppins-Bold
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+    # - family: Poppins-ExtraBold
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
+    # - family: Poppins-ExtraLight
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-ExtraLight.ttf
+    # - family: Poppins-Light
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-Light.ttf
+    # - family: Poppins-Regular
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+    # - family: Poppins-SemiBold
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
+    # - family: Poppins-Medium
+    #   fonts:
+    #     - asset: assets/fonts/Poppins/Poppins-Medium.ttf    
+    # - family: Geologica-Regular
+    #   fonts:
+    #     - asset: assets/fonts/Geologica/Geologica-Regular.ttf 
+    # - family: Geologica-SemiBold
+    #   fonts:
+    #     - asset: assets/fonts/Geologica/Geologica-SemiBold.ttf 
+    # - family: Geologica-Medium
+    #   fonts:
+    #     - asset: assets/fonts/Geologica/Geologica-Medium.ttf 
+    # - family: Cooper-Black-Regular
+    #   fonts:
+    #     - asset: assets/fonts/CooperBlack/Cooper-Black-Regular.ttf 

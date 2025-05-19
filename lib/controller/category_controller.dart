@@ -247,7 +247,7 @@ class CategoryController extends GetxController {
                 ),
               ),
             ),
-            getDynamicSizedBox(height: 1.3.h),
+            getDynamicSizedBox(height: 1.h),
             Center(
               child: Text(data.name,
                   style: TextStyle(

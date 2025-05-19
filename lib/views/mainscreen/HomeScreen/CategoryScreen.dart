@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -183,13 +182,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget apiSuccess(ScreenState state) {
     if (controller.state.value == ScreenState.apiSuccess &&
         controller.categoryList.isNotEmpty) {
-      return MasonryGridView.count(
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount:
+                Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 8,
+            childAspectRatio: 1.4),
         // controller: controller.scrollController,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(bottom: 5.h, left: 5.w, right: 5.w, top: 1.h),
-        crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 8,
+
         shrinkWrap: true,
         itemCount: controller.categoryList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),

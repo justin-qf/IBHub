@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -504,7 +503,7 @@ Widget getUpperContainer({
                     TextSpan(
                       text: firstpurpleText,
                       style: TextStyle(
-                          fontFamily: Poppins_SemiBold,
+                          fontFamily: dM_sans_semiBold,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                           color: black),
@@ -512,7 +511,7 @@ Widget getUpperContainer({
                     TextSpan(
                       text: secondwhiteText,
                       style: TextStyle(
-                          fontFamily: Poppins_SemiBold,
+                          fontFamily: dM_sans_semiBold,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.bold,
                           color: black),
@@ -1532,7 +1531,7 @@ Widget getIntroText(firsttext, secondtext, thirdtext, desription,
                 text: firsttext,
                 style: TextStyle(
                     fontSize: size.sp,
-                    fontFamily: Poppins_ExtraBold,
+                    fontFamily: dM_sans_extraBold,
                     fontWeight: FontWeight.bold,
                     color: black),
               ),
@@ -1541,7 +1540,7 @@ Widget getIntroText(firsttext, secondtext, thirdtext, desription,
                 style: TextStyle(
                     fontSize: size.sp,
                     fontWeight: FontWeight.bold,
-                    fontFamily: Poppins_ExtraBold,
+                    fontFamily: dM_sans_extraBold,
                     color: secondColor),
               ),
               TextSpan(
@@ -1549,7 +1548,7 @@ Widget getIntroText(firsttext, secondtext, thirdtext, desription,
                 style: TextStyle(
                     fontSize: size.sp,
                     fontWeight: FontWeight.bold,
-                    fontFamily: Poppins_ExtraBold,
+                    fontFamily: dM_sans_extraBold,
                     color: thirdcolor),
               )
             ],
@@ -1559,7 +1558,7 @@ Widget getIntroText(firsttext, secondtext, thirdtext, desription,
         Text(desription,
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: Geologica_Regular,
+                fontFamily: dM_sans_regular,
                 fontSize: 17.sp,
                 // fontWeight: FontWeight.bold,
                 color: black))
