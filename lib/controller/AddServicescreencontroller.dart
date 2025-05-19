@@ -720,91 +720,60 @@ class AddServicescreencontroller extends GetxController {
     );
   }
 
-  actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
-    await ImagePicker()
-        .pickImage(
-            source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
-            maxWidth: 1080,
-            maxHeight: 1080,
-            imageQuality: 100)
-        .then((file) async {
-      if (file != null) {
-        //Cropping the image
-        CroppedFile? croppedFile = await ImageCropper().cropImage(
-            sourcePath: file.path,
-            maxWidth: 1080,
-            maxHeight: 1080,
-            cropStyle: CropStyle.rectangle,
-            aspectRatioPresets: Platform.isAndroid
-                ? [
-                    CropAspectRatioPreset.square,
-                    CropAspectRatioPreset.ratio3x2,
-                    CropAspectRatioPreset.original,
-                    CropAspectRatioPreset.ratio4x3,
-                    CropAspectRatioPreset.ratio16x9
-                  ]
-                : [
-                    CropAspectRatioPreset.original,
-                    CropAspectRatioPreset.square,
-                    CropAspectRatioPreset.ratio3x2,
-                    CropAspectRatioPreset.ratio4x3,
-                    CropAspectRatioPreset.ratio5x3,
-                    CropAspectRatioPreset.ratio5x4,
-                    CropAspectRatioPreset.ratio7x5,
-                    CropAspectRatioPreset.ratio16x9
-                  ],
-            uiSettings: [
-              AndroidUiSettings(
-                  toolbarTitle: 'Crop Image',
-                  cropGridColor: primaryColor,
-                  toolbarColor: primaryColor,
-                  statusBarColor: primaryColor,
-                  toolbarWidgetColor: white,
-                  activeControlsWidgetColor: primaryColor,
-                  initAspectRatio: CropAspectRatioPreset.original,
-                  lockAspectRatio: false),
-              IOSUiSettings(
-                title: 'Crop Image',
-                cancelButtonTitle: 'Cancel',
-                doneButtonTitle: 'Done',
-                aspectRatioLockEnabled: false,
-              ),
-            ],
-            aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
-        if (croppedFile != null) {
-          imageFile = File(croppedFile.path).obs;
-          imageURl.value = croppedFile.path;
+  actionClickUploadImageFromCamera(BuildContext context,
+      {bool? isCamera}) async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+      maxWidth: 1080,
+      maxHeight: 1080,
+      imageQuality: 100,
+    );
 
-          validateFields(croppedFile.path,
-              model: imageModel,
-              errorText1: "Profile picture is required",
-              iscomman: true,
-              shouldEnableButton: true);
+    if (pickedFile != null) {
+      // Crop the image
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        maxWidth: 1080,
+        maxHeight: 1080,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        uiSettings: [
+          if (Platform.isAndroid)
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: primaryColor,
+              statusBarColor: primaryColor,
+              backgroundColor: Colors.white,
+              toolbarWidgetColor: white,
+              activeControlsWidgetColor: primaryColor,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+            ),
+          if (Platform.isIOS)
+            IOSUiSettings(
+              title: 'Crop Image',
+              cancelButtonTitle: 'Cancel',
+              doneButtonTitle: 'Done',
+              aspectRatioLockEnabled: false,
+            ),
+        ],
+      );
 
-          imageFile.refresh(); // Ensure Obx is notified
-          update();
-        }
-        //   } else {
-        //     imageFile.value = null;
-        //     imageURl.value = "";
-        //     validateFields("",
-        //         model: imageModel,
-        //         errorText1: "Profile picture is required",
-        //         iscomman: true,
-        //         shouldEnableButton: true);
-        //     update();
-        //   }
-        // } else {
-        //   imageFile.value = null;
-        //   imageURl.value = "";
-        //   validateFields("",
-        //       model: imageModel,
-        //       errorText1: "Profile picture is required",
-        //       iscomman: true,
-        //       shouldEnableButton: true);
-        //   update();
+      if (croppedFile != null) {
+        imageFile = File(croppedFile.path).obs;
+        imageURl.value = croppedFile.path;
+
+        validateFields(
+          croppedFile.path,
+          model: imageModel,
+          errorText1: "Profile picture is required",
+          iscomman: true,
+          shouldEnableButton: true,
+        );
+
+        imageFile.refresh();
+        update();
       }
-    });
+    }
 
     update();
   }

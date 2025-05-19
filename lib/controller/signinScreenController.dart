@@ -181,27 +181,27 @@ class Signinscreencontroller extends GetxController {
   //   return  FirebaseAuth.instance.currentUser != null;
   // }
 
-Future<firebase.User?> signinWithGmail() async {
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+// Future<firebase.User?> signinWithGmail() async {
+//   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  await googleSignIn.signOut();
+//   await googleSignIn.signOut();
 
-  final user = await googleSignIn.signIn();
+//   final user = await googleSignIn.signIn();
 
-  if (user == null) return null; // User canceled
+//   if (user == null) return null; // User canceled
 
-  final GoogleSignInAuthentication userAuth = await user.authentication;
+//   final GoogleSignInAuthentication userAuth = await user.authentication;
 
-  final credential = GoogleAuthProvider.credential(
-    idToken: userAuth.idToken,
-    accessToken: userAuth.accessToken,
-  );
+//   final credential = GoogleAuthProvider.credential(
+//     idToken: userAuth.idToken,
+//     accessToken: userAuth.accessToken,
+//   );
 
-  final userCredential =
-      await FirebaseAuth.instance.signInWithCredential(credential);
+//   final userCredential =
+//       await FirebaseAuth.instance.signInWithCredential(credential);
 
-  return userCredential.user;
-}
+//   return userCredential.user;
+// }
 
   validateFields(
     val, {

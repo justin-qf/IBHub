@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ibh/api_handle/apiOtherStates.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -172,6 +170,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
+  
+
   Widget apiSuccess(ScreenState state) {
     if (state == ScreenState.apiSuccess) {
       return Column(
@@ -179,30 +180,47 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             getDynamicSizedBox(height: 2.h),
-            SizedBox(
-              // color: Colors.yellow,
-              width: 95.w,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 5.w),
-                    child: SizedBox(
-                        // color: Colors.yellow,
-                        height: 5.h,
-                        width: 18.w,
-                        child: Image.asset(Asset.applogo)),
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        logcat('printing', 'notification');
+            Container(
+                margin: EdgeInsets.only(left: 6.w),
+                // color: Colors.yellow,
+                height: 5.h,
+                width: 18.w,
+                child: Image.asset(Asset.applogo)
+                // SizedBox(
+                //   // color: Colors.yellow,
+                //   width: 95.w,
+                //   child: Container(
+                //     margin: EdgeInsets.only(left: 5.w),
+                //     child:
 
-                        Get.to(NotificationScreen());
-                      },
-                      child: Icon(Icons.notifications))
-                ],
-              ),
-            ),
+                //      SizedBox(
+                //         // color: Colors.yellow,
+                //         height: 5.h,
+                //         width: 18.w,
+                //         child: Image.asset(Asset.applogo)),
+                //   ),
+
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Container(
+                //       margin: EdgeInsets.only(left: 5.w),
+                //       child: SizedBox(
+                //           // color: Colors.yellow,
+                //           height: 5.h,
+                //           width: 18.w,
+                //           child: Image.asset(Asset.applogo)),
+                //     ),
+                //     GestureDetector(
+                //         onTap: () {
+                //           logcat('printing', 'notification');
+
+                //           Get.to(NotificationScreen());
+                //         },
+                //         child: Icon(Icons.notifications))
+                //   ],
+                // ),
+                ),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
               Get.to(const CategoryScreen())!.then((value) {

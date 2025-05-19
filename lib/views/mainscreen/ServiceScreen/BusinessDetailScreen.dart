@@ -243,7 +243,7 @@ class _BusinessDetailScreenState extends State<BusinessDetailScreen> {
                               errorWidget: (context, url, error) => Image.asset(
                                 Asset.placeholder,
                                 height: 9.h,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.contain,
                               ),
                             ),
                     ),

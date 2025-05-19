@@ -269,17 +269,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                             //     // Navigate to Terms and Conditions screen or show dialog
                             //   },
                             // ),
-                            getMenuListItem(
-                                callback: () {
-                                  Get.to(Contactus());
+                            // getMenuListItem(
+                            //     callback: () {
+                            //       Get.to(Contactus());
 
-                                  // callPopupDialogs(context, function: () {
-                                  //   launchPhoneCall('+91 80008 41620');
-                                  //   // print('object');
-                                  // });
-                                },
-                                title: 'Contact Us',
-                                icons: Icons.call),
+                            //       // callPopupDialogs(context, function: () {
+                            //       //   launchPhoneCall('+91 80008 41620');
+                            //       //   // print('object');
+                            //       // });
+                            //     },
+                            //     title: 'Contact Us',
+                            //     icons: Icons.call),
 
                             getMenuListItem(
                                 callback: () {
