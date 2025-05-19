@@ -633,7 +633,12 @@ getCommonToolbar(String title,
 // }
 
 getleftsidebackbtn(
-    {required backFunction, title, istitle = true, isbussinessScreen = false}) {
+    {required backFunction,
+    title,
+    istitle = true,
+    isbussinessScreen = false,
+    isShare = false,
+    shareCallBack}) {
   return Row(
     children: [
       GestureDetector(
@@ -660,7 +665,10 @@ getleftsidebackbtn(
         Text(
           title,
           style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
-        )
+        ),
+      if (isShare == true) getDynamicSizedBox(width: 16.w),
+      if (isShare == true)
+        GestureDetector(onTap: shareCallBack, child: Icon(Icons.share))
     ],
   );
 }

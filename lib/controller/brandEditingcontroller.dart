@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -11,7 +13,10 @@ import 'package:ibh/models/TextItemModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 
 class Brandeditingcontroller extends GetxController {
@@ -50,9 +55,77 @@ class Brandeditingcontroller extends GetxController {
   }
 
   // Filter-related logic
+  RxDouble imageOpacity = 1.0.obs;
+
   Widget filterLogic() {
-    return SizedBox.shrink(); // Placeholder as per original code
+    return SizedBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 6.w),
+            child: Text(
+              'Opacity',
+              style: TextStyle(
+                  fontSize: 18.sp, color: white, fontFamily: dM_sans_semiBold),
+            ),
+          ),
+          Obx(() => SizedBox(
+                height: 3.h,
+                child: Slider(
+                  value: imageOpacity.value,
+                  min: 0,
+                  max: 1,
+                  divisions: 100,
+                  activeColor: primaryColor,
+                  inactiveColor: white,
+                  onChanged: (value) {
+                    imageOpacity.value = value; //
+                  },
+                ),
+              ))
+        ],
+      ),
+    );
   }
+
+//Share Image
+  final GlobalKey repaintBoundaryKey = GlobalKey();
+  Future<void> captureAndSaveImage() async {
+    try {
+      // Request storage permission
+      var status = await Permission.storage.request();
+      if (status.isDenied) {
+        Get.snackbar('Error', 'Storage permission denied');
+        return;
+      }
+
+      // Capture the widget
+      RenderRepaintBoundary boundary = repaintBoundaryKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      var image = await boundary.toImage(pixelRatio: 5.0); // Higher resolution
+      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List imageBytes = byteData!.buffer.asUint8List();
+
+      // Save to device
+      final directory = await getTemporaryDirectory();
+      final filePath =
+          '${directory.path}/brand_image_${DateTime.now().millisecondsSinceEpoch}.png';
+      File file = File(filePath);
+      await file.writeAsBytes(imageBytes);
+
+      // Optional: Share the image
+      await Share.shareXFiles([XFile(filePath)],
+          text: 'Check out my customized brand!');
+
+      // Get.snackbar('Success', 'Image saved and shared: $filePath');
+    } catch (e) {
+      // Get.snackbar('Error', 'Failed to save image: $e');
+      logcat('CaptureError', e.toString());
+    }
+  }
+
+  //shareimage
 
   void toggleImageSelection(AssetEntity image) async {
     if (selectedImage.value == image) {

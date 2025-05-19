@@ -30,10 +30,9 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
   @override
   Widget build(BuildContext context) {
     Statusbar().transparentStatusbarIsNormalScreen();
-    // Stack dimensions for clamping
     final stackWidth = 70.w;
     final stackHeight = 35.h;
-    final imagePadding = 5.0; // Padding inside the image Container
+    final imagePadding = 5.0;
 
     return CustomParentScaffold(
       onWillPop: () async {
@@ -42,7 +41,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
       },
       onTap: () {
         controller.hideKeyboard(context);
-        controller.selectedTextIndex.value = -1; // Deselect text on tap outside
+        controller.selectedTextIndex.value = -1;
       },
       isNormalScreen: true,
       isExtendBodyScreen: true,
@@ -57,72 +56,80 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                 Container(
                   margin: EdgeInsets.only(left: 5.w),
                   child: getleftsidebackbtn(
-                    title: 'Customize Your Brand',
-                    backFunction: () {
-                      Get.back(result: true);
-                    },
-                  ),
+                      title: 'Customize Your Brand',
+                      backFunction: () {
+                        Get.back(result: true);
+                      },
+                      isShare: true,
+                      shareCallBack: () {
+                        logcat('Printing', 'Data');
+                        controller.captureAndSaveImage();
+                      }),
                 ),
                 getDynamicSizedBox(height: 5.h),
                 SizedBox(
                   width: stackWidth,
                   height: stackHeight,
-                  child: Stack(
-                    clipBehavior: Clip.hardEdge, // Prevent overflow
-                    children: [
-                      Obx(() {
-                        final borderWidth = controller.borderSize.value;
-                        return Container(
-                          padding: EdgeInsets.all(imagePadding),
-                          decoration: BoxDecoration(
-                            color: white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: black.withOpacity(0.1),
-                                  blurRadius: 5.0,
-                                  offset: Offset(0, 0))
-                            ],
-                            border: Border.all(color: grey, width: 1),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Container(
-                            width:
-                                stackWidth - 2 * imagePadding + 2 * borderWidth,
-                            height: stackHeight -
-                                2 * imagePadding +
-                                2 * borderWidth,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: borderWidth,
-                                color: controller.showBorder.value
-                                    ? controller.hexBgCode.value.isNotEmpty
-                                        ? Color(controller.hexBgColor.value)
-                                        : controller.currentBGColor.value
-                                    : Colors.white,
+                  child: Obx(() {
+                    final borderWidth = controller.borderSize.value;
+                    return Container(
+                      padding: EdgeInsets.all(imagePadding),
+                      decoration: BoxDecoration(
+                        color: white,
+                        boxShadow: [
+                          BoxShadow(
+                              color: black.withOpacity(0.1),
+                              blurRadius: 5.0,
+                              offset: Offset(0, 0))
+                        ],
+                        border: Border.all(color: grey, width: 1),
+                        shape: BoxShape.rectangle,
+                      ),
+                      child: RepaintBoundary(
+                        key: controller.repaintBoundaryKey,
+                        child: Stack(
+                          clipBehavior: Clip.hardEdge,
+                          children: [
+                            // Inner Container with border and image
+                            Container(
+                              width: stackWidth -
+                                  2 * imagePadding +
+                                  2 * borderWidth,
+                              height: stackHeight -
+                                  2 * imagePadding +
+                                  2 * borderWidth,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: borderWidth,
+                                  color: controller.showBorder.value
+                                      ? controller.hexBgCode.value.isNotEmpty
+                                          ? Color(controller.hexBgColor.value)
+                                          : controller.currentBGColor.value
+                                      : Colors.white,
+                                ),
+                                shape: BoxShape.rectangle,
                               ),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(0),
-                              child: _buildImageWidget(
-                                controller,
-                                stackWidth - 2 * imagePadding,
-                                stackHeight - 2 * imagePadding,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(0),
+                                child: _buildImageWidget(
+                                  controller,
+                                  stackWidth - 2 * imagePadding,
+                                  stackHeight - 2 * imagePadding,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }),
-                      Obx(() => Stack(
-                            clipBehavior: Clip.hardEdge,
-                            children: controller.textItems
+                            // Text items on top
+                            ...controller.textItems
                                 .asMap()
                                 .entries
                                 .map((entry) {
                               final index = entry.key;
                               final item = entry.value;
-                              final maxWidth =
-                                  stackWidth - item.posX.value - 10;
+                              final maxWidth = (stackWidth -
+                                      2 * imagePadding +
+                                      2 * borderWidth) -
+                                  item.posX.value -
+                                  10;
                               return Positioned(
                                 left: item.posX.value,
                                 top: item.posY.value,
@@ -154,8 +161,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                   onPanUpdate: (details) {
                                     item.posX.value += details.delta.dx;
                                     item.posY.value += details.delta.dy;
+                                    // Adjust clamping for inner container bounds
                                     controller.clampTextPosition(
-                                        item, stackWidth, stackHeight);
+                                        item,
+                                        stackWidth - 2 * imagePadding,
+                                        stackHeight - 2 * imagePadding);
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
@@ -194,9 +204,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                 ),
                               );
                             }).toList(),
-                          )),
-                    ],
-                  ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
                 ),
                 getDynamicSizedBox(height: 2.h),
               ],
@@ -212,18 +224,24 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
       Brandeditingcontroller controller, double width, double height) {
     return Obx(() {
       if (controller.cachedThumbnail.value != null) {
-        return Image.memory(
-          controller.cachedThumbnail.value!,
-          fit: BoxFit.fill,
-          width: width,
-          height: height,
+        return Opacity(
+          opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
+          child: Image.memory(
+            controller.cachedThumbnail.value!,
+            fit: BoxFit.fill,
+            width: width,
+            height: height,
+          ),
         );
       } else if (controller.thumbnailFuture.value == null) {
-        return Image.asset(
-          Asset.bussinessPlaceholder,
-          fit: BoxFit.fill,
-          width: width,
-          height: height,
+        return Opacity(
+          opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
+          child: Image.asset(
+            Asset.bussinessPlaceholder,
+            fit: BoxFit.fill,
+            width: width,
+            height: height,
+          ),
         );
       } else {
         return FutureBuilder<Uint8List?>(
@@ -232,13 +250,15 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData &&
                 snapshot.data != null) {
-              controller.cachedThumbnail.value =
-                  snapshot.data; // Cache the result
-              return Image.memory(
-                snapshot.data!,
-                fit: BoxFit.fill,
-                width: width,
-                height: height,
+              controller.cachedThumbnail.value = snapshot.data;
+              return Opacity(
+                opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
+                child: Image.memory(
+                  snapshot.data!,
+                  fit: BoxFit.fill,
+                  width: width,
+                  height: height,
+                ),
               );
             } else {
               return Center(
