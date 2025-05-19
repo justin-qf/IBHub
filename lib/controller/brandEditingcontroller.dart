@@ -427,7 +427,13 @@ class Brandeditingcontroller extends GetxController {
     return TextAlign.center;
   }
 
-  void showTextEditor(BuildContext context) {
+  late TextEditingController selectedTextCtr;
+
+  void showTextEditor(BuildContext context, {isdoubleTap = false, index = 0}) {
+    if (isdoubleTap == true) {
+      selectedTextCtr = TextEditingController();
+      selectedTextCtr.text = textItems[index].content.value;
+    }
     String newText = "";
     showDialog(
       context: context,
@@ -447,7 +453,8 @@ class Brandeditingcontroller extends GetxController {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
+                  TextFormField(
+                    controller: isdoubleTap == true ? selectedTextCtr : null,
                     onChanged: (val) => newText = val,
                     maxLines: null,
                     style: const TextStyle(color: Colors.white, fontSize: 20),
@@ -460,8 +467,12 @@ class Brandeditingcontroller extends GetxController {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      if (newText.trim().isNotEmpty) {
-                        addTextItem(newText.trim());
+                      if (isdoubleTap == true) {
+                        textItems[index].content.value = selectedTextCtr.text;
+                      } else {
+                        if (newText.trim().isNotEmpty) {
+                          addTextItem(newText.trim());
+                        }
                       }
                       Navigator.of(context).pop();
                     },
@@ -476,7 +487,7 @@ class Brandeditingcontroller extends GetxController {
                       textStyle: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    child: const Text("Add Text"),
+                    child: Text(isdoubleTap ? "Update" : "Add Text"),
                   )
                 ],
               ),

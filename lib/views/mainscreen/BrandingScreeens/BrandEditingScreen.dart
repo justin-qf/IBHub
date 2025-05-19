@@ -8,7 +8,7 @@ import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/brandEditingcontroller.dart';
-import 'package:photo_manager/photo_manager.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:sizer/sizer.dart';
 
 class Brandeditingscreen extends StatefulWidget {
@@ -86,8 +86,11 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                             shape: BoxShape.rectangle,
                           ),
                           child: Container(
-                            width: stackWidth - 2 * imagePadding + 2 * borderWidth,
-                            height: stackHeight - 2 * imagePadding + 2 * borderWidth,
+                            width:
+                                stackWidth - 2 * imagePadding + 2 * borderWidth,
+                            height: stackHeight -
+                                2 * imagePadding +
+                                2 * borderWidth,
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: borderWidth,
@@ -118,7 +121,8 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                 .map((entry) {
                               final index = entry.key;
                               final item = entry.value;
-                              final maxWidth = stackWidth - item.posX.value - 10;
+                              final maxWidth =
+                                  stackWidth - item.posX.value - 10;
                               return Positioned(
                                 left: item.posX.value,
                                 top: item.posY.value,
@@ -137,10 +141,15 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                         item.alignment.value ==
                                             Alignment.centerLeft;
                                     controller.isTextAlignCenter.value =
-                                        item.alignment.value == Alignment.center;
+                                        item.alignment.value ==
+                                            Alignment.center;
                                     controller.isTextAlignRight.value =
                                         item.alignment.value ==
                                             Alignment.centerRight;
+                                  },
+                                  onDoubleTap: () {
+                                    controller.showTextEditor(context,
+                                        isdoubleTap: true, index: index);
                                   },
                                   onPanUpdate: (details) {
                                     item.posX.value += details.delta.dx;
@@ -223,7 +232,8 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData &&
                 snapshot.data != null) {
-              controller.cachedThumbnail.value = snapshot.data; // Cache the result
+              controller.cachedThumbnail.value =
+                  snapshot.data; // Cache the result
               return Image.memory(
                 snapshot.data!,
                 fit: BoxFit.fill,
