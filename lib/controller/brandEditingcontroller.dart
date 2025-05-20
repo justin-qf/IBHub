@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -13,6 +14,7 @@ import 'package:ibh/models/TextItemModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/FilteringClass.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -54,8 +56,89 @@ class Brandeditingcontroller extends GetxController {
     }
   }
 
+  @override
+  void onInit() {
+    super.onInit();
+    // Generate filter thumbnails when cachedThumbnail changes
+    ever(cachedThumbnail, (_) => _generateFilterThumbnails());
+  }
+
+  // Generate thumbnails for all filters
+  Future<void> _generateFilterThumbnails() async {
+    if (cachedThumbnail.value == null) {
+      filterThumbnails.clear();
+      return;
+    }
+
+    final tempFilters = ImageFilters();
+    try {
+      await tempFilters.loadImageFromBytes(cachedThumbnail.value!);
+      for (final filter in filters) {
+        await tempFilters.applyFilter(filter);
+        final filteredImage = tempFilters.filteredImage;
+        if (filteredImage != null) {
+          final byteData =
+              await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+          filterThumbnails[filter] = byteData!.buffer.asUint8List();
+        }
+      }
+    } catch (e) {
+      logcat('ThumbnailError', e.toString());
+    } finally {
+      tempFilters.dispose();
+    }
+  }
+
   // Filter-related logic
   RxDouble imageOpacity = 1.0.obs;
+  final currentFilter = 'None'.obs; // Track current filter
+  final filterThumbnails = <String, Uint8List>{}.obs; // Store filter thumbnails
+  final ImageFilters _imageFilters = ImageFilters();
+
+  // List of available filters
+  static const List<String> filters = [
+    'None',
+    'Grayscale',
+    'Sepia',
+    'Brightness',
+    'Contrast',
+    'Invert',
+    'Saturation',
+    'HueRotation',
+    'Blur',
+    'Vintage',
+    'Noise',
+  ];
+
+// Apply a filter to the main image
+  Future<void> applyImageFilter(String filterType) async {
+    if (cachedThumbnail.value == null) {
+      Get.snackbar('Error', 'No image selected');
+      return;
+    }
+
+    Get.dialog(
+      Center(child: CircularProgressIndicator()),
+      barrierDismissible: false,
+    );
+
+    try {
+      await _imageFilters.loadImageFromBytes(cachedThumbnail.value!);
+      await _imageFilters.applyFilter(filterType);
+      final filteredImage = _imageFilters.filteredImage;
+      if (filteredImage != null) {
+        final byteData =
+            await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+        cachedThumbnail.value = byteData!.buffer.asUint8List();
+        currentFilter.value = filterType;
+      }
+    } catch (e) {
+      logcat('FilterError', e.toString());
+      Get.snackbar('Error', 'Failed to apply filter: $e');
+    } finally {
+      Get.back();
+    }
+  }
 
   Widget filterLogic() {
     return SizedBox(
@@ -63,11 +146,69 @@ class Brandeditingcontroller extends GetxController {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
+            child: Text(
+              'Filters',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: white,
+                fontFamily: dM_sans_semiBold,
+              ),
+            ),
+          ),
+          SizedBox(
+              height: 10.h,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: filters.length,
+                itemBuilder: (context, index) {
+                  final filter = filters[index];
+                  return GestureDetector(
+                    onTap: () {
+                      logcat('Filter', 'Applying $filter');
+                      applyImageFilter(filter);
+                    },
+                    child: Container(
+                      width: 15.w,
+                      margin: EdgeInsets.only(left: 4.w),
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: currentFilter.value == filter
+                            ? Border.all(color: primaryColor, width: 2)
+                            : null,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: filterThumbnails.containsKey(filter) &&
+                                filterThumbnails[filter] != null
+                            ? Image.memory(
+                                filterThumbnails[filter]!,
+                                fit: BoxFit.cover,
+                                width: 15.w,
+                                height: 10.h,
+                              )
+                            : Image.asset(
+                                Asset.bussinessPlaceholder,
+                                fit: BoxFit.cover,
+                                width: 15.w,
+                                height: 10.h,
+                              ),
+                      ),
+                    ),
+                  );
+                },
+              )),
+          getDynamicSizedBox(height: 1.h),
+          Container(
             margin: EdgeInsets.only(left: 6.w),
             child: Text(
               'Opacity',
               style: TextStyle(
-                  fontSize: 18.sp, color: white, fontFamily: dM_sans_semiBold),
+                fontSize: 18.sp,
+                color: white,
+                fontFamily: dM_sans_semiBold,
+              ),
             ),
           ),
           Obx(() => SizedBox(
@@ -80,10 +221,10 @@ class Brandeditingcontroller extends GetxController {
                   activeColor: primaryColor,
                   inactiveColor: white,
                   onChanged: (value) {
-                    imageOpacity.value = value; //
+                    imageOpacity.value = value;
                   },
                 ),
-              ))
+              )),
         ],
       ),
     );
