@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
-import 'dart:math' as math; // Import with prefix
+import 'dart:math' as math;
 
 class ImageFilters {
   ui.Image? _originalImage;
   ui.Image? _filteredImage;
   String _currentFilter = 'None';
+  bool _isOriginalImageValid = false;
+  bool _isFilteredImageValid = false;
 
   // Getter for the filtered image
   ui.Image? get filteredImage => _filteredImage;
@@ -13,237 +16,260 @@ class ImageFilters {
   // Getter for the current filter name
   String get currentFilter => _currentFilter;
 
+  // List of 10 professional filters
+  static const List<String> filters = [
+    'None',
+    'Vibrance',
+    'Clarity',
+    'Vintage',
+    'Cinematic',
+    'Lomo',
+    'Moody',
+    'Faded',
+    'Bold',
+    'Warm',
+    'Cool',
+  ];
+
   // Load image from Uint8List (e.g., from gallery)
   Future<void> loadImageFromBytes(Uint8List bytes) async {
-    final codec = await ui.instantiateImageCodec(bytes);
-    final frame = await codec.getNextFrame();
-    _originalImage = frame.image;
-    _filteredImage = frame.image;
-    _currentFilter = 'None';
+    if (bytes.isEmpty) {
+      print('ImageFilters: Empty image data');
+      return;
+    }
+    try {
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      // Dispose existing images safely
+      _safeDisposeImage('_originalImage', _originalImage, '_isOriginalImageValid');
+      _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+      _originalImage = frame.image;
+      _filteredImage = frame.image; // Initially same as original
+      _isOriginalImageValid = true;
+      _isFilteredImageValid = true;
+      _currentFilter = 'None';
+      codec.dispose();
+    } catch (e) {
+      print('ImageFilters: Failed to load image: $e');
+      _isOriginalImageValid = false;
+      _isFilteredImageValid = false;
+      rethrow;
+    }
   }
 
-  // Apply filter to the image
-  Future<void> applyFilter(String filterType) async {
-    if (_originalImage == null) return;
+  Future<void> applyFilter(String filterType,
+      {Map<String, dynamic>? params}) async {
+    if (_originalImage == null || !_isOriginalImageValid) {
+      print('ImageFilters: No valid original image to apply filter $filterType');
+      return;
+    }
 
-    final byteData = await _originalImage!.toByteData();
-    if (byteData == null) return;
+    if (filterType == 'None') {
+      // For 'None', reset _filteredImage to original
+      _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+      // Use existing _originalImage instead of reloading
+      _filteredImage = _originalImage;
+      _isFilteredImageValid = true;
+      _currentFilter = 'None';
+      return;
+    }
 
-    final pixels = byteData.buffer.asUint8List();
     final width = _originalImage!.width;
     final height = _originalImage!.height;
+    final recorder = ui.PictureRecorder();
+    final canvas = ui.Canvas(recorder);
+    final paint = ui.Paint();
 
-    // Create a copy of the pixel data
-    final newPixels = Uint8List(pixels.length);
+    try {
+      canvas.save();
+      switch (filterType) {
+        case 'Vibrance':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            1.2, 0.1, 0.1, 0, 0,
+            0.1, 1.2, 0.1, 0, 0,
+            0.1, 0.1, 1.2, 0, 0,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
 
-    // Random number generator for Noise filter
+        case 'Clarity':
+          final blurPaint = ui.Paint()
+            ..imageFilter = ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, blurPaint);
+          final overlayPaint = ui.Paint()
+            ..blendMode = ui.BlendMode.overlay
+            ..color = ui.Color.fromARGB(128, 255, 255, 255);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, overlayPaint);
+          break;
+
+        case 'Vintage':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            0.9, 0.5, 0.1, 0, 20,
+            0.3, 0.8, 0.1, 0, 20,
+            0.1, 0.2, 0.7, 0, 10,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          final vignettePaint = ui.Paint()
+            ..shader = ui.Gradient.radial(
+              ui.Offset(width / 2, height / 2),
+              math.min(width, height) * 0.5,
+              [ui.Color.fromARGB(0, 0, 0, 0), ui.Color.fromARGB(100, 0, 0, 0)],
+              [0.4, 1.0],
+            )
+            ..blendMode = ui.BlendMode.darken;
+          canvas.drawRect(
+              ui.Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
+              vignettePaint);
+          break;
+
+        case 'Cinematic':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            0.8, 0.2, 0.1, 0, 10,
+            0.1, 0.9, 0.2, 0, 10,
+            0.1, 0.3, 1.1, 0, 20,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          final noise = await _generateNoiseTexture(width, height);
+          final noisePaint = ui.Paint()..blendMode = ui.BlendMode.overlay;
+          canvas.drawImage(noise, ui.Offset.zero, noisePaint);
+          noise.dispose();
+          break;
+
+        case 'Lomo':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            1.3, 0.0, 0.0, 0, -10,
+            0.0, 1.3, 0.0, 0, -10,
+            0.0, 0.0, 1.3, 0, -10,
+            0, 0, 0, 1, 0,
+          ]);
+          paint.imageFilter = ui.ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+
+        case 'Moody':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            0.7, 0.2, 0.1, 0, -20,
+            0.1, 0.7, 0.2, 0, -20,
+            0.1, 0.2, 0.8, 0, -10,
+            0, 0, 0, 1, 0,
+          ]);
+          paint.imageFilter = ui.ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+
+        case 'Faded':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            0.6, 0.2, 0.1, 0, 30,
+            0.2, 0.6, 0.2, 0, 30,
+            0.1, 0.2, 0.6, 0, 30,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+
+        case 'Bold':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            1.5, 0.0, 0.0, 0, -20,
+            0.0, 1.5, 0.0, 0, -20,
+            0.0, 0.0, 1.5, 0, -20,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+
+        case 'Warm':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            1.2, 0.3, 0.1, 0, 20,
+            0.2, 1.1, 0.1, 0, 20,
+            0.1, 0.1, 0.8, 0, 10,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+
+        case 'Cool':
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            0.8, 0.2, 0.3, 0, 10,
+            0.2, 0.9, 0.3, 0, 10,
+            0.3, 0.3, 1.2, 0, 20,
+            0, 0, 0, 1, 0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+
+        default:
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
+          break;
+      }
+
+      canvas.restore();
+      final picture = recorder.endRecording();
+      final newImage = await picture.toImage(width, height);
+
+      // Dispose old filtered image safely
+      _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+      _filteredImage = newImage;
+      _isFilteredImageValid = true;
+      _currentFilter = filterType;
+    } catch (e) {
+      print('ImageFilters: Failed to apply filter $filterType: $e');
+      _isFilteredImageValid = false;
+      rethrow;
+    }
+  }
+
+  // Generate noise texture for Cinematic filter
+  Future<ui.Image> _generateNoiseTexture(int width, int height) async {
     final random = math.Random();
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        final i = (y * width + x) * 4;
-        int r = pixels[i];
-        int g = pixels[i + 1];
-        int b = pixels[i + 2];
-        int a = pixels[i + 3];
-
-        switch (filterType) {
-          case 'Grayscale':
-            // Convert to grayscale using luminosity formula
-            final gray = (0.299 * r + 0.587 * g + 0.114 * b).round();
-            newPixels[i] = gray;
-            newPixels[i + 1] = gray;
-            newPixels[i + 2] = gray;
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Sepia':
-            // Apply sepia tone
-            newPixels[i] = (r * 0.393 + g * 0.769 + b * 0.189).round().clamp(0, 255);
-            newPixels[i + 1] = (r * 0.349 + g * 0.686 + b * 0.168).round().clamp(0, 255);
-            newPixels[i + 2] = (r * 0.272 + g * 0.534 + b * 0.131).round().clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Brightness':
-            // Increase brightness by +50
-            newPixels[i] = (r + 50).clamp(0, 255);
-            newPixels[i + 1] = (g + 50).clamp(0, 255);
-            newPixels[i + 2] = (b + 50).clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Contrast':
-            // Adjust contrast with factor 1.5
-            const factor = 1.5;
-            newPixels[i] = ((r - 128) * factor + 128).round().clamp(0, 255);
-            newPixels[i + 1] = ((g - 128) * factor + 128).round().clamp(0, 255);
-            newPixels[i + 2] = ((b - 128) * factor + 128).round().clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Invert':
-            // Invert colors
-            newPixels[i] = (255 - r).clamp(0, 255);
-            newPixels[i + 1] = (255 - g).clamp(0, 255);
-            newPixels[i + 2] = (255 - b).clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Saturation':
-            // Increase saturation by factor 1.5
-            final gray = 0.299 * r + 0.587 * g + 0.114 * b;
-            const satFactor = 1.5;
-            newPixels[i] = (gray + satFactor * (r - gray)).round().clamp(0, 255);
-            newPixels[i + 1] = (gray + satFactor * (g - gray)).round().clamp(0, 255);
-            newPixels[i + 2] = (gray + satFactor * (b - gray)).round().clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'HueRotation':
-            // Rotate hue by 90 degrees
-            final hsv = _rgbToHsv(r, g, b);
-            hsv[0] = (hsv[0] + 90) % 360; // Shift hue
-            final rgb = _hsvToRgb(hsv[0], hsv[1], hsv[2]);
-            newPixels[i] = rgb[0].clamp(0, 255);
-            newPixels[i + 1] = rgb[1].clamp(0, 255);
-            newPixels[i + 2] = rgb[2].clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Blur':
-            // Simple 3x3 box blur
-            if (x > 0 && x < width - 1 && y > 0 && y < height - 1) {
-              int sumR = 0, sumG = 0, sumB = 0, count = 0;
-              for (int dy = -1; dy <= 1; dy++) {
-                for (int dx = -1; dx <= 1; dx++) {
-                  final ni = ((y + dy) * width + (x + dx)) * 4;
-                  sumR += pixels[ni];
-                  sumG += pixels[ni + 1];
-                  sumB += pixels[ni + 2];
-                  count++;
-                }
-              }
-              newPixels[i] = (sumR / count).round().clamp(0, 255);
-              newPixels[i + 1] = (sumG / count).round().clamp(0, 255);
-              newPixels[i + 2] = (sumB / count).round().clamp(0, 255);
-              newPixels[i + 3] = a;
-            } else {
-              newPixels[i] = r;
-              newPixels[i + 1] = g;
-              newPixels[i + 2] = b;
-              newPixels[i + 3] = a;
-            }
-            break;
-
-          case 'Vintage':
-            // Combine sepia-like tones with reduced contrast
-            newPixels[i] = (r * 0.353 + g * 0.729 + b * 0.169).round().clamp(0, 255);
-            newPixels[i + 1] = (r * 0.309 + g * 0.646 + b * 0.148).round().clamp(0, 255);
-            newPixels[i + 2] = (r * 0.232 + g * 0.494 + b * 0.111).round().clamp(0, 255);
-            // Reduce contrast
-            const vintageFactor = 0.8;
-            newPixels[i] = ((newPixels[i] - 128) * vintageFactor + 128).round().clamp(0, 255);
-            newPixels[i + 1] = ((newPixels[i + 1] - 128) * vintageFactor + 128).round().clamp(0, 255);
-            newPixels[i + 2] = ((newPixels[i + 2] - 128) * vintageFactor + 128).round().clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          case 'Noise':
-            // Add random noise (±20 to each channel)
-            final noise = random.nextInt(41) - 20;
-            newPixels[i] = (r + noise).clamp(0, 255);
-            newPixels[i + 1] = (g + noise).clamp(0, 255);
-            newPixels[i + 2] = (b + noise).clamp(0, 255);
-            newPixels[i + 3] = a;
-            break;
-
-          default:
-            // No filter, copy original pixels
-            newPixels[i] = r;
-            newPixels[i + 1] = g;
-            newPixels[i + 2] = b;
-            newPixels[i + 3] = a;
-        }
-      }
+    final pixels = Uint8List(width * height * 4);
+    for (int i = 0; i < pixels.length; i += 4) {
+      final noise = random.nextInt(50);
+      pixels[i] = noise;
+      pixels[i + 1] = noise;
+      pixels[i + 2] = noise;
+      pixels[i + 3] = 128;
     }
 
-    // Create a new image from the modified pixels
-    final codec = await ui.instantiateImageCodec(
-      newPixels,
-      targetWidth: width,
-      targetHeight: height,
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromPixels(
+      pixels,
+      width,
+      height,
+      ui.PixelFormat.rgba8888,
+      (ui.Image image) {
+        completer.complete(image);
+      },
+      rowBytes: width * 4,
     );
-    final frame = await codec.getNextFrame();
-    _filteredImage?.dispose(); // Dispose previous filtered image
-    _filteredImage = frame.image;
-    _currentFilter = filterType;
+    return completer.future;
   }
 
-  // Helper: Convert RGB to HSV
-  List<double> _rgbToHsv(int r, int g, int b) {
-    double rNorm = r / 255.0;
-    double gNorm = g / 255.0;
-    double bNorm = b / 255.0;
-
-    final max = [rNorm, gNorm, bNorm].reduce(math.max); // Use math.max
-    final min = [rNorm, gNorm, bNorm].reduce(math.min); // Use math.min
-    final delta = max - min;
-
-    double h = 0;
-    if (delta != 0) {
-      if (max == rNorm) {
-        h = 60 * (((gNorm - bNorm) / delta) % 6);
-      } else if (max == gNorm) {
-        h = 60 * ((bNorm - rNorm) / delta + 2);
-      } else {
-        h = 60 * ((rNorm - gNorm) / delta + 4);
+  // Safely dispose an image with error handling
+  void _safeDisposeImage(String imageName, ui.Image? image, String validFlagName) {
+    if (image != null) {
+      try {
+        image.dispose();
+        print('ImageFilters: Disposed $imageName');
+      } catch (e) {
+        print('ImageFilters: Error disposing $imageName: $e');
+      }
+      // Update the corresponding validity flag
+      if (validFlagName == '_isOriginalImageValid') {
+        _isOriginalImageValid = false;
+      } else if (validFlagName == '_isFilteredImageValid') {
+        _isFilteredImageValid = false;
       }
     }
-    double s = max == 0 ? 0 : delta / max;
-    double v = max;
-
-    return [h, s, v];
-  }
-
-  // Helper: Convert HSV to RGB
-  List<int> _hsvToRgb(double h, double s, double v) {
-    double c = v * s;
-    double x = c * (1 - ((h / 60) % 2 - 1).abs());
-    double m = v - c;
-
-    double r = 0, g = 0, b = 0;
-    if (h < 60) {
-      r = c;
-      g = x;
-    } else if (h < 120) {
-      r = x;
-      g = c;
-    } else if (h < 180) {
-      r = 0;
-      g = c;
-      b = x;
-    } else if (h < 240) {
-      g = x;
-      b = c;
-    } else if (h < 300) {
-      r = x;
-      b = c;
-    } else {
-      r = c;
-      b = x;
-    }
-
-    return [
-      ((r + m) * 255).round(),
-      ((g + m) * 255).round(),
-      ((b + m) * 255).round(),
-    ];
   }
 
   // Dispose images to prevent memory leaks
   void dispose() {
-    _originalImage?.dispose();
-    _filteredImage?.dispose();
+    _safeDisposeImage('_originalImage', _originalImage, '_isOriginalImageValid');
+    _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+    _originalImage = null;
+    _filteredImage = null;
   }
 }

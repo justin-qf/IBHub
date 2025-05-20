@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -33,6 +34,29 @@ class Brandeditingcontroller extends GetxController {
   final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
   final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
   final Rx<Uint8List?> cachedThumbnail = Rx<Uint8List?>(null);
+  final Rx<Uint8List?> originalThumbnail =
+      Rx<Uint8List?>(null); // New: Store original bytes
+
+  // Filter-related properties
+  RxDouble imageOpacity = 1.0.obs;
+  final currentFilter = 'None'.obs;
+  final filterThumbnails = <String, Uint8List>{}.obs;
+  RxBool _isGeneratingThumbnails = false.obs;
+
+  // List of available filters
+  static const List<String> filters = [
+    'None',
+    'Vibrance',
+    'Clarity',
+    'Vintage',
+    'Cinematic',
+    'Lomo',
+    'Moody',
+    'Faded',
+    'Bold',
+    'Warm',
+    'Cool',
+  ];
 
   List<Widget> screens(BuildContext context) => [
         Container(margin: EdgeInsets.all(10), child: getimageGridView()),
@@ -56,64 +80,87 @@ class Brandeditingcontroller extends GetxController {
     }
   }
 
+  Timer? _debounceTimer;
+
   @override
   void onInit() {
     super.onInit();
-    // Generate filter thumbnails when cachedThumbnail changes
-    ever(cachedThumbnail, (_) => _generateFilterThumbnails());
+    ever(cachedThumbnail, (_) {
+      _debounceTimer?.cancel();
+      _debounceTimer = Timer(Duration(milliseconds: 500), () {
+        if (!_isGeneratingThumbnails.value) {
+          _generateFilterThumbnails();
+        }
+      });
+    });
   }
 
-  // Generate thumbnails for all filters
+  @override
+  void onClose() {
+    _debounceTimer?.cancel();
+    super.onClose();
+  }
+
   Future<void> _generateFilterThumbnails() async {
-    if (cachedThumbnail.value == null) {
+    if (!_isValidImageData(originalThumbnail.value)) {
       filterThumbnails.clear();
+      logcat('ThumbnailError', 'No valid image data for thumbnail generation');
       return;
     }
 
-    final tempFilters = ImageFilters();
+    _isGeneratingThumbnails.value = true;
     try {
-      await tempFilters.loadImageFromBytes(cachedThumbnail.value!);
-      for (final filter in filters) {
-        await tempFilters.applyFilter(filter);
-        final filteredImage = tempFilters.filteredImage;
-        if (filteredImage != null) {
-          final byteData =
-              await filteredImage.toByteData(format: ui.ImageByteFormat.png);
-          filterThumbnails[filter] = byteData!.buffer.asUint8List();
+      filterThumbnails.clear();
+      await Stream.fromIterable(filters).asyncMap((filter) async {
+        final tempFilters = ImageFilters();
+        try {
+          await tempFilters
+              .loadImageFromBytes(originalThumbnail.value!); // Use original
+          await tempFilters.applyFilter(filter);
+          final filteredImage = tempFilters.filteredImage;
+          if (filteredImage != null) {
+            final byteData =
+                await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+            if (byteData != null) {
+              filterThumbnails[filter] = byteData.buffer.asUint8List();
+              logcat(
+                  'ThumbnailSuccess', 'Generated thumbnail for filter $filter');
+            } else {
+              logcat('ThumbnailError',
+                  'Failed to encode image for filter $filter');
+            }
+          } else {
+            logcat(
+                'ThumbnailError', 'No valid filtered image for filter $filter');
+          }
+        } catch (e, stackTrace) {
+          // logcat('ThumbnailError', 'Failed to apply filter $filter: $e',
+          //     stackTrace: stackTrace);
+        } finally {
+          try {
+            tempFilters.dispose();
+            logcat(
+                'ThumbnailCleanup', 'Disposed ImageFilters for filter $filter');
+          } catch (e) {
+            logcat('ThumbnailCleanupError',
+                'Error disposing ImageFilters for filter $filter: $e');
+          }
         }
-      }
-    } catch (e) {
-      logcat('ThumbnailError', e.toString());
+      }).drain();
     } finally {
-      tempFilters.dispose();
+      _isGeneratingThumbnails.value = false;
+      logcat('ThumbnailComplete', 'Thumbnail generation completed');
     }
   }
 
-  // Filter-related logic
-  RxDouble imageOpacity = 1.0.obs;
-  final currentFilter = 'None'.obs; // Track current filter
-  final filterThumbnails = <String, Uint8List>{}.obs; // Store filter thumbnails
-  final ImageFilters _imageFilters = ImageFilters();
-
-  // List of available filters
-  static const List<String> filters = [
-    'None',
-    'Grayscale',
-    'Sepia',
-    'Brightness',
-    'Contrast',
-    'Invert',
-    'Saturation',
-    'HueRotation',
-    'Blur',
-    'Vintage',
-    'Noise',
-  ];
-
-// Apply a filter to the main image
   Future<void> applyImageFilter(String filterType) async {
-    if (cachedThumbnail.value == null) {
-      Get.snackbar('Error', 'No image selected');
+    if (!_isValidImageData(originalThumbnail.value)) {
+      Get.snackbar('Error', 'No valid image selected');
+      return;
+    }
+
+    if (!filters.contains(filterType)) {
+      Get.snackbar('Error', 'Invalid filter type: $filterType');
       return;
     }
 
@@ -122,21 +169,57 @@ class Brandeditingcontroller extends GetxController {
       barrierDismissible: false,
     );
 
+    final tempFilters = ImageFilters();
     try {
-      await _imageFilters.loadImageFromBytes(cachedThumbnail.value!);
-      await _imageFilters.applyFilter(filterType);
-      final filteredImage = _imageFilters.filteredImage;
+      await tempFilters
+          .loadImageFromBytes(originalThumbnail.value!); // Use original
+      await tempFilters.applyFilter(filterType);
+      final filteredImage = tempFilters.filteredImage;
       if (filteredImage != null) {
         final byteData =
             await filteredImage.toByteData(format: ui.ImageByteFormat.png);
-        cachedThumbnail.value = byteData!.buffer.asUint8List();
-        currentFilter.value = filterType;
+        if (byteData != null) {
+          cachedThumbnail.value = byteData.buffer.asUint8List();
+          currentFilter.value = filterType;
+        } else {
+          throw Exception('Failed to encode filtered image');
+        }
+      } else {
+        throw Exception('No valid filtered image produced');
       }
-    } catch (e) {
-      logcat('FilterError', e.toString());
+    } catch (e, stackTrace) {
+      // logcat('FilterError', 'Failed to apply filter $filterType: $e',
+      //     stackTrace: stackTrace);
       Get.snackbar('Error', 'Failed to apply filter: $e');
     } finally {
+      tempFilters.dispose();
       Get.back();
+    }
+  }
+
+  // Validate image data
+  bool _isValidImageData(Uint8List? data) {
+    if (data == null || data.isEmpty) return false;
+    try {
+      // Check for PNG header
+      if (data.length >= 8 &&
+          data[0] == 0x89 &&
+          data[1] == 0x50 &&
+          data[2] == 0x4E &&
+          data[3] == 0x47) {
+        return true;
+      }
+      // Check for JPEG header
+      if (data.length >= 3 &&
+          data[0] == 0xFF &&
+          data[1] == 0xD8 &&
+          data[2] == 0xFF) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      logcat('ImageValidationError', 'Invalid image data: $e');
+      return false;
     }
   }
 
@@ -157,48 +240,67 @@ class Brandeditingcontroller extends GetxController {
             ),
           ),
           SizedBox(
-              height: 10.h,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: filters.length,
-                itemBuilder: (context, index) {
-                  final filter = filters[index];
-                  return GestureDetector(
-                    onTap: () {
-                      logcat('Filter', 'Applying $filter');
-                      applyImageFilter(filter);
-                    },
-                    child: Container(
-                      width: 15.w,
-                      margin: EdgeInsets.only(left: 4.w),
-                      decoration: BoxDecoration(
-                        color: white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: currentFilter.value == filter
-                            ? Border.all(color: primaryColor, width: 2)
-                            : null,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: filterThumbnails.containsKey(filter) &&
-                                filterThumbnails[filter] != null
-                            ? Image.memory(
-                                filterThumbnails[filter]!,
-                                fit: BoxFit.cover,
-                                width: 15.w,
-                                height: 10.h,
-                              )
-                            : Image.asset(
-                                Asset.bussinessPlaceholder,
-                                fit: BoxFit.cover,
-                                width: 15.w,
-                                height: 10.h,
-                              ),
-                      ),
+            height: 10.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: filters.length,
+              itemBuilder: (context, index) {
+                final filter = filters[index];
+                return GestureDetector(
+                  onTap: () {
+                    logcat('Filter', 'Applying $filter');
+                    applyImageFilter(filter);
+                  },
+                  child: Container(
+                    width: 18.w,
+                    margin: EdgeInsets.only(left: 2.w, right: 2.w),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: currentFilter.value == filter
+                                ? Border.all(color: primaryColor, width: 2)
+                                : null,
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: filterThumbnails.containsKey(filter) &&
+                                    filterThumbnails[filter] != null
+                                ? Image.memory(
+                                    filterThumbnails[filter]!,
+                                    fit: BoxFit.cover,
+                                    width: 15.w,
+                                    height: 8.h,
+                                  )
+                                : Image.asset(
+                                    Asset.bussinessPlaceholder,
+                                    fit: BoxFit.cover,
+                                    width: 15.w,
+                                    height: 8.h,
+                                  ),
+                          ),
+                        ),
+                        SizedBox(height: 0.2.h),
+                        Text(
+                          filter,
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: white,
+                            fontFamily: dM_sans_regular,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  );
-                },
-              )),
+                  ),
+                );
+              },
+            ),
+          ),
           getDynamicSizedBox(height: 1.h),
           Container(
             margin: EdgeInsets.only(left: 6.w),
@@ -230,55 +332,48 @@ class Brandeditingcontroller extends GetxController {
     );
   }
 
-//Share Image
+  // Share Image
   final GlobalKey repaintBoundaryKey = GlobalKey();
   Future<void> captureAndSaveImage() async {
     try {
-      // Request storage permission
       var status = await Permission.storage.request();
       if (status.isDenied) {
         Get.snackbar('Error', 'Storage permission denied');
         return;
       }
 
-      // Capture the widget
       RenderRepaintBoundary boundary = repaintBoundaryKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
-      var image = await boundary.toImage(pixelRatio: 5.0); // Higher resolution
+      var image = await boundary.toImage(pixelRatio: 5.0);
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List imageBytes = byteData!.buffer.asUint8List();
 
-      // Save to device
       final directory = await getTemporaryDirectory();
       final filePath =
           '${directory.path}/brand_image_${DateTime.now().millisecondsSinceEpoch}.png';
       File file = File(filePath);
       await file.writeAsBytes(imageBytes);
 
-      // Optional: Share the image
       await Share.shareXFiles([XFile(filePath)],
           text: 'Check out my customized brand!');
-
-      // Get.snackbar('Success', 'Image saved and shared: $filePath');
-    } catch (e) {
-      // Get.snackbar('Error', 'Failed to save image: $e');
-      logcat('CaptureError', e.toString());
+    } catch (e, stackTrace) {
+      // logcat('CaptureError', e.toString(), stackTrace: stackTrace);
     }
   }
-
-  //shareimage
 
   void toggleImageSelection(AssetEntity image) async {
     if (selectedImage.value == image) {
       selectedImage.value = null;
       thumbnailFuture.value = null;
       cachedThumbnail.value = null;
+      originalThumbnail.value = null; // Clear original
     } else {
       selectedImage.value = image;
       thumbnailFuture.value =
-          image.thumbnailDataWithSize(ThumbnailSize(600, 600));
+          image.thumbnailDataWithSize(ThumbnailSize(300, 300));
       final Uint8List? data = await thumbnailFuture.value;
-      cachedThumbnail.value = data;
+      originalThumbnail.value = data; // Store original
+      cachedThumbnail.value = data; // Initialize cached with original
     }
   }
 
