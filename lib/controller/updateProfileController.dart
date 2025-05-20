@@ -1366,10 +1366,12 @@ class Updateprofilecontroller extends GetxController {
   }
 
   void getCategory(context) async {
-    commonGetApiCallFormate(
+    commonPostApiCallFormate(
       allowHeader: true,
       title: 'Category',
       context,
+      body: {},
+      isModelResponse: true,
       onResponse: (data) {
         var responsDetails = CategoryData.fromJson(data);
 

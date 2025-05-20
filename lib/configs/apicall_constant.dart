@@ -5,7 +5,8 @@ class ApiUrl {
   // static const imageUrl = '${baseUrl}swooosh_admin/public/storage/';
 
   //LIVE
-  static const liveUrl = "https://indianbusinesshub.in/";
+  // static const liveUrl = "https://indianbusinesshub.in/";
+  static const liveUrl = "https://indianbusinesshub.in/admin/";
 
   //  "https://indianbusinesshub.in/";
 

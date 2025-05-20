@@ -235,7 +235,7 @@ class HomeScreenController extends GetxController {
         return;
       }
       var response =
-          await Repository.get({}, ApiUrl.getCategories, allowHeader: true);
+          await Repository.post({}, ApiUrl.getCategories, allowHeader: true);
       isCategoryLoading(false);
       logcat("CATEGORY_RESPONSE::", response.body);
       var responseData = jsonDecode(response.body);

@@ -279,37 +279,42 @@ class AddServicescreencontroller extends GetxController {
   }
 
   void getCategory(context, stateID, {isfromHomescreen}) async {
-    commonGetApiCallFormate(context,
+    commonPostApiCallFormate(context,
         title: isFromUpdate.value
             ? AddServiceScreenViewConst.editService
             : AddServiceScreenViewConst.addService,
         apiEndPoint: ApiUrl.getCategories,
-        allowHeader: true, apisLoading: (isTrue) {
-      isCategoryApiCallLoading.value = isTrue;
+        allowHeader: true,
+        apisLoading: (isTrue) {
+          isCategoryApiCallLoading.value = isTrue;
 
-      update();
-    }, onResponse: (response) {
-      var categoryData = CategoryModel.fromJson(response);
-      categoryList.clear();
-      categoryFilterList.clear();
-      categoryList.addAll(categoryData.data);
-      categoryFilterList.addAll(categoryData.data);
+          update();
+        },
+        isModelResponse: true,
+        body: {},
+        onResponse: (response) {
+          var categoryData = CategoryModel.fromJson(response);
+          categoryList.clear();
+          categoryFilterList.clear();
+          categoryList.addAll(categoryData.data);
+          categoryFilterList.addAll(categoryData.data);
 
-      if (isfromHomescreen && categoryId.value.isNotEmpty) {
-        final selectedCategory = categoryList.firstWhere(
-          (category) => category.id.toString() == categoryId.value,
-        );
-        // ignore: unnecessary_null_comparison
-        if (selectedCategory != null) {
-          categoryCtr.text = selectedCategory.name;
-          categoryId.value = selectedCategory.id.toString();
-        } else {
-          categoryId.value = '';
-          categoryCtr.text = '';
-        }
-      }
-      update();
-    }, networkManager: networkManager);
+          if (isfromHomescreen && categoryId.value.isNotEmpty) {
+            final selectedCategory = categoryList.firstWhere(
+              (category) => category.id.toString() == categoryId.value,
+            );
+            // ignore: unnecessary_null_comparison
+            if (selectedCategory != null) {
+              categoryCtr.text = selectedCategory.name;
+              categoryId.value = selectedCategory.id.toString();
+            } else {
+              categoryId.value = '';
+              categoryCtr.text = '';
+            }
+          }
+          update();
+        },
+        networkManager: networkManager);
   }
 
   Widget setCategoryListDialog({isFromHomeScreen}) {
