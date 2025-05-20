@@ -221,6 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
+
+
               Get.to(const CategoryScreen())!.then((value) {
                 futureDelay(() {
                   controller.currentPage = 1;
@@ -228,6 +230,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       isFirstTime: true);
                 }, isOneSecond: false);
               });
+
+              
             }),
             getDynamicSizedBox(height: 2.h),
             SizedBox(

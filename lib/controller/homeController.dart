@@ -465,6 +465,7 @@ class HomeScreenController extends GetxController {
       logcat("AppVersion", serverVersion.toString());
       logcat("currentVersion", currentVersion.toString());
       logcat("isForcefully", appUpdateModel.data.isForcefullyUpdate.toString());
+
       if (isNewVersionAvailable(currentVersion, serverVersion)) {
         const url =
             'https://play.google.com/store/apps/details?id=com.app.medicalhistory';
@@ -489,10 +490,12 @@ class HomeScreenController extends GetxController {
           // ignore: use_build_context_synchronously
           showBottomSheetPopup(context);
         } else {
-          Get.to(BusinessDetailScreen(
-            item: item,
-            isFromProfile: false,
-          ));
+          Get.to(
+            BusinessDetailScreen(
+              item: item,
+              isFromProfile: false,
+            ),
+          );
         }
         // Get.to(BusinessDetailScreen(
         //   item: item,

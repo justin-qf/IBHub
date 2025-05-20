@@ -185,7 +185,7 @@ class Signupscreencontroller extends GetxController {
         });
   }
 
-  RxBool isEmailLogin = false.obs;
+  RxBool isGmailLogin = false.obs;
 
   void registerAPI(
     context,
@@ -199,7 +199,8 @@ class Signupscreencontroller extends GetxController {
           "email": emailCtr.text.toString().trim(),
           "password": passCtr.text.toString().trim(),
           "password_confirmation": confpassCtr.text.toString(),
-          "device_token": firebaseToken ?? ''
+          "device_token": firebaseToken ?? '',
+          "login_type": isGmailLogin.value == true ? 'gmail' : 'email'
         },
         apiEndPoint: ApiUrl.register, onResponse: (data) {
       var responseDetail = LoginModel.fromJson(data);
@@ -211,7 +212,7 @@ class Signupscreencontroller extends GetxController {
       } else {
         logcat("EMAILID", responseDetail.data!.user!.email.toString().trim());
 
-        if (isEmailLogin.value == true) {
+        if (isGmailLogin.value == true) {
           Get.to(() => MainScreen());
         } else {
           Get.to(() => OtpScreen(

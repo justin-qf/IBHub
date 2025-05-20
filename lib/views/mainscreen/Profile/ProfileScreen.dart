@@ -19,7 +19,6 @@ import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/Contact%20Us/contactUS.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
-import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/ChangepasswordScreen.dart';
 import 'package:ibh/views/mainscreen/ServiceScreen/BusinessDetailScreen.dart';
 import 'package:ibh/views/privacypolicy/PrivacyPolicyScreen.dart';

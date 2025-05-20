@@ -47,6 +47,7 @@ android {
 
     kotlinOptions {
         jvmTarget = '11'
+        jvmTarget = '11'
     }
 
     sourceSets {
@@ -74,8 +75,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             // signingConfig signingConfigs.debug
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

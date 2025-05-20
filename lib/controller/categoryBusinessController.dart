@@ -945,33 +945,45 @@ class CategoryBusinessController extends GetxController {
                       ],
                     ),
                     getDynamicSizedBox(height: 0.5.h),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 18.sp,
-                        ),
-                        getDynamicSizedBox(width: 0.5.w),
-                        SizedBox(
-                          // height: 4.h,
-                          width: Device.screenType == sizer.ScreenType.mobile
-                              ? 50.w
-                              : 65.w,
-                          child: Text(
-                              // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
-
-                              '${item.address}, ${item.city!.city}, ${item.state!.name} - ${item.pincode}',
-                              maxLines: 3,
-                              style: TextStyle(
-                                  height: 1.1,
-                                  fontFamily: dM_sans_semiBold,
-                                  fontSize: 14.sp,
-                                  color: black,
-                                  fontWeight: FontWeight.w500)),
-                        ),
-                      ],
-                    ),
+                    (item.address.isNotEmpty ||
+                            item.city?.city.isNotEmpty == true ||
+                            item.state?.name.isNotEmpty == true ||
+                            item.pincode.isNotEmpty)
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (item.address.isNotEmpty ||
+                                  item.city?.city.isNotEmpty == true ||
+                                  item.state?.name.isNotEmpty == true ||
+                                  item.pincode.isNotEmpty)
+                                Icon(
+                                  Icons.location_on,
+                                  size: 18.sp,
+                                ),
+                              getDynamicSizedBox(width: 0.5.w),
+                              SizedBox(
+                                width:
+                                    Device.screenType == sizer.ScreenType.mobile
+                                        ? 50.w
+                                        : 65.w,
+                                child: Text(
+                                  '${item.address.isNotEmpty ? '${item.address}, ' : ''}'
+                                  '${item.city?.city.isNotEmpty == true ? '${item.city!.city}, ' : ''}'
+                                  '${item.state?.name.isNotEmpty == true ? '${item.state!.name} - ' : ''}'
+                                  '${item.pincode.isNotEmpty ? item.pincode : ''}',
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    height: 1.1,
+                                    fontFamily: dM_sans_semiBold,
+                                    fontSize: 14.sp,
+                                    color: black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container()
                   ],
                 ),
               ),

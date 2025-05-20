@@ -668,6 +668,7 @@ class ProfileScreenConstant {
 class BottomConstant {
   static const home = 'Home';
   static const search = 'Search';
+  static const branding = 'Branding';
   static const favourite = 'Favourite';
   static const party = 'Retailer';
   static const orderHistory = 'Order History';

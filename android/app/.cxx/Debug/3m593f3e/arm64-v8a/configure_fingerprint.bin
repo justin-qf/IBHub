@@ -2,6 +2,7 @@ C/C++ Structured Logi
 g
 eC:\Users\parth\Downloads\Flutter\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	»«øáî2§ ÂÑ³œì2u
 s
 qD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\additional_project_files.txt	»«øáî2 ©±×àî2r
@@ -26,3 +27,29 @@ i
 gD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\prefab_config.json	¼«øáî2( ³±×àî2p
 n
 lD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\symbol_folder_index.txt	¼«øáî2c ³±×àî2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	×˜âÄî2§ ÂÑ³œì2u
+s
+qD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\additional_project_files.txt	×˜âÄî2 ‚ù¢¿î2r
+p
+nD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\android_gradle_build.json	×˜âÄî2â ‹ù¢¿î2w
+u
+sD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\android_gradle_build_mini.json	×˜âÄî2½ £ù¢¿î2d
+b
+`D:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\build.ninja	×˜âÄî2ÃÖ õö¢¿î2h
+f
+dD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\build.ninja.txt	×˜âÄî2m
+k
+iD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\build_file_index.txt	×˜âÄî2e §ù¢¿î2n
+l
+jD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\compile_commands.json	×˜âÄî2	r
+p
+nD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\compile_commands.json.bin	×˜âÄî2
+x
+v
+tD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\metadata_generation_command.txt	×˜âÄî2û ¥ù¢¿î2k
+i
+gD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\prefab_config.json	×˜âÄî2( ¦ù¢¿î2p
+n
+lD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\arm64-v8a\symbol_folder_index.txt	×˜âÄî2c ¦ù¢¿î2
+>>>>>>> 5c401b6f36983d6d3fabad72230c82a60f29df44

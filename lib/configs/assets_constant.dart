@@ -3,6 +3,28 @@ class Asset {
   static const svgFolder = 'svgs/';
   static const pngFolder = 'pngs/';
   static const fontFolder = 'fonts/';
+  static const bussiness = 'bussiness/';
+  static const daily = 'daily/';
+  static const festivals = 'festivals/';
+
+  //tempdata
+
+  static const f1 = '$assets$pngFolder${festivals}1.jpg';
+  static const f2 = '$assets$pngFolder${festivals}2.jpg';
+  static const f3 = '$assets$pngFolder${festivals}3.jpg';
+  static const f4 = '$assets$pngFolder${festivals}4.jpg';
+
+  static const d1 = '$assets$pngFolder${daily}1.jpg';
+  static const d2 = '$assets$pngFolder${daily}2.jpg';
+  static const d3 = '$assets$pngFolder${daily}3.jpg';
+  static const d4 = '$assets$pngFolder${daily}4.jpg';
+  static const d5 = '$assets$pngFolder${daily}5.jpg';
+  static const d6 = '$assets$pngFolder${daily}6.jpg';
+
+  static const b1 = '$assets$pngFolder${bussiness}1.jpg';
+  static const b2 = '$assets$pngFolder${bussiness}2.jpg';
+  static const b3 = '$assets$pngFolder${bussiness}3.jpg';
+  static const b4 = '$assets$pngFolder${bussiness}4.jpg';
 
   //SVGS//
   static const otp = '$assets${svgFolder}otp.svg';
@@ -27,7 +49,6 @@ class Asset {
   static const badge = '$assets${svgFolder}badge.svg';
   static const google = '$assets${svgFolder}google.svg';
   static const browser = '$assets${svgFolder}browser.svg';
-  
 
   static const intro = '$assets${svgFolder}intro.svg';
   static const logout = '$assets${svgFolder}logout.svg';

@@ -114,20 +114,22 @@ class _UpdateBusinessProfileScreenState
                             isVerified: ctr.isUserVerfied.value ? true : false,
                             context: context,
                             gestureFunction: () {
-                              ctr.searchCategoryCtr.text = "";
-                              showDropdownMessage(context,
-                                  ctr.setCategoryListDialog(), 'Category',
-                                  isShowLoading: ctr.categoryFilterList,
-                                  onClick: () {
-                                ctr.applyCategoryFilter(
-                                  '',
-                                );
-                              }, refreshClick: () {
-                                futureDelay(() {
-                                  ctr.getCategory(context);
-                                }, isOneSecond: false);
-                              });
-                              ctr.unfocusAll();
+                              if (ctr.isUserVerfied.value == false) {
+                                ctr.searchCategoryCtr.text = "";
+                                showDropdownMessage(context,
+                                    ctr.setCategoryListDialog(), 'Category',
+                                    isShowLoading: ctr.categoryFilterList,
+                                    onClick: () {
+                                  ctr.applyCategoryFilter(
+                                    '',
+                                  );
+                                }, refreshClick: () {
+                                  futureDelay(() {
+                                    ctr.getCategory(context);
+                                  }, isOneSecond: false);
+                                });
+                                ctr.unfocusAll();
+                              }
                             },
                           );
                         }),
@@ -199,10 +201,10 @@ class _UpdateBusinessProfileScreenState
                                 node: ctr.websiteNode,
                                 model: ctr.websiteModel.value,
                                 function: (val) {
-                                  ctr.validateFields(val,
-                                      iscomman: true,
-                                      model: ctr.websiteModel,
-                                      errorText1: 'Enter Website Link');
+                                  // ctr.validateFields(val,
+                                  //     iscomman: true,
+                                  //     model: ctr.websiteModel,
+                                  //     errorText1: 'Enter Website Link');
                                 },
                                 hint: 'Enter Website Link',
                                 isRequired: false);
@@ -216,10 +218,10 @@ class _UpdateBusinessProfileScreenState
                                 node: ctr.facebookNode,
                                 model: ctr.faceBookModel.value,
                                 function: (val) {
-                                  ctr.validateFields(val,
-                                      iscomman: true,
-                                      model: ctr.faceBookModel,
-                                      errorText1: 'Enter Facebook Link');
+                                  // ctr.validateFields(val,
+                                  //     iscomman: true,
+                                  //     model: ctr.faceBookModel,
+                                  //     errorText1: 'Enter Facebook Link');
                                 },
                                 hint: 'Enter Facebook Link',
                                 isRequired: false);
@@ -233,10 +235,10 @@ class _UpdateBusinessProfileScreenState
                                 node: ctr.linkedInNode,
                                 model: ctr.linkedinModel.value,
                                 function: (val) {
-                                  ctr.validateFields(val,
-                                      iscomman: true,
-                                      model: ctr.linkedinModel,
-                                      errorText1: 'Enter Linkedin Link');
+                                  // ctr.validateFields(val,
+                                  //     iscomman: true,
+                                  //     model: ctr.linkedinModel,
+                                  //     errorText1: 'Enter Linkedin Link');
                                 },
                                 hint: 'Enter Linkedin Link',
                                 isRequired: false);
@@ -252,6 +254,7 @@ class _UpdateBusinessProfileScreenState
                                 isNumeric: true,
                                 function: (val) {
                                   ctr.validateFields(
+                                    skipEmptyCheck: true,
                                     val,
                                     isnumber: true,
                                     model: ctr.whatsappModel,
