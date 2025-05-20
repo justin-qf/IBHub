@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(callback),
         SearchScreen(callback),
         FavouriteScreen(callback),
-        BrandingScreen(callback),
+        // BrandingScreen(callback),
         ProfileScreen(callback)
       ];
     });

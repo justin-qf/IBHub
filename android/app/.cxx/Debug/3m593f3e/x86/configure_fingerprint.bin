@@ -2,54 +2,27 @@ C/C++ Structured Logi
 g
 eC:\Users\parth\Downloads\Flutter\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
-<<<<<<< HEAD
-?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ø«øáî2§ ÂÑ³œì2o
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	Î†äî2§ ÂÑ³œì2o
 m
-kD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\additional_project_files.txt	ø«øáî2 ˆÌ×àî2l
+kD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\additional_project_files.txt	Î†äî2 Âéûãî2l
 j
-hD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\android_gradle_build.json	ø«øáî2Ö ŠÌ×àî2q
+hD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\android_gradle_build.json	Î†äî2Ö Ãéûãî2q
 o
-mD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\android_gradle_build_mini.json	ø«øáî2± ŒÌ×àî2^
+mD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\android_gradle_build_mini.json	Î†äî2± Äéûãî2^
 \
-ZD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build.ninja	ø«øáî2¥Ö ¸Ë×àî2b
+ZD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build.ninja	Î†äî2¥Ö Üèûãî2b
 `
-^D:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build.ninja.txt	ø«øáî2g
+^D:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build.ninja.txt	Î†äî2g
 e
-cD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build_file_index.txt	ø«øáî2e Ì×àî2h
+cD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build_file_index.txt	Î†äî2e Æéûãî2h
 f
-dD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\compile_commands.json	ø«øáî2	l
+dD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\compile_commands.json	Î†äî2	l
 j
-hD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\compile_commands.json.bin	ø«øáî2
+hD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\compile_commands.json.bin	Î†äî2
 r
 p
-nD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\metadata_generation_command.txt	ø«øáî2İ ŒÌ×àî2e
+nD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\metadata_generation_command.txt	Î†äî2İ Åéûãî2e
 c
-aD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\prefab_config.json	ø«øáî2( Ì×àî2j
+aD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\prefab_config.json	Î†äî2( Åéûãî2j
 h
-fD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\symbol_folder_index.txt	ø«øáî2] Ì×àî2
-=======
-?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ó˜âÄî2§ ÂÑ³œì2o
-m
-kD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\additional_project_files.txt	ó˜âÄî2 ­Â£¿î2l
-j
-hD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\android_gradle_build.json	ó˜âÄî2Ö °Â£¿î2q
-o
-mD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\android_gradle_build_mini.json	ó˜âÄî2± ´Â£¿î2^
-\
-ZD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build.ninja	ó˜âÄî2¥Ö ‰À£¿î2b
-`
-^D:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build.ninja.txt	ó˜âÄî2g
-e
-cD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\build_file_index.txt	ó˜âÄî2e ¶Â£¿î2h
-f
-dD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\compile_commands.json	ó˜âÄî2	l
-j
-hD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\compile_commands.json.bin	ó˜âÄî2
-r
-p
-nD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\metadata_generation_command.txt	ó˜âÄî2İ ´Â£¿î2e
-c
-aD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\prefab_config.json	ó˜âÄî2( µÂ£¿î2j
-h
-fD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\symbol_folder_index.txt	ó˜âÄî2] ¶Â£¿î2
->>>>>>> 5c401b6f36983d6d3fabad72230c82a60f29df44
+fD:\Flutter\Live Project\BussinessApp\IBHub\android\app\.cxx\Debug\3m593f3e\x86\symbol_folder_index.txt	Î†äî2] Æéûãî2

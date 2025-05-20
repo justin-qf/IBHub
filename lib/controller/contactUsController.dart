@@ -24,51 +24,51 @@ import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 import 'package:http/http.dart' as http;
 
-// class Contactuscontroller extends GetxController {
-//   final InternetController networkManager = Get.find<InternetController>();
+class Contactuscontroller extends GetxController {
+  final InternetController networkManager = Get.find<InternetController>();
 
-//   Rx<ScreenState> state = ScreenState.apiLoading.obs;
+  Rx<ScreenState> state = ScreenState.apiLoading.obs;
 
-//   late FocusNode nameNode, emailNode, phoneNode, messageNode;
+  late FocusNode nameNode, emailNode, phoneNode, messageNode;
 
-//   late TextEditingController nameCtr, emailCtr, phoneCtr, messageCtr;
+  late TextEditingController nameCtr, emailCtr, phoneCtr, messageCtr;
 
-//   var nameModel = ValidationModel(null, null, isValidate: false).obs;
-//   var emailModel = ValidationModel(null, null, isValidate: false).obs;
-//   var phoneModel = ValidationModel(null, null, isValidate: false).obs;
-//   var messageModel = ValidationModel(null, null, isValidate: false).obs;
-//   // var imageModel = ValidationModel(null, null, isValidate: false).obs;
+  var nameModel = ValidationModel(null, null, isValidate: false).obs;
+  var emailModel = ValidationModel(null, null, isValidate: false).obs;
+  var phoneModel = ValidationModel(null, null, isValidate: false).obs;
+  var messageModel = ValidationModel(null, null, isValidate: false).obs;
+  // var imageModel = ValidationModel(null, null, isValidate: false).obs;
 
-//   RxBool isFormInvalidate = false.obs;
+  RxBool isFormInvalidate = false.obs;
 
-//   void inti() {
-//     nameNode = FocusNode();
-//     emailNode = FocusNode();
-//     phoneNode = FocusNode();
-//     messageNode = FocusNode();
+  void inti() {
+    nameNode = FocusNode();
+    emailNode = FocusNode();
+    phoneNode = FocusNode();
+    messageNode = FocusNode();
 
-//     nameCtr = TextEditingController();
-//     emailCtr = TextEditingController();
-//     phoneCtr = TextEditingController();
-//     messageCtr = TextEditingController();
-//   }
+    nameCtr = TextEditingController();
+    emailCtr = TextEditingController();
+    phoneCtr = TextEditingController();
+    messageCtr = TextEditingController();
+  }
 
-//   getprofile(BuildContext context) async {
-//     User? retrievedObject = await UserPreferences().getSignInInfo();
+  getprofile(BuildContext context) async {
+    User? retrievedObject = await UserPreferences().getSignInInfo();
 
-//     if (retrievedObject == null) {
-//       // You could show an error, fallback, or early return
-//       // print("Retrieved user is null");
-//       return;
-//     }
+    if (retrievedObject == null) {
+      // You could show an error, fallback, or early return
+      // print("Retrieved user is null");
+      return;
+    }
 
-//     if (retrievedObject.name != null) {
-//       nameCtr.text = retrievedObject.name!;
-//     }
+    if (retrievedObject.name != null) {
+      nameCtr.text = retrievedObject.name!;
+    }
 
-//     if (retrievedObject.phone != null) {
-//       phoneCtr.text = retrievedObject.phone!;
-//     }
+    if (retrievedObject.phone != null) {
+      phoneCtr.text = retrievedObject.phone!;
+    }
 
     if (retrievedObject.email != null) {
       emailCtr.text = retrievedObject.email!;
@@ -104,95 +104,95 @@ import 'package:http/http.dart' as http;
     }
   }
 
-//   @override
-//   void onInit() {
-//     super.onInit();
+  @override
+  void onInit() {
+    super.onInit();
 
-//     inti();
-//   }
+    inti();
+  }
 
-//   @override
-//   void onClose() {
-//     nameCtr.clear();
-//     emailCtr.clear();
-//     phoneCtr.clear();
-//     messageCtr.clear();
+  @override
+  void onClose() {
+    nameCtr.clear();
+    emailCtr.clear();
+    phoneCtr.clear();
+    messageCtr.clear();
 
-//     // Reset all validation models
-//     nameModel.value = ValidationModel(null, null, isValidate: false);
-//     emailModel.value = ValidationModel(null, null, isValidate: false);
-//     phoneModel.value = ValidationModel(null, null, isValidate: false);
-//     messageModel.value = ValidationModel(null, null, isValidate: false);
-//     // imageModel.value = ValidationModel(null, null, isValidate: false);
-//     // Reset reactive variables
-//     isFormInvalidate.value = false;
+    // Reset all validation models
+    nameModel.value = ValidationModel(null, null, isValidate: false);
+    emailModel.value = ValidationModel(null, null, isValidate: false);
+    phoneModel.value = ValidationModel(null, null, isValidate: false);
+    messageModel.value = ValidationModel(null, null, isValidate: false);
+    // imageModel.value = ValidationModel(null, null, isValidate: false);
+    // Reset reactive variables
+    isFormInvalidate.value = false;
 
-//     super.onClose();
-//   }
+    super.onClose();
+  }
 
-//   void enableSubmitBtn() {
-//     if (nameModel.value.isValidate == false) {
-//       isFormInvalidate.value = false;
-//     } else if (emailModel.value.isValidate == false) {
-//       isFormInvalidate.value = false;
-//     } else if (phoneModel.value.isValidate == false) {
-//       isFormInvalidate.value = false;
-//     } else if (messageModel.value.isValidate == false) {
-//       isFormInvalidate.value = false;
-//     }
+  void enableSubmitBtn() {
+    if (nameModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
+    } else if (emailModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
+    } else if (phoneModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
+    } else if (messageModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
+    }
 
-//     //  else if (imageModel.value.isValidate == false) {
-//     //   isFormInvalidate.value = false;
-//     // }
+    //  else if (imageModel.value.isValidate == false) {
+    //   isFormInvalidate.value = false;
+    // }
 
-//     else {
-//       isFormInvalidate.value = true;
-//     }
+    else {
+      isFormInvalidate.value = true;
+    }
 
-//     update();
-//   }
+    update();
+  }
 
-//   validateFields(
-//     val, {
-//     model,
-//     errorText1,
-//     errorText2,
-//     errorText3,
-//     iscomman = false,
-//     isselectionfield = false,
-//     isotp = false,
-//     isnumber = false,
-//     ispassword = false,
-//     isemail = false,
-//     isconfirmpassword = false,
-//     confirmpasswordctr,
-//     isPincode = false,
-//     shouldEnableButton = true,
-//     validateIndex = 0,
-//   }) {
-//     return validateField(
-//         iscomman: iscomman,
-//         val: val,
-//         models: model,
-//         errorText1: errorText1,
-//         errorText2: errorText2,
-//         errorText3: errorText3,
-//         isselectionfield: isselectionfield,
-//         isotp: isotp,
-//         isnumber: isnumber,
-//         ispassword: ispassword,
-//         isEmail: isemail,
-//         ispincode: isPincode,
-//         isconfirmpassword: isconfirmpassword,
-//         confirmpasswordctr: confirmpasswordctr,
-//         shouldEnableButton: shouldEnableButton,
-//         notifyListeners: () {
-//           update();
-//         },
-//         enableBtnFunction: () {
-//           enableSubmitBtn();
-//         });
-//   }
+  validateFields(
+    val, {
+    model,
+    errorText1,
+    errorText2,
+    errorText3,
+    iscomman = false,
+    isselectionfield = false,
+    isotp = false,
+    isnumber = false,
+    ispassword = false,
+    isemail = false,
+    isconfirmpassword = false,
+    confirmpasswordctr,
+    isPincode = false,
+    shouldEnableButton = true,
+    validateIndex = 0,
+  }) {
+    return validateField(
+        iscomman: iscomman,
+        val: val,
+        models: model,
+        errorText1: errorText1,
+        errorText2: errorText2,
+        errorText3: errorText3,
+        isselectionfield: isselectionfield,
+        isotp: isotp,
+        isnumber: isnumber,
+        ispassword: ispassword,
+        isEmail: isemail,
+        ispincode: isPincode,
+        isconfirmpassword: isconfirmpassword,
+        confirmpasswordctr: confirmpasswordctr,
+        shouldEnableButton: shouldEnableButton,
+        notifyListeners: () {
+          update();
+        },
+        enableBtnFunction: () {
+          enableSubmitBtn();
+        });
+  }
 
   Rx<File?> imageFile = Rx<File?>(null);
 
@@ -331,16 +331,16 @@ import 'package:http/http.dart' as http;
     );
   }
 
-//   actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
-//     try {
-//       final file = await ImagePicker().pickImage(
-//         source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
-//         maxWidth: 1080,
-//         maxHeight: 1080,
-//         imageQuality: 100,
-//       );
+  actionClickUploadImageFromCamera(context, {bool? isCamera}) async {
+    try {
+      final file = await ImagePicker().pickImage(
+        source: isCamera == true ? ImageSource.camera : ImageSource.gallery,
+        maxWidth: 1080,
+        maxHeight: 1080,
+        imageQuality: 100,
+      );
 
-//       if (file == null) return;
+      if (file == null) return;
 
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: file.path,
@@ -369,7 +369,7 @@ import 'package:http/http.dart' as http;
         ],
       );
 
-//       if (croppedFile == null) return;
+      if (croppedFile == null) return;
 
       // imageFile = File(croppedFile.path).obs;
       imageFile.value = File(croppedFile.path);
@@ -377,13 +377,13 @@ import 'package:http/http.dart' as http;
 
       // await updateLogo(context);
 
-//       // validateFields(
-//       //   croppedFile.path,
-//       //   model: imageModel,
-//       //   errorText1: "Pic is required",
-//       //   iscomman: true,
-//       //   shouldEnableButton: true,
-//       // );
+      // validateFields(
+      //   croppedFile.path,
+      //   model: imageModel,
+      //   errorText1: "Pic is required",
+      //   iscomman: true,
+      //   shouldEnableButton: true,
+      // );
 
       imageFile.refresh();
       update();
