@@ -275,20 +275,14 @@ class Signinscreencontroller extends GetxController {
           UserPreferences().saveSignInInfo(res.data.user);
           UserPreferences().setToken(res.data.user.token.toString());
 
-          showDialogForScreen(context, 'Authentication', json['message'],
-              callback: () {
-            if (res.data.user.isEmailVerified == true) {
-              Get.offAll(MainScreen());
-              print('user is verified and goto dashboard');
-            } else {
-              Get.to(Signupscreen(
-                emailId: user.email,
-              ));
-            }
-          });
-        } else {
-          showDialogForScreen(context, 'Authentication', json['message'],
-              callback: () {});
+          if (res.data.user.isEmailVerified == true) {
+            Get.offAll(MainScreen());
+            print('user is verified and goto dashboard');
+          } else {
+            Get.to(Signupscreen(
+              emailId: user.email,
+            ));
+          }
         }
       } else {
         showDialogForScreen(context, 'Authentication', json['message'],

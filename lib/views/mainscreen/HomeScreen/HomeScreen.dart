@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() => controller.isFetchingMore = true);
       controller.currentPage++;
       Future.delayed(
-        const Duration(seconds: 1),
+        const Duration(milliseconds: 200),
         () {
           controller.isBusinessLoading.value = false;
           controller
@@ -168,9 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-  
-
   Widget apiSuccess(ScreenState state) {
     if (state == ScreenState.apiSuccess) {
       return Column(
@@ -221,8 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
-
-
               Get.to(const CategoryScreen())!.then((value) {
                 futureDelay(() {
                   controller.currentPage = 1;
@@ -230,8 +225,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       isFirstTime: true);
                 }, isOneSecond: false);
               });
-
-              
             }),
             getDynamicSizedBox(height: 2.h),
             SizedBox(

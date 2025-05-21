@@ -846,6 +846,11 @@ class Updateprofilecontroller extends GetxController {
         if (isUserVerfied.value == true) {
           Get.back(result: true);
         }
+
+        var profileData = LoginModel.fromJson(data);
+
+        print('data issssss:+${profileData}');
+        UserPreferences().saveSignInInfo(profileData.data!.user);
       },
       networkManager: networkManager,
     );

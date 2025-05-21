@@ -7,6 +7,7 @@ import 'package:ibh/componant/dialogs/dialogs.dart';
 import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:http/http.dart' as http;
 
@@ -58,7 +59,10 @@ commonPostApiCallFormate(context,
       }
     } else {
       showDialogForScreen(context, title!, data['message'].toString(),
-          callback: () {});
+          callback: () {
+        getUnauthenticatedUser(
+            context, data['message'], "Unauthenticated user");
+      });
     }
   } catch (e) {
     logcat("Exception", e);
@@ -106,6 +110,8 @@ void commonGetApiCallFormate(context,
             callback: () {});
       }
     } else {
+      getUnauthenticatedUser(
+          context, responseData['message'], "Unauthenticated user");
       isFromPartyList != true
           ? showDialogForScreen(context, title!,
               responseData['message'] ?? Connection.servererror,

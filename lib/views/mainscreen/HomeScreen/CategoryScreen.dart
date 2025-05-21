@@ -47,7 +47,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       setState(() => controller.isFetchingMore = true);
       controller.currentPage++;
       Future.delayed(
-        const Duration(seconds: 1),
+        const Duration(milliseconds: 200),
         () {
           controller
               // ignore: use_build_context_synchronously

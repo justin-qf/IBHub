@@ -22,6 +22,7 @@ import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/models/categotyModel.dart';
 import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -910,8 +911,10 @@ class AddServicescreencontroller extends GetxController {
             isFromUpdate.value
                 ? AddServiceScreenViewConst.editService
                 : AddServiceScreenViewConst.addService,
-            json['message'],
-            callback: () {});
+            json['message'], callback: () {
+          getUnauthenticatedUser(
+              context, json['message'], "Unauthenticated user");
+        });
       }
     } catch (e) {
       logcat("Service Creation Exception", e.toString());

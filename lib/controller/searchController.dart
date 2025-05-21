@@ -779,8 +779,10 @@ class SearchScreenController extends GetxController {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(context, SearchScreenConstant.titleScreen,
-            responseData['message'] ?? ServerError.servererror,
-            callback: () {});
+            responseData['message'] ?? ServerError.servererror, callback: () {
+          getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+        });
       }
     } catch (e) {
       logcat("Ecxeption", e);

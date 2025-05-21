@@ -255,6 +255,7 @@ class HomeScreenController extends GetxController {
               callback: () {});
         }
       } else {
+        
         state.value = ScreenState.apiError;
         // message.value =
         //     responseData['message'] ?? APIResponseHandleText.serverError;

@@ -64,9 +64,6 @@ flutter:
   assets:
     - assets/fonts/
     - assets/pngs/
-    - assets/pngs/bussiness/
-    - assets/pngs/daily/
-    - assets/pngs/festivals/
     - assets/svgs/
     - assets/gif/
 

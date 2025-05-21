@@ -769,7 +769,10 @@ class FavouriteController extends GetxController {
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(context, 'Favourite Screen',
             responseData['message'] ?? ServerError.servererror,
-            callback: () {});
+            callback: () {
+                getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+            });
       }
     } catch (e) {
       logcat("Ecxeption", e);
