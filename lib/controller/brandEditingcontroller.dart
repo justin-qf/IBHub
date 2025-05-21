@@ -37,6 +37,8 @@ class Brandeditingcontroller extends GetxController {
   final Rx<Uint8List?> originalThumbnail =
       Rx<Uint8List?>(null); // New: Store original bytes
 
+  final Rx<Uint8List?> highResThumbnail = Rx<Uint8List?>(null);
+
   // Filter-related properties
   RxDouble imageOpacity = 1.0.obs;
   final currentFilter = 'None'.obs;
@@ -98,101 +100,302 @@ class Brandeditingcontroller extends GetxController {
 
   @override
   void onClose() {
+    _filterDebounceTimer?.cancel();
     _debounceTimer?.cancel();
     super.onClose();
   }
 
   Future<void> _generateFilterThumbnails() async {
-    if (!_isValidImageData(originalThumbnail.value)) {
+    if (!_isValidImageData(originalThumbnail.value) ||
+        _isGeneratingThumbnails.value) {
       filterThumbnails.clear();
-      logcat('ThumbnailError', 'No valid image data for thumbnail generation');
+      logcat('ThumbnailError', 'No valid image data or generation in progress');
       return;
     }
 
     _isGeneratingThumbnails.value = true;
-    try {
-      filterThumbnails.clear();
-      await Stream.fromIterable(filters).asyncMap((filter) async {
-        final tempFilters = ImageFilters();
-        try {
-          await tempFilters.loadImageFromBytes(originalThumbnail.value!);
-          await tempFilters.applyFilter(filter);
-          final filteredImage = tempFilters.filteredImage;
-          if (filteredImage != null) {
-            final byteData =
-                await filteredImage.toByteData(format: ui.ImageByteFormat.png);
-            if (byteData != null) {
-              filterThumbnails[filter] = byteData.buffer.asUint8List();
-              logcat(
-                  'ThumbnailSuccess', 'Generated thumbnail for filter $filter');
-            } else {
-              logcat('ThumbnailError',
-                  'Failed to encode image for filter $filter');
-            }
-          } else {
+    filterThumbnails.clear();
+    logcat('ThumbnailGeneration', 'Starting thumbnail generation');
+
+    final futures = filters.map((filter) async {
+      final tempFilters = ImageFilters();
+      try {
+        // Load a lower-resolution version of the image for thumbnails
+        final codec = await ui.instantiateImageCodec(
+          originalThumbnail.value!,
+          targetWidth: 100, // Reduced resolution for faster processing
+          targetHeight: 100,
+        );
+        final frame = await codec.getNextFrame();
+        await tempFilters.loadImageFromBytes(await frame.image
+            .toByteData(format: ui.ImageByteFormat.png)
+            .then((byteData) => byteData!.buffer.asUint8List()));
+        codec.dispose();
+
+        await tempFilters.applyFilter(filter);
+        final filteredImage = tempFilters.filteredImage;
+        if (filteredImage != null) {
+          final byteData =
+              await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+          if (byteData != null) {
+            filterThumbnails[filter] = byteData.buffer.asUint8List();
             logcat(
-                'ThumbnailError', 'No valid filtered image for filter $filter');
-          }
-        } catch (e, stackTrace) {
-          //
-        } finally {
-          try {
-            tempFilters.dispose();
-            logcat(
-                'ThumbnailCleanup', 'Disposed ImageFilters for filter $filter');
-          } catch (e) {
-            logcat('ThumbnailCleanupError',
-                'Error disposing ImageFilters for filter $filter: $e');
+                'ThumbnailSuccess', 'Generated thumbnail for filter $filter');
           }
         }
-      }).drain();
-    } finally {
-      _isGeneratingThumbnails.value = false;
-      logcat('ThumbnailComplete', 'Thumbnail generation completed');
-    }
+      } catch (e) {
+        logcat('ThumbnailError', 'Error generating thumbnail for $filter: $e');
+      } finally {
+        tempFilters.dispose();
+      }
+    }).toList();
+
+    await Future.wait(futures);
+    _isGeneratingThumbnails.value = false;
+    logcat('ThumbnailComplete', 'Thumbnail generation completed');
   }
+  // Future<void> _generateFilterThumbnails() async {
+  //   if (!_isValidImageData(originalThumbnail.value)) {
+  //     filterThumbnails.clear();
+  //     logcat('ThumbnailError', 'No valid image data for thumbnail generation');
+  //     return;
+  //   }
+
+  //   _isGeneratingThumbnails.value = true;
+  //   try {
+  //     filterThumbnails.clear();
+  //     await Stream.fromIterable(filters).asyncMap((filter) async {
+  //       final tempFilters = ImageFilters();
+  //       try {
+  //         await tempFilters.loadImageFromBytes(originalThumbnail.value!);
+  //         await tempFilters.applyFilter(filter);
+  //         final filteredImage = tempFilters.filteredImage;
+  //         if (filteredImage != null) {
+  //           final byteData =
+  //               await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+  //           if (byteData != null) {
+  //             filterThumbnails[filter] = byteData.buffer.asUint8List();
+  //             logcat(
+  //                 'ThumbnailSuccess', 'Generated thumbnail for filter $filter');
+  //           } else {
+  //             logcat('ThumbnailError',
+  //                 'Failed to encode image for filter $filter');
+  //           }
+  //         } else {
+  //           logcat(
+  //               'ThumbnailError', 'No valid filtered image for filter $filter');
+  //         }
+  //       } catch (e, stackTrace) {
+  //         //
+  //       } finally {
+  //         try {
+  //           tempFilters.dispose();
+  //           logcat(
+  //               'ThumbnailCleanup', 'Disposed ImageFilters for filter $filter');
+  //         } catch (e) {
+  //           logcat('ThumbnailCleanupError',
+  //               'Error disposing ImageFilters for filter $filter: $e');
+  //         }
+  //       }
+  //     }).drain();
+  //   } finally {
+  //     _isGeneratingThumbnails.value = false;
+  //     logcat('ThumbnailComplete', 'Thumbnail generation completed');
+  //   }
+  // }
+
+  Timer? _filterDebounceTimer;
 
   Future<void> applyImageFilter(String filterType) async {
-    if (!_isValidImageData(originalThumbnail.value)) {
-      Get.snackbar('Error', 'No valid image selected');
-      return;
-    }
+    _filterDebounceTimer?.cancel();
+    _filterDebounceTimer = Timer(const Duration(milliseconds: 100), () async {
+      if (!_isValidImageData(originalThumbnail.value)) {
+        Get.snackbar('Error', 'No valid image selected');
+        return;
+      }
 
-    if (!filters.contains(filterType)) {
-      Get.snackbar('Error', 'Invalid filter type: $filterType');
-      return;
-    }
+      if (!filters.contains(filterType)) {
+        Get.snackbar('Error', 'Invalid filter type: $filterType');
+        return;
+      }
 
-    Get.dialog(
-      Center(child: CircularProgressIndicator()),
-      barrierDismissible: false,
-    );
+      // Use pre-generated thumbnail for instant update
+      if (filterThumbnails.containsKey(filterType) &&
+          filterThumbnails[filterType] != null) {
+        cachedThumbnail.value = filterThumbnails[filterType];
+        currentFilter.value = filterType;
+        logcat('Filter', 'Applied $filterType using cached thumbnail');
+
+        // Apply filter to high-res image in the background
+        _applyFilterToHighRes(filterType);
+        return;
+      }
+
+      // Fallback to real-time processing if thumbnail is not available
+      Get.dialog(
+        const Center(child: CircularProgressIndicator()),
+        barrierDismissible: false,
+      );
+
+      final tempFilters = ImageFilters();
+      try {
+        await tempFilters.loadImageFromBytes(originalThumbnail.value!);
+        await tempFilters.applyFilter(filterType);
+        final filteredImage = tempFilters.filteredImage;
+        if (filteredImage != null) {
+          final byteData =
+              await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+          if (byteData != null) {
+            final filteredBytes = byteData.buffer.asUint8List();
+            cachedThumbnail.value = filteredBytes;
+            filterThumbnails[filterType] =
+                filteredBytes; // Cache for future use
+            currentFilter.value = filterType;
+            logcat('Filter', 'Generated and applied $filterType');
+
+            // Apply filter to high-res image in the background
+            _applyFilterToHighRes(filterType);
+          } else {
+            throw Exception('Failed to encode filtered image');
+          }
+        } else {
+          throw Exception('No valid filtered image produced');
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Failed to apply filter: $e');
+        logcat('FilterError', 'Failed to apply $filterType: $e');
+      } finally {
+        tempFilters.dispose();
+        Get.back();
+      }
+    });
+  }
+
+  Future<void> _applyFilterToHighRes(String filterType) async {
+    if (highResThumbnail.value == null) return;
 
     final tempFilters = ImageFilters();
     try {
-      await tempFilters.loadImageFromBytes(originalThumbnail.value!);
+      await tempFilters.loadImageFromBytes(highResThumbnail.value!);
       await tempFilters.applyFilter(filterType);
       final filteredImage = tempFilters.filteredImage;
       if (filteredImage != null) {
         final byteData =
             await filteredImage.toByteData(format: ui.ImageByteFormat.png);
         if (byteData != null) {
-          cachedThumbnail.value = byteData.buffer.asUint8List();
-          currentFilter.value = filterType;
-        } else {
-          throw Exception('Failed to encode filtered image');
+          highResThumbnail.value = byteData.buffer.asUint8List();
+          logcat('HighResFilter', 'Applied $filterType to high-res thumbnail');
         }
-      } else {
-        throw Exception('No valid filtered image produced');
       }
-    } catch (e, stackTrace) {
-//
-      Get.snackbar('Error', 'Failed to apply filter: $e');
+    } catch (e) {
+      logcat(
+          'HighResFilterError', 'Failed to apply $filterType to high-res: $e');
     } finally {
       tempFilters.dispose();
-      Get.back();
     }
   }
+  // Future<void> applyImageFilter(String filterType) async {
+  //   _filterDebounceTimer?.cancel();
+  //   _filterDebounceTimer = Timer(const Duration(milliseconds: 100), () async {
+  //     // Existing applyImageFilter code
+
+  //     if (!_isValidImageData(originalThumbnail.value)) {
+  //       Get.snackbar('Error', 'No valid image selected');
+  //       return;
+  //     }
+
+  //     if (!filters.contains(filterType)) {
+  //       Get.snackbar('Error', 'Invalid filter type: $filterType');
+  //       return;
+  //     }
+
+  //     // Use pre-generated thumbnail for instant update
+  //     if (filterThumbnails.containsKey(filterType) &&
+  //         filterThumbnails[filterType] != null) {
+  //       cachedThumbnail.value = filterThumbnails[filterType];
+  //       currentFilter.value = filterType;
+  //       logcat('Filter', 'Applied $filterType using cached thumbnail');
+  //       return;
+  //     }
+
+  //     // Fallback to real-time processing if thumbnail is not available
+  //     Get.dialog(
+  //       const Center(child: CircularProgressIndicator()),
+  //       barrierDismissible: false,
+  //     );
+
+  //     final tempFilters = ImageFilters();
+  //     try {
+  //       await tempFilters.loadImageFromBytes(originalThumbnail.value!);
+  //       await tempFilters.applyFilter(filterType);
+  //       final filteredImage = tempFilters.filteredImage;
+  //       if (filteredImage != null) {
+  //         final byteData =
+  //             await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+  //         if (byteData != null) {
+  //           final filteredBytes = byteData.buffer.asUint8List();
+  //           cachedThumbnail.value = filteredBytes;
+  //           filterThumbnails[filterType] =
+  //               filteredBytes; // Cache for future use
+  //           currentFilter.value = filterType;
+  //           logcat('Filter', 'Generated and applied $filterType');
+  //         } else {
+  //           throw Exception('Failed to encode filtered image');
+  //         }
+  //       } else {
+  //         throw Exception('No valid filtered image produced');
+  //       }
+  //     } catch (e) {
+  //       Get.snackbar('Error', 'Failed to apply filter: $e');
+  //       logcat('FilterError', 'Failed to apply $filterType: $e');
+  //     } finally {
+  //       tempFilters.dispose();
+  //       Get.back();
+  //     }
+  //   });
+  // }
+
+//   Future<void> applyImageFilter(String filterType) async {
+//     if (!_isValidImageData(originalThumbnail.value)) {
+//       Get.snackbar('Error', 'No valid image selected');
+//       return;
+//     }
+
+//     if (!filters.contains(filterType)) {
+//       Get.snackbar('Error', 'Invalid filter type: $filterType');
+//       return;
+//     }
+
+//     Get.dialog(
+//       Center(child: CircularProgressIndicator()),
+//       barrierDismissible: false,
+//     );
+
+//     final tempFilters = ImageFilters();
+//     try {
+//       await tempFilters.loadImageFromBytes(originalThumbnail.value!);
+//       await tempFilters.applyFilter(filterType);
+//       final filteredImage = tempFilters.filteredImage;
+//       if (filteredImage != null) {
+//         final byteData =
+//             await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+//         if (byteData != null) {
+//           cachedThumbnail.value = byteData.buffer.asUint8List();
+//           currentFilter.value = filterType;
+//         } else {
+//           throw Exception('Failed to encode filtered image');
+//         }
+//       } else {
+//         throw Exception('No valid filtered image produced');
+//       }
+//     } catch (e, stackTrace) {
+// //
+//       Get.snackbar('Error', 'Failed to apply filter: $e');
+//     } finally {
+//       tempFilters.dispose();
+//       Get.back();
+//     }
+//   }
 
   // Validate image data
   bool _isValidImageData(Uint8List? data) {
@@ -218,119 +421,341 @@ class Brandeditingcontroller extends GetxController {
     }
   }
 
+  // Widget filterLogic() {
+  //   return SizedBox(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Container(
+  //           margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
+  //           child: Text(
+  //             'Filters',
+  //             style: TextStyle(
+  //               fontSize: 18.sp,
+  //               color: white,
+  //               fontFamily: dM_sans_semiBold,
+  //             ),
+  //           ),
+  //         ),
+  //         SizedBox(
+  //           height: 10.h,
+  //           child: ListView.builder(
+  //             scrollDirection: Axis.horizontal,
+  //             itemCount: filters.length,
+  //             itemBuilder: (context, index) {
+  //               final filter = filters[index];
+  //               return GestureDetector(
+  //                 onTap: () {
+  //                   logcat('Filter', 'Applying $filter');
+  //                   applyImageFilter(filter);
+  //                 },
+  //                 child: Container(
+  //                   width: 18.w,
+  //                   margin: EdgeInsets.only(left: 2.w, right: 2.w),
+  //                   child: Column(
+  //                     children: [
+  //                       Obx(() => Container(
+  //                             decoration: BoxDecoration(
+  //                               color: white,
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: currentFilter.value == filter
+  //                                   ? Border.all(color: primaryColor, width: 2)
+  //                                   : null,
+  //                             ),
+  //                             child: ClipRRect(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               child: filterThumbnails.containsKey(filter) &&
+  //                                       filterThumbnails[filter] != null
+  //                                   ? Image.memory(
+  //                                       filterThumbnails[filter]!,
+  //                                       fit: BoxFit.cover,
+  //                                       width: 15.w,
+  //                                       height: 8.h,
+  //                                       filterQuality: FilterQuality
+  //                                           .low, // Optimize for speed
+  //                                     )
+  //                                   : Image.asset(
+  //                                       Asset.bussinessPlaceholder,
+  //                                       fit: BoxFit.cover,
+  //                                       width: 15.w,
+  //                                       height: 8.h,
+  //                                       filterQuality: FilterQuality.low,
+  //                                     ),
+  //                             ),
+  //                           )),
+  //                       SizedBox(height: 0.2.h),
+  //                       Text(
+  //                         filter,
+  //                         style: TextStyle(
+  //                           fontSize: 10.sp,
+  //                           color: white,
+  //                           fontFamily: dM_sans_regular,
+  //                         ),
+  //                         textAlign: TextAlign.center,
+  //                         maxLines: 1,
+  //                         overflow: TextOverflow.ellipsis,
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //         getDynamicSizedBox(height: 1.h),
+  //         Container(
+  //           margin: EdgeInsets.only(left: 6.w),
+  //           child: Text(
+  //             'Opacity',
+  //             style: TextStyle(
+  //               fontSize: 18.sp,
+  //               color: white,
+  //               fontFamily: dM_sans_semiBold,
+  //             ),
+  //           ),
+  //         ),
+  //         Obx(() => SizedBox(
+  //               height: 3.h,
+  //               child: Slider(
+  //                 value: imageOpacity.value,
+  //                 min: 0,
+  //                 max: 1,
+  //                 divisions: 100,
+  //                 activeColor: primaryColor,
+  //                 inactiveColor: white,
+  //                 onChanged: (value) {
+  //                   imageOpacity.value = value;
+  //                 },
+  //               ),
+  //             )),
+  //       ],
+  //     ),
+  //   );
+  // }
   Widget filterLogic() {
-    return SizedBox(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
-            child: Text(
-              'Filters',
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: white,
-                fontFamily: dM_sans_semiBold,
-              ),
+  return SizedBox(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
+          child: Text(
+            'Filters',
+            style: TextStyle(
+              fontSize: 18.sp,
+              color: white,
+              fontFamily: dM_sans_semiBold,
             ),
           ),
-          SizedBox(
-            height: 10.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: filters.length,
-              itemBuilder: (context, index) {
-                final filter = filters[index];
-                return GestureDetector(
-                  onTap: () {
-                    logcat('Filter', 'Applying $filter');
-                    applyImageFilter(filter);
-                  },
-                  child: Container(
-                    width: 18.w,
-                    margin: EdgeInsets.only(left: 2.w, right: 2.w),
-                    child: Column(
-                      children: [
-                        Obx(() => Container(
-                              decoration: BoxDecoration(
-                                color: white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: currentFilter.value == filter
-                                    ? Border.all(color: primaryColor, width: 2)
-                                    : null,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: filterThumbnails.containsKey(filter) &&
-                                        filterThumbnails[filter] != null
-                                    ? Image.memory(
-                                        filterThumbnails[filter]!,
-                                        fit: BoxFit.cover,
-                                        width: 15.w,
-                                        height: 8.h,
-                                        filterQuality: FilterQuality.high,
-                                      )
-                                    : Image.asset(
-                                        Asset.bussinessPlaceholder,
-                                        fit: BoxFit.cover,
-                                        width: 15.w,
-                                        height: 8.h,
-                                        filterQuality: FilterQuality.high,
-                                      ),
-                              ),
-                            )),
-                        SizedBox(height: 0.2.h),
-                        Text(
-                          filter,
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: white,
-                            fontFamily: dM_sans_regular,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+        ),
+        SizedBox(
+          height: 10.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: filters.length,
+            itemBuilder: (context, index) {
+              final filter = filters[index];
+              return GestureDetector(
+                onTap: () {
+                  logcat('Filter', 'Applying $filter');
+                  applyImageFilter(filter);
+                },
+                child: Container(
+                  width: 18.w,
+                  margin: EdgeInsets.only(left: 2.w, right: 2.w),
+                  child: Column(
+                    children: [
+                      Obx(() => Container(
+                            decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: currentFilter.value == filter
+                                  ? Border.all(color: primaryColor, width: 2)
+                                  : null,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: filterThumbnails.containsKey(filter) &&
+                                      filterThumbnails[filter] != null
+                                  ? Image.memory(
+                                      filterThumbnails[filter]!,
+                                      fit: BoxFit.cover,
+                                      width: 15.w,
+                                      height: 8.h,
+                                      filterQuality: FilterQuality.low,
+                                    )
+                                  : Image.asset(
+                                      Asset.bussinessPlaceholder,
+                                      fit: BoxFit.cover,
+                                      width: 15.w,
+                                      height: 8.h,
+                                      filterQuality: FilterQuality.low,
+                                    ),
+                            ),
+                          )),
+                      SizedBox(height: 0.2.h),
+                      Text(
+                        filter,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: white,
+                          fontFamily: dM_sans_regular,
                         ),
-                      ],
-                    ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
-          ),
-          getDynamicSizedBox(height: 1.h),
-          Container(
-            margin: EdgeInsets.only(left: 6.w),
-            child: Text(
-              'Opacity',
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: white,
-                fontFamily: dM_sans_semiBold,
-              ),
-            ),
-          ),
-          Obx(() => SizedBox(
-                height: 3.h,
-                child: Slider(
-                  value: imageOpacity.value,
-                  min: 0,
-                  max: 1,
-                  divisions: 100,
-                  activeColor: primaryColor,
-                  inactiveColor: white,
-                  onChanged: (value) {
-                    imageOpacity.value = value;
-                  },
                 ),
-              )),
-        ],
-      ),
-    );
-  }
+              );
+            },
+          ),
+        ),
+        getDynamicSizedBox(height: 1.h),
+        Container(
+          margin: EdgeInsets.only(left: 6.w),
+          child: Text(
+            'Opacity',
+            style: TextStyle(
+              fontSize: 18.sp,
+              color: white,
+              fontFamily: dM_sans_semiBold,
+            ),
+          ),
+        ),
+        Obx(() => SizedBox(
+              height: 3.h,
+              child: Slider(
+                value: imageOpacity.value,
+                min: 0,
+                max: 1,
+                divisions: 100,
+                activeColor: primaryColor,
+                inactiveColor: white,
+                onChanged: (value) {
+                  imageOpacity.value = value;
+                },
+              ),
+            )),
+      ],
+    ),
+  );
+}
+  // Widget filterLogic() {
+  //   return SizedBox(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Container(
+  //           margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
+  //           child: Text(
+  //             'Filters',
+  //             style: TextStyle(
+  //               fontSize: 18.sp,
+  //               color: white,
+  //               fontFamily: dM_sans_semiBold,
+  //             ),
+  //           ),
+  //         ),
+  //         SizedBox(
+  //           height: 10.h,
+  //           child: ListView.builder(
+  //             scrollDirection: Axis.horizontal,
+  //             itemCount: filters.length,
+  //             itemBuilder: (context, index) {
+  //               final filter = filters[index];
+  //               return GestureDetector(
+  //                 onTap: () {
+  //                   logcat('Filter', 'Applying $filter');
+  //                   applyImageFilter(filter);
+  //                 },
+  //                 child: Container(
+  //                   width: 18.w,
+  //                   margin: EdgeInsets.only(left: 2.w, right: 2.w),
+  //                   child: Column(
+  //                     children: [
+  //                       Obx(() => Container(
+  //                             decoration: BoxDecoration(
+  //                               color: white,
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               border: currentFilter.value == filter
+  //                                   ? Border.all(color: primaryColor, width: 2)
+  //                                   : null,
+  //                             ),
+  //                             child: ClipRRect(
+  //                               borderRadius: BorderRadius.circular(10),
+  //                               child: filterThumbnails.containsKey(filter) &&
+  //                                       filterThumbnails[filter] != null
+  //                                   ? Image.memory(
+  //                                       filterThumbnails[filter]!,
+  //                                       fit: BoxFit.cover,
+  //                                       width: 15.w,
+  //                                       height: 8.h,
+  //                                       filterQuality: FilterQuality.high,
+  //                                     )
+  //                                   : Image.asset(
+  //                                       Asset.bussinessPlaceholder,
+  //                                       fit: BoxFit.cover,
+  //                                       width: 15.w,
+  //                                       height: 8.h,
+  //                                       filterQuality: FilterQuality.high,
+  //                                     ),
+  //                             ),
+  //                           )),
+  //                       SizedBox(height: 0.2.h),
+  //                       Text(
+  //                         filter,
+  //                         style: TextStyle(
+  //                           fontSize: 10.sp,
+  //                           color: white,
+  //                           fontFamily: dM_sans_regular,
+  //                         ),
+  //                         textAlign: TextAlign.center,
+  //                         maxLines: 1,
+  //                         overflow: TextOverflow.ellipsis,
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //         getDynamicSizedBox(height: 1.h),
+  //         Container(
+  //           margin: EdgeInsets.only(left: 6.w),
+  //           child: Text(
+  //             'Opacity',
+  //             style: TextStyle(
+  //               fontSize: 18.sp,
+  //               color: white,
+  //               fontFamily: dM_sans_semiBold,
+  //             ),
+  //           ),
+  //         ),
+  //         Obx(() => SizedBox(
+  //               height: 3.h,
+  //               child: Slider(
+  //                 value: imageOpacity.value,
+  //                 min: 0,
+  //                 max: 1,
+  //                 divisions: 100,
+  //                 activeColor: primaryColor,
+  //                 inactiveColor: white,
+  //                 onChanged: (value) {
+  //                   imageOpacity.value = value;
+  //                 },
+  //               ),
+  //             )),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   // Share Image
   final GlobalKey repaintBoundaryKey = GlobalKey();
+
   Future<void> captureAndSaveImage() async {
     try {
       var status = await Permission.storage.request();
@@ -339,40 +764,156 @@ class Brandeditingcontroller extends GetxController {
         return;
       }
 
-      RenderRepaintBoundary boundary = repaintBoundaryKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      var image = await boundary.toImage(pixelRatio: 5.0);
-      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List imageBytes = byteData!.buffer.asUint8List();
+      if (selectedImage.value == null) {
+        Get.snackbar('Error', 'No image selected');
+        return;
+      }
 
+      // Get full-resolution image data
+      final File? imageFile = await selectedImage.value!.file;
+      if (imageFile == null) {
+        Get.snackbar('Error', 'Failed to load full-resolution image');
+        return;
+      }
+      final Uint8List imageBytes = await imageFile.readAsBytes();
+
+      // Apply the current filter to the full-resolution image
+      Uint8List finalImageBytes = imageBytes;
+      if (currentFilter.value != 'None') {
+        final tempFilters = ImageFilters();
+        try {
+          await tempFilters.loadImageFromBytes(imageBytes);
+          await tempFilters.applyFilter(currentFilter.value);
+          final filteredImage = tempFilters.filteredImage;
+          if (filteredImage != null) {
+            final byteData =
+                await filteredImage.toByteData(format: ui.ImageByteFormat.png);
+            if (byteData != null) {
+              finalImageBytes = byteData.buffer.asUint8List();
+              logcat('Share',
+                  'Applied filter ${currentFilter.value} to full-resolution image');
+            } else {
+              throw Exception('Failed to encode filtered image');
+            }
+          } else {
+            throw Exception('No valid filtered image produced');
+          }
+        } catch (e) {
+          logcat('ShareError', 'Failed to apply filter: $e');
+          Get.snackbar('Error', 'Failed to apply filter: $e');
+          return;
+        } finally {
+          tempFilters.dispose();
+        }
+      }
+
+      // Save and share the image
       final directory = await getTemporaryDirectory();
       final filePath =
           '${directory.path}/brand_image_${DateTime.now().millisecondsSinceEpoch}.png';
-      File file = File(filePath);
-      await file.writeAsBytes(imageBytes);
+      final File file = File(filePath);
+      await file.writeAsBytes(finalImageBytes);
 
       await Share.shareXFiles([XFile(filePath)],
           text: 'Check out my customized brand!');
-    } catch (e, stackTrace) {
-      // logcat('CaptureError', e.toString(), stackTrace: stackTrace);
+    } catch (e) {
+      logcat('CaptureError', e.toString());
+      Get.snackbar('Error', 'Failed to share image: $e');
     }
   }
+  // Future<void> captureAndSaveImage() async {
+  //   try {
+  //     var status = await Permission.storage.request();
+  //     if (status.isDenied) {
+  //       Get.snackbar('Error', 'Storage permission denied');
+  //       return;
+  //     }
+
+  //     RenderRepaintBoundary boundary = repaintBoundaryKey.currentContext!
+  //         .findRenderObject() as RenderRepaintBoundary;
+  //     var image =
+  //         await boundary.toImage(pixelRatio: 3.0); // Lower pixelRatio for speed
+  //     ByteData? byteData =
+  //         await image.toByteData(format: ui.ImageByteFormat.png);
+  //     Uint8List imageBytes = byteData!.buffer.asUint8List();
+
+  //     final directory = await getTemporaryDirectory();
+  //     final filePath =
+  //         '${directory.path}/brand_image_${DateTime.now().millisecondsSinceEpoch}.png';
+  //     File file = File(filePath);
+  //     await file.writeAsBytes(imageBytes);
+
+  //     await Share.shareXFiles([XFile(filePath)],
+  //         text: 'Check out my customized brand!');
+  //   } catch (e) {
+  //     logcat('CaptureError', e.toString());
+  //   }
+  // }
+  // Future<void> captureAndSaveImage() async {
+  //   try {
+  //     var status = await Permission.storage.request();
+  //     if (status.isDenied) {
+  //       Get.snackbar('Error', 'Storage permission denied');
+  //       return;
+  //     }
+
+  //     RenderRepaintBoundary boundary = repaintBoundaryKey.currentContext!
+  //         .findRenderObject() as RenderRepaintBoundary;
+  //     var image = await boundary.toImage(pixelRatio: 5.0);
+  //     ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
+  //     Uint8List imageBytes = byteData!.buffer.asUint8List();
+
+  //     final directory = await getTemporaryDirectory();
+  //     final filePath =
+  //         '${directory.path}/brand_image_${DateTime.now().millisecondsSinceEpoch}.png';
+  //     File file = File(filePath);
+  //     await file.writeAsBytes(imageBytes);
+
+  //     await Share.shareXFiles([XFile(filePath)],
+  //         text: 'Check out my customized brand!');
+  //   } catch (e, stackTrace) {
+  //     // logcat('CaptureError', e.toString(), stackTrace: stackTrace);
+  //   }
+  // }
 
   void toggleImageSelection(AssetEntity image) async {
     if (selectedImage.value == image) {
       selectedImage.value = null;
       thumbnailFuture.value = null;
       cachedThumbnail.value = null;
-      originalThumbnail.value = null; // Clear original
+      originalThumbnail.value = null;
+      highResThumbnail.value = null; // Clear high-res thumbnail
     } else {
       selectedImage.value = image;
-      thumbnailFuture.value =
-          image.thumbnailDataWithSize(ThumbnailSize(200, 200));
-      final Uint8List? data = await thumbnailFuture.value;
-      originalThumbnail.value = data; // Store original
-      cachedThumbnail.value = data; // Initialize cached with original
+      thumbnailFuture.value = image.thumbnailDataWithSize(
+          const ThumbnailSize(100, 100)); // Low-res for filters
+      final Uint8List? lowResData = await thumbnailFuture.value;
+      originalThumbnail.value = lowResData;
+      cachedThumbnail.value = lowResData;
+
+      // Fetch high-res thumbnail (e.g., 800x800)
+      final highResFuture =
+          image.thumbnailDataWithSize(const ThumbnailSize(800, 800));
+      final Uint8List? highResData = await highResFuture;
+      highResThumbnail.value = highResData;
     }
   }
+
+  // void toggleImageSelection(AssetEntity image) async {
+  //   if (selectedImage.value == image) {
+  //     selectedImage.value = null;
+  //     thumbnailFuture.value = null;
+  //     cachedThumbnail.value = null;
+  //     originalThumbnail.value = null; // Clear original
+  //   } else {
+  //     selectedImage.value = image;
+  //     thumbnailFuture.value =
+  //         image.thumbnailDataWithSize(ThumbnailSize(200, 200));
+  //     final Uint8List? data = await thumbnailFuture.value;
+  //     originalThumbnail.value = data; // Store original
+  //     cachedThumbnail.value = data; // Initialize cached with original
+  //   }
+  // }
 
   Future<void> fetchGalleryAlbums() async {
     isLoading.value = true;

@@ -231,6 +231,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
             fit: BoxFit.fill,
             width: width,
             height: height,
+            filterQuality: FilterQuality.high, // Balance quality and speed
           ),
         );
       } else if (controller.thumbnailFuture.value == null) {
@@ -241,6 +242,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
             fit: BoxFit.fill,
             width: width,
             height: height,
+            filterQuality: FilterQuality.high,
           ),
         );
       } else {
@@ -251,6 +253,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                 snapshot.hasData &&
                 snapshot.data != null) {
               controller.cachedThumbnail.value = snapshot.data;
+              controller.highResThumbnail.value = snapshot.data;
               return Opacity(
                 opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
                 child: Image.memory(
@@ -258,16 +261,66 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                   fit: BoxFit.fill,
                   width: width,
                   height: height,
+                  filterQuality: FilterQuality.medium,
                 ),
               );
             } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
           },
         );
       }
     });
   }
+  // Widget _buildImageWidget(
+
+  //     Brandeditingcontroller controller, double width, double height) {
+  //   return Obx(() {
+  //     if (controller.cachedThumbnail.value != null) {
+  //       return Opacity(
+  //         opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
+  //         child: Image.memory(
+  //           controller.cachedThumbnail.value!,
+  //           fit: BoxFit.fill,
+  //           width: width,
+  //           height: height,
+  //         ),
+  //       );
+  //     } else if (controller.thumbnailFuture.value == null) {
+  //       return Opacity(
+  //         opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
+  //         child: Image.asset(
+  //           Asset.bussinessPlaceholder,
+  //           fit: BoxFit.fill,
+  //           width: width,
+  //           height: height,
+  //         ),
+  //       );
+  //     } else {
+  //       return FutureBuilder<Uint8List?>(
+  //         future: controller.thumbnailFuture.value,
+  //         builder: (context, snapshot) {
+  //           if (snapshot.connectionState == ConnectionState.done &&
+  //               snapshot.hasData &&
+  //               snapshot.data != null) {
+  //             controller.cachedThumbnail.value = snapshot.data;
+  //             return Opacity(
+  //               opacity: controller.imageOpacity.value.clamp(0.0, 1.0),
+  //               child: Image.memory(
+  //                 snapshot.data!,
+  //                 fit: BoxFit.fill,
+  //                 width: width,
+  //                 height: height,
+  //               ),
+  //             );
+  //           } else {
+  //             return Center(
+  //               child: CircularProgressIndicator(),
+  //             );
+  //           }
+  //         },
+  //       );
+  //     }
+  //   });
+  // }
 }

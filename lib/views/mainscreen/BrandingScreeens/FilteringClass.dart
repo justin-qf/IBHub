@@ -9,7 +9,7 @@ class ImageFilters {
   String _currentFilter = 'None';
   bool _isOriginalImageValid = false;
   bool _isFilteredImageValid = false;
-  int _originalImageRefCount = 0; // Track references to _originalImage
+  int _originalImageRefCount = 0;
 
   ui.Image? get filteredImage => _filteredImage;
   String get currentFilter => _currentFilter;
@@ -28,23 +28,29 @@ class ImageFilters {
     'Cool',
   ];
 
-  // Load image and clone for filtered image
   Future<void> loadImageFromBytes(Uint8List bytes) async {
     if (bytes.isEmpty) {
       print('ImageFilters: Empty image data');
       return;
     }
     try {
-      final codec = await ui.instantiateImageCodec(bytes);
+      // Cap resolution to prevent memory issues
+      const maxDimension = 2048; // Max width or height
+      final codec = await ui.instantiateImageCodec(
+        bytes,
+        targetWidth: bytes.length > 1024 * 1024
+            ? maxDimension
+            : null, // Scale down large images
+        targetHeight: bytes.length > 1024 * 1024 ? maxDimension : null,
+      );
       final frame = await codec.getNextFrame();
       _safeDisposeImage(
           '_originalImage', _originalImage, '_isOriginalImageValid');
       _safeDisposeImage(
           '_filteredImage', _filteredImage, '_isFilteredImageValid');
       _originalImage = frame.image;
-      _originalImageRefCount = 1; // Initial reference
-      _filteredImage =
-          await _cloneImage(frame.image); // Clone for filtered image
+      _originalImageRefCount = 1;
+      _filteredImage = await _cloneImage(frame.image);
       _isOriginalImageValid = true;
       _isFilteredImageValid = true;
       _currentFilter = 'None';
@@ -57,7 +63,6 @@ class ImageFilters {
     }
   }
 
-  // Clone an image to create an independent copy
   Future<ui.Image> _cloneImage(ui.Image image) async {
     final recorder = ui.PictureRecorder();
     final canvas = ui.Canvas(recorder);
@@ -79,7 +84,7 @@ class ImageFilters {
     if (filterType == 'None') {
       _safeDisposeImage(
           '_filteredImage', _filteredImage, '_isFilteredImageValid');
-      _filteredImage = await _cloneImage(_originalImage!); // Clone original
+      _filteredImage = await _cloneImage(_originalImage!);
       _isFilteredImageValid = true;
       _currentFilter = 'None';
       return;
@@ -93,7 +98,7 @@ class ImageFilters {
 
     try {
       canvas.save();
-      _originalImageRefCount++; // Increment ref count
+      _originalImageRefCount++;
       switch (filterType) {
         case 'Vibrance':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
@@ -121,13 +126,29 @@ class ImageFilters {
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
         case 'Clarity':
-          final blurPaint = ui.Paint()
-            ..imageFilter = ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0);
-          canvas.drawImage(_originalImage!, ui.Offset.zero, blurPaint);
-          final overlayPaint = ui.Paint()
-            ..blendMode = ui.BlendMode.overlay
-            ..color = ui.Color.fromARGB(128, 255, 255, 255);
-          canvas.drawImage(_originalImage!, ui.Offset.zero, overlayPaint);
+          paint.colorFilter = const ui.ColorFilter.matrix(<double>[
+            1.1,
+            0.1,
+            0.1,
+            0,
+            10,
+            0.1,
+            1.1,
+            0.1,
+            0,
+            10,
+            0.1,
+            0.1,
+            1.1,
+            0,
+            10,
+            0,
+            0,
+            0,
+            1,
+            0,
+          ]);
+          canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
         case 'Vintage':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
@@ -153,17 +174,6 @@ class ImageFilters {
             0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
-          final vignettePaint = ui.Paint()
-            ..shader = ui.Gradient.radial(
-              ui.Offset(width / 2, height / 2),
-              math.min(width, height) * 0.5,
-              [ui.Color.fromARGB(0, 0, 0, 0), ui.Color.fromARGB(100, 0, 0, 0)],
-              [0.4, 1.0],
-            )
-            ..blendMode = ui.BlendMode.darken;
-          canvas.drawRect(
-              ui.Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
-              vignettePaint);
           break;
         case 'Cinematic':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
@@ -189,10 +199,6 @@ class ImageFilters {
             0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
-          final noise = await _generateNoiseTexture(width, height);
-          final noisePaint = ui.Paint()..blendMode = ui.BlendMode.overlay;
-          canvas.drawImage(noise, ui.Offset.zero, noisePaint);
-          noise.dispose();
           break;
         case 'Lomo':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
@@ -217,7 +223,6 @@ class ImageFilters {
             1,
             0,
           ]);
-          paint.imageFilter = ui.ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
         case 'Moody':
@@ -243,7 +248,6 @@ class ImageFilters {
             1,
             0,
           ]);
-          paint.imageFilter = ui.ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
         case 'Faded':
@@ -366,33 +370,8 @@ class ImageFilters {
       _isFilteredImageValid = false;
       rethrow;
     } finally {
-      _originalImageRefCount--; // Decrement ref count
+      _originalImageRefCount--;
     }
-  }
-
-  Future<ui.Image> _generateNoiseTexture(int width, int height) async {
-    final random = math.Random();
-    final pixels = Uint8List(width * height * 4);
-    for (int i = 0; i < pixels.length; i += 4) {
-      final noise = random.nextInt(50);
-      pixels[i] = noise;
-      pixels[i + 1] = noise;
-      pixels[i + 2] = noise;
-      pixels[i + 3] = 128;
-    }
-
-    final completer = Completer<ui.Image>();
-    ui.decodeImageFromPixels(
-      pixels,
-      width,
-      height,
-      ui.PixelFormat.rgba8888,
-      (ui.Image image) {
-        completer.complete(image);
-      },
-      rowBytes: width * 4,
-    );
-    return completer.future;
   }
 
   void _safeDisposeImage(
