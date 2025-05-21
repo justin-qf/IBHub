@@ -347,8 +347,9 @@ class ServiceDetailScreenController extends GetxController {
       if (isFromLoadMore == false) {
         isServiceLoading(false);
       }
+      var responseData = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
@@ -385,7 +386,10 @@ class ServiceDetailScreenController extends GetxController {
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(
             context, CategoryScreenConstant.title, ServerError.servererror,
-            callback: () {});
+            callback: () {
+          getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+        });
       }
     } catch (e) {
       isServiceLoading(false);

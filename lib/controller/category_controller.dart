@@ -13,6 +13,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/categoryListModel.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:ibh/views/mainscreen/HomeScreen/CategoryBusinessScreen.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -92,8 +93,10 @@ class CategoryController extends GetxController {
         state.value = ScreenState.apiError;
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(context, 'Category Screen',
-            responseData['message'] ?? ServerError.servererror,
-            callback: () {});
+            responseData['message'] ?? ServerError.servererror, callback: () {
+          getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+        });
       }
     } catch (e) {
       currentPage = 1;

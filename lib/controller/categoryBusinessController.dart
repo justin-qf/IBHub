@@ -775,7 +775,11 @@ class CategoryBusinessController extends GetxController {
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(context, CategoryScreenConstant.title,
             responseData['message'] ?? ServerError.servererror,
-            callback: () {});
+            callback: () {
+                        getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+
+            });
       }
     } catch (e) {
       logcat("Ecxeption", e);

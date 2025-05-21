@@ -15,6 +15,7 @@ import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/ServiceListModel.dart';
 import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/helper.dart';
 import 'package:ibh/utils/log.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
@@ -51,9 +52,9 @@ class ServiceController extends GetxController {
       var pageURL = '${ApiUrl.getServiceList}/${businessId}?page=$currentPage';
       var response = await Repository.get({}, pageURL, allowHeader: true);
 
+      var responseData = jsonDecode(response.body);
       logcat("RESPONSE::", response.body);
       if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
         if (responseData['success'] == true) {
           state.value = ScreenState.apiSuccess;
           message.value = '';
@@ -87,7 +88,10 @@ class ServiceController extends GetxController {
         message.value = APIResponseHandleText.serverError;
         showDialogForScreen(
             context, CategoryScreenConstant.title, ServerError.servererror,
-            callback: () {});
+            callback: () {
+          getUnauthenticatedUser(
+              context, responseData['message'], "Unauthenticated user");
+        });
       }
     } catch (e) {
       logcat("Ecxeption", e);

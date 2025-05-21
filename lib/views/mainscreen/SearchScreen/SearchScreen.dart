@@ -83,6 +83,8 @@ class _SearchScreenState extends State<SearchScreen> {
       Future.delayed(
         Duration.zero,
         () {
+
+          
           controller
               .getBusinessList(context, controller.currentPage, true,
                   isFirstTime: false)
