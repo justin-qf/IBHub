@@ -169,6 +169,10 @@ class Signinscreencontroller extends GetxController {
         logcat("LoginResponse::", jsonEncode(responseDetail));
         // User? retrievedObject = await UserPreferences().getSignInInfo();
         if (responseDetail.data!.user!.isEmailVerified == true) {
+          emailCtr.text = '';
+          passCtr.text = '';
+          emailModel.value = ValidationModel(null, null, isValidate: false);
+          passModel.value = ValidationModel(null, null, isValidate: false);
           Get.offAll(const MainScreen());
         } else {
           Get.to(() => OtpScreen(

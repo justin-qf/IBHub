@@ -198,7 +198,7 @@ class _SigninscreenState extends State<Signinscreen> {
                 onTap: () async {
                   final result = await Get.to(() => Signupscreen());
                   if (result == true) {
-                    ctr.resetForm();
+                    ctr.resetForm ();
                     ctr.unfocusAll();
                   }
                 },
