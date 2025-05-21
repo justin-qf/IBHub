@@ -191,20 +191,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 18.w,
                         child: Image.asset(Asset.applogo)),
                   ),
-                  GestureDetector(
-                      onTap: () {
-                        logcat('printing', 'notification');
+                  // GestureDetector(
+                  //     onTap: () {
+                  //       logcat('printing', 'notification');
 
-                        Get.to(NotificationScreen());
-                      },
-                      child: Icon(Icons.notifications))
+                  //       Get.to(NotificationScreen());
+                  //     },
+                  //     child: Icon(Icons.notifications))
                 ],
               ),
             ),
             getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.categoryTitle, () {
-
-
               Get.to(const CategoryScreen())!.then((value) {
                 futureDelay(() {
                   controller.currentPage = 1;
@@ -212,8 +210,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       isFirstTime: true);
                 }, isOneSecond: false);
               });
-
-              
             }),
             getDynamicSizedBox(height: 2.h),
             SizedBox(

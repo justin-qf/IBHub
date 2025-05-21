@@ -85,7 +85,8 @@ class Brandeditingcontroller extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    ever(cachedThumbnail, (_) {
+    // Only generate thumbnails when originalThumbnail changes
+    ever(originalThumbnail, (_) {
       _debounceTimer?.cancel();
       _debounceTimer = Timer(Duration(milliseconds: 500), () {
         if (!_isGeneratingThumbnails.value) {
@@ -114,8 +115,7 @@ class Brandeditingcontroller extends GetxController {
       await Stream.fromIterable(filters).asyncMap((filter) async {
         final tempFilters = ImageFilters();
         try {
-          await tempFilters
-              .loadImageFromBytes(originalThumbnail.value!); // Use original
+          await tempFilters.loadImageFromBytes(originalThumbnail.value!);
           await tempFilters.applyFilter(filter);
           final filteredImage = tempFilters.filteredImage;
           if (filteredImage != null) {
@@ -134,8 +134,7 @@ class Brandeditingcontroller extends GetxController {
                 'ThumbnailError', 'No valid filtered image for filter $filter');
           }
         } catch (e, stackTrace) {
-          // logcat('ThumbnailError', 'Failed to apply filter $filter: $e',
-          //     stackTrace: stackTrace);
+          //
         } finally {
           try {
             tempFilters.dispose();
@@ -171,8 +170,7 @@ class Brandeditingcontroller extends GetxController {
 
     final tempFilters = ImageFilters();
     try {
-      await tempFilters
-          .loadImageFromBytes(originalThumbnail.value!); // Use original
+      await tempFilters.loadImageFromBytes(originalThumbnail.value!);
       await tempFilters.applyFilter(filterType);
       final filteredImage = tempFilters.filteredImage;
       if (filteredImage != null) {
@@ -188,8 +186,7 @@ class Brandeditingcontroller extends GetxController {
         throw Exception('No valid filtered image produced');
       }
     } catch (e, stackTrace) {
-      // logcat('FilterError', 'Failed to apply filter $filterType: $e',
-      //     stackTrace: stackTrace);
+//
       Get.snackbar('Error', 'Failed to apply filter: $e');
     } finally {
       tempFilters.dispose();
@@ -201,7 +198,6 @@ class Brandeditingcontroller extends GetxController {
   bool _isValidImageData(Uint8List? data) {
     if (data == null || data.isEmpty) return false;
     try {
-      // Check for PNG header
       if (data.length >= 8 &&
           data[0] == 0x89 &&
           data[1] == 0x50 &&
@@ -209,7 +205,6 @@ class Brandeditingcontroller extends GetxController {
           data[3] == 0x47) {
         return true;
       }
-      // Check for JPEG header
       if (data.length >= 3 &&
           data[0] == 0xFF &&
           data[1] == 0xD8 &&
@@ -256,32 +251,34 @@ class Brandeditingcontroller extends GetxController {
                     margin: EdgeInsets.only(left: 2.w, right: 2.w),
                     child: Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: currentFilter.value == filter
-                                ? Border.all(color: primaryColor, width: 2)
-                                : null,
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: filterThumbnails.containsKey(filter) &&
-                                    filterThumbnails[filter] != null
-                                ? Image.memory(
-                                    filterThumbnails[filter]!,
-                                    fit: BoxFit.cover,
-                                    width: 15.w,
-                                    height: 8.h,
-                                  )
-                                : Image.asset(
-                                    Asset.bussinessPlaceholder,
-                                    fit: BoxFit.cover,
-                                    width: 15.w,
-                                    height: 8.h,
-                                  ),
-                          ),
-                        ),
+                        Obx(() => Container(
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: currentFilter.value == filter
+                                    ? Border.all(color: primaryColor, width: 2)
+                                    : null,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: filterThumbnails.containsKey(filter) &&
+                                        filterThumbnails[filter] != null
+                                    ? Image.memory(
+                                        filterThumbnails[filter]!,
+                                        fit: BoxFit.cover,
+                                        width: 15.w,
+                                        height: 8.h,
+                                        filterQuality: FilterQuality.high,
+                                      )
+                                    : Image.asset(
+                                        Asset.bussinessPlaceholder,
+                                        fit: BoxFit.cover,
+                                        width: 15.w,
+                                        height: 8.h,
+                                        filterQuality: FilterQuality.high,
+                                      ),
+                              ),
+                            )),
                         SizedBox(height: 0.2.h),
                         Text(
                           filter,
@@ -370,7 +367,7 @@ class Brandeditingcontroller extends GetxController {
     } else {
       selectedImage.value = image;
       thumbnailFuture.value =
-          image.thumbnailDataWithSize(ThumbnailSize(300, 300));
+          image.thumbnailDataWithSize(ThumbnailSize(200, 200));
       final Uint8List? data = await thumbnailFuture.value;
       originalThumbnail.value = data; // Store original
       cachedThumbnail.value = data; // Initialize cached with original

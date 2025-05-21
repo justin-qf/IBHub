@@ -9,14 +9,11 @@ class ImageFilters {
   String _currentFilter = 'None';
   bool _isOriginalImageValid = false;
   bool _isFilteredImageValid = false;
+  int _originalImageRefCount = 0; // Track references to _originalImage
 
-  // Getter for the filtered image
   ui.Image? get filteredImage => _filteredImage;
-
-  // Getter for the current filter name
   String get currentFilter => _currentFilter;
 
-  // List of 10 professional filters
   static const List<String> filters = [
     'None',
     'Vibrance',
@@ -31,7 +28,7 @@ class ImageFilters {
     'Cool',
   ];
 
-  // Load image from Uint8List (e.g., from gallery)
+  // Load image and clone for filtered image
   Future<void> loadImageFromBytes(Uint8List bytes) async {
     if (bytes.isEmpty) {
       print('ImageFilters: Empty image data');
@@ -40,11 +37,14 @@ class ImageFilters {
     try {
       final codec = await ui.instantiateImageCodec(bytes);
       final frame = await codec.getNextFrame();
-      // Dispose existing images safely
-      _safeDisposeImage('_originalImage', _originalImage, '_isOriginalImageValid');
-      _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+      _safeDisposeImage(
+          '_originalImage', _originalImage, '_isOriginalImageValid');
+      _safeDisposeImage(
+          '_filteredImage', _filteredImage, '_isFilteredImageValid');
       _originalImage = frame.image;
-      _filteredImage = frame.image; // Initially same as original
+      _originalImageRefCount = 1; // Initial reference
+      _filteredImage =
+          await _cloneImage(frame.image); // Clone for filtered image
       _isOriginalImageValid = true;
       _isFilteredImageValid = true;
       _currentFilter = 'None';
@@ -57,18 +57,29 @@ class ImageFilters {
     }
   }
 
+  // Clone an image to create an independent copy
+  Future<ui.Image> _cloneImage(ui.Image image) async {
+    final recorder = ui.PictureRecorder();
+    final canvas = ui.Canvas(recorder);
+    canvas.drawImage(image, ui.Offset.zero, ui.Paint());
+    final picture = recorder.endRecording();
+    final clonedImage = await picture.toImage(image.width, image.height);
+    picture.dispose();
+    return clonedImage;
+  }
+
   Future<void> applyFilter(String filterType,
       {Map<String, dynamic>? params}) async {
     if (_originalImage == null || !_isOriginalImageValid) {
-      print('ImageFilters: No valid original image to apply filter $filterType');
+      print(
+          'ImageFilters: No valid original image to apply filter $filterType');
       return;
     }
 
     if (filterType == 'None') {
-      // For 'None', reset _filteredImage to original
-      _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
-      // Use existing _originalImage instead of reloading
-      _filteredImage = _originalImage;
+      _safeDisposeImage(
+          '_filteredImage', _filteredImage, '_isFilteredImageValid');
+      _filteredImage = await _cloneImage(_originalImage!); // Clone original
       _isFilteredImageValid = true;
       _currentFilter = 'None';
       return;
@@ -82,17 +93,33 @@ class ImageFilters {
 
     try {
       canvas.save();
+      _originalImageRefCount++; // Increment ref count
       switch (filterType) {
         case 'Vibrance':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            1.2, 0.1, 0.1, 0, 0,
-            0.1, 1.2, 0.1, 0, 0,
-            0.1, 0.1, 1.2, 0, 0,
-            0, 0, 0, 1, 0,
+            1.2,
+            0.1,
+            0.1,
+            0,
+            0,
+            0.1,
+            1.2,
+            0.1,
+            0,
+            0,
+            0.1,
+            0.1,
+            1.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         case 'Clarity':
           final blurPaint = ui.Paint()
             ..imageFilter = ui.ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0);
@@ -102,13 +129,28 @@ class ImageFilters {
             ..color = ui.Color.fromARGB(128, 255, 255, 255);
           canvas.drawImage(_originalImage!, ui.Offset.zero, overlayPaint);
           break;
-
         case 'Vintage':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            0.9, 0.5, 0.1, 0, 20,
-            0.3, 0.8, 0.1, 0, 20,
-            0.1, 0.2, 0.7, 0, 10,
-            0, 0, 0, 1, 0,
+            0.9,
+            0.5,
+            0.1,
+            0,
+            20,
+            0.3,
+            0.8,
+            0.1,
+            0,
+            20,
+            0.1,
+            0.2,
+            0.7,
+            0,
+            10,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           final vignettePaint = ui.Paint()
@@ -123,13 +165,28 @@ class ImageFilters {
               ui.Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
               vignettePaint);
           break;
-
         case 'Cinematic':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            0.8, 0.2, 0.1, 0, 10,
-            0.1, 0.9, 0.2, 0, 10,
-            0.1, 0.3, 1.1, 0, 20,
-            0, 0, 0, 1, 0,
+            0.8,
+            0.2,
+            0.1,
+            0,
+            10,
+            0.1,
+            0.9,
+            0.2,
+            0,
+            10,
+            0.1,
+            0.3,
+            1.1,
+            0,
+            20,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           final noise = await _generateNoiseTexture(width, height);
@@ -137,69 +194,158 @@ class ImageFilters {
           canvas.drawImage(noise, ui.Offset.zero, noisePaint);
           noise.dispose();
           break;
-
         case 'Lomo':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            1.3, 0.0, 0.0, 0, -10,
-            0.0, 1.3, 0.0, 0, -10,
-            0.0, 0.0, 1.3, 0, -10,
-            0, 0, 0, 1, 0,
+            1.3,
+            0.0,
+            0.0,
+            0,
+            -10,
+            0.0,
+            1.3,
+            0.0,
+            0,
+            -10,
+            0.0,
+            0.0,
+            1.3,
+            0,
+            -10,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           paint.imageFilter = ui.ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         case 'Moody':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            0.7, 0.2, 0.1, 0, -20,
-            0.1, 0.7, 0.2, 0, -20,
-            0.1, 0.2, 0.8, 0, -10,
-            0, 0, 0, 1, 0,
+            0.7,
+            0.2,
+            0.1,
+            0,
+            -20,
+            0.1,
+            0.7,
+            0.2,
+            0,
+            -20,
+            0.1,
+            0.2,
+            0.8,
+            0,
+            -10,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           paint.imageFilter = ui.ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         case 'Faded':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            0.6, 0.2, 0.1, 0, 30,
-            0.2, 0.6, 0.2, 0, 30,
-            0.1, 0.2, 0.6, 0, 30,
-            0, 0, 0, 1, 0,
+            0.6,
+            0.2,
+            0.1,
+            0,
+            30,
+            0.2,
+            0.6,
+            0.2,
+            0,
+            30,
+            0.1,
+            0.2,
+            0.6,
+            0,
+            30,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         case 'Bold':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            1.5, 0.0, 0.0, 0, -20,
-            0.0, 1.5, 0.0, 0, -20,
-            0.0, 0.0, 1.5, 0, -20,
-            0, 0, 0, 1, 0,
+            1.5,
+            0.0,
+            0.0,
+            0,
+            -20,
+            0.0,
+            1.5,
+            0.0,
+            0,
+            -20,
+            0.0,
+            0.0,
+            1.5,
+            0,
+            -20,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         case 'Warm':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            1.2, 0.3, 0.1, 0, 20,
-            0.2, 1.1, 0.1, 0, 20,
-            0.1, 0.1, 0.8, 0, 10,
-            0, 0, 0, 1, 0,
+            1.2,
+            0.3,
+            0.1,
+            0,
+            20,
+            0.2,
+            1.1,
+            0.1,
+            0,
+            20,
+            0.1,
+            0.1,
+            0.8,
+            0,
+            10,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         case 'Cool':
           paint.colorFilter = const ui.ColorFilter.matrix(<double>[
-            0.8, 0.2, 0.3, 0, 10,
-            0.2, 0.9, 0.3, 0, 10,
-            0.3, 0.3, 1.2, 0, 20,
-            0, 0, 0, 1, 0,
+            0.8,
+            0.2,
+            0.3,
+            0,
+            10,
+            0.2,
+            0.9,
+            0.3,
+            0,
+            10,
+            0.3,
+            0.3,
+            1.2,
+            0,
+            20,
+            0,
+            0,
+            0,
+            1,
+            0,
           ]);
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
-
         default:
           canvas.drawImage(_originalImage!, ui.Offset.zero, paint);
           break;
@@ -208,9 +354,10 @@ class ImageFilters {
       canvas.restore();
       final picture = recorder.endRecording();
       final newImage = await picture.toImage(width, height);
+      picture.dispose();
 
-      // Dispose old filtered image safely
-      _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+      _safeDisposeImage(
+          '_filteredImage', _filteredImage, '_isFilteredImageValid');
       _filteredImage = newImage;
       _isFilteredImageValid = true;
       _currentFilter = filterType;
@@ -218,10 +365,11 @@ class ImageFilters {
       print('ImageFilters: Failed to apply filter $filterType: $e');
       _isFilteredImageValid = false;
       rethrow;
+    } finally {
+      _originalImageRefCount--; // Decrement ref count
     }
   }
 
-  // Generate noise texture for Cinematic filter
   Future<ui.Image> _generateNoiseTexture(int width, int height) async {
     final random = math.Random();
     final pixels = Uint8List(width * height * 4);
@@ -247,16 +395,20 @@ class ImageFilters {
     return completer.future;
   }
 
-  // Safely dispose an image with error handling
-  void _safeDisposeImage(String imageName, ui.Image? image, String validFlagName) {
+  void _safeDisposeImage(
+      String imageName, ui.Image? image, String validFlagName) {
     if (image != null) {
       try {
+        if (imageName == '_originalImage' && _originalImageRefCount > 0) {
+          print(
+              'ImageFilters: Skipping disposal of $imageName; ref count: $_originalImageRefCount');
+          return;
+        }
         image.dispose();
         print('ImageFilters: Disposed $imageName');
       } catch (e) {
         print('ImageFilters: Error disposing $imageName: $e');
       }
-      // Update the corresponding validity flag
       if (validFlagName == '_isOriginalImageValid') {
         _isOriginalImageValid = false;
       } else if (validFlagName == '_isFilteredImageValid') {
@@ -265,11 +417,13 @@ class ImageFilters {
     }
   }
 
-  // Dispose images to prevent memory leaks
   void dispose() {
-    _safeDisposeImage('_originalImage', _originalImage, '_isOriginalImageValid');
-    _safeDisposeImage('_filteredImage', _filteredImage, '_isFilteredImageValid');
+    _safeDisposeImage(
+        '_originalImage', _originalImage, '_isOriginalImageValid');
+    _safeDisposeImage(
+        '_filteredImage', _filteredImage, '_isFilteredImageValid');
     _originalImage = null;
     _filteredImage = null;
+    _originalImageRefCount = 0;
   }
 }
