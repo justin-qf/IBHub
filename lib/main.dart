@@ -11,6 +11,7 @@ import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/services/firebaseNoticationsHandler.dart';
 import 'package:ibh/services/push_notification.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/views/RemoteConfig/remoteConfig.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/BrandEditingScreen.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
@@ -23,6 +24,12 @@ void main() async {
   if (Platform.isAndroid) {
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
   }
+
+  //remote config
+  final remoteConfigService = RemoteConfigService();
+  await remoteConfigService.initialize();
+  Get.put<RemoteConfigService>(remoteConfigService);
+
   // Initialize Hive
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);

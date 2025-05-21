@@ -265,38 +265,44 @@ class _SigninscreenState extends State<Signinscreen> {
 
               // getDynamicSizedBox(height: 2.h),
 
-              OutlinedButton(
-                  onPressed: () async {
-                    final user = await ctr.signinWithGmail(context);
+              Obx(() {
+                return ctr.isGoogleAuthVisible.value == true
+                    ? OutlinedButton(
+                        onPressed: () async {
+                          final user = await ctr.signinWithGmail(context);
 
-                    var id = user!.uid;
+                          var id = user!.uid;
 
-                    print('user id:$id');
+                          print('user id:$id');
 
-                    // if (user != null) {
-                    //   final result = await Get.to(() => Signupscreen(
-                    //         emailId: user.email,
-                    //       ));
-                    //   if (result == true) {
-                    //     ctr.resetForm();
-                    //     ctr.unfocusAll();
-                    //   }
-                    // } else {
-                    //   print('Login cancelled.');
-                    // }
-                  },
-                  style: ButtonStyle(
-                      minimumSize: const WidgetStatePropertyAll(Size(50, 50)),
-                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15))),
-                      side: const WidgetStatePropertyAll(BorderSide(
-                          color: const Color.fromARGB(255, 219, 219, 219),
-                          width: 1))),
-                  child: SvgPicture.asset(
-                    Asset.google,
-                    height: 4.h,
-                    width: 4.w,
-                  )),
+                          // if (user != null) {
+                          //   final result = await Get.to(() => Signupscreen(
+                          //         emailId: user.email,
+                          //       ));
+                          //   if (result == true) {
+                          //     ctr.resetForm();
+                          //     ctr.unfocusAll();
+                          //   }
+                          // } else {
+                          //   print('Login cancelled.');
+                          // }
+                        },
+                        style: ButtonStyle(
+                            minimumSize:
+                                const WidgetStatePropertyAll(Size(50, 50)),
+                            shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15))),
+                            side: const WidgetStatePropertyAll(BorderSide(
+                                color: const Color.fromARGB(255, 219, 219, 219),
+                                width: 1))),
+                        child: SvgPicture.asset(
+                          Asset.google,
+                          height: 4.h,
+                          width: 4.w,
+                        ))
+                    : SizedBox.shrink();
+              })
             ],
           ),
         ),

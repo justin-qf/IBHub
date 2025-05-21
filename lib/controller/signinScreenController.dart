@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -19,6 +20,7 @@ import 'package:ibh/models/sign_in_form_validation.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/RemoteConfig/remoteConfig.dart';
 import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
@@ -26,6 +28,15 @@ import 'package:ibh/views/sigin_signup/signupScreen.dart';
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
+  final RemoteConfigService remoteConfigService =
+      Get.find<RemoteConfigService>(); // Get RemoteConfigService
+  RxBool isGoogleAuthVisible = false.obs; // Reactive boolean
+
+  // // Optional: Refresh Remote Config
+  // Future<void> refreshRemoteConfig() async {
+  //   await remoteConfigService.initialize();
+  //   isGoogleAuthVisible.value = remoteConfigService.isGoogleAuthVisible;
+  // }
 
   Rx<ScreenState> state = ScreenState.apiLoading.obs;
 
@@ -61,6 +72,12 @@ class Signinscreencontroller extends GetxController {
     _isLoading.value = false;
     // print('call signin screeen');
     resetForm();
+
+    isGoogleAuthVisible.value = remoteConfigService.isGoogleAuthVisible;
+    remoteConfigService.remoteConfig.onConfigUpdated.listen((event) async {
+      await remoteConfigService.remoteConfig.activate();
+      isGoogleAuthVisible.value = remoteConfigService.isGoogleAuthVisible;
+    });
   }
 
   @override
@@ -168,28 +185,6 @@ class Signinscreencontroller extends GetxController {
   }
 
 // google
-// google
-
-//   Future<void> _handleSignIn() async {
-//     try {
-//       await _googleSignIn.signIn();
-//     } catch (error) {
-//       print(error);
-//     }
-//   }
-
-  //  Future<bool> signinWithGmail() async {
-  //   final user = await GoogleSignIn().signIn();
-
-  //   GoogleSignInAuthentication userAuth = await user!.authentication;
-
-  //   var credential = GoogleAuthProvider.credential(
-  //       idToken: userAuth.idToken, accessToken: userAuth.accessToken);
-
-  //   await FirebaseAuth.instance.signInWithCredential(credential);
-
-  //   return  FirebaseAuth.instance.currentUser != null;
-  // }
 
   Future<firebase.User?> signinWithGmail(BuildContext context) async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
