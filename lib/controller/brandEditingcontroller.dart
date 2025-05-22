@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
@@ -81,6 +80,8 @@ class Brandeditingcontroller extends GetxController {
       currentFocus.unfocus();
     }
   }
+
+  
 
   Timer? _debounceTimer;
 
@@ -533,115 +534,115 @@ class Brandeditingcontroller extends GetxController {
   //   );
   // }
   Widget filterLogic() {
-  return SizedBox(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
-          child: Text(
-            'Filters',
-            style: TextStyle(
-              fontSize: 18.sp,
-              color: white,
-              fontFamily: dM_sans_semiBold,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 10.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: filters.length,
-            itemBuilder: (context, index) {
-              final filter = filters[index];
-              return GestureDetector(
-                onTap: () {
-                  logcat('Filter', 'Applying $filter');
-                  applyImageFilter(filter);
-                },
-                child: Container(
-                  width: 18.w,
-                  margin: EdgeInsets.only(left: 2.w, right: 2.w),
-                  child: Column(
-                    children: [
-                      Obx(() => Container(
-                            decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: currentFilter.value == filter
-                                  ? Border.all(color: primaryColor, width: 2)
-                                  : null,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: filterThumbnails.containsKey(filter) &&
-                                      filterThumbnails[filter] != null
-                                  ? Image.memory(
-                                      filterThumbnails[filter]!,
-                                      fit: BoxFit.cover,
-                                      width: 15.w,
-                                      height: 8.h,
-                                      filterQuality: FilterQuality.low,
-                                    )
-                                  : Image.asset(
-                                      Asset.bussinessPlaceholder,
-                                      fit: BoxFit.cover,
-                                      width: 15.w,
-                                      height: 8.h,
-                                      filterQuality: FilterQuality.low,
-                                    ),
-                            ),
-                          )),
-                      SizedBox(height: 0.2.h),
-                      Text(
-                        filter,
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: white,
-                          fontFamily: dM_sans_regular,
-                        ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        getDynamicSizedBox(height: 1.h),
-        Container(
-          margin: EdgeInsets.only(left: 6.w),
-          child: Text(
-            'Opacity',
-            style: TextStyle(
-              fontSize: 18.sp,
-              color: white,
-              fontFamily: dM_sans_semiBold,
-            ),
-          ),
-        ),
-        Obx(() => SizedBox(
-              height: 3.h,
-              child: Slider(
-                value: imageOpacity.value,
-                min: 0,
-                max: 1,
-                divisions: 100,
-                activeColor: primaryColor,
-                inactiveColor: white,
-                onChanged: (value) {
-                  imageOpacity.value = value;
-                },
+    return SizedBox(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
+            child: Text(
+              'Filters',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: white,
+                fontFamily: dM_sans_semiBold,
               ),
-            )),
-      ],
-    ),
-  );
-}
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: filters.length,
+              itemBuilder: (context, index) {
+                final filter = filters[index];
+                return GestureDetector(
+                  onTap: () {
+                    logcat('Filter', 'Applying $filter');
+                    applyImageFilter(filter);
+                  },
+                  child: Container(
+                    width: 18.w,
+                    margin: EdgeInsets.only(left: 2.w, right: 2.w),
+                    child: Column(
+                      children: [
+                        Obx(() => Container(
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: currentFilter.value == filter
+                                    ? Border.all(color: primaryColor, width: 2)
+                                    : null,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: filterThumbnails.containsKey(filter) &&
+                                        filterThumbnails[filter] != null
+                                    ? Image.memory(
+                                        filterThumbnails[filter]!,
+                                        fit: BoxFit.cover,
+                                        width: 15.w,
+                                        height: 8.h,
+                                        filterQuality: FilterQuality.low,
+                                      )
+                                    : Image.asset(
+                                        Asset.bussinessPlaceholder,
+                                        fit: BoxFit.cover,
+                                        width: 15.w,
+                                        height: 8.h,
+                                        filterQuality: FilterQuality.low,
+                                      ),
+                              ),
+                            )),
+                        SizedBox(height: 0.2.h),
+                        Text(
+                          filter,
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: white,
+                            fontFamily: dM_sans_regular,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          getDynamicSizedBox(height: 1.h),
+          Container(
+            margin: EdgeInsets.only(left: 6.w),
+            child: Text(
+              'Opacity',
+              style: TextStyle(
+                fontSize: 18.sp,
+                color: white,
+                fontFamily: dM_sans_semiBold,
+              ),
+            ),
+          ),
+          Obx(() => SizedBox(
+                height: 3.h,
+                child: Slider(
+                  value: imageOpacity.value,
+                  min: 0,
+                  max: 1,
+                  divisions: 100,
+                  activeColor: primaryColor,
+                  inactiveColor: white,
+                  onChanged: (value) {
+                    imageOpacity.value = value;
+                  },
+                ),
+              )),
+        ],
+      ),
+    );
+  }
   // Widget filterLogic() {
   //   return SizedBox(
   //     child: Column(

@@ -204,6 +204,25 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                 ),
                               );
                             }).toList(),
+                            Positioned(
+                              child: Container(
+                                height: Device.height,
+                                width: Device.width,
+                                // color: Colors.yellow,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      Asset.applogo,
+                                      height: 10.h,
+                                      width: 10.w,
+                                    ),
+                                    getDynamicSizedBox(height: 1.2.h),
+                                    
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
