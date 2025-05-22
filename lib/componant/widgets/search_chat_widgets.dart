@@ -119,6 +119,7 @@ setSearchBars(context, controller, String tag,
     {Function? onCancleClick,
     Function? onClearClick,
     Function? onFilterClick,
+    Function? onEditingComplete,
     bool? isCancle,
     String? categoryId = '',
     bool? isFilterApplied,
@@ -163,7 +164,9 @@ setSearchBars(context, controller, String tag,
                       keyboardType: TextInputType.text,
                       textAlign: TextAlign.start,
                       onEditingComplete: () {
-                        if (tag == BusinessCategoryConstant.title) {
+                        if (onEditingComplete != null) {
+                          onEditingComplete();
+                        } else if (tag == BusinessCategoryConstant.title) {
                           futureDelay(() {
                             Get.find<CategoryBusinessController>()
                                 .getBusinessList(context, 1, false,

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/parentWidgets/CustomeParentBackground.dart';
@@ -7,23 +8,33 @@ import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/controller/brandEditingcontroller.dart';
+import 'package:ibh/controller/BrandImageController.dart';
 import 'package:sizer/sizer.dart';
 
-class Brandeditingscreen extends StatefulWidget {
-  const Brandeditingscreen({super.key});
+class BrandImageScreen extends StatefulWidget {
+  BrandImageScreen({required this.id, required this.title, super.key});
+  // BusinessData item;
+  String id;
+  String title;
 
   @override
-  State<Brandeditingscreen> createState() => _BrandeditingscreenState();
+  State<BrandImageScreen> createState() => _BrandImageScreenState();
 }
 
-class _BrandeditingscreenState extends State<Brandeditingscreen> {
-  var controller = Get.put(Brandeditingcontroller());
+class _BrandImageScreenState extends State<BrandImageScreen> {
+  var controller = Get.put(BrandImageController());
 
   @override
   void initState() {
     super.initState();
+    getInitData();
     controller.fetchGalleryAlbums();
+  }
+
+  getInitData() {
+    setState(() {
+      controller.categoryId = widget.id;
+    });
   }
 
   @override
@@ -49,25 +60,23 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
           Expanded(
             child: Container(
               height: 63.5.h,
-              color: transparent,
+              color: white,
               child: Column(
                 children: [
                   getDynamicSizedBox(height: 4.h),
                   Container(
-                    margin: EdgeInsets.only(left: 5.w),
-                    child: getleftsidebackbtn(
-                      title: 'Customize Your Brand',
-                      backFunction: () {
-                        Get.back(result: true);
-                      },
-                    ),
-                  ),
+                      margin: EdgeInsets.only(left: 5.w),
+                      child: getleftsidebackbtn(
+                          title: widget.title,
+                          backFunction: () {
+                            Get.back(result: true);
+                          })),
                   getDynamicSizedBox(height: 5.h),
                   SizedBox(
                     width: stackWidth,
                     height: stackHeight,
                     child: Stack(
-                      clipBehavior: Clip.hardEdge, // Prevent overflow
+                      clipBehavior: Clip.hardEdge,
                       children: [
                         Obx(() {
                           final borderWidth = controller.borderSize.value;
@@ -81,7 +90,7 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                                       blurRadius: 5.0,
                                       offset: const Offset(0, 0))
                                 ],
-                                border: Border.all(color: grey, width: 1),
+                                border: Border.all(color: black, width: 1),
                                 shape: BoxShape.rectangle),
                             child: Container(
                               width: stackWidth -
@@ -199,22 +208,43 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
               ),
             ),
           ),
-          Obx(() => controller.buildNavBar(context)),
+          Obx(() => controller.buildNavBar(context, controller)),
         ],
       ),
     );
   }
 
   Widget _buildImageWidget(
-      Brandeditingcontroller controller, double width, double height) {
+      BrandImageController controller, double width, double height) {
     return Obx(() {
-      if (controller.cachedThumbnail.value != null) {
-        return Image.memory(controller.cachedThumbnail.value!,
-            fit: BoxFit.fill, width: width, height: height);
-      } else if (controller.thumbnailFuture.value == null) {
-        return Image.asset(Asset.bussinessPlaceholder,
-            fit: BoxFit.fill, width: width, height: height);
-      } else {
+      if (controller.selectedImageUrl.value.isNotEmpty) {
+        // Display the selected image
+        return CachedNetworkImage(
+          imageUrl: controller.selectedImageUrl.value,
+          fit: BoxFit.fill,
+          width: width,
+          height: height,
+          placeholder: (context, url) => Image.asset(
+            Asset.bussinessPlaceholder,
+            fit: BoxFit.fill,
+            width: width,
+            height: height,
+          ),
+          errorWidget: (context, url, error) => Image.asset(
+            Asset.bussinessPlaceholder,
+            fit: BoxFit.fill,
+            width: width,
+            height: height,
+          ),
+        );
+      } else if (controller.cachedThumbnail.value != null) {
+        return Image.memory(
+          controller.cachedThumbnail.value!,
+          fit: BoxFit.fill,
+          width: width,
+          height: height,
+        );
+      } else if (controller.thumbnailFuture.value != null) {
         return FutureBuilder<Uint8List?>(
           future: controller.thumbnailFuture.value,
           builder: (context, snapshot) {
@@ -223,12 +253,23 @@ class _BrandeditingscreenState extends State<Brandeditingscreen> {
                 snapshot.data != null) {
               controller.cachedThumbnail.value =
                   snapshot.data; // Cache the result
-              return Image.memory(snapshot.data!,
-                  fit: BoxFit.fill, width: width, height: height);
+              return Image.memory(
+                snapshot.data!,
+                fit: BoxFit.fill,
+                width: width,
+                height: height,
+              );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
           },
+        );
+      } else {
+        return Image.asset(
+          Asset.bussinessPlaceholder,
+          fit: BoxFit.fill,
+          width: width,
+          height: height,
         );
       }
     });

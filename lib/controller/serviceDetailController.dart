@@ -565,7 +565,7 @@ class ServiceDetailScreenController extends GetxController {
               getServiceDetails(context, item);
             },
             child: Container(
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               color: white,
               height: 13.h,
               child: Column(
@@ -677,7 +677,7 @@ class ServiceDetailScreenController extends GetxController {
                         });
                       },
                       child: Container(
-                        margin: EdgeInsets.all(3),
+                        margin: const EdgeInsets.all(3),
                         child: Icon(
                           Icons.edit,
                           size: 18.sp,
@@ -696,11 +696,10 @@ class ServiceDetailScreenController extends GetxController {
                         );
                         // if (isDeleted == true) {
                         //   if (!context.mounted) return;
-
                         // }
                       },
                       child: Container(
-                        margin: EdgeInsets.all(3),
+                        margin: const EdgeInsets.all(3),
                         child: Icon(
                           Icons.delete,
                           size: 18.sp,
@@ -709,9 +708,8 @@ class ServiceDetailScreenController extends GetxController {
                       ),
                     ),
                     Obx(() {
-                      return Container(
+                      return SizedBox(
                         height: 3.h,
-                        // color: Colors.yellow,
                         width: 10.w,
                         child: Transform.scale(
                           scale: 3.sp,
@@ -721,7 +719,6 @@ class ServiceDetailScreenController extends GetxController {
                             value: item.isActive.value == 1,
                             onChanged: (value) {
                               int newStatus = item.isActive.value == 0 ? 1 : 0;
-
                               toggleActiveStatus(
                                 context,
                                 statusID: newStatus.toString(),
@@ -735,7 +732,7 @@ class ServiceDetailScreenController extends GetxController {
                     })
                   ],
                 )
-              : SizedBox.shrink()
+              : const SizedBox.shrink()
         ],
       ),
     );

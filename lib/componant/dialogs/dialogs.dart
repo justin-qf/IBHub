@@ -15,79 +15,153 @@ import '../../configs/font_constant.dart';
 import '../../configs/string_constant.dart';
 import '../toolbar/toolbar.dart';
 
-Widget getRadioButton(
-    {label,
-    firstText,
-    secondText,
-    isrequired = false,
-    enableFunction,
-    groupvalue,
-    isSelected,
-    onChanged,
-    required unfocused,
-    notifyListeners}) {
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
+// Widget getRadioButton(
+//     {label,
+//     firstText,
+//     secondText,
+//     isrequired = false,
+//     enableFunction,
+//     groupvalue,
+//     isSelected,
+//     onChanged,
+//     required unfocused,
+//     notifyListeners}) {
+//   return Row(
+//     crossAxisAlignment: CrossAxisAlignment.center,
+//     children: [
+//       getRadioLable(label, isRequired: isrequired),
+//       getDynamicSizedBox(width: 1.w),
+//       Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Row(
+//             children: [
+//               Radio(
+//                 value: firstText,
+//                 groupValue: groupvalue,
+//                 onChanged: (value) {
+//                   unfocused();
+//                   onChanged(value!);
+//                   isSelected = false;
+//                   enableFunction(groupvalue);
+//                   notifyListeners();
+//                 },
+//               ),
+//               GestureDetector(
+//                 onTap: () {
+//                   unfocused();
+//                   onChanged(firstText);
+//                   isSelected = false;
+//                   enableFunction(groupvalue);
+//                   notifyListeners();
+//                 },
+//                 child: Text(
+//                   firstText,
+//                   style: const TextStyle(fontFamily: dM_sans_regular),
+//                 ),
+//               ),
+//               Radio(
+//                 value: secondText,
+//                 groupValue: groupvalue,
+//                 onChanged: (value) {
+//                   unfocused();
+//                   onChanged(value!);
+//                   isSelected = false;
+//                   enableFunction(groupvalue);
+//                   notifyListeners();
+//                 },
+//               ),
+//               GestureDetector(
+//                 onTap: () {
+//                   unfocused();
+//                   onChanged(secondText);
+//                   isSelected = false;
+//                   enableFunction(groupvalue);
+//                   notifyListeners();
+//                 },
+//                 child: Text(
+//                   secondText,
+//                   style: const TextStyle(fontFamily: dM_sans_regular),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     ],
+//   );
+// }
+
+Widget getRadioButton({
+  label,
+  firstText,
+  secondText,
+  isrequired = false,
+  enableFunction,
+  groupvalue,
+  isSelected,
+  onChanged,
+  required unfocused,
+  notifyListeners,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      getLable(label, isRequired: isrequired),
-      getDynamicSizedBox(width: 1.w),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      getRadioLable(label, isRequired: isrequired),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Radio(
-                value: firstText,
-                groupValue: groupvalue,
-                onChanged: (value) {
-                  unfocused();
-                  onChanged(value!);
-
-                  isSelected = false;
-
-                  enableFunction(groupvalue);
-                  notifyListeners();
-                },
-              ),
-              GestureDetector(
-                onTap: () {
-                  unfocused();
-                  onChanged(firstText);
-
-                  isSelected = false;
-                  enableFunction(groupvalue);
-                  notifyListeners();
-                },
-                child: Text(
-                  firstText,
-                  style: TextStyle(fontFamily: dM_sans_regular),
-                ),
-              ),
-              Radio(
-                value: secondText,
-                groupValue: groupvalue,
-                onChanged: (value) {
-                  unfocused();
-                  onChanged(value!);
-                  isSelected = false;
-                  enableFunction(groupvalue);
-                  notifyListeners();
-                },
-              ),
-              GestureDetector(
-                onTap: () {
-                  unfocused();
-                  onChanged(secondText);
-                  isSelected = false;
-                  enableFunction(groupvalue);
-                  notifyListeners();
-                },
-                child: Text(
-                  secondText,
-                  style: TextStyle(fontFamily: dM_sans_regular),
-                ),
-              ),
-            ],
+          // Remove default padding using SizedBox with zero width if needed
+          Radio<String>(
+            materialTapTargetSize:
+                MaterialTapTargetSize.shrinkWrap, // <-- Removes extra space
+            visualDensity: const VisualDensity(
+                horizontal: -1, vertical: -2), // <-- Makes it tighter
+            value: firstText,
+            groupValue: groupvalue,
+            onChanged: (value) {
+              unfocused();
+              onChanged(value!);
+              enableFunction(groupvalue);
+              notifyListeners();
+            },
+          ),
+          GestureDetector(
+            onTap: () {
+              unfocused();
+              onChanged(firstText);
+              enableFunction(groupvalue);
+              notifyListeners();
+            },
+            child: Text(
+              firstText,
+              style: const TextStyle(fontFamily: dM_sans_regular),
+            ),
+          ),
+          Radio<String>(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: const VisualDensity(vertical: -4),
+            value: secondText,
+            groupValue: groupvalue,
+            onChanged: (value) {
+              unfocused();
+              onChanged(value!);
+              enableFunction(groupvalue);
+              notifyListeners();
+            },
+          ),
+          GestureDetector(
+            onTap: () {
+              unfocused();
+              onChanged(secondText);
+              enableFunction(groupvalue);
+              notifyListeners();
+            },
+            child: Text(
+              secondText,
+              style: const TextStyle(fontFamily: dM_sans_regular),
+            ),
           ),
         ],
       ),
@@ -812,22 +886,23 @@ Future<Object?> selectImageFromCameraOrGallery(BuildContext context,
                           fontFamily: fontBold),
                     ),
                     actions: [
-                      CupertinoDialogAction(
-                          onPressed: () {
-                            cameraClick!();
-                            Navigator.pop(context);
-                          },
-                          isDefaultAction: true,
-                          isDestructiveAction: true,
-                          child: Text(AlertDialogList.camera,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: isDarkMode() ? white : black,
-                                  fontFamily: fontRegular,
-                                  fontSize:
-                                      Device.screenType == ScreenType.mobile
-                                          ? 16.sp
-                                          : 11.sp))),
+                      if (cameraClick != null)
+                        CupertinoDialogAction(
+                            onPressed: () {
+                              cameraClick();
+                              Navigator.pop(context);
+                            },
+                            isDefaultAction: true,
+                            isDestructiveAction: true,
+                            child: Text(AlertDialogList.camera,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: isDarkMode() ? white : black,
+                                    fontFamily: fontRegular,
+                                    fontSize:
+                                        Device.screenType == ScreenType.mobile
+                                            ? 16.sp
+                                            : 11.sp))),
                       CupertinoDialogAction(
                           onPressed: () {
                             galleryClick!();

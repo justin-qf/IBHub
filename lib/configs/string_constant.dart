@@ -19,6 +19,10 @@ class CategoryScreenViewConst {
   static const title = 'Category';
 }
 
+class ProductScreenConst {
+  static const title = 'My Product';
+}
+
 class SubjectScreenViewConst {
   static const popularSubject = 'Popular Subject';
 }
@@ -173,6 +177,7 @@ class ProfileScreenConst {
   static const edit = 'Edit ';
   static const updateProfile = 'Update Profile';
   static const mybusiness = 'My Bussiness';
+  static const product = 'My Product';
   static const changepassword = 'Change Password';
 
   static const editdesc =
@@ -444,6 +449,32 @@ class SignUpConstant {
   static const back = 'Back';
   static const stateList = 'State List';
   static const cityList = 'City List';
+}
+
+class AddProductConstant {
+  static const title = 'Add Product';
+  static const productImageLable = 'Product Image';
+  static const productImageHint = 'Select Product Image';
+  static const productNameLable = 'Product Name';
+  static const productNameHint = 'Enter Product Name';
+  static const priceLable = 'Price';
+  static const priceHint = 'Enter Price';
+  static const salePriceLable = 'Sale Price';
+  static const salePriceHint = 'Enter Sale Price';
+  static const specificationLable = 'Specification';
+  static const specificationHint = 'Enter Specification';
+  static const unitLable = 'Specification';
+  static const unitHint = 'Enter Specification';
+  static const serviceLable = 'Service';
+  static const serviceHint = 'Select Service';
+  static const serviceListHint = 'Service List';
+  static const descriptionLable = 'Description';
+  static const descriptionHint = 'Enter Description';
+  static const submit = 'Submit';
+  static const featureLabel = 'Is Featured';
+  static const yesLable = 'Yes';
+  static const noLable = 'No';
+  static const serviceLabel = 'Is Service';
 }
 
 class OtpConstants {

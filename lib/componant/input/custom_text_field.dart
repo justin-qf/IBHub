@@ -136,7 +136,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
         textAlignVertical:
             widget.isAddressField ? TextAlignVertical.bottom : null,
         maxLength: widget.inputType == TextInputType.number
-            ? 16
+            ? 50
             : widget.isReferenceField
                 ? 6
                 : widget.isGst == true

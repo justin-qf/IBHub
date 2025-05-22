@@ -9,29 +9,32 @@ import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/configs/string_constant.dart';
-import 'package:ibh/controller/category_controller.dart';
-import 'package:ibh/models/categoryListModel.dart';
+import 'package:ibh/controller/brandSeeAllController.dart';
+import 'package:ibh/models/ImageCategoryModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
-
+class BrandSeeAllScreen extends StatefulWidget {
+  BrandSeeAllScreen(
+      {required this.imageCategoryTypeId, required this.title, super.key});
+  String imageCategoryTypeId;
+  String title;
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<BrandSeeAllScreen> createState() => _BrandSeeAllScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
-  var controller = Get.put(CategoryController());
+class _BrandSeeAllScreenState extends State<BrandSeeAllScreen> {
+  var controller = Get.put(BrandSeeAllController());
 
   @override
   void initState() {
     futureDelay(() {
       controller.currentPage = 1;
-      controller.getCategoryList(context, controller.currentPage, false,
+      controller.getImageCategoryList(
+          context, controller.currentPage, widget.imageCategoryTypeId, false,
           isFirstTime: true);
     }, milliseconds: true);
     controller.refreshController.refreshCompleted();
@@ -52,7 +55,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
         () {
           controller
               // ignore: use_build_context_synchronously
-              .getCategoryList(context, controller.currentPage, true,
+              .getImageCategoryList(context, controller.currentPage,
+                  widget.imageCategoryTypeId, true,
                   isFirstTime: false)
               .whenComplete(() {
             if (mounted) {
@@ -68,7 +72,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void dispose() {
     controller.currentPage = 1;
-    controller.categoryList.clear();
+    controller.imageCategoryList.clear();
     super.dispose();
   }
 
@@ -93,7 +97,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             Container(
                 margin: EdgeInsets.only(left: 5.w),
                 child: getleftsidebackbtn(
-                  title: CategoryScreenViewConst.title,
+                  title: widget.title,
                   backFunction: () {
                     Get.back(result: true);
                   },
@@ -101,25 +105,42 @@ class _CategoryScreenState extends State<CategoryScreen> {
             setSearchBars(
                 context, controller.searchCtr, CategoryScreenViewConst.title,
                 onCancleClick: () {
-              controller.isSearch = false;
-              controller.searchCtr.text = '';
-              setState(() {});
-            }, onClearClick: () {
-              if (controller.searchCtr.text.isNotEmpty) {
-                futureDelay(() {
-                  hideKeyboard(context);
-                  controller.currentPage = 1;
+                  controller.isSearch = false;
+                  controller.searchCtr.text = '';
+                  setState(() {});
+                },
+                onClearClick: () {
+                  if (controller.searchCtr.text.isNotEmpty) {
+                    futureDelay(() {
+                      hideKeyboard(context);
+                      controller.currentPage = 1;
+                      futureDelay(() {
+                        controller.getImageCategoryList(
+                            context,
+                            controller.currentPage,
+                            widget.imageCategoryTypeId,
+                            false,
+                            search: controller.searchCtr.text.toString(),
+                            isFirstTime: true);
+                      }, milliseconds: true);
+                    });
+                  }
+                  controller.searchCtr.text = '';
+                  setState(() {});
+                },
+                isCancle: false,
+                isFromCategoryList: true,
+                onEditingComplete: () {
                   futureDelay(() {
-                    controller.getCategoryList(
-                        context, controller.currentPage, false,
+                    controller.getImageCategoryList(
+                        context,
+                        controller.currentPage,
+                        widget.imageCategoryTypeId,
+                        false,
                         search: controller.searchCtr.text.toString(),
                         isFirstTime: true);
                   }, milliseconds: true);
-                });
-              }
-              controller.searchCtr.text = '';
-              setState(() {});
-            }, isCancle: false, isFromCategoryList: true),
+                }),
             getDynamicSizedBox(height: 1.h),
             Expanded(
               child: SmartRefresher(
@@ -132,8 +153,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 onRefresh: () async {
                   controller.currentPage = 1;
                   futureDelay(() {
-                    controller.getCategoryList(
-                        context, controller.currentPage, false,
+                    controller.getImageCategoryList(
+                        context,
+                        controller.currentPage,
+                        widget.imageCategoryTypeId,
+                        false,
                         isFirstTime: true);
                   }, isOneSecond: false);
                   controller.refreshController.refreshCompleted();
@@ -151,12 +175,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           case ScreenState.apiError:
                             return SizedBox(
                                 height: Device.height / 1.5,
-                                child: apiOtherStates(controller.state.value,
-                                    controller, controller.categoryList, () {
+                                child: apiOtherStates(
+                                    controller.state.value,
+                                    controller,
+                                    controller.imageCategoryList, () {
                                   controller.currentPage = 1;
                                   futureDelay(() {
-                                    controller.getCategoryList(
-                                        context, controller.currentPage, false,
+                                    controller.getImageCategoryList(
+                                        context,
+                                        controller.currentPage,
+                                        widget.imageCategoryTypeId,
+                                        false,
                                         isFirstTime: true);
                                   }, isOneSecond: false);
                                   controller.refreshController
@@ -174,7 +203,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               ),
             ),
-        
           ],
         ),
       ),
@@ -183,7 +211,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget apiSuccess(ScreenState state) {
     if (controller.state.value == ScreenState.apiSuccess &&
-        controller.categoryList.isNotEmpty) {
+        controller.imageCategoryList.isNotEmpty) {
       return MasonryGridView.count(
         // controller: controller.scrollController,
         physics: const NeverScrollableScrollPhysics(),
@@ -192,12 +220,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
         mainAxisSpacing: 10,
         crossAxisSpacing: 8,
         shrinkWrap: true,
-        itemCount: controller.categoryList.length +
+        itemCount: controller.imageCategoryList.length +
             (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index < controller.categoryList.length) {
-            CategoryListData data = controller.categoryList[index];
-            return controller.getOldListItem(context, data: data);
+          if (index < controller.imageCategoryList.length) {
+            ImageCategoryData data = controller.imageCategoryList[index];
+            return controller.getListItem(
+                context, data: data, widget.imageCategoryTypeId.toString());
           } else if (controller.isFetchingMore) {
             return Center(
               child: Padding(
@@ -214,5 +243,4 @@ class _CategoryScreenState extends State<CategoryScreen> {
       return noDataFoundWidget();
     }
   }
-
 }

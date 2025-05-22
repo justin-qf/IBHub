@@ -657,9 +657,18 @@ getleftsidebackbtn(
       ),
       if (istitle == true) getDynamicSizedBox(width: 2.w),
       if (istitle == true)
-        Text(
-          title,
-          style: TextStyle(fontFamily: dM_sans_bold, fontSize: 18.sp),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(right: 5.w),
+            child: Text(
+              title,
+              maxLines: 1,
+              style: TextStyle(
+                  fontFamily: dM_sans_bold,
+                  fontSize: 18.sp,
+                  overflow: TextOverflow.ellipsis),
+            ),
+          ),
         )
     ],
   );

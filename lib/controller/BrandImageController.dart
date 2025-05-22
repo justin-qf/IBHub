@@ -10,12 +10,18 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/models/TextItemModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/BrandImageScreens/BackgroundScreenTab.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/BrandImageScreens/FooterScreenTab.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/BrandImageScreens/FrameScreenTab.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/BrandImageScreens/PostScreenTab.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/BrandImageScreens/TextEditScreenTab.dart';
 import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
+import 'package:http/http.dart' as http;
 
-class Brandeditingcontroller extends GetxController {
+class BrandImageController extends GetxController {
   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
   RxInt activeTab = 0.obs;
 
@@ -27,16 +33,46 @@ class Brandeditingcontroller extends GetxController {
   final Rx<AssetEntity?> selectedImage = Rx<AssetEntity?>(null);
   final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
   final Rx<Uint8List?> cachedThumbnail = Rx<Uint8List?>(null);
+  String categoryId = "";
+  var selectedImageUrl = ''.obs;
 
-  List<Widget> screens(BuildContext context) => [
-        Container(margin: EdgeInsets.all(10), child: getimageGridView()),
-        Container(margin: EdgeInsets.all(10), child: footerWidget()),
-        Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.w),
-            child: getFrameGridView()),
-        Container(child: bgcolorPic(context: context)),
-        Container(
-            margin: EdgeInsets.all(10), child: gettextEditingWidget(context)),
+// Method to set the selected image
+  void setSelectedImage(String imageUrl) {
+    selectedImageUrl.value = imageUrl;
+    cachedThumbnail.value = null; // Clear cached thumbnail
+    thumbnailFuture.value = null; // Clear previous future
+    // Optionally, fetch the image as Uint8List if needed
+    fetchImageAsUint8List(imageUrl);
+  }
+
+  // Method to fetch image as Uint8List (if needed)
+  Future<Uint8List?> fetchImageAsUint8List(String imageUrl) async {
+    try {
+      final response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode == 200) {
+        cachedThumbnail.value = response.bodyBytes;
+        return response.bodyBytes;
+      }
+    } catch (e) {
+      logcat("Error::", e.toString());
+    }
+    return null;
+  }
+
+  List<Widget> screens(BuildContext context, BrandImageController controller) =>
+      [
+        PostScreenTab(controller: controller),
+        FooterScreenTab(controller: controller),
+        FrameScreenTab(controller: controller),
+        BackgroundScreenTab(controller: controller),
+        TextEditScreenTab(controller: controller),
+        // Container(
+        //     margin: EdgeInsets.symmetric(horizontal: 4.w),
+        //     child: getFrameGridView()),
+        // Container(child: bgcolorPic(context: context)),
+        // Container(
+        //     margin: const EdgeInsets.all(10),
+        //     child: gettextEditingWidget(context)),
         Container(
           margin: EdgeInsets.all(10),
           child: filterLogic(),
@@ -52,7 +88,7 @@ class Brandeditingcontroller extends GetxController {
 
   // Filter-related logic
   Widget filterLogic() {
-    return SizedBox.shrink(); // Placeholder as per original code
+    return const SizedBox.shrink(); // Placeholder as per original code
   }
 
   void toggleImageSelection(AssetEntity image) async {
@@ -884,11 +920,11 @@ class Brandeditingcontroller extends GetxController {
     activeTab.value = index;
   }
 
-  Widget buildNavBar(BuildContext context) {
+  Widget buildNavBar(BuildContext context, BrandImageController controller) {
     return Column(
       children: [
         Obx(() => Container(
-              height: 27.h,
+              height: 33.h,
               width: Device.width,
               decoration: BoxDecoration(
                   color: primaryColor.withOpacity(0.5),
@@ -901,15 +937,16 @@ class Brandeditingcontroller extends GetxController {
                       blurRadius: 6.0, // Softness of the shadow
                       spreadRadius: 1.0, // How much the shadow spreads
                       offset: Offset(0, -3), // Position of the shadow (above)
-                    ),
+                    )
                   ]),
-              child: screens(context)[activeTab.value],
+              child: screens(context, controller)[activeTab.value],
             )),
         Container(
           width: double.infinity,
           color: primaryColor,
           padding: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 2.w),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -940,7 +977,6 @@ class Brandeditingcontroller extends GetxController {
                     index: 4,
                     onTap: () {
                       _updateTab(4);
-                      print("Open Text Editor");
                     }),
                 buildNavButton(
                     icon: Icons.edit,
@@ -948,7 +984,6 @@ class Brandeditingcontroller extends GetxController {
                     index: 5,
                     onTap: () {
                       _updateTab(5);
-                      print("Open Text Editor");
                     }),
               ],
             ),
@@ -972,15 +1007,13 @@ class Brandeditingcontroller extends GetxController {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon,
-                size: 17.sp, color: isActive ? Colors.yellow : Colors.white),
+            Icon(icon, size: 17.sp, color: isActive ? yellow : white),
             Text(
               label,
               style: TextStyle(
-                fontSize: 15.sp,
-                color: isActive ? Colors.yellow : Colors.white,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              ),
+                  fontSize: 15.sp,
+                  color: isActive ? yellow : white,
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal),
             ),
           ],
         ),

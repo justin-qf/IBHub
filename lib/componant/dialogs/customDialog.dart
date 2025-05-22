@@ -267,7 +267,7 @@ Future<Object?> popupDialogs(
 }
 
 Future<bool?> deleteDialogs(BuildContext context,
-    {required Function() function}) {
+    {required Function() function, bool? isFromProduct = false}) {
   return showGeneralDialog(
     barrierColor: black.withOpacity(0.6),
     transitionBuilder: (context, a1, a2, widget) {
@@ -276,9 +276,9 @@ Future<bool?> deleteDialogs(BuildContext context,
         child: Opacity(
           opacity: a1.value,
           child: CupertinoAlertDialog(
-            title: const Text(
-              "Delete Service",
-              style: TextStyle(
+            title: Text(
+              isFromProduct == true ? "Delete Product" : "Delete Service",
+              style: const TextStyle(
                 fontSize: 18,
                 color: black,
                 fontFamily: fontBold,

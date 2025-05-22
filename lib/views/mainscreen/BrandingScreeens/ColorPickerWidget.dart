@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/controller/BrandImageController.dart';
 import 'package:ibh/controller/brandEditingcontroller.dart';
 import 'package:sizer/sizer.dart';
 
@@ -16,7 +17,8 @@ class ColorPickerWidget extends StatefulWidget {
 class _ColorPickerWidgetState extends State<ColorPickerWidget> {
   double _cursorX = 0;
   double _cursorY = 0;
-  final Brandeditingcontroller controller = Get.find<Brandeditingcontroller>();
+  // final Brandeditingcontroller controller = Get.find<Brandeditingcontroller>();
+  final controller = Get.find<BrandImageController>();
 
   Color _getColorAtPosition(double xPosition, double yPosition) {
     const colors = [

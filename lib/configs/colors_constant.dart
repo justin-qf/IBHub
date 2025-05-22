@@ -221,6 +221,7 @@ const Color fourthTile = Color(0XFF9bd2f5);
 
 const Color black = Colors.black;
 const Color white = Colors.white;
+const Color yellow = Colors.yellow;
 const Color grey = Colors.grey;
 const Color red = Colors.red;
 const Color lightRed = Color(0xFFBC1313);

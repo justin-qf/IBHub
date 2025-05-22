@@ -6,11 +6,11 @@ import 'package:ibh/componant/toolbar/toolbar.dart';
 import 'package:ibh/componant/widgets/widgets.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
-import 'package:ibh/controller/brandingscreencontroller.dart';
-import 'package:ibh/models/businessListModel.dart';
+import 'package:ibh/configs/string_constant.dart';
+import 'package:ibh/controller/brandingScreencontroller.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:ibh/views/mainscreen/BrandingScreeens/BrandingDetailsScreen.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/BrandSeeAllScreen.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -25,19 +25,44 @@ class BrandingScreen extends StatefulWidget {
 }
 
 class _BrandingScreenState extends State<BrandingScreen> {
-  var controller = Get.put(Brandingscreencontroller());
+  var controller = Get.put(BrandingScreencontroller());
 
   @override
   void initState() {
     super.initState();
     controller.state.value = ScreenState.apiLoading;
     futureDelay(() {
-      controller.getBusinessList(context, 1, false, isFirstTime: true);
-    }, isOneSecond: true);
+      controller.getBrandingImageList(context, controller.currentPage, false,
+          isFirstTime: true);
+    }, milliseconds: true);
+    controller.refreshController.refreshCompleted();
+    controller.scrollController.addListener(scrollListener);
+  }
 
-    // controller.pageController =
-    //     PageController(initialPage: controller.currentPage);
-    // controller.scrollController.addListener(scrollListener);
+  void scrollListener() {
+    if (controller.scrollController.position.pixels ==
+            controller.scrollController.position.maxScrollExtent &&
+        controller.nextPageURL.value.isNotEmpty &&
+        !controller.isFetchingMore) {
+      if (!mounted) return;
+      setState(() => controller.isFetchingMore = true);
+      controller.currentPage++;
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {
+          controller
+              // ignore: use_build_context_synchronously
+              .getBrandingImageList(context, controller.currentPage, true,
+                  isFirstTime: false)
+              .whenComplete(() {
+            if (mounted) {
+              setState(() => controller.isFetchingMore = false);
+              controller.refreshController.refreshCompleted();
+            }
+          });
+        },
+      );
+    }
   }
 
   @override
@@ -57,7 +82,7 @@ class _BrandingScreenState extends State<BrandingScreen> {
           child: Column(
             children: [
               getDynamicSizedBox(height: 4.h),
-              getCommonToolbar("Branding", showBackButton: false),
+              getCommonToolbar(BottomConstant.branding, showBackButton: false),
               Expanded(
                 child: SmartRefresher(
                   physics: const BouncingScrollPhysics(),
@@ -69,7 +94,7 @@ class _BrandingScreenState extends State<BrandingScreen> {
                   onRefresh: () async {
                     futureDelay(() {
                       controller.currentPage = 1;
-                      controller.getBusinessList(
+                      controller.getBrandingImageList(
                         context,
                         controller.currentPage,
                         false,
@@ -93,10 +118,9 @@ class _BrandingScreenState extends State<BrandingScreen> {
                                 child: apiOtherStates(controller.state.value,
                                     controller, controller.searchList, () {
                                   controller.currentPage = 1;
-
-                                  controller.getBusinessList(
+                                  controller.getBrandingImageList(
                                     context,
-                                    1,
+                                    controller.currentPage,
                                     false,
                                     isFirstTime: true,
                                   );
@@ -122,275 +146,85 @@ class _BrandingScreenState extends State<BrandingScreen> {
   }
 
   Widget apiSuccess(ScreenState state) {
-    if (state == ScreenState.apiSuccess
-
-        // && controller.businessList.isNotEmpty
-
-        ) {
+    if (state == ScreenState.apiSuccess) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          getDynamicSizedBox(height: 3.h),
-          // controller.getDigitalCardLayout(context),
-          getHomeLable('Daily Images', () {
-            Get.to(Brandingdetailsscreen(
-              count: 1,
-            ));
-            // Get.to(const CategoryScreen())!.then((value) {
-            //   futureDelay(() {
-            //     controller.currentPage = 1;
-            //     controller.getBusinessList(context, 1, false,
-            //         isFirstTime: true);
-            //   }, isOneSecond: false);
-            // });
-          }),
-          getDynamicSizedBox(height: 2.h),
-          Container(
-              color: transparent,
-              height: Device.screenType == sizer.ScreenType.mobile
-                  ? isSmallDevice(context)
-                      ? 15.h
-                      : 18.h
-                  : 20.h,
-              child: Obx(() {
-                final items = controller.businessList.take(6).toList();
-                return controller.isBusinessLoading.value
-                    ? SizedBox(
-                        height: 12.h,
-                        child: const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor)),
-                      )
-                    : controller.businessList.isNotEmpty
-                        ? ListView.builder(
-                            // controller: controller.scrollController,
-                            physics: const BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(
-                                bottom: 5.h, left: 2.w, right: 2.w, top: 1.h),
-
-                            shrinkWrap: false,
-                            scrollDirection: Axis.horizontal,
-                            clipBehavior: Clip.antiAlias,
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              if (index < controller.businessList.length) {
-                                BusinessData data =
-                                    controller.businessList[index];
-                                return controller.getDailyListItem(
-                                    dailyName: controller.dailyNames[index],
-                                    dailyImg: controller.dailyImages[index],
-                                    context,
-                                    data);
-                              } else if (controller.isFetchingfestivalMore) {
-                                return Center(
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 2.h),
-                                    child: const CircularProgressIndicator(
-                                        color: primaryColor),
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            },
-                          )
-                        : Container();
-              })),
-          getDynamicSizedBox(height: 1.h),
-          getSeeAll(
-              title: 'Festivals Images',
-              onCLick: () {
-                Get.to(Brandingdetailsscreen(
-                  count: 2,
-                ));
-                // Get.to(const CategoryScreen())!.then((value) {
-                //   futureDelay(() {
-                //     controller.currentPage = 1;
-                //     controller.getBusinessList(context, 1, false,
-                //         isFirstTime: true);
-                //   }, isOneSecond: false);
-                // });
-              }),
-          getDynamicSizedBox(height: 2.h),
-          Container(
-              color: transparent,
-              // width: 10.w,
-              height: Device.screenType == sizer.ScreenType.mobile
-                  ? isSmallDevice(context)
-                      ? 15.h
-                      : 18.h
-                  : 25.h,
-              child: Obx(() {
-                final items = controller.businessList.take(6).toList();
-                return controller.isBusinessLoading.value
-                    ? SizedBox(
-                        height: 12.h,
-                        child: const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor)),
-                      )
-                    : controller.businessList.isNotEmpty
-                        ? ListView.builder(
-                            // controller: controller.scrollController,
-                            physics: const BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(
-                                bottom: 2.h, left: 2.w, right: 2.w, top: 1.h),
-                            shrinkWrap: false,
-                            scrollDirection: Axis.horizontal,
-                            clipBehavior: Clip.antiAlias,
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              if (index < controller.businessList.length) {
-                                BusinessData data =
-                                    controller.businessList[index];
-                                return controller.getFestivalListItem(
-                                    festivalName:
-                                        controller.festivalNames[index],
-                                    festivalImg:
-                                        controller.festivalImages[index],
-                                    context,
-                                    data);
-                              } else if (controller.isFetchingfestivalMore) {
-                                return Center(
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 2.h),
-                                    child: const CircularProgressIndicator(
-                                        color: primaryColor),
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            },
-                          )
-                        : Container();
-              })),
-          getDynamicSizedBox(height: 2.h),
-          getHomeLable('Bussiness Images', () {
-            Get.to(Brandingdetailsscreen(
-              count: 3,
-            ));
-            // Get.to(const CategoryScreen())!.then((value) {
-            //   futureDelay(() {
-            //     controller.currentPage = 1;
-            //     controller.getBusinessList(context, 1, false,
-            //         isFirstTime: true);
-            //   }, isOneSecond: false);
-            // });
-          }),
-          getDynamicSizedBox(height: 2.h),
-          Container(
-            color: transparent,
-            height: Device.screenType == sizer.ScreenType.mobile
-                ? isSmallDevice(context)
-                    ? 15.h
-                    : 18.h
-                : 25.h,
-            child: Obx(
-              () {
-                final items = controller.businessList.take(6).toList();
-                return controller.isBusinessLoading.value
-                    ? SizedBox(
-                        height: 12.h,
-                        child: const Center(
-                            child:
-                                CircularProgressIndicator(color: primaryColor)),
-                      )
-                    : controller.businessList.isNotEmpty
-                        ? ListView.builder(
-                            // controller: controller.scrollController,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(
-                                bottom: 2.h, left: 2.w, right: 2.w, top: 1.h),
-                            shrinkWrap: false,
-                            scrollDirection: Axis.horizontal,
-                            clipBehavior: Clip.antiAlias,
-
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              if (index < controller.businessList.length) {
-                                BusinessData data =
-                                    controller.businessList[index];
-                                return controller.getBusinessListItem(
-                                    businessName:
-                                        controller.bussinessNames[index],
-                                    bussinessImg:
-                                        controller.bussinessList[index],
-                                    context,
-                                    data);
-                              } else if (controller.isFetchingfestivalMore) {
-                                return Center(
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 2.h),
-                                    child: const CircularProgressIndicator(
-                                        color: primaryColor),
-                                  ),
-                                );
-                              } else {
-                                return Container();
-                              }
-                            },
-                          )
-                        : Container();
-              },
-            ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            // itemCount: controller.categoryTypes.length,
+            itemCount: controller.categoryTypes.length +
+                (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
+            padding: const EdgeInsets.all(0),
+            itemBuilder: (context, index) {
+              if (index < controller.categoryTypes.length) {
+                final categoryType = controller.categoryTypes[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getDynamicSizedBox(height: 1.5.h),
+                    getHomeLable(categoryType.title, () {
+                      Get.to(BrandSeeAllScreen(
+                        imageCategoryTypeId: categoryType.id.toString(),
+                        title: categoryType.title,
+                      ))!
+                          .then((value) {
+                        futureDelay(() {
+                          controller.currentPage = 1;
+                          controller.getBrandingImageList(
+                              context, controller.currentPage, false,
+                              isFirstTime: true);
+                        }, isOneSecond: false);
+                      });
+                    }, isFromDetailScreen: false),
+                    getDynamicSizedBox(height: 1.h),
+                    if (categoryType.title == 'Business')
+                      controller.businessCategoryWidget(categoryType.category)
+                    else if (categoryType.title == 'Daily Images')
+                      controller.getDailyListItem(categoryType.category)
+                    else
+                      controller.businessCategoryWidget(categoryType.category)
+                  ],
+                );
+              } else if (controller.isFetchingMore) {
+                return Center(
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 2.h),
+                      child:
+                          const CircularProgressIndicator(color: primaryColor)),
+                );
+              } else {
+                return Container();
+              }
+              // final categoryType = controller.categoryTypes[index];
+              // return Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     getDynamicSizedBox(height: 1.h),
+              //     getHomeLable(categoryType.title, () {
+              //       // Get.to(const CategoryScreen())!.then((value) {
+              //       //   futureDelay(() {
+              //       //     controller.currentPage = 1;
+              //       //     controller.getBusinessList(context, 1, false,
+              //       //         isFirstTime: true);
+              //       //   }, isOneSecond: false);
+              //       // });
+              //     }),
+              //     getDynamicSizedBox(height: 1.h),
+              //     if (categoryType.title == 'Business')
+              //       controller.businessCategoryWidget(categoryType.category)
+              //     else if (categoryType.title == 'Daily Images')
+              //       controller.getDailyListItem(categoryType.category)
+              //     else
+              //       controller.businessCategoryWidget(categoryType.category)
+              //   ],
+              // );
+            },
           ),
         ],
       );
-
-      // ListView.builder(
-      //   controller: controller.scrollController,
-      //   physics: const BouncingScrollPhysics(),
-      //   padding:
-      //       EdgeInsets.only(left: 1.w, right: 1.w, top: 0.5.h, bottom: 12.h),
-      //   scrollDirection: Axis.vertical,
-      //   shrinkWrap: true,
-      //   clipBehavior: Clip.antiAlias,
-      //   itemCount: controller.businessList.length +
-      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-      //   itemBuilder: (context, index) {
-      //     if (index < controller.businessList.length) {
-      //       BusinessData data = controller.businessList[index];
-      //       return controller.getBusinessListItem(context, data);
-      //     } else if (controller.isFetchingMore) {
-      //       return Center(
-      //         child: Padding(
-      //           padding: EdgeInsets.symmetric(vertical: 2.h),
-      //           child: const CircularProgressIndicator(color: primaryColor),
-      //         ),
-      //       );
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      // );
-      // return MasonryGridView.count(
-      //   controller: controller.scrollController,
-      //   physics: const BouncingScrollPhysics(),
-      //   padding: EdgeInsets.only(bottom: 2.h, left: 5.w, right: 5.w, top: 2.h),
-      //   crossAxisCount: Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
-      //   mainAxisSpacing: 10,
-      //   crossAxisSpacing: 4,
-      //   itemCount: controller.businessList.length +
-      //       (controller.nextPageURL.value.isNotEmpty ? 1 : 0),
-      //   itemBuilder: (context, index) {
-      //     if (index < controller.businessList.length) {
-      //       BusinessData data = controller.businessList[index];
-      //       return controller.getBusinessListItem(context, data);
-      //     } else if (controller.isFetchingMore) {
-      //       return Center(
-      //         child: Padding(a
-      //           padding: EdgeInsets.symmetric(vertical: 2.h),
-      //           child: const CircularProgressIndicator(color: primaryColor),
-      //         ),
-      //       );
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      // );
     } else {
       return noDataFoundWidget();
     }
