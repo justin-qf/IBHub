@@ -12,7 +12,6 @@ import 'package:ibh/services/firebaseNoticationsHandler.dart';
 import 'package:ibh/services/push_notification.dart';
 import 'package:ibh/utils/helper.dart';
 import 'package:ibh/views/RemoteConfig/remoteConfig.dart';
-import 'package:ibh/views/mainscreen/BrandingScreeens/BrandEditingScreen.dart';
 import 'package:ibh/views/splashscreen/SplashScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -72,7 +71,7 @@ class _MyAppState extends State<MyApp> {
         enableLog: true,
         title: AppConstant.name,
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home:const SplashScreen(),
         defaultTransition: Transition.fadeIn,
       );
     });

@@ -198,7 +198,7 @@ class _SigninscreenState extends State<Signinscreen> {
                 onTap: () async {
                   final result = await Get.to(() => Signupscreen());
                   if (result == true) {
-                    ctr.resetForm ();
+                    ctr.resetForm();
                     ctr.unfocusAll();
                   }
                 },
@@ -274,7 +274,6 @@ class _SigninscreenState extends State<Signinscreen> {
                           var id = user!.uid;
 
                           print('user id:$id');
-
                           // if (user != null) {
                           //   final result = await Get.to(() => Signupscreen(
                           //         emailId: user.email,
@@ -289,13 +288,17 @@ class _SigninscreenState extends State<Signinscreen> {
                         },
                         style: ButtonStyle(
                             minimumSize:
-                                const WidgetStatePropertyAll(Size(50, 50)),
-                            shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15))),
-                            side: const WidgetStatePropertyAll(BorderSide(
-                                color: const Color.fromARGB(255, 219, 219, 219),
-                                width: 1))),
+                                const MaterialStatePropertyAll(Size(50, 50)),
+                            shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                            ),
+                            side: const MaterialStatePropertyAll(
+                              BorderSide(
+                                color: Color.fromARGB(255, 219, 219, 219),
+                                width: 1,
+                              ),
+                            )),
                         child: SvgPicture.asset(
                           Asset.google,
                           height: 4.h,
