@@ -198,7 +198,7 @@ class _SigninscreenState extends State<Signinscreen> {
                 onTap: () async {
                   final result = await Get.to(() => Signupscreen());
                   if (result == true) {
-                    ctr.resetForm ();
+                    ctr.resetForm();
                     ctr.unfocusAll();
                   }
                 },
@@ -274,18 +274,6 @@ class _SigninscreenState extends State<Signinscreen> {
                           var id = user!.uid;
 
                           print('user id:$id');
-
-                          // if (user != null) {
-                          //   final result = await Get.to(() => Signupscreen(
-                          //         emailId: user.email,
-                          //       ));
-                          //   if (result == true) {
-                          //     ctr.resetForm();
-                          //     ctr.unfocusAll();
-                          //   }
-                          // } else {
-                          //   print('Login cancelled.');
-                          // }
                         },
                         style: ButtonStyle(
                             minimumSize:
