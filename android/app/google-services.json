@@ -12,7 +12,52 @@
           "package_name": "com.app.indianbusinesshub"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "210905767385-1bfnvn5euhg96dgqmseocf61pd056ff0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.indianbusinesshub",
+            "certificate_hash": "3f6852c55f855a5da9aaa625a7cf6a77bf06c38a"
+          }
+        },
+        {
+          "client_id": "210905767385-bl7l6rrq5geengenr7u00qsbibe1i31h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.indianbusinesshub",
+            "certificate_hash": "c7ab91b83b502044a29a2c7bc896ec12ad8053f7"
+          }
+        },
+        {
+          "client_id": "210905767385-jakniucqd7akvus8o5vamctcodmj06o2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.indianbusinesshub",
+            "certificate_hash": "1e44155958ccbaaba3724360ad744f64a1faf69c"
+          }
+        },
+        {
+          "client_id": "210905767385-s0o6mgmu83nq7pq6okmsf37a795iq5c1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.indianbusinesshub",
+            "certificate_hash": "22a2a6385e8bda62d604f50384eff0d3682fd50f"
+          }
+        },
+        {
+          "client_id": "210905767385-s5vem43ru2s274ief7a1lgpjejjlse2c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.indianbusinesshub",
+            "certificate_hash": "c6ccdfc332b8d5dc7f94b30395b5ca808e0628a6"
+          }
+        },
+        {
+          "client_id": "210905767385-ks2v7oov6kqm5r0t1mnv91cq799dekv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDnOMMAFlUFbS3Pvtr2759RAoxbmN6FciQ"
@@ -20,7 +65,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210905767385-ks2v7oov6kqm5r0t1mnv91cq799dekv8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

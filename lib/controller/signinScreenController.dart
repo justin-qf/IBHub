@@ -28,8 +28,8 @@ import 'package:ibh/views/sigin_signup/signupScreen.dart';
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
-  final RemoteConfigService remoteConfigService =
-      Get.find<RemoteConfigService>(); // Get RemoteConfigService
+  RemoteConfigService get remoteConfigService =>
+      Get.find<RemoteConfigService>();
   RxBool isGoogleAuthVisible = false.obs; // Reactive boolean
 
   // // Optional: Refresh Remote Config
@@ -77,7 +77,11 @@ class Signinscreencontroller extends GetxController {
     remoteConfigService.remoteConfig.onConfigUpdated.listen((event) async {
       await remoteConfigService.remoteConfig.activate();
       isGoogleAuthVisible.value = remoteConfigService.isGoogleAuthVisible;
+      logcat(
+          "Updated isGoogleAuthVisible:", isGoogleAuthVisible.value.toString());
     });
+    logcat(
+        "Initial isGoogleAuthVisible:", isGoogleAuthVisible.value.toString());
   }
 
   @override

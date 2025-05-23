@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:hive/hive.dart';
 import 'package:ibh/configs/app_constants.dart';
 import 'package:ibh/configs/colors_constant.dart';

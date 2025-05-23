@@ -255,7 +255,6 @@ class HomeScreenController extends GetxController {
               callback: () {});
         }
       } else {
-        
         state.value = ScreenState.apiError;
         // message.value =
         //     responseData['message'] ?? APIResponseHandleText.serverError;
@@ -469,10 +468,10 @@ class HomeScreenController extends GetxController {
 
       if (isNewVersionAvailable(currentVersion, serverVersion)) {
         const url =
-            'https://play.google.com/store/apps/details?id=com.app.medicalhistory';
+            'https://play.google.com/store/apps/details?id=com.app.indianbusinesshub';
         bool isForcefully =
             appUpdateModel.data.isForcefullyUpdate == 1 ? true : false;
-        showUpdatePopup(context, url ?? appUpdateModel.data.appUrl.toString(),
+        showUpdatePopup(context, appUpdateModel.data.appUrl ?? url,
             appUpdateModel.data.description, isForcefully);
       }
 
