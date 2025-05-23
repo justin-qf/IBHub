@@ -106,6 +106,27 @@ class _SignupscreenState extends State<Signupscreen> {
                   isRequired: true,
                 );
               }),
+              Obx(
+                () {
+                  return getTextField(
+                      label: SignUpConstant.contactLabel,
+                      ctr: ctr.phoneCtr,
+                      node: ctr.phoneNode,
+                      model: ctr.phoneModel.value,
+                      function: (val) {
+                        ctr.validateFields(
+                          val,
+                          isnumber: true,
+                          model: ctr.phoneModel,
+                          errorText1: SignUpConstant.contactNumHint,
+                          errorText2: SignUpConstant.contactNumLengthHint,
+                        );
+                      },
+                      hint: SignUpConstant.contactNumHint,
+                      isNumeric: true,
+                      isRequired: true);
+                },
+              ),
               Obx(() {
                 return getTextField(
                     label: SignUpConstant.passwordLable,
@@ -169,7 +190,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       ctr.toggleConfPassObscureText();
                     });
               }),
-              getDynamicSizedBox(height: isSmallDevice(context) ? 3.h : 5.h),
+              getDynamicSizedBox(height: isSmallDevice(context) ? 3.h : 3.h),
               Obx(() {
                 return ctr.isloading == false
                     ? Container(
@@ -184,7 +205,7 @@ class _SignupscreenState extends State<Signupscreen> {
                       )
                     : const CircularProgressIndicator();
               }),
-              getDynamicSizedBox(height: 5.h),
+              getDynamicSizedBox(height: 3.h),
               Align(
                 alignment: Alignment.center,
                 child: Column(
@@ -273,7 +294,7 @@ class _SignupscreenState extends State<Signupscreen> {
                   ],
                 ),
               ),
-              getDynamicSizedBox(height: isSmallDevice(context) ? null : 3.h),
+              getDynamicSizedBox(height: isSmallDevice(context) ? null : 2.h),
               GestureDetector(
                 onTap: () {
                   ctr.resetForm();

@@ -20,10 +20,11 @@ class Signupscreencontroller extends GetxController {
 
   Rx<ScreenState> state = ScreenState.apiLoading.obs;
 
-  late FocusNode emailNode, passNode, confpassNode;
-  late TextEditingController emailCtr, passCtr, confpassCtr;
+  late FocusNode emailNode, phoneNode, passNode, confpassNode;
+  late TextEditingController emailCtr, phoneCtr, passCtr, confpassCtr;
 
   var emailModel = ValidationModel(null, null, isValidate: false).obs;
+  var phoneModel = ValidationModel(null, null, isValidate: false).obs;
   var passModel = ValidationModel(null, null, isValidate: false).obs;
   var confpassModel = ValidationModel(null, null, isValidate: false).obs;
 
@@ -41,9 +42,9 @@ class Signupscreencontroller extends GetxController {
   bool get isObsecureConPassText => obsecureTextConPass.value;
   set isObsecureConPassText(bool value) => obsecureTextConPass.value = value;
 
-  late TextEditingController searchStatectr;
-  late FocusNode searchStateNode;
-  var searchModel = ValidationModel(null, null, isValidate: false).obs;
+  // late TextEditingController searchStatectr;
+  // late FocusNode searchStateNode;
+  // var searchModel = ValidationModel(null, null, isValidate: false).obs;
 
   RxBool isStateApiCallLoading = false.obs;
   RxList stateFilterList = [].obs;
@@ -54,11 +55,11 @@ class Signupscreencontroller extends GetxController {
     emailNode = FocusNode();
     passNode = FocusNode();
     confpassNode = FocusNode();
-    searchStateNode = FocusNode();
+    phoneNode = FocusNode();
     emailCtr = TextEditingController();
     passCtr = TextEditingController();
     confpassCtr = TextEditingController();
-    searchStatectr = TextEditingController();
+    phoneCtr = TextEditingController();
   }
 
   @override
@@ -85,6 +86,8 @@ class Signupscreencontroller extends GetxController {
   void enableSignUpButton() {
     if (emailModel.value.isValidate == false) {
       isFormInvalidate.value = false;
+    } else if (phoneModel.value.isValidate == false) {
+      isFormInvalidate.value = false;
     } else if (passModel.value.isValidate == false) {
       isFormInvalidate.value = false;
     } else if (confpassModel.value.isValidate == false) {
@@ -99,10 +102,11 @@ class Signupscreencontroller extends GetxController {
   @override
   void onClose() {
     emailCtr.clear();
-
+    phoneCtr.clear();
     passCtr.clear();
     confpassCtr.clear();
     emailModel.value = ValidationModel(null, null, isValidate: false);
+    phoneModel.value = ValidationModel(null, null, isValidate: false);
     passModel.value = ValidationModel(null, null, isValidate: false);
     confpassModel.value = ValidationModel(null, null, isValidate: false);
 
@@ -120,11 +124,11 @@ class Signupscreencontroller extends GetxController {
     emailCtr.clear();
     passCtr.clear();
     confpassCtr.clear();
-    searchStatectr.clear();
+    phoneCtr.clear();
     emailNode.unfocus();
     passNode.unfocus();
     confpassNode.unfocus();
-    searchStateNode.unfocus();
+    phoneNode.unfocus();
 
     // Reset validation models
     emailModel.value = ValidationModel(null, null, isValidate: false);
@@ -197,6 +201,7 @@ class Signupscreencontroller extends GetxController {
         title: LoginConst.signup,
         body: {
           "email": emailCtr.text.toString().trim(),
+          "phone": phoneCtr.text.toString().trim(),
           "password": passCtr.text.toString().trim(),
           "password_confirmation": confpassCtr.text.toString(),
           "device_token": firebaseToken ?? '',

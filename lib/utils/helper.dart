@@ -224,23 +224,22 @@ Future<bool> isAnyFieldEmpty() async {
   User? retrievedObject = await UserPreferences().getSignInInfo();
 
   String phone = retrievedObject?.phone ?? '';
-  // String address = retrievedObject?.address ?? '';
   String city = retrievedObject?.city?.city.toString() ?? '';
   String states = retrievedObject?.state?.name.toString() ?? '';
   String pincode = retrievedObject?.pincode.toString() ?? '';
-  String visitingCardUrl = retrievedObject?.visitingCardUrl ?? '';
+  // String visitingCardUrl = retrievedObject?.visitingCardUrl ?? '';
 
   // logcat("address::", address);
   logcat("city::", city);
   logcat("states::", states);
   logcat("pincode::", pincode);
-  logcat("visitingCardUrl::", visitingCardUrl);
+  // logcat("visitingCardUrl::", visitingCardUrl);
 
   return phone.trim().isEmpty ||
       city.trim().isEmpty ||
       states.trim().isEmpty ||
-      pincode.trim().isEmpty ||
-      visitingCardUrl.trim().isEmpty;
+      pincode.trim().isEmpty;
+  // visitingCardUrl.trim().isEmpty;
 }
 
 launchPhoneCall(String phoneNumber) async {
