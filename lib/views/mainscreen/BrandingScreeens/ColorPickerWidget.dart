@@ -1,8 +1,9 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:ibh/configs/colors_constant.dart';
-// import 'package:ibh/controller/brandEditingcontroller.dart';
-// import 'package:sizer/sizer.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/controller/BrandImageController.dart';
+import 'package:ibh/controller/brandEditingcontroller.dart';
+import 'package:sizer/sizer.dart';
 
 // // ignore: must_be_immutable
 // class ColorPickerWidget extends StatefulWidget {
@@ -13,10 +14,11 @@
 //   _ColorPickerWidgetState createState() => _ColorPickerWidgetState();
 // }
 
-// class _ColorPickerWidgetState extends State<ColorPickerWidget> {
-//   double _cursorX = 0;
-//   double _cursorY = 0;
-//   final Brandeditingcontroller controller = Get.find<Brandeditingcontroller>();
+class _ColorPickerWidgetState extends State<ColorPickerWidget> {
+  double _cursorX = 0;
+  double _cursorY = 0;
+  // final Brandeditingcontroller controller = Get.find<Brandeditingcontroller>();
+  final controller = Get.find<BrandImageController>();
 
 //   Color _getColorAtPosition(double xPosition, double yPosition) {
 //     const colors = [

@@ -397,8 +397,6 @@ class _UpdateBusinessProfileScreenState
                         Obx(() {
                           return getFormButton(context, () async {
                             if (ctr.is0FormInvalidate.value == true) {
-                              print('bussines api called');
-
                               await ctr.updateBussines(context);
                               // futureDelay(() {
                               //   details.onStepContinue?.call();

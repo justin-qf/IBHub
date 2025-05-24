@@ -239,8 +239,10 @@ class CategoryController extends GetxController {
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
                   imageUrl: data.thumbnail,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(color: primaryColor),
+                  placeholder: (context, url) => Image.asset(
+                    Asset.bussinessPlaceholder,
+                    height: 9.h,
+                    fit: BoxFit.contain,
                   ),
                   errorWidget: (context, url, error) => Image.asset(
                     Asset.bussinessPlaceholder,

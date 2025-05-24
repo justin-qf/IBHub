@@ -887,7 +887,7 @@ class SearchScreenController extends GetxController {
             ),
             getDynamicSizedBox(width: 2.w),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: 11.h,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -900,7 +900,6 @@ class SearchScreenController extends GetxController {
                           : 65.w,
                       child: Text(
                           // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
-
                           item.businessName,
                           maxLines: 1,
                           style: TextStyle(

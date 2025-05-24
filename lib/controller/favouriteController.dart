@@ -1261,8 +1261,8 @@ class FavouriteController extends GetxController {
                                   fontWeight: FontWeight.w900)),
                         ),
                         Positioned(
-                            top: -1.h,
-                            right: -3.w,
+                            top: -1.6.h,
+                            right: -5.w,
                             child: GestureDetector(
                                 onTap: () {
                                   item.isFavorite == true

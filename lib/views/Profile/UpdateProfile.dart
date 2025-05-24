@@ -127,13 +127,9 @@ class _ProfileScreenState extends State<UpdateProfile>
               child: TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: ctr.tabController,
-                children: [
-                  const UpdateBusinessProfileScreen(
-                    index: 0,
-                  ),
-                  UpdateDocumentScreen(
-                    index: 1,
-                  )
+                children: const [
+                  UpdateBusinessProfileScreen(index: 0),
+                  UpdateDocumentScreen(index: 1)
                 ],
               ),
             ),

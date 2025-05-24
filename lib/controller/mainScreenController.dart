@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ibh/componant/toolbar/toolbar.dart';
-import 'package:ibh/configs/assets_constant.dart';
 import 'package:ibh/configs/colors_constant.dart';
 import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/preference/UserPreference.dart';
 import 'package:ibh/views/Profile/UpdateProfile.dart';
-import 'package:ibh/views/Profile/updateprofilescreen.dart';
 import 'package:sizer/sizer.dart';
 import '../utils/enum.dart';
 import 'internet_controller.dart';
@@ -61,14 +59,14 @@ class MainScreenController extends GetxController {
   getProfileData() async {
     state.value = ScreenState.apiLoading;
     User? retrievedObject = await UserPreferences().getSignInInfo();
-    name.value = retrievedObject!.name??'';
-    bussiness.value = retrievedObject.businessName??'';
-    phone.value = retrievedObject.phone??'';
-    address.value = retrievedObject.address??'';
+    name.value = retrievedObject!.name ?? '';
+    bussiness.value = retrievedObject.businessName ?? '';
+    phone.value = retrievedObject.phone ?? '';
+    address.value = retrievedObject.address ?? '';
     city.value = retrievedObject.city.toString();
     states.value = retrievedObject.state.toString();
     pincode.value = retrievedObject.pincode.toString();
-    visitingCardUrl.value = retrievedObject.visitingCardUrl??'';
+    visitingCardUrl.value = retrievedObject.visitingCardUrl ?? '';
     update();
     state.value = ScreenState.apiSuccess;
   }

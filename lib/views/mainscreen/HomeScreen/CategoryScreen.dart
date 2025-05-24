@@ -173,6 +173,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               ),
             ),
+        
           ],
         ),
       ),
@@ -182,13 +183,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget apiSuccess(ScreenState state) {
     if (controller.state.value == ScreenState.apiSuccess &&
         controller.categoryList.isNotEmpty) {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount:
-                Device.screenType == sizer.ScreenType.mobile ? 2 : 3,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 8,
-            childAspectRatio: 1.4),
+      return MasonryGridView.count(
         // controller: controller.scrollController,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(bottom: 5.h, left: 5.w, right: 5.w, top: 1.h),
@@ -216,4 +211,5 @@ class _CategoryScreenState extends State<CategoryScreen> {
       return noDataFoundWidget();
     }
   }
+
 }

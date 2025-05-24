@@ -12,7 +12,6 @@ import 'package:ibh/componant/dialogs/loading_indicator.dart';
 import 'package:ibh/configs/apicall_constant.dart';
 import 'package:ibh/configs/string_constant.dart';
 import 'package:ibh/controller/MasterController.dart';
-
 import 'package:ibh/controller/internet_controller.dart';
 import 'package:ibh/models/login_model.dart';
 import 'package:ibh/models/googleAuthResponse.dart';
@@ -25,6 +24,7 @@ import 'package:ibh/views/auth/ReserPasswordScreen/OtpScreen.dart';
 import 'package:ibh/views/mainscreen/MainScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:ibh/views/sigin_signup/signupScreen.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Signinscreencontroller extends GetxController {
   final InternetController networkManager = Get.find<InternetController>();
@@ -198,6 +198,8 @@ class Signinscreencontroller extends GetxController {
     final user = await googleSignIn.signIn();
 
     if (user == null) return null; // User canceled
+
+    logcat("user::", user.email.toString());
 
     final GoogleSignInAuthentication userAuth = await user.authentication;
 

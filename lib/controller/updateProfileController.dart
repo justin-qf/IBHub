@@ -782,7 +782,7 @@ class Updateprofilecontroller extends GetxController {
 
       var response = await Repository.multiPartPost(
         <String, String>{},
-        ApiUrl.updateLOgo,
+        ApiUrl.updateLogo,
         multiPartData: files,
         allowHeader: true,
       );

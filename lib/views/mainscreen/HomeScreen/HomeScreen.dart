@@ -154,7 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-
                   //  SingleChildScrollView(
                   //   physics: const NeverScrollableScrollPhysics(),
                   //   child:
@@ -226,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }, isOneSecond: false);
               });
             }),
-            getDynamicSizedBox(height: 2.h),
+            getDynamicSizedBox(height: 0.5.h),
             SizedBox(
                 height: Device.screenType == sizer.ScreenType.mobile
                     ? isSmallDevice(context)
@@ -338,11 +337,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     ),
                 //   )
                 : SizedBox.shrink(),
-            getDynamicSizedBox(height: 3.h),
+            getDynamicSizedBox(height: 2.h),
             getHomeLable(DashboardText.buisinessTitle, () {
               Get.to(AddServicescreen())!.then((value) {});
             }, isShowSeeMore: false),
-            getDynamicSizedBox(height: 3.h),
+            getDynamicSizedBox(height: 2.h),
             Obx(
               () {
                 return controller.isBusinessLoading.value
@@ -366,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         mainAxisSpacing: 1.h,
                                         childAspectRatio: 1.5,
                                         crossAxisSpacing: 1.w),
-                                padding: EdgeInsets.only(),
+                                padding: const EdgeInsets.only(),
                                 physics: const NeverScrollableScrollPhysics(),
                                 scrollDirection: Axis.vertical,
                                 shrinkWrap: true,

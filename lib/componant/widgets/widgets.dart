@@ -440,6 +440,7 @@ Widget getTextField(
     model,
     function,
     bool isNumeric = false,
+    bool isNumber = false,
     bool isReadOnly = false,
     bool wantsuffix = false,
     bool ispass = false,
@@ -475,15 +476,17 @@ Widget getTextField(
       isAddress: isMultipline,
       inputType: isMultipline
           ? TextInputType.multiline
-          : isNumeric
+          : isNumber || isNumeric
               ? TextInputType.number
               : TextInputType.text,
-      inputFormatters: isNumeric
-          ? [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10)
-            ]
-          : [],
+      inputFormatters: isNumber
+          ? []
+          : isNumeric
+              ? [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10)
+                ]
+              : [],
       wantSuffix: wantsuffix ? true : false,
       isPass: ispass ? true : false,
       isWhite: true,
@@ -746,8 +749,8 @@ getLable(
         ? EdgeInsets.only(left: 9.w, right: 9.w)
         : EdgeInsets.only(top: 2.h),
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RichText(
           text: TextSpan(
@@ -773,20 +776,52 @@ getLable(
             ],
           ),
         ),
-        // Text(
-        //   title,
-        //   textAlign: TextAlign.start,
-        //   style: TextStyle(
-        //       color: isDarkMode() ? white : black,
-        //       fontFamily: fontRegular,
-        //       fontSize: Device.screenType == ScreenType.mobile ? 16.sp : 8.5.sp,
-        //       fontWeight: FontWeight.w700),
-        // ),
         if (isFromVisitReport == null)
           SizedBox(
               height: Device.screenType == ScreenType.mobile ? 0.5.h : 0.2.h),
       ],
     ),
+  );
+}
+
+getRadioLable(
+  String title, {
+  bool? isFromVisitReport,
+  bool isRequired = false,
+  isVerified = false,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: title,
+              style: TextStyle(
+                color: isVerified ? grey : black,
+                fontFamily: dM_sans_bold,
+                fontSize:
+                    Device.screenType == ScreenType.mobile ? 16.sp : 8.5.sp,
+                // fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (isRequired) // Conditionally add the '*'
+              const TextSpan(
+                text: SignUpConstant.required,
+                style: TextStyle(
+                  color: red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ],
+        ),
+      ),
+      if (isFromVisitReport == null)
+        SizedBox(
+            height: Device.screenType == ScreenType.mobile ? 0.5.h : 0.2.h),
+    ],
   );
 }
 
@@ -811,6 +846,24 @@ Widget getLogo(islogo) {
 Widget noDataFoundWidget({bool? isFromBlog}) {
   return SizedBox(
     height: Device.height / 1.5,
+    child: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+          Text(Common.datanotfound,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: fontMedium,
+                  fontSize: 16.sp,
+                  color: isDarkMode() ? white : black)),
+        ])),
+  );
+}
+
+Widget noDataFoundWidgetResponsive({bool? isFromImageTab}) {
+  return SizedBox(
+    height: isFromImageTab == true ? Device.height / 4.2 : Device.height / 3,
     child: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -27,6 +27,7 @@ class ApiUrl {
   static const getSearch = 'searchlist';
   static const logout = 'logout';
   static const getServiceList = 'services/list';
+  static const getServiceDropdownList = 'services/dropdown';
   static const addService = 'services/create';
   static const businessesList = 'businesses/list';
   static const reviewList = 'businesses/review/list';
@@ -51,7 +52,7 @@ class ApiUrl {
   static const verification = 'document-upload/type/list';
 
   //modified
-  static const updateLOgo = 'profile/update-logo';
+  static const updateLogo = 'profile/update-logo';
   static const updateBussiness = 'profile/update-business';
   static const documentcreate = 'document-upload/create';
   static const documentupdate = 'document-upload/edit/';
@@ -66,5 +67,15 @@ class ApiUrl {
 
   static const contactUS = 'customer-care/create';
 
-  // /auth/google/callback
+  //product
+  static const product = 'products/list';
+  static const addProduct = 'products/create';
+  static const deleteProduct = 'products/delete/';
+  static const changeProductStatus = 'products/toggle-status/';
+
+  //Brand Image
+  static const brandImageList = 'images/categories/types/list';
+  static const getImageCategoryList = 'images/categories/list';
+  static const getImageList = 'images/list';
+  static const getCustomeFrameList = 'custom-frame/list';
 }

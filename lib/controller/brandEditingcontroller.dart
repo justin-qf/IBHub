@@ -1,25 +1,19 @@
-// import 'dart:io';
-// import 'dart:typed_data';
-// import 'dart:ui';
-// import 'dart:ui' as ui;
-// import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
-// import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-// import 'package:get/get.dart';
-// import 'package:ibh/componant/toolbar/toolbar.dart';
-// import 'package:ibh/configs/assets_constant.dart';
-// import 'package:ibh/configs/colors_constant.dart';
-// import 'package:ibh/configs/font_constant.dart';
-// import 'package:ibh/models/TextItemModel.dart';
-// import 'package:ibh/utils/enum.dart';
-// import 'package:ibh/utils/log.dart';
-// import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
-// import 'package:ibh/views/mainscreen/BrandingScreeens/FilteringClass.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:photo_manager/photo_manager.dart';
-// import 'package:share_plus/share_plus.dart';
-// import 'package:sizer/sizer.dart';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:get/get.dart';
+import 'package:ibh/componant/toolbar/toolbar.dart';
+import 'package:ibh/configs/assets_constant.dart';
+import 'package:ibh/configs/colors_constant.dart';
+import 'package:ibh/configs/font_constant.dart';
+import 'package:ibh/models/TextItemModel.dart';
+import 'package:ibh/utils/enum.dart';
+import 'package:ibh/utils/log.dart';
+import 'package:ibh/views/mainscreen/BrandingScreeens/ColorPickerWidget.dart';
+import 'package:photo_manager/photo_manager.dart';
+import 'package:sizer/sizer.dart';
+import 'package:sizer/sizer.dart' as sizer;
 
 // class Brandeditingcontroller extends GetxController {
 //   Rx<ScreenState> state = ScreenState.apiSuccess.obs;
@@ -56,231 +50,25 @@
 //     }
 //   }
 
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     // Generate filter thumbnails when cachedThumbnail changes
-//     ever(cachedThumbnail, (_) => _generateFilterThumbnails());
-//   }
+  // Filter-related logic
+  Widget filterLogic() {
+    return SizedBox.shrink(); // Placeholder as per original code
+  }
 
-//   // Generate thumbnails for all filters
-//   Future<void> _generateFilterThumbnails() async {
-//     if (cachedThumbnail.value == null) {
-//       filterThumbnails.clear();
-//       return;
-//     }
-
-//     final tempFilters = ImageFilters();
-//     try {
-//       await tempFilters.loadImageFromBytes(cachedThumbnail.value!);
-//       for (final filter in filters) {
-//         await tempFilters.applyFilter(filter);
-//         final filteredImage = tempFilters.filteredImage;
-//         if (filteredImage != null) {
-//           final byteData =
-//               await filteredImage.toByteData(format: ui.ImageByteFormat.png);
-//           filterThumbnails[filter] = byteData!.buffer.asUint8List();
-//         }
-//       }
-//     } catch (e) {
-//       logcat('ThumbnailError', e.toString());
-//     } finally {
-//       tempFilters.dispose();
-//     }
-//   }
-
-//   // Filter-related logic
-//   RxDouble imageOpacity = 1.0.obs;
-//   final currentFilter = 'None'.obs; // Track current filter
-//   final filterThumbnails = <String, Uint8List>{}.obs; // Store filter thumbnails
-//   final ImageFilters _imageFilters = ImageFilters();
-
-//   // List of available filters
-//   static const List<String> filters = [
-//     'None',
-//     'Grayscale',
-//     'Sepia',
-//     'Brightness',
-//     'Contrast',
-//     'Invert',
-//     'Saturation',
-//     'HueRotation',
-//     'Blur',
-//     'Vintage',
-//     'Noise',
-//   ];
-
-// // Apply a filter to the main image
-//   Future<void> applyImageFilter(String filterType) async {
-//     if (cachedThumbnail.value == null) {
-//       Get.snackbar('Error', 'No image selected');
-//       return;
-//     }
-
-//     Get.dialog(
-//       Center(child: CircularProgressIndicator()),
-//       barrierDismissible: false,
-//     );
-
-//     try {
-//       await _imageFilters.loadImageFromBytes(cachedThumbnail.value!);
-//       await _imageFilters.applyFilter(filterType);
-//       final filteredImage = _imageFilters.filteredImage;
-//       if (filteredImage != null) {
-//         final byteData =
-//             await filteredImage.toByteData(format: ui.ImageByteFormat.png);
-//         cachedThumbnail.value = byteData!.buffer.asUint8List();
-//         currentFilter.value = filterType;
-//       }
-//     } catch (e) {
-//       logcat('FilterError', e.toString());
-//       Get.snackbar('Error', 'Failed to apply filter: $e');
-//     } finally {
-//       Get.back();
-//     }
-//   }
-
-//   Widget filterLogic() {
-//     return SizedBox(
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Container(
-//             margin: EdgeInsets.only(left: 6.w, bottom: 1.h),
-//             child: Text(
-//               'Filters',
-//               style: TextStyle(
-//                 fontSize: 18.sp,
-//                 color: white,
-//                 fontFamily: dM_sans_semiBold,
-//               ),
-//             ),
-//           ),
-//           SizedBox(
-//               height: 10.h,
-//               child: ListView.builder(
-//                 scrollDirection: Axis.horizontal,
-//                 itemCount: filters.length,
-//                 itemBuilder: (context, index) {
-//                   final filter = filters[index];
-//                   return GestureDetector(
-//                     onTap: () {
-//                       logcat('Filter', 'Applying $filter');
-//                       applyImageFilter(filter);
-//                     },
-//                     child: Container(
-//                       width: 15.w,
-//                       margin: EdgeInsets.only(left: 4.w),
-//                       decoration: BoxDecoration(
-//                         color: white,
-//                         borderRadius: BorderRadius.circular(10),
-//                         border: currentFilter.value == filter
-//                             ? Border.all(color: primaryColor, width: 2)
-//                             : null,
-//                       ),
-//                       child: ClipRRect(
-//                         borderRadius: BorderRadius.circular(10),
-//                         child: filterThumbnails.containsKey(filter) &&
-//                                 filterThumbnails[filter] != null
-//                             ? Image.memory(
-//                                 filterThumbnails[filter]!,
-//                                 fit: BoxFit.cover,
-//                                 width: 15.w,
-//                                 height: 10.h,
-//                               )
-//                             : Image.asset(
-//                                 Asset.bussinessPlaceholder,
-//                                 fit: BoxFit.cover,
-//                                 width: 15.w,
-//                                 height: 10.h,
-//                               ),
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               )),
-//           getDynamicSizedBox(height: 1.h),
-//           Container(
-//             margin: EdgeInsets.only(left: 6.w),
-//             child: Text(
-//               'Opacity',
-//               style: TextStyle(
-//                 fontSize: 18.sp,
-//                 color: white,
-//                 fontFamily: dM_sans_semiBold,
-//               ),
-//             ),
-//           ),
-//           Obx(() => SizedBox(
-//                 height: 3.h,
-//                 child: Slider(
-//                   value: imageOpacity.value,
-//                   min: 0,
-//                   max: 1,
-//                   divisions: 100,
-//                   activeColor: primaryColor,
-//                   inactiveColor: white,
-//                   onChanged: (value) {
-//                     imageOpacity.value = value;
-//                   },
-//                 ),
-//               )),
-//         ],
-//       ),
-//     );
-//   }
-
-// //Share Image
-//   final GlobalKey repaintBoundaryKey = GlobalKey();
-//   Future<void> captureAndSaveImage() async {
-//     try {
-//       // Request storage permission
-//       var status = await Permission.storage.request();
-//       if (status.isDenied) {
-//         Get.snackbar('Error', 'Storage permission denied');
-//         return;
-//       }
-
-//       // Capture the widget
-//       RenderRepaintBoundary boundary = repaintBoundaryKey.currentContext!
-//           .findRenderObject() as RenderRepaintBoundary;
-//       var image = await boundary.toImage(pixelRatio: 5.0); // Higher resolution
-//       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
-//       Uint8List imageBytes = byteData!.buffer.asUint8List();
-
-//       // Save to device
-//       final directory = await getTemporaryDirectory();
-//       final filePath =
-//           '${directory.path}/brand_image_${DateTime.now().millisecondsSinceEpoch}.png';
-//       File file = File(filePath);
-//       await file.writeAsBytes(imageBytes);
-
-//       // Optional: Share the image
-//       await Share.shareXFiles([XFile(filePath)],
-//           text: 'Check out my customized brand!');
-
-//       // Get.snackbar('Success', 'Image saved and shared: $filePath');
-//     } catch (e) {
-//       // Get.snackbar('Error', 'Failed to save image: $e');
-//       logcat('CaptureError', e.toString());
-//     }
-//   }
-
-//   //shareimage
-
-//   void toggleImageSelection(AssetEntity image) async {
-//     if (selectedImage.value == image) {
-//       selectedImage.value = null;
-//       thumbnailFuture.value = null;
-//       cachedThumbnail.value = null;
-//     } else {
-//       selectedImage.value = image;
-//       thumbnailFuture.value =
-//           image.thumbnailDataWithSize(ThumbnailSize(600, 600));
-//       final Uint8List? data = await thumbnailFuture.value;
-//       cachedThumbnail.value = data;
-//     }
-//   }
+  void toggleImageSelection(AssetEntity image) async {
+    if (selectedImage.value == image) {
+      selectedImage.value = null;
+      thumbnailFuture.value = null;
+      cachedThumbnail.value = null;
+    } else {
+      selectedImage.value = image;
+      thumbnailFuture.value =
+          image.thumbnailDataWithSize(ThumbnailSize(600, 600));
+      final Uint8List? data = await thumbnailFuture.value;
+      cachedThumbnail.value = data;
+    }
+    update(); // Trigger UI update
+  }
 
 //   Future<void> fetchGalleryAlbums() async {
 //     isLoading.value = true;
@@ -346,166 +134,167 @@
 //     logcat('Info', 'Total albums fetched: ${albums.length}');
 //   }
 
-//   Widget buildGalleryItem({
-//     required Widget child,
-//     VoidCallback? onTap,
-//     String? title,
-//     String? subtitle,
-//     bool isSelected = false,
-//   }) {
-//     return GestureDetector(
-//       onTap: onTap,
-//       child: Stack(
-//         children: [
-//           Column(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               Container(
-//                 margin: EdgeInsets.only(top: 1.h),
-//                 width: 5.w,
-//                 height: 8.h,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(12),
-//                   border: Border.all(
-//                     color: isSelected ? Colors.blue : Colors.grey.shade300,
-//                     width: isSelected ? 2 : 1,
-//                   ),
-//                 ),
-//                 child: ClipRRect(
-//                   borderRadius: BorderRadius.circular(12),
-//                   child: child,
-//                 ),
-//               ),
-//               if (title != null)
-//                 Padding(
-//                   padding: const EdgeInsets.only(top: 4.0),
-//                   child: Text(
-//                     title,
-//                     style: const TextStyle(
-//                         color: white,
-//                         fontWeight: FontWeight.w600,
-//                         fontSize: 12),
-//                     maxLines: 1,
-//                     overflow: TextOverflow.ellipsis,
-//                     textAlign: TextAlign.center,
-//                   ),
-//                 ),
-//             ],
-//           ),
-//           if (isSelected)
-//             Positioned(
-//               top: 1.2.h,
-//               right: 0.3.w,
-//               child:
-//                   Icon(Icons.check_circle, color: Colors.blueAccent, size: 20),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
+  Widget buildGalleryItem({
+    required Widget child,
+    VoidCallback? onTap,
+    String? title,
+    String? subtitle,
+    bool isSelected = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 0.h),
+                width: 5.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isSelected ? Colors.blue : Colors.grey.shade300,
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: child,
+                ),
+              ),
+              if (title != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                        color: black,
+                        fontFamily: fontBold,
+                        fontWeight: FontWeight.w600,
+                        fontSize: Device.screenType == sizer.ScreenType.mobile
+                            ? 14.sp
+                            : 4.sp),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+            ],
+          ),
+          if (isSelected)
+            Positioned(
+              top: 1.2.h,
+              right: 0.3.w,
+              child: const Icon(Icons.check_circle,
+                  color: Colors.blueAccent, size: 20),
+            ),
+        ],
+      ),
+    );
+  }
 
 //   final Rx<AssetPathEntity?> selectedAlbum = Rx<AssetPathEntity?>(null);
 
-//   Widget getimageGridView() {
-//     return Obx(() {
-//       if (isLoading.value) {
-//         return const Center(child: CircularProgressIndicator());
-//       }
-//       if (selectedAlbum.value != null) {
-//         final images = albumImages[selectedAlbum.value!] ?? [];
-//         return Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Align(
-//               alignment: Alignment.topRight,
-//               child: IconButton(
-//                 icon: const Icon(Icons.close),
-//                 onPressed: () {
-//                   selectedAlbum.value = null;
-//                 },
-//               ),
-//             ),
-//             Expanded(
-//               child: GridView.builder(
-//                 padding: const EdgeInsets.all(10),
-//                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//                     crossAxisCount: 4,
-//                     crossAxisSpacing: 10,
-//                     mainAxisSpacing: 5,
-//                     childAspectRatio: 0.8),
-//                 itemCount: images.length,
-//                 itemBuilder: (context, index) {
-//                   final image = images[index];
-//                   final thumbnailFuture =
-//                       image.thumbnailDataWithSize(ThumbnailSize(400, 400));
-//                   return FutureBuilder<Uint8List?>(
-//                     future: thumbnailFuture,
-//                     builder: (context, snapshot) {
-//                       Widget thumbnail;
-//                       if (snapshot.connectionState == ConnectionState.done &&
-//                           snapshot.hasData) {
-//                         thumbnail =
-//                             Image.memory(snapshot.data!, fit: BoxFit.cover);
-//                       } else {
-//                         thumbnail = const Center(child: Icon(Icons.image));
-//                       }
-//                       return Obx(() {
-//                         final isSelected = selectedImage.value == image;
-//                         return buildGalleryItem(
-//                           isSelected: isSelected,
-//                           onTap: () {
-//                             toggleImageSelection(image);
-//                           },
-//                           child: thumbnail,
-//                         );
-//                       });
-//                     },
-//                   );
-//                 },
-//               ),
-//             ),
-//           ],
-//         );
-//       }
-//       if (albums.isEmpty) {
-//         return const Center(child: Text('No albums found'));
-//       }
-//       return GridView.builder(
-//         padding: const EdgeInsets.all(10),
-//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//           crossAxisCount: 4,
-//           crossAxisSpacing: 5,
-//           mainAxisSpacing: 5,
-//           childAspectRatio: 0.7,
-//         ),
-//         itemCount: albums.length,
-//         itemBuilder: (BuildContext context, int index) {
-//           final album = albums[index];
-//           final images = albumImages[album] ?? [];
-//           return buildGalleryItem(
-//             title: album.name,
-//             subtitle: '${images.length} images',
-//             onTap: () {
-//               selectedAlbum.value = album;
-//             },
-//             child: images.isNotEmpty
-//                 ? FutureBuilder<Uint8List?>(
-//                     future: images.first.thumbnailData,
-//                     builder: (context, snapshot) {
-//                       if (snapshot.connectionState == ConnectionState.done &&
-//                           snapshot.data != null) {
-//                         return Image.memory(snapshot.data!, fit: BoxFit.cover);
-//                       }
-//                       return const Center(
-//                           child: Icon(Icons.photo, color: Colors.grey));
-//                     },
-//                   )
-//                 : const Center(child: Icon(Icons.photo, color: Colors.grey)),
-//           );
-//         },
-//       );
-//     });
-//   }
+  Widget getimageGridView() {
+    return Obx(() {
+      if (isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      if (selectedAlbum.value != null) {
+        final images = albumImages[selectedAlbum.value!] ?? [];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      selectedAlbum.value = null;
+                    })),
+            Expanded(
+              child: GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(10),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 5,
+                    childAspectRatio: 0.8),
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  final image = images[index];
+                  final thumbnailFuture = image
+                      .thumbnailDataWithSize(const ThumbnailSize(400, 400));
+                  return FutureBuilder<Uint8List?>(
+                    future: thumbnailFuture,
+                    builder: (context, snapshot) {
+                      Widget thumbnail;
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        thumbnail =
+                            Image.memory(snapshot.data!, fit: BoxFit.cover);
+                      } else {
+                        thumbnail = const Center(child: Icon(Icons.image));
+                      }
+                      return Obx(() {
+                        final isSelected = selectedImage.value == image;
+                        return buildGalleryItem(
+                          isSelected: isSelected,
+                          onTap: () {
+                            toggleImageSelection(image);
+                          },
+                          child: thumbnail,
+                        );
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      }
+      if (albums.isEmpty) {
+        return const Center(child: Text('No albums found'));
+      }
+      return GridView.builder(
+        padding: const EdgeInsets.all(10),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 5,
+            childAspectRatio: 0.8),
+        itemCount: albums.length,
+        itemBuilder: (BuildContext context, int index) {
+          final album = albums[index];
+          final images = albumImages[album] ?? [];
+          return buildGalleryItem(
+            title: album.name,
+            subtitle: '${images.length} images',
+            onTap: () {
+              selectedAlbum.value = album;
+            },
+            child: images.isNotEmpty
+                ? FutureBuilder<Uint8List?>(
+                    future: images.first.thumbnailData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.data != null) {
+                        return Image.memory(snapshot.data!, fit: BoxFit.cover);
+                      }
+                      return const Center(
+                          child: Icon(Icons.photo, color: primaryColor));
+                    },
+                  )
+                : const Center(child: Icon(Icons.photo, color: primaryColor)),
+          );
+        },
+      );
+    });
+  }
 
 //   Widget getFrameGridView() {
 //     return SizedBox(
@@ -986,211 +775,229 @@
 //     return Color(int.parse(hex, radix: 16));
 //   }
 
-//   var currentBGColor = Rx<Color>(Colors.red);
-//   RxDouble borderSize = 2.sp.obs;
+  var currentBGColor = Rx<Color>(Colors.red);
+  RxDouble borderSize = 2.sp.obs;
 
-//   Widget bgcolorPic({context}) {
-//     return Container(
-//       padding: const EdgeInsets.all(2),
-//       child: SingleChildScrollView(
-//         physics: NeverScrollableScrollPhysics(),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               children: [
-//                 ColorPickerWidget(hexBgCode: hexBgCode),
-//                 SizedBox(width: 3.w),
-//                 Flexible(
-//                   child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.start,
-//                     mainAxisSize: MainAxisSize.min,
-//                     children: [
-//                       Container(
-//                         height: 6.h,
-//                         width: 35.w,
-//                         padding:
-//                             EdgeInsets.only(top: 0.h, right: 2.w, left: 2.w),
-//                         child: TextField(
-//                           onSubmitted: (value) {
-//                             try {
-//                               String hex = value.replaceAll('#', '');
-//                               if (hex.length == 6 || hex.length == 8) {
-//                                 hexBgCode.value = '#${hex.toUpperCase()}';
-//                               } else {
-//                                 Get.snackbar(
-//                                   "Invalid Hex",
-//                                   "Please enter a 6 or 8 character hex code (e.g. #FF5733)",
-//                                   backgroundColor: primaryColor,
-//                                   colorText: white,
-//                                   snackPosition: SnackPosition.BOTTOM,
-//                                 );
-//                               }
-//                             } catch (e) {
-//                               Get.snackbar(
-//                                 "Error",
-//                                 "Invalid hex format. Please use #RRGGBB or #AARRGGBB",
-//                                 backgroundColor: primaryColor,
-//                                 colorText: white,
-//                                 snackPosition: SnackPosition.BOTTOM,
-//                               );
-//                             }
-//                           },
-//                           decoration: InputDecoration(
-//                             labelText: 'Hex Code',
-//                             filled: true,
-//                             fillColor: Colors.white,
-//                             border: OutlineInputBorder(),
-//                           ),
-//                         ),
-//                       ),
-//                       Container(
-//                         height: 7.h,
-//                         width: 45.w,
-//                         padding: EdgeInsets.symmetric(horizontal: 2.w),
-//                         child: Row(
-//                           children: [
-//                             Checkbox(
-//                               value: showBorder.value,
-//                               onChanged: (value) {
-//                                 showBorder.value = value!;
-//                                 if (showBorder.value == false) {
-//                                   borderSize.value = 2.sp;
-//                                 }
-//                               },
-//                               activeColor: primaryColor,
-//                               checkColor: white,
-//                             ),
-//                             Expanded(
-//                               child: Text(
-//                                 'Image Border',
-//                                 style: TextStyle(
-//                                     fontSize: 16.sp, color: Colors.white),
-//                                 overflow: TextOverflow.ellipsis,
-//                               ),
-//                             )
-//                           ],
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 )
-//               ],
-//             ),
-//             Obx(() => showBorder.value == true
-//                 ? Slider(
-//                     value: borderSize.value,
-//                     min: 2.sp,
-//                     max: 32.sp,
-//                     activeColor: primaryColor,
-//                     inactiveColor: white,
-//                     onChanged: (value) {
-//                       borderSize.value = value;
-//                     },
-//                   )
-//                 : SizedBox.shrink())
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  @override
+  void onClose() {
+    // imageFilters.dispose(); // Clean up ImageFilters
+    super.onClose();
+  }
+
+  Widget bgcolorPic({context}) {
+    return Container(
+      padding: const EdgeInsets.all(2),
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ColorPickerWidget(hexBgCode: hexBgCode),
+                SizedBox(width: 3.w),
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: 6.h,
+                        width: 35.w,
+                        padding:
+                            EdgeInsets.only(top: 0.h, right: 2.w, left: 2.w),
+                        child: TextField(
+                          onSubmitted: (value) {
+                            try {
+                              String hex = value.replaceAll('#', '');
+                              if (hex.length == 6 || hex.length == 8) {
+                                hexBgCode.value = '#${hex.toUpperCase()}';
+                              } else {
+                                Get.snackbar(
+                                  "Invalid Hex",
+                                  "Please enter a 6 or 8 character hex code (e.g. #FF5733)",
+                                  backgroundColor: primaryColor,
+                                  colorText: white,
+                                  snackPosition: SnackPosition.BOTTOM,
+                                );
+                              }
+                            } catch (e) {
+                              Get.snackbar(
+                                "Error",
+                                "Invalid hex format. Please use #RRGGBB or #AARRGGBB",
+                                backgroundColor: primaryColor,
+                                colorText: white,
+                                snackPosition: SnackPosition.BOTTOM,
+                              );
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Hex Code',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 7.h,
+                        width: 45.w,
+                        padding: EdgeInsets.symmetric(horizontal: 2.w),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: showBorder.value,
+                              onChanged: (value) {
+                                showBorder.value = value!;
+                                if (showBorder.value == false) {
+                                  borderSize.value = 2.sp;
+                                }
+                              },
+                              activeColor: primaryColor,
+                              checkColor: white,
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Image Border',
+                                style: TextStyle(
+                                    fontSize: 16.sp, color: Colors.white),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Obx(() => showBorder.value == true
+                ? Slider(
+                    value: borderSize.value,
+                    min: 2.sp,
+                    max: 32.sp,
+                    activeColor: primaryColor,
+                    inactiveColor: white,
+                    onChanged: (value) {
+                      borderSize.value = value;
+                    },
+                  )
+                : SizedBox.shrink())
+          ],
+        ),
+      ),
+    );
+  }
 
 //   void _updateTab(int index) {
 //     activeTab.value = index;
 //   }
 
-//   Widget buildNavBar(BuildContext context) {
-//     return Column(
-//       children: [
-//         Obx(() => Container(
-//               height: 25.h,
-//               width: Device.width,
-//               decoration: BoxDecoration(color: grey),
-//               child: screens(context)[activeTab.value],
-//             )),
-//         Container(
-//           width: double.infinity,
-//           color: primaryColor,
-//           padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 2.w),
-//           child: SingleChildScrollView(
-//             scrollDirection: Axis.horizontal,
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: [
-//                 _buildNavButton(
-//                     icon: Icons.image,
-//                     label: "Images",
-//                     index: 0,
-//                     onTap: () => _updateTab(0)),
-//                 _buildNavButton(
-//                     icon: Icons.border_bottom,
-//                     label: "Footer",
-//                     index: 1,
-//                     onTap: () => _updateTab(1)),
-//                 _buildNavButton(
-//                     icon: Icons.image,
-//                     label: "Frames",
-//                     index: 2,
-//                     onTap: () => _updateTab(2)),
-//                 _buildNavButton(
-//                     icon: Icons.wallpaper,
-//                     label: "Backgrounds",
-//                     index: 3,
-//                     onTap: () => _updateTab(3)),
-//                 _buildNavButton(
-//                     icon: Icons.text_fields,
-//                     label: "Text",
-//                     index: 4,
-//                     onTap: () {
-//                       _updateTab(4);
-//                       print("Open Text Editor");
-//                     }),
-//                 _buildNavButton(
-//                     icon: Icons.edit,
-//                     label: "Edit",
-//                     index: 5,
-//                     onTap: () {
-//                       _updateTab(5);
-//                       print("Open Text Editor");
-//                     }),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
+  Widget buildNavBar(BuildContext context) {
+    return Column(
+      children: [
+        Obx(() => Container(
+              height: 27.h,
+              width: Device.width,
+              decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.5),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: white, // Grey shadow
+                      blurRadius: 6.0, // Softness of the shadow
+                      spreadRadius: 1.0, // How much the shadow spreads
+                      offset: Offset(0, -3), // Position of the shadow (above)
+                    ),
+                  ]),
+              child: screens(context)[activeTab.value],
+            )),
+        Container(
+          width: double.infinity,
+          color: primaryColor,
+          padding: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 2.w),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                buildNavButton(
+                    icon: Icons.image,
+                    label: "Images",
+                    index: 0,
+                    onTap: () => _updateTab(0)),
+                buildNavButton(
+                    icon: Icons.border_bottom,
+                    label: "Footer",
+                    index: 1,
+                    onTap: () => _updateTab(1)),
+                buildNavButton(
+                    icon: Icons.image,
+                    label: "Frames",
+                    index: 2,
+                    onTap: () => _updateTab(2)),
+                buildNavButton(
+                    icon: Icons.wallpaper,
+                    label: "Backgrounds",
+                    index: 3,
+                    onTap: () => _updateTab(3)),
+                buildNavButton(
+                    icon: Icons.text_fields,
+                    label: "Text",
+                    index: 4,
+                    onTap: () {
+                      _updateTab(4);
+                      print("Open Text Editor");
+                    }),
+                buildNavButton(
+                    icon: Icons.edit,
+                    label: "Edit",
+                    index: 5,
+                    onTap: () {
+                      _updateTab(5);
+                      print("Open Text Editor");
+                    }),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-//   Widget _buildNavButton({
-//     required IconData icon,
-//     required String label,
-//     required int index,
-//     required VoidCallback onTap,
-//   }) {
-//     final isActive = activeTab.value == index;
-//     return InkWell(
-//       onTap: onTap,
-//       child: Container(
-//         padding: EdgeInsets.all(12),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Icon(icon,
-//                 size: 17.sp, color: isActive ? Colors.yellow : Colors.white),
-//             Text(
-//               label,
-//               style: TextStyle(
-//                 fontSize: 15.sp,
-//                 color: isActive ? Colors.yellow : Colors.white,
-//                 fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+  Widget buildNavButton({
+    required IconData icon,
+    required String label,
+    required int index,
+    required VoidCallback onTap,
+  }) {
+    final isActive = activeTab.value == index;
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon,
+                size: 17.sp, color: isActive ? Colors.yellow : Colors.white),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 15.sp,
+                color: isActive ? Colors.yellow : Colors.white,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 //   void clampTextPosition(TextItem item, double stackWidth, double stackHeight) {
 //     const minWidth = 10.0;
