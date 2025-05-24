@@ -60,8 +60,8 @@ class ImageController extends GetxController {
       }
 
       var pageURL = '${ApiUrl.getImageList}?page=$currentPage';
-      var response = await Repository.post(
-          {'category_id': categoryId, "language": selectedLabel}, pageURL,
+      var response = await Repository.postApi(
+          {'category_id':int.parse(categoryId), "language": selectedLabel??''}, pageURL,
           allowHeader: true);
 
       logcat("PassingData::",

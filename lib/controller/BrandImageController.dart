@@ -34,15 +34,22 @@ class BrandImageController extends GetxController {
   final Rx<Future<Uint8List?>?> thumbnailFuture = Rx<Future<Uint8List?>?>(null);
   final Rx<Uint8List?> cachedThumbnail = Rx<Uint8List?>(null);
   String categoryId = "";
-  var selectedImageUrl = ''.obs;
 
-// Method to set the selected image
+  //this is the image user selected from list
+  var selectedImageUrl = ''.obs;
+  var selectedFrameUrl = ''.obs;
+
+  // Method to set the selected image
   void setSelectedImage(String imageUrl) {
     selectedImageUrl.value = imageUrl;
     cachedThumbnail.value = null; // Clear cached thumbnail
     thumbnailFuture.value = null; // Clear previous future
     // Optionally, fetch the image as Uint8List if needed
     fetchImageAsUint8List(imageUrl);
+  }
+
+  void setSelectedFrame(String frameUrl) {
+    selectedFrameUrl.value = frameUrl;
   }
 
   // Method to fetch image as Uint8List (if needed)

@@ -209,7 +209,7 @@ class FrameController extends GetxController {
       {required FramesData data}) {
     return GestureDetector(
       onTap: () {
-        controller.setSelectedImage(data.imgUrl);
+        controller.setSelectedFrame(data.imgUrl);
         // Get.to(CategoryBusinessScreen(data))!.then((value) {});
       },
       child: Container(

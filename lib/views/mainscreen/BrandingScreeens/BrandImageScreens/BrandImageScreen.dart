@@ -10,6 +10,7 @@ import 'package:ibh/configs/font_constant.dart';
 import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/BrandImageController.dart';
 import 'package:sizer/sizer.dart';
+import 'dart:math' as math;
 
 class BrandImageScreen extends StatefulWidget {
   BrandImageScreen({required this.id, required this.title, super.key});
@@ -40,9 +41,11 @@ class _BrandImageScreenState extends State<BrandImageScreen> {
   @override
   Widget build(BuildContext context) {
     Statusbar().transparentStatusbarIsNormalScreen();
-    final stackWidth = 70.w;
-    final stackHeight = 30.h;
-    const imagePadding = 5.0; // Padding inside the image Container
+        final squareSize = math.min(80.w, 40.h);  // Responsive square size
+
+    final stackWidth = squareSize;
+    final stackHeight = squareSize;
+    const imagePadding = 0.0; // Padding inside the image Container
 
     return CustomParentScaffold(
       onWillPop: () async {
@@ -90,34 +93,16 @@ class _BrandImageScreenState extends State<BrandImageScreen> {
                                       blurRadius: 5.0,
                                       offset: const Offset(0, 0))
                                 ],
-                                border: Border.all(color: black, width: 1),
+                                border: Border.all(color: black, width: 0.5),
                                 shape: BoxShape.rectangle),
-                            child: Container(
-                              width: stackWidth -
-                                  2 * imagePadding +
-                                  2 * borderWidth,
-                              height: stackHeight -
-                                  2 * imagePadding +
-                                  2 * borderWidth,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: borderWidth,
-                                  color: controller.showBorder.value
-                                      ? controller.hexBgCode.value.isNotEmpty
-                                          ? Color(controller.hexBgColor.value)
-                                          : controller.currentBGColor.value
-                                      : Colors.white,
-                                ),
-                                shape: BoxShape.rectangle,
-                              ),
-                              child: ClipRRect(
+                            child: 
+                               ClipRRect(
                                 borderRadius: BorderRadius.circular(0),
                                 child: _buildImageWidget(
                                   controller,
                                   stackWidth - 2 * imagePadding,
                                   stackHeight - 2 * imagePadding,
                                 ),
-                              ),
                             ),
                           );
                         }),
@@ -213,65 +198,145 @@ class _BrandImageScreenState extends State<BrandImageScreen> {
       ),
     );
   }
+Widget _buildImageWidget(
+    BrandImageController controller, double width, double height) {
+  return Obx(() {
+    Widget baseImage;
 
-  Widget _buildImageWidget(
-      BrandImageController controller, double width, double height) {
-    return Obx(() {
-      if (controller.selectedImageUrl.value.isNotEmpty) {
-        // Display the selected image
-        return CachedNetworkImage(
-          imageUrl: controller.selectedImageUrl.value,
-          fit: BoxFit.fill,
-          width: width,
-          height: height,
-          placeholder: (context, url) => Image.asset(
-            Asset.bussinessPlaceholder,
-            fit: BoxFit.fill,
-            width: width,
-            height: height,
-          ),
-          errorWidget: (context, url, error) => Image.asset(
-            Asset.bussinessPlaceholder,
-            fit: BoxFit.fill,
-            width: width,
-            height: height,
-          ),
-        );
-      } else if (controller.cachedThumbnail.value != null) {
-        return Image.memory(
-          controller.cachedThumbnail.value!,
-          fit: BoxFit.fill,
-          width: width,
-          height: height,
-        );
-      } else if (controller.thumbnailFuture.value != null) {
-        return FutureBuilder<Uint8List?>(
-          future: controller.thumbnailFuture.value,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData &&
-                snapshot.data != null) {
-              controller.cachedThumbnail.value =
-                  snapshot.data; // Cache the result
-              return Image.memory(
-                snapshot.data!,
-                fit: BoxFit.fill,
-                width: width,
-                height: height,
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        );
-      } else {
-        return Image.asset(
+    if (controller.selectedImageUrl.value.isNotEmpty) {
+      baseImage = CachedNetworkImage(
+        imageUrl: controller.selectedImageUrl.value,
+        fit: BoxFit.fill,
+        width: width,
+        height: height,
+        placeholder: (context, url) => Image.asset(
           Asset.bussinessPlaceholder,
           fit: BoxFit.fill,
           width: width,
           height: height,
-        );
-      }
-    });
-  }
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          Asset.bussinessPlaceholder,
+          fit: BoxFit.fill,
+          width: width,
+          height: height,
+        ),
+      );
+    } else if (controller.cachedThumbnail.value != null) {
+      baseImage = Image.memory(
+        controller.cachedThumbnail.value!,
+        fit: BoxFit.fill,
+        width: width,
+        height: height,
+      );
+    } else if (controller.thumbnailFuture.value != null) {
+      baseImage = FutureBuilder<Uint8List?>(
+        future: controller.thumbnailFuture.value,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData &&
+              snapshot.data != null) {
+            controller.cachedThumbnail.value = snapshot.data;
+            return Image.memory(
+              snapshot.data!,
+              fit: BoxFit.fill,
+              width: width,
+              height: height,
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      );
+    } else {
+      baseImage = Image.asset(
+        Asset.bussinessPlaceholder,
+        fit: BoxFit.fill,
+        width: width,
+        height: height,
+      );
+    }
+
+    // Overlay image if secondaryImageUrl is present
+    Widget overlayImage = controller.selectedFrameUrl.value.isNotEmpty
+        ? CachedNetworkImage(
+            imageUrl: controller.selectedFrameUrl.value,
+            width: width,
+            height: height,
+          )
+        : const SizedBox.shrink(); // Empty widget if no secondary image
+
+    return Stack(
+      children: [
+        baseImage,
+        if (controller.selectedFrameUrl.value.isNotEmpty)
+          Positioned.fill(child: overlayImage),
+      ],
+    );
+  });
+}
+
+
+  // Widget _buildImageWidget(
+  //     BrandImageController controller, double width, double height) {
+  //   return Obx(() {
+  //     if (controller.selectedImageUrl.value.isNotEmpty) {
+  //       // Display the selected image
+  //       return CachedNetworkImage(
+  //         imageUrl: controller.selectedImageUrl.value,
+  //         fit: BoxFit.fill,
+  //         width: width,
+  //         height: height,
+  //         placeholder: (context, url) => Image.asset(
+  //           Asset.bussinessPlaceholder,
+  //           fit: BoxFit.fill,
+  //           width: width,
+  //           height: height,
+  //         ),
+  //         errorWidget: (context, url, error) => Image.asset(
+  //           Asset.bussinessPlaceholder,
+  //           fit: BoxFit.fill,
+  //           width: width,
+  //           height: height,
+  //         ),
+  //       );
+  //     } else if (controller.cachedThumbnail.value != null) {
+  //       return Image.memory(
+  //         controller.cachedThumbnail.value!,
+  //         fit: BoxFit.fill,
+  //         width: width,
+  //         height: height,
+  //       );
+  //     } else if (controller.thumbnailFuture.value != null) {
+  //       return FutureBuilder<Uint8List?>(
+  //         future: controller.thumbnailFuture.value,
+  //         builder: (context, snapshot) {
+  //           if (snapshot.connectionState == ConnectionState.done &&
+  //               snapshot.hasData &&
+  //               snapshot.data != null) {
+  //             controller.cachedThumbnail.value =
+  //                 snapshot.data; // Cache the result
+  //             return Image.memory(
+  //               snapshot.data!,
+  //               fit: BoxFit.fill,
+  //               width: width,
+  //               height: height,
+  //             );
+  //           } else {
+  //             return const Center(child: CircularProgressIndicator());
+  //           }
+  //         },
+  //       );
+  //     } else {
+  //       return Image.asset(
+  //         Asset.bussinessPlaceholder,
+  //         fit: BoxFit.fill,
+  //         width: width,
+  //         height: height,
+  //       );
+  //     }
+  //   });
+  // }
+
+
 }

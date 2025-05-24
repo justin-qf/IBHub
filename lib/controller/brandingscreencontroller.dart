@@ -470,7 +470,7 @@ class BrandingScreencontroller extends GetxController {
           return GestureDetector(
             onTap: () async {
               Get.to(BrandImageScreen(
-                      id: category.imageCategoryTypeId.toString(),
+                      id: category.id.toString(),
                       title: category.name))!
                   .then((value) {});
               // bool isEmpty = await isAnyFieldEmpty();
@@ -603,7 +603,7 @@ class BrandingScreencontroller extends GetxController {
           return GestureDetector(
               onTap: () {
                 Get.to(BrandImageScreen(
-                        id: category.imageCategoryTypeId.toString(),
+                        id: category.id.toString(),
                         title: category.name))!
                     .then((value) {});
               },

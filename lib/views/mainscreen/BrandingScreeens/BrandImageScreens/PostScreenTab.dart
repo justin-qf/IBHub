@@ -10,6 +10,7 @@ import 'package:ibh/controller/image_controller.dart';
 import 'package:ibh/models/imageModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
+import 'package:ibh/utils/log.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -29,6 +30,7 @@ class _PostScreenTabState extends State<PostScreenTab> {
   @override
   void initState() {
     futureDelay(() {});
+    logcat("widget.controller.categoryId",widget.controller.categoryId.toString());
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       controller.currentPage = 1;
       await controller.getPostList(context, controller.currentPage, false,

@@ -25,7 +25,40 @@ class Repository {
   static get buildMultipartHeader async {
     return {'content-type': "multipart/form-data"};
   }
+ static Future<http.Response> postApi(Map<String, dynamic> body, String endPoint,
+      {bool? allowHeader}) async {
+    logcat("APIURL:::", buildUrl(endPoint));
+    logcat("APIURL:::",  jsonEncode(body));
+    String token = await UserPreferences().getToken();
+    //logcat("TOKEN", token.toString());
+    Map<String, String> headers = {
+      'Content-Type': "application/json",
+      'Authorization': 'Bearer $token',
+    };
+    // logcat("PassignData", {
+    //   'Content-Type': "application/json",
+    //   'Authorization': token,
+    // });
 
+    try {
+      var response = await client
+          .post(buildUrl(endPoint), body: jsonEncode(body), headers: headers)
+          .timeout(const Duration(seconds: 20)); // ⏳ Set timeout to 30s
+      return response;
+    } catch (e) {
+      if (e is TimeoutException) {
+        logcat("API Error", "Request timed out!");
+        throw TimeoutException("The request timed out. Please try again.");
+      } else {
+        logcat("API Error", e.toString());
+        rethrow;
+      }
+    }
+    // var response = await client.post(buildUrl(endPoint),
+    //     body: jsonEncode(body),
+    //     headers: allowHeader == true ? headers : await buildHeader);
+    // return response;
+  }
   static Future<http.Response> post(Map<String, dynamic> body, String endPoint,
       {bool? allowHeader}) async {
     logcat("APIURL:::", buildUrl(endPoint));
