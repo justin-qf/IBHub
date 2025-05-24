@@ -15,14 +15,14 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
 
-// // ignore: must_be_immutable
-// class BrandingScreen extends StatefulWidget {
-//   BrandingScreen(this.callBack, {super.key});
-//   Function callBack;
+// ignore: must_be_immutable
+class BrandingScreen extends StatefulWidget {
+  BrandingScreen(this.callBack, {super.key});
+  Function callBack;
 
-//   @override
-//   State<BrandingScreen> createState() => _BrandingScreenState();
-// }
+  @override
+  State<BrandingScreen> createState() => _BrandingScreenState();
+}
 
 class _BrandingScreenState extends State<BrandingScreen> {
   var controller = Get.put(BrandingScreencontroller());

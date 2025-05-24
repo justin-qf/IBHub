@@ -7,19 +7,12 @@ version: 1.0.0+2
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
-  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  sizer: ^3.0.2
-  get: ^4.6.6
-  http: ^1.1.0
-  shared_preferences: ^2.2.1
-  flutter_svg: ^2.0.7
-  image_picker: ^1.0.4
   sizer: ^3.0.2
   get: ^4.6.6
   http: ^1.1.0
@@ -43,38 +36,35 @@ dependencies:
   palette_generator: ^0.3.3+3
   image_cropper: ^9.1.0
   photo_view: ^0.14.0
-  image_cropper: ^5.0.0
   pull_to_refresh_flutter3: ^2.0.2
   webview_flutter: ^4.8.0
    
   file_picker: ^10.1.9
 
   package_info_plus: ^8.0.2
-  firebase_dynamic_links: any
-  firebase_auth: ^4.19.5
-  firebase_core: ^2.31.0
-  firebase_crashlytics: ^3.4.9
-  firebase_messaging: ^14.9.2
-  flutter_local_notifications: ^17.1.2
+  
   hive: ^2.2.3
   permission_handler: ^11.3.1
   
   # firebase_crashlytics: ^3.4.9
-  flutter_local_notifications: ^17.1.2
    
   google_sign_in: ^6.2.2
+  firebase_core: ^3.13.1
+  firebase_crashlytics: ^4.3.6
   firebase_messaging: ^15.2.6
   firebase_auth: ^5.5.4
-  firebase_core: ^3.13.1
+  firebase_dynamic_links: ^6.1.6
+  flutter_local_notifications: ^19.2.1
   firebase_remote_config: ^5.4.4
-  firebase_crashlytics: ^4.3.6
+  flutter_colorpicker: ^1.1.0
+  photo_manager: ^3.7.1
+  flutter_staggered_grid_view: ^0.7.0
  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^4.0.0
   flutter_lints: ^4.0.0
 
 flutter:

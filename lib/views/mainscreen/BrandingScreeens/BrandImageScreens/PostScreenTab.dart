@@ -10,7 +10,6 @@ import 'package:ibh/controller/image_controller.dart';
 import 'package:ibh/models/imageModel.dart';
 import 'package:ibh/utils/enum.dart';
 import 'package:ibh/utils/helper.dart';
-import 'package:photo_manager/photo_manager.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:sizer/sizer.dart';
 import 'package:sizer/sizer.dart' as sizer;
@@ -269,100 +268,4 @@ class _PostScreenTabState extends State<PostScreenTab> {
     }
   }
 
-  Widget _buildImageGridView() {
-    final images =
-        widget.controller.albumImages[widget.controller.selectedAlbum.value!] ??
-            [];
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.topRight,
-          child: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () {
-              widget.controller.selectedAlbum.value = null;
-            },
-          ),
-        ),
-        Expanded(
-          child: GridView.builder(
-            padding: const EdgeInsets.all(10),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 5,
-              childAspectRatio: 0.8,
-            ),
-            itemCount: images.length,
-            itemBuilder: (context, index) {
-              final image = images[index];
-              final thumbnailFuture =
-                  image.thumbnailDataWithSize(const ThumbnailSize(400, 400));
-              return FutureBuilder<Uint8List?>(
-                future: thumbnailFuture,
-                builder: (context, snapshot) {
-                  Widget thumbnail =
-                      snapshot.connectionState == ConnectionState.done &&
-                              snapshot.hasData
-                          ? Image.memory(snapshot.data!, fit: BoxFit.cover)
-                          : const Center(child: Icon(Icons.image));
-                  return Obx(() {
-                    final isSelected =
-                        widget.controller.selectedImage.value == image;
-                    return widget.controller.buildGalleryItem(
-                      isSelected: isSelected,
-                      onTap: () {
-                        widget.controller.toggleImageSelection(image);
-                      },
-                      child: thumbnail,
-                    );
-                  });
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
   }
-
-  Widget _buildAlbumGridView() {
-    if (widget.controller.albums.isEmpty) {
-      return const Center(child: Text('No albums found'));
-    }
-    return GridView.builder(
-      padding: const EdgeInsets.all(10),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 0,
-        mainAxisExtent: 90.0,
-        childAspectRatio: 0.8,
-      ),
-      itemCount: widget.controller.albums.length,
-      itemBuilder: (context, index) {
-        final album = widget.controller.albums[index];
-        final images = widget.controller.albumImages[album] ?? [];
-        return widget.controller.buildGalleryItem(
-          title: album.name,
-          subtitle: '${images.length} images',
-          onTap: () {
-            widget.controller.selectedAlbum.value = album;
-          },
-          child: images.isNotEmpty
-              ? FutureBuilder<Uint8List?>(
-                  future: images.first.thumbnailData,
-                  builder: (context, snapshot) {
-                    return snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData
-                        ? Image.memory(snapshot.data!, fit: BoxFit.cover)
-                        : const Center(
-                            child: Icon(Icons.photo, color: primaryColor));
-                  },
-                )
-              : const Center(child: Icon(Icons.photo, color: primaryColor)),
-        );
-      },
-    );
-  }
-}

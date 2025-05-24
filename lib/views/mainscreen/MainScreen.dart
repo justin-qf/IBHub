@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(callback),
         SearchScreen(callback),
         FavouriteScreen(callback),
-        // BrandingScreen(callback),
+        BrandingScreen(callback),
         ProfileScreen(callback)
       ];
     });
@@ -118,6 +118,10 @@ class _MainScreenState extends State<MainScreen> {
                         icon: Icons.star,
                         text: BottomConstant.favourite,
                       ),
+                         GButton(
+                          icon: Icons.branding_watermark,
+                          text: BottomConstant.branding,
+                        ),
                       GButton(
                           icon: Icons.person_rounded,
                           text: BottomConstant.profile)

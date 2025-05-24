@@ -1,6 +1,6 @@
 class ApiUrl {
   // LOCAL
-  // static const baseUrl = "http://192.168.1.11/indian_business_hub/";
+  static const baseUrl = "http://192.168.1.39/indian_business_hub/";
   // static const buildApiUrl = '${baseUrl}swooosh_admin/api/';
   // static const imageUrl = '${baseUrl}swooosh_admin/public/storage/';
 
@@ -10,8 +10,8 @@ class ApiUrl {
 
   //  "https://indianbusinesshub.in/";
 
-  static const buildApiUrl = '${liveUrl}api/';
-  static const imageUrl = '${liveUrl}public/storage';
+  static const buildApiUrl = '${baseUrl}api/';
+  static const imageUrl = '${baseUrl}public/storage';
 
   //AUTH
   static const login = "login";

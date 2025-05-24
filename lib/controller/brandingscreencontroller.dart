@@ -36,67 +36,67 @@ class BrandingScreencontroller extends GetxController {
   final ScrollController scrollController = ScrollController();
   bool isFetchingMore = false;
 
-//   void hideKeyboard(context) {
-//     FocusScopeNode currentFocus = FocusScope.of(context);
-//     if (!currentFocus.hasPrimaryFocus) {
-//       currentFocus.unfocus();
-//     }
-//   }
+  void hideKeyboard(context) {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
 
-//   var dailyImages = [
-//     Asset.d1,
-//     Asset.d2,
-//     Asset.d3,
-//     Asset.d4,
-//     Asset.d5,
-//     Asset.d6
-//   ];
+  var dailyImages = [
+    Asset.d1,
+    Asset.d2,
+    Asset.d3,
+    Asset.d4,
+    Asset.d5,
+    Asset.d6
+  ];
 
-//   var dailyNames = [
-//     "Monday Motivation",
-//     "Tuesday Tip",
-//     "Wisdom Wednesday",
-//     "Thoughtful Thursday",
-//     "Feel Good Friday",
-//     "Weekend Inspiration",
-//   ];
+  var dailyNames = [
+    "Monday Motivation",
+    "Tuesday Tip",
+    "Wisdom Wednesday",
+    "Thoughtful Thursday",
+    "Feel Good Friday",
+    "Weekend Inspiration",
+  ];
 
-//   var festivalImages = [
-//     Asset.f1,
-//     Asset.f2,
-//     Asset.f3,
-//     Asset.f4,
-//     Asset.f1,
-//     Asset.f2
-//   ];
+  var festivalImages = [
+    Asset.f1,
+    Asset.f2,
+    Asset.f3,
+    Asset.f4,
+    Asset.f1,
+    Asset.f2
+  ];
 
-//   var festivalNames = [
-//     "Incredible India – Symbol of Heritage", // Colorful Taj Mahal
-//     "Christmas – Joy and Giving", // Merry Christmas
-//     "Diwali – Festival of Lights", // Dipavali
-//     "Holi – Festival of Colors", // Holi
-//     "Incredible India – Symbol of Heritage", // Repeated Taj Mahal
-//     "Christmas – Joy and Giving", // Repeated Christmas
-//   ];
-//   RxString nextPageURL = "".obs;
+  var festivalNames = [
+    "Incredible India – Symbol of Heritage", // Colorful Taj Mahal
+    "Christmas – Joy and Giving", // Merry Christmas
+    "Diwali – Festival of Lights", // Dipavali
+    "Holi – Festival of Colors", // Holi
+    "Incredible India – Symbol of Heritage", // Repeated Taj Mahal
+    "Christmas – Joy and Giving", // Repeated Christmas
+  ];
+  RxString nextPageURL = "".obs;
 
-//   final RxList<String> bussinessList = [
-//     Asset.b1,
-//     Asset.b2,
-//     Asset.b3,
-//     Asset.b4,
-//     Asset.b1,
-//     Asset.b2,
-//   ].obs;
+  final RxList<String> bussinessList = [
+    Asset.b1,
+    Asset.b2,
+    Asset.b3,
+    Asset.b4,
+    Asset.b1,
+    Asset.b2,
+  ].obs;
 
-//   var bussinessNames = [
-//     "Elite Branding Solutions",
-//     "Innovate Digital Studio",
-//     "Prime Visual Agency",
-//     "Bold Impact Media",
-//     "Elite Branding Solutions", // Repeated
-//     "Innovate Digital Studio", // Repeated
-//   ];
+  var bussinessNames = [
+    "Elite Branding Solutions",
+    "Innovate Digital Studio",
+    "Prime Visual Agency",
+    "Bold Impact Media",
+    "Elite Branding Solutions", // Repeated
+    "Innovate Digital Studio", // Repeated
+  ];
 
   getDailyListItems(BuildContext context, BusinessData item,
       {dailyImg, dailyName}) {
@@ -317,144 +317,144 @@ class BrandingScreencontroller extends GetxController {
                       fit: BoxFit.cover,
                     ),
 
-//                     // Container(
-//                     //   height: 10.h,
-//                     //   width: isSmallDevice(context) ? 8.w : 12.w,
-//                     //   padding: const EdgeInsets.all(4),
-//                     //   child: ClipRRect(
-//                     //     borderRadius: BorderRadius.circular(50),
-//                     //     child:
-//                     //   ),
-//                     // ),
+                    // Container(
+                    //   height: 10.h,
+                    //   width: isSmallDevice(context) ? 8.w : 12.w,
+                    //   padding: const EdgeInsets.all(4),
+                    //   child: ClipRRect(
+                    //     borderRadius: BorderRadius.circular(50),
+                    //     child:
+                    //   ),
+                    // ),
 
-//                     //  CachedNetworkImage(
-//                     //   fit: BoxFit.contain,
-//                     //   height: 1.h,
-//                     //   imageUrl: item.visitingCardUrl,
-//                     //   placeholder: (context, url) => Center(
-//                     //     child: Image.asset(Asset.itemPlaceholder,
-//                     //         height: 12.h, width: 25.w, fit: BoxFit.cover),
-//                     //   ),
-//                     //   errorWidget: (context, url, error) => Image.asset(
-//                     //       Asset.itemPlaceholder,
-//                     //       height: 12.h,
-//                     //       fit: BoxFit.cover),
-//                     // ),
-//                   ),
-//                 ),
-//                 Positioned(
-//                   top: 0.5.h,
-//                   right: 1.w,
-//                   child: Container(
-//                     decoration: BoxDecoration(
-//                       shape: BoxShape.circle,
-//                       color: white,
-//                     ),
-//                     child: SvgPicture.asset(
-//                       Asset.badge,
-//                       color: blue,
-//                     ),
-//                   ),
-//                 ),
-//                 // item.isEmailVerified
-//                 //     ?
+                    //  CachedNetworkImage(
+                    //   fit: BoxFit.contain,
+                    //   height: 1.h,
+                    //   imageUrl: item.visitingCardUrl,
+                    //   placeholder: (context, url) => Center(
+                    //     child: Image.asset(Asset.itemPlaceholder,
+                    //         height: 12.h, width: 25.w, fit: BoxFit.cover),
+                    //   ),
+                    //   errorWidget: (context, url, error) => Image.asset(
+                    //       Asset.itemPlaceholder,
+                    //       height: 12.h,
+                    //       fit: BoxFit.cover),
+                    // ),
+                  ),
+                ),
+                Positioned(
+                  top: 0.5.h,
+                  right: 1.w,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: white,
+                    ),
+                    child: SvgPicture.asset(
+                      Asset.badge,
+                      color: blue,
+                    ),
+                  ),
+                ),
+                // item.isEmailVerified
+                //     ?
 
-//                 // : SizedBox.shrink()
-//               ],
-//             ),
-//             // getDynamicSizedBox(height: 1.w),
+                // : SizedBox.shrink()
+              ],
+            ),
+            // getDynamicSizedBox(height: 1.w),
 
-//             Expanded(
-//               child: Center(
-//                 child: Container(
-//                   // height: 3.h,
-//                   padding: EdgeInsets.symmetric(horizontal: 2.w),
+            Expanded(
+              child: Center(
+                child: Container(
+                  // height: 3.h,
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
 
-//                   // height: 4.h,
-//                   width: Device.screenType == sizer.ScreenType.mobile
-//                       ? 58.w
-//                       : 65.w,
-//                   child: Text(
-//                       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
-//                       festivalName,
-//                       // item.businessName,
-//                       maxLines: 1,
-//                       style: TextStyle(
-//                           fontFamily: dM_sans_semiBold,
-//                           fontSize: 14.sp,
-//                           height: 1.2,
-//                           overflow: TextOverflow.ellipsis,
-//                           color: black,
-//                           fontWeight: FontWeight.w900)),
-//                 ),
-//               ),
-//             ),
-//             // Column(
-//             //   mainAxisAlignment: MainAxisAlignment.center,
-//             //   crossAxisAlignment: CrossAxisAlignment.start,
-//             //   children: [
-//             //     SizedBox(
-//             //       // height: 4.h,
-//             //       width: Device.screenType == sizer.ScreenType.mobile
-//             //           ? 58.w
-//             //           : 65.w,
-//             //       child: Text(
-//             //           // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
+                  // height: 4.h,
+                  width: Device.screenType == sizer.ScreenType.mobile
+                      ? 58.w
+                      : 65.w,
+                  child: Text(
+                      // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
+                      festivalName,
+                      // item.businessName,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontFamily: dM_sans_semiBold,
+                          fontSize: 14.sp,
+                          height: 1.2,
+                          overflow: TextOverflow.ellipsis,
+                          color: black,
+                          fontWeight: FontWeight.w900)),
+                ),
+              ),
+            ),
+            // Column(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     SizedBox(
+            //       // height: 4.h,
+            //       width: Device.screenType == sizer.ScreenType.mobile
+            //           ? 58.w
+            //           : 65.w,
+            //       child: Text(
+            //           // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoasasddahshdadakdshddlkd',
 
-//             //           item.businessName,
-//             //           maxLines: 2,
-//             //           style: TextStyle(
-//             //               fontFamily: dM_sans_medium,
-//             //               fontSize: 14.sp,
-//             //               height: 1,
-//             //               overflow: TextOverflow.ellipsis,
-//             //               color: black,
-//             //               fontWeight: FontWeight.w900)),
-//             //     ),
-//             //     // getDynamicSizedBox(height: 1.h),
-//             //     // SizedBox(
-//             //     //   // height: 2.h,
-//             //     //   width: Device.screenType == sizer.ScreenType.mobile
-//             //     //       ? 58.w
-//             //     //       : 70.w,
-//             //     //   child: Text(item.name,
-//             //     //       maxLines: 1,
-//             //     //       style: TextStyle(
-//             //     //           height: 1.1,
-//             //     //           fontFamily: dM_sans_semiBold,
-//             //     //           fontSize: 14.sp,
-//             //     //           color: black,
-//             //     //           fontWeight: FontWeight.w500)),
-//             //     // ),
-//             //     // getDynamicSizedBox(height: 1.h),
-//             //     // SizedBox(
-//             //     //   // height: 4.h,
-//             //     //   width: Device.screenType == sizer.ScreenType.mobile
-//             //     //       ? 58.w
-//             //     //       : 65.w,
-//             //     //   child: Text(
-//             //     //       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
+            //           item.businessName,
+            //           maxLines: 2,
+            //           style: TextStyle(
+            //               fontFamily: dM_sans_medium,
+            //               fontSize: 14.sp,
+            //               height: 1,
+            //               overflow: TextOverflow.ellipsis,
+            //               color: black,
+            //               fontWeight: FontWeight.w900)),
+            //     ),
+            //     // getDynamicSizedBox(height: 1.h),
+            //     // SizedBox(
+            //     //   // height: 2.h,
+            //     //   width: Device.screenType == sizer.ScreenType.mobile
+            //     //       ? 58.w
+            //     //       : 70.w,
+            //     //   child: Text(item.name,
+            //     //       maxLines: 1,
+            //     //       style: TextStyle(
+            //     //           height: 1.1,
+            //     //           fontFamily: dM_sans_semiBold,
+            //     //           fontSize: 14.sp,
+            //     //           color: black,
+            //     //           fontWeight: FontWeight.w500)),
+            //     // ),
+            //     // getDynamicSizedBox(height: 1.h),
+            //     // SizedBox(
+            //     //   // height: 4.h,
+            //     //   width: Device.screenType == sizer.ScreenType.mobile
+            //     //       ? 58.w
+            //     //       : 65.w,
+            //     //   child: Text(
+            //     //       // 'asdaiyutasypudsgsaudgasgasdadsdjhdgasbaosdoas',
 
-//             //     //       item.address.isNotEmpty
-//             //     //           ? item.address
-//             //     //           : item.city != null
-//             //     //               ? item.city!.city
-//             //     //               : item.phone,
-//             //     //       maxLines: 2,
-//             //     //       style: TextStyle(
-//             //     //           height: 1.1,
-//             //     //           fontFamily: dM_sans_semiBold,
-//             //     //           fontSize: 14.sp,
-//             //     //           color: black,
-//             //     //           fontWeight: FontWeight.w500)),
-//             //     // ),
-//             //   ],
-//             // ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+            //     //       item.address.isNotEmpty
+            //     //           ? item.address
+            //     //           : item.city != null
+            //     //               ? item.city!.city
+            //     //               : item.phone,
+            //     //       maxLines: 2,
+            //     //       style: TextStyle(
+            //     //           height: 1.1,
+            //     //           fontFamily: dM_sans_semiBold,
+            //     //           fontSize: 14.sp,
+            //     //           color: black,
+            //     //           fontWeight: FontWeight.w500)),
+            //     // ),
+            //   ],
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
 
   businessCategoryWidget(List<Category> categories) {
     return SizedBox(
@@ -754,63 +754,63 @@ class BrandingScreencontroller extends GetxController {
     }
   }
 
-//   // double getWidth(BuildContext context) => MediaQuery.of(context).size.width;
+  // double getWidth(BuildContext context) => MediaQuery.of(context).size.width;
 
-//   // Widget getDigitalCardLayout(context) {
-//   //   return Container(
-//   //     // digital card
-//   //     decoration: BoxDecoration(
-//   //         borderRadius: BorderRadius.all(Radius.circular(7)),
-//   //         border: Border(
-//   //             top: BorderSide(color: secondaryColor, width: 1),
-//   //             right: BorderSide(color: secondaryColor, width: 1),
-//   //             left: BorderSide(color: secondaryColor, width: 1),
-//   //             bottom: BorderSide(color: secondaryColor, width: 1)),
-//   //         boxShadow: [
-//   //           BoxShadow(
-//   //             color: Colors.grey.withOpacity(0.2),
-//   //             spreadRadius: 3,
-//   //             blurRadius: 7,
-//   //             offset: Offset(0, 5),
-//   //           ),
-//   //         ],
-//   //         color: Colors.white),
-//   //     margin: EdgeInsets.only(top: 2.h, left: 2.w, right: 2.w, bottom: 2.h),
-//   //     width: getWidth(context),
-//   //     padding: EdgeInsets.only(left: 15, top: 7, bottom: 7, right: 15),
-//   //     height: 80,
-//   //     child: Stack(
-//   //       children: [
-//   //         Container(
-//   //           margin: EdgeInsets.only(left: 15),
-//   //           child: SvgPicture.asset(
-//   //             "assets/wallet.svg",
-//   //             width: 60,
-//   //             height: 60,
-//   //           ),
-//   //         ),
-//   //         Container(
-//   //           margin: EdgeInsets.only(left: 100, top: 8),
-//   //           child: Text(
-//   //             "Create A Digital Business Card.",
-//   //             style: TextStyle(
-//   //                 fontSize: 18,
-//   //                 fontWeight: FontWeight.bold,
-//   //                 color: primaryColor),
-//   //           ),
-//   //         ),
-//   //         Container(
-//   //           width: double.maxFinite,
-//   //           margin: EdgeInsets.only(left: 100, top: 28),
-//   //           child: Text(
-//   //             "Looking for business card for your brand? Tap on banner to create your brand digital card",
-//   //             style: TextStyle(
-//   //               fontSize: 12,
-//   //             ),
-//   //           ),
-//   //         )
-//   //       ],
-//   //     ),
-//   //   );
-//   // }
-// }
+  // Widget getDigitalCardLayout(context) {
+  //   return Container(
+  //     // digital card
+  //     decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.all(Radius.circular(7)),
+  //         border: Border(
+  //             top: BorderSide(color: secondaryColor, width: 1),
+  //             right: BorderSide(color: secondaryColor, width: 1),
+  //             left: BorderSide(color: secondaryColor, width: 1),
+  //             bottom: BorderSide(color: secondaryColor, width: 1)),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.grey.withOpacity(0.2),
+  //             spreadRadius: 3,
+  //             blurRadius: 7,
+  //             offset: Offset(0, 5),
+  //           ),
+  //         ],
+  //         color: Colors.white),
+  //     margin: EdgeInsets.only(top: 2.h, left: 2.w, right: 2.w, bottom: 2.h),
+  //     width: getWidth(context),
+  //     padding: EdgeInsets.only(left: 15, top: 7, bottom: 7, right: 15),
+  //     height: 80,
+  //     child: Stack(
+  //       children: [
+  //         Container(
+  //           margin: EdgeInsets.only(left: 15),
+  //           child: SvgPicture.asset(
+  //             "assets/wallet.svg",
+  //             width: 60,
+  //             height: 60,
+  //           ),
+  //         ),
+  //         Container(
+  //           margin: EdgeInsets.only(left: 100, top: 8),
+  //           child: Text(
+  //             "Create A Digital Business Card.",
+  //             style: TextStyle(
+  //                 fontSize: 18,
+  //                 fontWeight: FontWeight.bold,
+  //                 color: primaryColor),
+  //           ),
+  //         ),
+  //         Container(
+  //           width: double.maxFinite,
+  //           margin: EdgeInsets.only(left: 100, top: 28),
+  //           child: Text(
+  //             "Looking for business card for your brand? Tap on banner to create your brand digital card",
+  //             style: TextStyle(
+  //               fontSize: 12,
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+}

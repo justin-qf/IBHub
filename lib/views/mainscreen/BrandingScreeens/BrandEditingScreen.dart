@@ -10,21 +10,21 @@ import 'package:ibh/configs/statusbar.dart';
 import 'package:ibh/controller/brandEditingcontroller.dart';
 import 'package:sizer/sizer.dart';
 
-// class Brandeditingscreen extends StatefulWidget {
-//   const Brandeditingscreen({super.key});
+class Brandeditingscreen extends StatefulWidget {
+  const Brandeditingscreen({super.key});
 
-//   @override
-//   State<Brandeditingscreen> createState() => _BrandeditingscreenState();
-// }
+  @override
+  State<Brandeditingscreen> createState() => _BrandeditingscreenState();
+}
 
-// class _BrandeditingscreenState extends State<Brandeditingscreen> {
-//   var controller = Get.put(Brandeditingcontroller());
+class _BrandeditingscreenState extends State<Brandeditingscreen> {
+  var controller = Get.put(Brandeditingcontroller());
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     controller.fetchGalleryAlbums();
-//   }
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchGalleryAlbums();
+  }
 
   @override
   Widget build(BuildContext context) {

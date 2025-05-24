@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 import 'dart:typed_data';
-import 'dart:math' as math; // Import with prefix
 
 class ImageFilters {
   ui.Image? _originalImage;
@@ -21,7 +20,6 @@ class ImageFilters {
     final frame = await codec.getNextFrame();
     _originalImage = frame.image;
     _filteredImage = frame.image;
-    _currentFilter = 'None';
   }
 
   // Apply filter to the image
@@ -39,16 +37,11 @@ class ImageFilters {
     // Create a copy of the pixel data
     final newPixels = Uint8List(pixels.length);
 
-    // Random number generator for Noise filter
-    final random = math.Random();
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        final i = (y * width + x) * 4;
-        int r = pixels[i];
-        int g = pixels[i + 1];
-        int b = pixels[i + 2];
-        int a = pixels[i + 3];
+    for (int i = 0; i < pixels.length; i += 4) {
+      int r = pixels[i];
+      int g = pixels[i + 1];
+      int b = pixels[i + 2];
+      int a = pixels[i + 3];
 
       switch (filterType) {
         case 'Grayscale':
@@ -97,70 +90,8 @@ class ImageFilters {
     final codec = await ui.instantiateImageCodec(newPixels,
         targetWidth: width, targetHeight: height);
     final frame = await codec.getNextFrame();
-    _filteredImage?.dispose(); // Dispose previous filtered image
     _filteredImage = frame.image;
     _currentFilter = filterType;
-  }
-
-  // Helper: Convert RGB to HSV
-  List<double> _rgbToHsv(int r, int g, int b) {
-    double rNorm = r / 255.0;
-    double gNorm = g / 255.0;
-    double bNorm = b / 255.0;
-
-    final max = [rNorm, gNorm, bNorm].reduce(math.max); // Use math.max
-    final min = [rNorm, gNorm, bNorm].reduce(math.min); // Use math.min
-    final delta = max - min;
-
-    double h = 0;
-    if (delta != 0) {
-      if (max == rNorm) {
-        h = 60 * (((gNorm - bNorm) / delta) % 6);
-      } else if (max == gNorm) {
-        h = 60 * ((bNorm - rNorm) / delta + 2);
-      } else {
-        h = 60 * ((rNorm - gNorm) / delta + 4);
-      }
-    }
-    double s = max == 0 ? 0 : delta / max;
-    double v = max;
-
-    return [h, s, v];
-  }
-
-  // Helper: Convert HSV to RGB
-  List<int> _hsvToRgb(double h, double s, double v) {
-    double c = v * s;
-    double x = c * (1 - ((h / 60) % 2 - 1).abs());
-    double m = v - c;
-
-    double r = 0, g = 0, b = 0;
-    if (h < 60) {
-      r = c;
-      g = x;
-    } else if (h < 120) {
-      r = x;
-      g = c;
-    } else if (h < 180) {
-      r = 0;
-      g = c;
-      b = x;
-    } else if (h < 240) {
-      g = x;
-      b = c;
-    } else if (h < 300) {
-      r = x;
-      b = c;
-    } else {
-      r = c;
-      b = x;
-    }
-
-    return [
-      ((r + m) * 255).round(),
-      ((g + m) * 255).round(),
-      ((b + m) * 255).round(),
-    ];
   }
 
   // Dispose images to prevent memory leaks
